@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="df22d5de-0498-4008-9a04-2f268069076d" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1kKtg7YUyzTYDUQKU1dLkr2PDbm" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="javascript.nodejs.core.library.configured.version" value="14.15.0" />
+    <property name="javascript.nodejs.core.library.typings.version" value="14.14.14" />
+    <property name="nodejs_interpreter_path" value="node" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/models" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="df22d5de-0498-4008-9a04-2f268069076d" name="Default Changelist" comment="" />
+      <created>1605461220037</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1605461220037</updated>
+      <workItem from="1605461221573" duration="327000" />
+      <workItem from="1605462356135" duration="750000" />
+      <workItem from="1606677250615" duration="2197000" />
+      <workItem from="1607380548700" duration="198000" />
+      <workItem from="1607485004770" duration="844000" />
+      <workItem from="1607528408676" duration="13816000" />
+      <workItem from="1607561825180" duration="10765000" />
+      <workItem from="1607624180411" duration="6250000" />
+      <workItem from="1607704762536" duration="14682000" />
+      <workItem from="1607799378894" duration="566000" />
+      <workItem from="1607800347993" duration="185000" />
+      <workItem from="1607810189702" duration="747000" />
+      <workItem from="1607880287468" duration="25000" />
+      <workItem from="1608103204826" duration="46000" />
+      <workItem from="1608106060848" duration="338000" />
+      <workItem from="1608219277614" duration="2746000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="356" y="209" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1607573952414">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="356" y="209" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.800@0.0.1280.800" timestamp="1607573952414" />
+    <state x="73" y="42" width="907" height="722" key="SettingsEditor" timestamp="1608219362357">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="73" y="42" width="907" height="722" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1608219362357" />
+  </component>
+</project>
