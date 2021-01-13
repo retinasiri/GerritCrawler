@@ -1,0 +1,25 @@
+{
+  "message": "read ECONNRESET",
+  "name": "Error",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (internal/stream_base_commons.js:209:20)",
+  "config": {
+    "url": "https://codereview.qt-project.org/accounts/1007413",
+    "method": "get",
+    "headers": {
+      "Accept": "application/json, text/plain, */*",
+      "User-Agent": "axios/0.21.0"
+    },
+    "transformRequest": [
+      null
+    ],
+    "transformResponse": [
+      null
+    ],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1
+  },
+  "code": "ECONNRESET"
+}

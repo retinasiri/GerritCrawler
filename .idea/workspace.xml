@@ -1,7 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="df22d5de-0498-4008-9a04-2f268069076d" name="Default Changelist" comment="" />
+    <list default="true" id="df22d5de-0498-4008-9a04-2f268069076d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/models/changeSummary.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/crawling.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/apiEndpoints.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/apiEndpoints.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/account.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/account.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/changeDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/change.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parseur.js" beforeDir="false" afterPath="$PROJECT_DIR$/parseur.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,6 +43,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1kKtg7YUyzTYDUQKU1dLkr2PDbm" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -24,7 +56,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="javascript.nodejs.core.library.configured.version" value="14.15.0" />
-    <property name="javascript.nodejs.core.library.typings.version" value="14.14.14" />
+    <property name="javascript.nodejs.core.library.typings.version" value="14.14.20" />
     <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
@@ -60,11 +92,29 @@
       <workItem from="1608103204826" duration="46000" />
       <workItem from="1608106060848" duration="338000" />
       <workItem from="1608219277614" duration="2746000" />
+      <workItem from="1608501360748" duration="424000" />
+      <workItem from="1608831269568" duration="15150000" />
+      <workItem from="1609364308028" duration="121000" />
+      <workItem from="1610071369133" duration="1214000" />
+      <workItem from="1610504076779" duration="7884000" />
+      <workItem from="1610576624945" duration="1988000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="356" y="209" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1607573952414">
@@ -75,5 +125,9 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="73" y="42" width="907" height="722" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1608219362357" />
+    <state x="341" y="32" width="598" height="735" key="find.popup" timestamp="1610506453550">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="341" y="32" width="598" height="735" key="find.popup/0.0.1280.800/-282.-1080.1920.1080@0.0.1280.800" timestamp="1610506453550" />
   </component>
 </project>

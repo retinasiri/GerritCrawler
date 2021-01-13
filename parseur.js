@@ -3,8 +3,8 @@ const Axios = require('axios');
 const Mongoose = require('mongoose');
 const Project = require('./models/project');
 const Account = require('./models/account');
-const Change = require('./models/change');
-const ChangeDetail = require('./models/changeDetail');
+const Change = require('./models/changeSummary');
+const ChangeDetail = require('./models/change');
 const Database = require('./config/databaseConfig');
 const ApiEndPoints = require('./config/apiEndpoints');
 
