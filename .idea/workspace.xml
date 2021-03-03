@@ -28,6 +28,7 @@
       <change afterPath="$PROJECT_DIR$/trash/index.js" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/trash/metrics.js" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/trash/metrics2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/apiEndpoints.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/apiEndpoints.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
@@ -65,7 +66,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="javascript.nodejs.core.library.configured.version" value="14.15.0" />
-    <property name="javascript.nodejs.core.library.typings.version" value="14.14.28" />
+    <property name="javascript.nodejs.core.library.typings.version" value="14.14.31" />
     <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
@@ -131,6 +132,7 @@
       <workItem from="1614474033343" duration="1818000" />
       <workItem from="1614529129852" duration="31229000" />
       <workItem from="1614714197433" duration="2137000" />
+      <workItem from="1614804132781" duration="236000" />
     </task>
     <servers />
   </component>
