@@ -7,7 +7,8 @@ var LabelSchema = new Schema({
         all: {},
         values: {}
     },
-    Code_Review: {}
+    Code_Review: {},
+    Sanity_Review: {}
 }, {
     versionKey: false
 });

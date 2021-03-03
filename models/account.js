@@ -13,4 +13,7 @@ var AccountSchema = new Schema({
     versionKey: false
 });
 
-module.exports = mongoose.model('Account', AccountSchema);
+const Account = mongoose.model('Account', AccountSchema)
+//Account.createIndexes();
+
+module.exports = Account;

@@ -14,4 +14,6 @@ var ProjectSchema = new Schema({
     versionKey: false
 });
 
-module.exports = mongoose.model('Project', ProjectSchema);
+const Project = mongoose.model('Project', ProjectSchema);
+//Project.createIndexes();
+module.exports = Project;

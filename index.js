@@ -1,219 +1,243 @@
 //Library
-const Axios = require('axios');
 const Mongoose = require('mongoose');
+const Moment = require('moment');
+const fs = require('fs');
+const fsExtra = require("fs-extra");
 const RateLimit = require('axios-rate-limit');
 const Project = require('./models/project');
 const Account = require('./models/account');
 const ChangeSummary = require('./models/changeSummary');
 const Change = require('./models/change');
+const Crawling = require('./models/crawling');
 const Database = require('./config/databaseConfig');
 const ApiEndPoints = require('./config/apiEndpoints');
 
-var projectParseUrl = Database.qtDbUrl;
-var projectParseApiUrl = ApiEndPoints.qtApiUrl;
-
-//limiter le nombre de requête par seconde
+const Axios = require('axios');
 const axios = RateLimit(Axios.create(), {maxRPS: 80})
-//const axios = RateLimit(Axios.create(), {maxRequests: 2, perMilliseconds: 1000, maxRPS: 2})
+
+let projectDBUrl = Database.openstackDbUrl;
+let projectApiUrl = ApiEndPoints.openstackApiUrl;
+
+let LAST_YEAR_TO_COLLECT = 2013;
+let NUMBER_OF_CHANGES_REQUESTED = 500;
 
 //Connect to the database
-Mongoose.connect(projectParseUrl,
-    {useNewUrlParser: true, useUnifiedTopology: true},
-    function (err) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("Connected to the database");
-        }
-    });
+function dbConnection() {
+    return Mongoose.connect(projectDBUrl,
+        {useNewUrlParser: true, useUnifiedTopology: true},
+        function (err) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(getTime() + "Connected to the database");
+            }
+        });
+}
 
-//Get the projects
-let projectBaseUrl = ApiEndPoints.getProjectsUrl(projectParseApiUrl)
+startCrawling(projectApiUrl, 0).then();
 
+async function startCrawling(projectApiUrl, start) {
 
-getProjects(projectBaseUrl);
-startCrawling(138500);
-
-//Get Changes
-//Get merged changed
-//Get abandoned change
-//Get Accounts
-//Go to the next project
-
-// Want to use async/await? Add the `async` keyword to your outer function/method.
-async function startCrawling(start) {
     try {
-        const response = await getAllChanges(start);
-        //console.log(response);
+
+        await dbConnection();
+        //Mongoose.set("useCreateIndex", true);
+
+        let response = await initCrawlingProgression(projectApiUrl);
+        let basicChangesStartingPoint = response.number_of_open_changes_collected;
+        let mergedChangesStartingPoint = response.number_of_merged_changes_collected;
+        let abandonedChangesStartingPoint = response.number_of_abandoned_changes_collected;
+
+        let basicChangesUrl = ApiEndPoints.getOpenChangeUrl(projectApiUrl, basicChangesStartingPoint);
+        //let mergedChangesUrl = ApiEndPoints.getMergedChangeUrl(projectApiUrl, mergedChangesStartingPoint);
+        let mergedChangesUrl = ApiEndPoints.getMergedChangeUrl(projectApiUrl, mergedChangesStartingPoint);
+        let abandonedChangesUrl = ApiEndPoints.getAbandonedChangeUrl(projectApiUrl, abandonedChangesStartingPoint);
+
+        //getAllChanges(basicChangesUrl).then();
+        getAllChanges(mergedChangesUrl).then();
+        //getAllChanges(abandonedChangesUrl).then();
+
     } catch (error) {
         console.error(error);
     }
 }
 
-function getProjects(baseUrl) {
-    return fetchFromApi(baseUrl, true, saveProject);
+function getTime(){
+    let date_ob = new Date();
+    let hours = date_ob.getHours();
+    let minutes = date_ob.getMinutes();
+    let seconds = date_ob.getSeconds();
+    return  hours + ":" + minutes + ":" + seconds + " : ";
 }
 
-function getAllChanges(start) {
-    return getChanges(start)
+function getStartRange(url){
+    let start = Number(url.getStartValue());
+    return start + " - " + (start + NUMBER_OF_CHANGES_REQUESTED);
+}
+
+/**
+ * @param {URL} changesUrl The date
+ */
+function getAllChanges(changesUrl) {
+
+    let start = Number(changesUrl.getStartValue());
+    console.log(getTime() + "ChangesUrl : " + changesUrl);
+    let typeOfChange = changesUrl.searchParams.get('q');
+    console.log(getTime() + typeOfChange + " changes : " + getStartRange(changesUrl));
+
+    return getChanges(changesUrl.href)
         .then(function (params) {
             if (params) {
-                if (params._more_changes) {
-                    if (params._more_changes === true) {
-                        console.log("Changes : " + start + " - " + (start + 500));
-                        getAllChanges(start + 500).then();
+                if (params.created) {
+                    var date = Moment(params.created).toDate();
+                    if (date.getFullYear() > LAST_YEAR_TO_COLLECT) {
+                        if (params._more_changes) {
+                            if (params._more_changes === true) {
+                                //console.log("changesUrl + 500 : " + changesUrl);
+                                changesUrl = changesUrl.startAt(start + NUMBER_OF_CHANGES_REQUESTED);
+
+                                return saveCrawlingProgression(changesUrl, start + NUMBER_OF_CHANGES_REQUESTED).then(() => {
+                                    return getAllChanges(changesUrl).then();
+                                });
+
+                            } else {
+                                console.log(getTime() + "No more changes for " + typeOfChange);
+                            }
+                        } else {
+                            console.log(getTime() + "No more changes for " + typeOfChange);
+                        }
                     } else {
-                        console.log("All Changes");
+                        console.log(getTime() + "Data limit of collected changes reach for " + typeOfChange);
                     }
                 }
             }
         })
-}
-
-/*function getChanges(){
-    return fetchFromApi(ApiEndPoints.getChangesUrl(projectParseApiUrl), saveChange);
-}*/
-
-function getChangesBaseUrl (project, start) {
-    return ApiEndPoints.getMergedChangeUrl(projectParseApiUrl, start)
-}
-
-function getChanges(start) {
-    //console.log("StartFrom : " + start);
-    return fetchFromApi(ApiEndPoints.getMergedChangeUrl(projectParseApiUrl, start), true, function (params) {
-            //Save changes summary
-            saveChangeSummary(params).then();
-
-            //Get and save account owner of changes
-            //fetchAndSaveAccount(params);
-
-            //Get and save change details
-            //fetchAndSaveChangesDetails(params);
+        .catch(function (err) {
+            console.log("Error : " + JSON.stringify(err.toString()));
         });
 }
 
-function fetchAndSaveChangesDetails(params) {
-    if (params.id) {
-        let id = params.id;
-        return fetchFromApi(
-            ApiEndPoints.getChangeDetailsUrl(projectParseApiUrl, id),
-            false,
-            saveChangeDetail
-        ).then();
-    }
+/**
+ * @param {String} changesUrl The date
+ */
+function getChanges(changesUrl) {
+    return fetchFromApi(changesUrl, function (params) {
+        saveFiles(changesUrl, params);
+    });
 }
 
-//check if the user is already in the database
-function fetchAndSaveAccount(params) {
-    if (params.owner) {
-        if (params.owner._account_id) {
-            let accountId = params.owner._account_id;
-            //console.log("_account_id : " + params.owner._account_id);
-            //check first if the user is already in the DB
-
-            return Account.count({_account_id: accountId})
-                .then((err, count) => {
-                    if (!count > 0) {
-                        fetchFromApi(
-                            ApiEndPoints.getAccountsDetail(projectParseApiUrl, accountId),
-                            false,
-                            saveAccount
-                        ).then();
-                    }
-                })
-
-        }
-    }
-}
-
-function fetchFromApi(apiEndpoint, ResponseHasMultipleElement, functionToExecute) {
+/**
+ * @param {String} apiEndpoint The date
+ * @param {function} functionToExecute The date
+ */
+function fetchFromApi(apiEndpoint, functionToExecute) {
+    //console.log("apiEndpoint : " + apiEndpoint);
     return axios.get(apiEndpoint)
         .then(response => {
+            //console.log("fetchFromApi start : " + start);
             var json = JSON.parse(response.data.slice(5));
             var lastJson;
 
-            if (ResponseHasMultipleElement) {
-                for (var key in json) {
-                    if (json.hasOwnProperty(key)) {
-                        functionToExecute(json[key]);
-                        lastJson = json[key];
-                    }
-                }
+            functionToExecute(json);
 
-                //console.log('Last json : ' + JSON.stringify(lastJson))
-
-                if (lastJson._more_changes) {
-                    console.log('More changes : ' + JSON.stringify(lastJson._more_changes))
-                } else {
-                    console.log('More changes : false')
-                }
-
-            } else {
-                functionToExecute(json);
-                lastJson = json;
-
-                if (lastJson.change_id) {
-                    console.log('Last changes inserted')
+            for (var key in json) {
+                if (json.hasOwnProperty(key)) {
+                    lastJson = json[key];
                 }
             }
+            if (lastJson)
+                if (lastJson._more_changes) {
+                    let url = new URL(apiEndpoint);
+                    let typeOfChange = url.searchParams.get('q');
+                    console.log(getTime() + typeOfChange + ' more changes : ' + JSON.stringify(lastJson._more_changes))
+                }
 
             return lastJson;
         })
         .catch(function (err) {
-            //console.log("Api Error : " + err)
             //console.log("Api Error : " + JSON.stringify(err.toJSON()));
-            //catchError(err)
+            console.log("Api Error : " + err);
+            getAllChanges(new URL(apiEndpoint));
         });
 }
 
-//https://github.com/axios/axios
-function catchError(error) {
-    if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log("Api Error data : " + error.response.data);
-        console.log("Api Error status : " + error.response.status);
-        console.log("Api Error headers : " + error.response.headers);
-    } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log("Api Error request : " + error.request);
+function saveFiles(changeUrl, json) {
+    //console.log('saveFiles : ' + changeUrl);
+    changeUrl = new URL(changeUrl)
+    let type = changeUrl.searchParams.get('q');
+    let start = new Number(changeUrl.getStartValue());
+    let name = (type.split(":"))[1] + "-changes" ;
+    let website = (changeUrl.hostname.split("."))[1];
+    let fileName = website + "/" + name + "/" + start + "-" + (start + NUMBER_OF_CHANGES_REQUESTED) + ".json";
+    let data = JSON.stringify(json, null, 2);
+
+    //fs.existsSync(name) || fs.mkdirSync(name);
+    fsExtra.ensureDirSync(website + "/" + name);
+
+    fs.writeFile(fileName, data, (err) => {
+        if (err) throw err;
+        console.log(getTime() + 'Data written to file : ' + getStartRange(changeUrl));
+    });
+
+}
+
+/**
+ * @param {URL} url The date
+ * @param {Number} number The date
+ */
+function saveCrawlingProgression(url, number) {
+    let type = url.searchParams.get('q');
+    name = url.hostname;
+    if (type === ApiEndPoints.openChangeQuery) {
+        return Crawling.updateOne({url: projectApiUrl}, {number_of_open_changes_collected: number})
+            .then((doc) => {
+                console.log(getTime() + "Number save : " + type + " " + JSON.stringify(doc));
+            })
+            .catch(function (err) {
+                console.log("Error : " + JSON.stringify(err));
+            });
+    } else if (type === ApiEndPoints.mergedChangeQuery) {
+        return Crawling.updateOne({url: projectApiUrl}, {number_of_merged_changes_collected: number})
+            .then((doc) => {
+                console.log(getTime() + "Number save : " + type + " " + JSON.stringify(doc));
+            })
+            .catch(function (err) {
+                console.log("Error : " + JSON.stringify(err));
+            });
+
+    } else if (type === ApiEndPoints.abandonedChangeQuery) {
+        return Crawling.updateOne({url: projectApiUrl}, {number_of_abandoned_changes_collected: number})
+            .then((doc) => {
+                console.log(getTime() + "Number save : " + type + " " + JSON.stringify(doc));
+            })
+            .catch(function (err) {
+                console.log("Error : " + JSON.stringify(err));
+            });
     } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log("Api Error message : " + error.message);
+        return Promise.resolve();
     }
-    console.log("Api Error config : " + error.config);
+
 }
 
-//Save project to the database
-function saveProject(projectJson) {
-    return Project.updateOne({id: projectJson.id}, projectJson, {upsert: true})
-        .then(() => {
-            //console.log('Projects saved : ' + JSON.stringify(projectJson.id))
-        });
-}
+function initCrawlingProgression(url) {
+    name = new URL(url).hostname;
 
-//Save accounts to the database
-function saveAccount(accountJson) {
-    return Account.updateOne({_account_id: accountJson._account_id}, accountJson, {upsert: true})
-        .then(() => {
-            //console.log('Account saved : ' + JSON.stringify(accountJson._account_id))
-        });
-}
+    var initData = new Crawling({
+        "project_name": name,
+        "url": url,
+        "number_of_open_changes_collected": 0,
+        "number_of_merged_changes_collected": 0,
+        "number_of_abandoned_changes_collected": 0
+    });
 
-//saves changes to the database
-function saveChangeSummary(changeJson) {
-    return ChangeSummary.updateOne({id: changeJson.id}, changeJson, {upsert: true})
-        .then(() => {
-            //console.log('Change saved : ' + JSON.stringify(changeJson.id))
+    return Crawling.findOne({url: url})
+        .then(result => {
+            if (result) {
+                // user exists...
+                return Promise.resolve(result);
+            } else {
+                return initData.save().then();
+            }
         });
-}
 
-//saves changes to the database
-function saveChangeDetail(changeJson) {
-    return Change.updateOne({id: changeJson.id}, changeJson, {upsert: true})
-        .then(() => {
-            //console.log('Change saved : ' + JSON.stringify(changeJson.id))
-        });
 }

@@ -6,7 +6,7 @@ var ReviewerUpdate = require('./reviewerUpdate').schema;
 var Schema = mongoose.Schema;
 
 var ChangeSchema = new Schema({
-    id: String,
+    id:String,
     project: String,
     branch: String,
     topic: String,
@@ -24,13 +24,9 @@ var ChangeSchema = new Schema({
     has_review_started: Boolean,
     _number: Number,
     owner: {type: Account},
+    submitter: {type: Account},
     hashtags: [],
-    attention_set: [{
-        _id: false,
-        account: {type: Account},
-        last_update: String,
-        reason: String
-    }],
+    attention_set: [{}],
     labels: {
         _id: false,
         type: Label
@@ -54,9 +50,20 @@ var ChangeSchema = new Schema({
         _id: false,
         type: Message
     }],
-    requirements: []
+    requirements: [],
+    current_revision: String,
+    revisions: {},
+    _more_changes: Boolean
 }, {
     versionKey: false
 });
+const Change = mongoose.model('Change', ChangeSchema);
+//Change.createIndexes();
+module.exports = Change;
 
-module.exports = mongoose.model('Change', ChangeSchema);
+/*attention_set: [{
+    _id: false,
+    account: {type: Account},
+    last_update: String,
+    reason: String
+}],*/

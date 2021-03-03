@@ -1,12 +1,12 @@
 //Library
 const Axios = require('axios');
 const Mongoose = require('mongoose');
-const Project = require('./models/project');
-const Account = require('./models/account');
-const Change = require('./models/changeSummary');
-const ChangeDetail = require('./models/change');
-const Database = require('./config/databaseConfig');
-const ApiEndPoints = require('./config/apiEndpoints');
+const Project = require('../models/project');
+const Account = require('../models/account');
+const Change = require('../models/changeSummary');
+const ChangeDetail = require('../models/change');
+const Database = require('../config/databaseConfig');
+const ApiEndPoints = require('../config/apiEndpoints');
 
 var projectParseUrl = Database.libreOfficeDBUrl;
 var projectParseApiUrl = ApiEndPoints.libreOfficeApiUrl;
@@ -117,3 +117,58 @@ Axios.get(ApiEndPoints.getChangesUrl(projectParseApiUrl))
     .catch(function (err) {
         console.log("error" + err);
     });
+
+
+///
+function fetchAndSaveChangesDetails(params) {
+    if (params.id) {
+        let id = params.id;
+        return fetchFromApi(
+            ApiEndPoints.getChangeDetailsUrl(projectApiUrl, id),
+            false,
+            saveChangeDetail
+        ).then();
+    }
+}
+
+//https://github.com/axios/axios
+function catchError(error) {
+    if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("Api Error data : " + error.response.data);
+        console.log("Api Error status : " + error.response.status);
+        console.log("Api Error headers : " + error.response.headers);
+    } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log("Api Error request : " + error.request);
+    } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Api Error message : " + error.message);
+    }
+    console.log("Api Error config : " + error.config);
+}
+
+//check if the user is already in the database
+function fetchAndSaveAccount(params) {
+    if (params.owner) {
+        if (params.owner._account_id) {
+            let accountId = params.owner._account_id;
+            //console.log("_account_id : " + params.owner._account_id);
+            //check first if the user is already in the DB
+
+            return Account.count({_account_id: accountId})
+                .then((err, count) => {
+                    if (!count > 0) {
+                        fetchFromApi(ApiEndPoints.getAccountsDetail(projectApiUrl, accountId),
+                            0,
+                            false,
+                            saveAccount
+                        ).then();
+                    }
+                })
+        }
+    }
+}
