@@ -19,7 +19,13 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df22d5de-0498-4008-9a04-2f268069076d" name="Default Changelist" comment="" />
+    <list default="true" id="df22d5de-0498-4008-9a04-2f268069076d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README" beforeDir="false" afterPath="$PROJECT_DIR$/README" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/computeMetrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/computeMetrics.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/metrics.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -54,6 +60,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/res" />
       <recent name="$PROJECT_DIR$/trash" />
       <recent name="$PROJECT_DIR$/models" />
       <recent name="$PROJECT_DIR$" />
@@ -111,7 +118,10 @@
       <workItem from="1614474033343" duration="1818000" />
       <workItem from="1614529129852" duration="31229000" />
       <workItem from="1614714197433" duration="2137000" />
-      <workItem from="1614804132781" duration="985000" />
+      <workItem from="1614804132781" duration="5172000" />
+      <workItem from="1614825594766" duration="2303000" />
+      <workItem from="1614875356099" duration="4047000" />
+      <workItem from="1614906299170" duration="4933000" />
     </task>
     <servers />
   </component>
@@ -131,10 +141,11 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="356" y="209" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1607573952414">
-      <screen x="0" y="0" width="1280" height="800" />
+    <state x="356" y="226" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1614810497831">
+      <screen x="0" y="23" width="1280" height="777" />
     </state>
     <state x="356" y="209" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.800@0.0.1280.800" timestamp="1607573952414" />
+    <state x="356" y="226" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1280.777/0.-1057.1920.1057@0.23.1280.777" timestamp="1614810497831" />
     <state x="73" y="42" width="907" height="722" key="SettingsEditor" timestamp="1608219362357">
       <screen x="0" y="0" width="1280" height="800" />
     </state>

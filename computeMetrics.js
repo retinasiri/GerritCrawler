@@ -4,6 +4,7 @@ const MathJs = require('mathjs');
 const dbUtils = require('./config/dbUtils');
 const Database = require('./config/databaseConfig');
 const Change = require('./models/change');
+const Metrics = require('./models/metrics');
 const Utils = require('./config/utils');
 
 let projectDBUrl = Database.libreOfficeDBUrl;
@@ -28,8 +29,6 @@ function mainFunction() {
     return getChanges()
         .then(() => {
             return Utils.saveJsonToFile("metrics", metricsJson);
-            //let csv = Utils.jsonToCsv(metricsJson);
-            //Utils.saveFile("csv_metrics", csv, csv)
         })
         .catch(err => {
             console.log(err)
@@ -66,131 +65,97 @@ function getChanges() {
         });
 }
 
-async function collectDocs(docs){
+async function collectDocs(docs) {
     if (!docs)
         return;
     let promiseArray = []
     for (let key in docs) {
-        let promise = await collectInfo(docs[key]);
+        let promise = await collectMetrics(docs[key]).then((json) => {
+            return saveMetrics(json);
+        });
         promiseArray.push(promise);
     }
     return Promise.all(promiseArray);
 }
 
-async function collectInfo(json) {
+function saveMetrics(json) {
+    return Metrics.updateOne({id: json.id}, json, {upsert: true})
+        .then(() => {
+            console.log('Metrics saved : ' + json.id)
+        });
+}
+
+async function collectMetrics(json) {
+
     console.log(i + "/" + NUM_OF_CHANGES_LIMIT);
     i++;
 
-    let changeId = json.change_id;
-    if (!metricsJson[changeId])
-        metricsJson[changeId] = {};
+    let metric = {};
 
-    add_long_id(json, metricsJson[changeId]);
-    add_id(json, metricsJson[changeId]);
-    add_id_num(json, metricsJson[changeId]);
-    add_date_created(json, metricsJson[changeId]);
-    add_date_created_time(json, metricsJson[changeId]);
-    //add_date_submitted(json, metricsJson[changeId]);
-    diff_created_updated(json, metricsJson[changeId]);
-    add_lines_added(json, metricsJson[changeId]);
-    add_lines_deleted(json, metricsJson[changeId]);
-    add_subject_length(json, metricsJson[changeId]);
-    add_subject_word_count(json, metricsJson[changeId]);
-    add_change_file_count(json, metricsJson[changeId]);
-    add_num_files_type(json, metricsJson[changeId]);
-    add_num_directory(json, metricsJson[changeId]);
-    add_num_subsystem(json, metricsJson[changeId]);
-    add_is_a_bot(json, metricsJson[changeId]);
-    await add_review_number(json, metricsJson[changeId]);
+    metric["n"] = i;
+    metric["number"] = json._number;
+    metric["id"] = json.id;
+    metric["change_id"] = json.change_id;
+    metric["date_created"] = json.created;
+    metric["date_updated"] = json.updated;
+    metric["date_submitted"] = get_date_submitted(json);
+    metric["date_created_time"] = get_date_created_time(json);
+    metric["date_updated_time"] = get_date_updated_time(json);
+    metric["diff_created_updated"] = diffCreatedUpdatedTime(json);
+    metric["lines_added_num"] = json.insertions;
+    metric["lines_deleted_num"] = json.deletions;
+    metric["subject_length"] = countSubjectLength(json);
+    metric["subject_word_count"] = numberOfWordInSubject(json);
 
-    add_date_updated(json, metricsJson[changeId]);
-    add_date_updated_time(json, metricsJson[changeId]);
+    let fileInfo = get_files_info(json);
 
+    metric["num_files"] = fileInfo.num_files;
+    metric["num_files_type"] = fileInfo.num_files_type;
+    metric["num_directory"] = fileInfo.num_directory;
+    metric["num_file_added"] = fileInfo.num_file_added;
+    metric["num_file_deleted"] = fileInfo.num_file_deleted;
+    metric["num_binary_file"] = fileInfo.num_binary_file;
 
+    metric["num_subsystem"] = num_subsystem(json);
+    metric["is_a_bot"] = is_a_bot(json);
+    /*metric["modify_entropy"] = get_modify_entropy(json);
+    metric["num_language"] = get_num_language(json);
+    metric["num_lines_added"] = get_num_segs_added(json);
+    metric["num_lines_deleted"] = get_num_segs_deleted(json);
+    metric["changes_files_modified"] = get_changes_files_modified(json);
+
+    metric["file_developer_num"] = get_file_developer_num(json);
+    metric["change_num"] = get_change_num(json);
+    metric["recent_change_num"] = get_recent_change_num(json);
+    metric["subsystem_change_num"] = get_subsystem_change_num(json);
+    metric["review_num"] = get_review_num(json);
+    metric["merged_ratio"] = get_merged_ratio(json);
+    metric["recent_merged_ratio"] = get_recent_merged_ratio(json);
+    metric["subsystem_merged_ratio"] = get_subsystem_merged_ratio(json);
+
+    metric["msg_length"] = get_msg_length(json);
+    metric["has_bug"] = get_has_feature(json);
+    metric["has_feature"] = get_has_feature(json);
+    metric["has_improve"] = get_has_improve(json);
+    metric["has_document"] = get_has_document(json);
+    metric["has_refactor"] = get_has_refactor(json);*/
+
+    return metric;
 }
 
-function add_id(inputJson, outputJson) {
-    outputJson["id"] = inputJson.change_id;
+function get_date_submitted(json) {
+    if (json.submitted)
+        return json.submitted;
+    else
+        return 0;
 }
 
-function add_id_num(inputJson, outputJson) {
-    outputJson["id_num"] = inputJson._number;
+function get_date_created_time(json) {
+    return Moment(json.created).toDate().getTime();
 }
 
-function add_long_id(inputJson, outputJson) {
-    outputJson["long_id"] = inputJson.id;
-}
-
-function add_date_created(inputJson, outputJson) {
-    outputJson["created"] = inputJson.created;
-}
-
-function add_date_updated(inputJson, outputJson) {
-    outputJson["updated"] = inputJson.updated;
-}
-
-function add_date_submitted(inputJson, outputJson) {
-    outputJson["submitted"] = inputJson.submitted;
-}
-
-function add_date_created_time(inputJson, outputJson) {
-    outputJson["time_created"] = Moment(inputJson.created).toDate().getTime();
-}
-
-function add_date_updated_time(inputJson, outputJson) {
-    outputJson["time_updated"] = Moment(inputJson.updated).toDate().getTime();
-}
-
-function diff_created_updated(inputJson, outputJson) {
-    outputJson["diff_created_updated"] = diffCreatedUpdatedTime(inputJson);
-}
-
-function add_lines_added(inputJson, outputJson) {
-    outputJson["lines_added_num"] = inputJson.insertions;
-}
-
-function add_lines_deleted(inputJson, outputJson) {
-    outputJson["lines_deleted_num"] = inputJson.deletions;
-}
-
-function add_subject_length(inputJson, outputJson) {
-    outputJson["subject_length"] = countSubjectLength(inputJson);
-}
-
-function add_subject_word_count(inputJson, outputJson) {
-    outputJson["subject_word_count"] = numberOfWordInSubject(inputJson);
-}
-
-function add_change_file_count(inputJson, outputJson) {
-    outputJson["num_change_file"] = num_files(inputJson);
-}
-
-function add_num_files_type(inputJson, outputJson) {
-    outputJson["num_files_type"] = num_files_type(inputJson);
-}
-
-function add_num_directory(inputJson, outputJson) {
-    outputJson["num_directory"] = num_directory(inputJson);
-}
-
-function add_num_subsystem(inputJson, outputJson) {
-    outputJson["num_subsystem"] = num_subsystem(inputJson);
-}
-
-function add_is_a_bot(inputJson, outputJson) {
-    outputJson["is_a_bot"] = is_a_bot(inputJson);
-}
-
-async function add_review_number(inputJson, outputJson) {
-    let reviewJson = await review_num(inputJson);
-    outputJson["change_num"] = reviewJson.change_num;
-    outputJson["recent_change_num"] = reviewJson.recent_change_num;
-    outputJson["review_num"] = reviewJson.review_num;
-    outputJson["recent_review_num"] = reviewJson.recent_review_num;
-    outputJson["merged_review_num"] = reviewJson.merged_review_num;
-    outputJson["recent_merged_review_num"] = reviewJson.recent_merged_review_num;
-    outputJson["merged_ratio"] = reviewJson.merged_ratio;
-    outputJson["recent_merged_ratio"] = reviewJson.recent_merged_ratio;
+function get_date_updated_time(json) {
+    return Moment(json.updated).toDate().getTime()
 }
 
 //function
@@ -248,48 +213,69 @@ function get_files(json) {
             }
         }
     }
-
     return filesJson;
 }
 
-function num_files(json) {
-    let filesJson = get_files(json);
-    return Object.keys(filesJson).length;
-
-    /*for (let key in revisions) {
+function get_files_names_list(json) {
+    let revisions = json.revisions;
+    let filesArray = [];
+    for (let key in revisions) {
         let files = revisions[key].files;
-        let numberOfFile = Object.keys(files).length;
-        numberOfFilesArray.push(numberOfFile)
+        filesArray.concat(files);
     }
-    return MathJs.max(numberOfFilesArray);*/
+    return filesArray;
 }
 
+function get_num_files(json) {
+    let filesArray = get_files_names_list(json);
+    return Object.keys(filesArray).length;
+}
 
-function num_files_type(json) {
+function get_files_info(json) {
+
     let revisions = json.revisions
-    //let numberOfTypesFilesArray = [];
+    let fileInfo = {};
+    let filesJson = {};
     let filesExtJson = {};
+    let directoryJson = {};
+    let addFiles = [];
+    let removeFiles = [];
+
+    fileInfo.num_files = 0;
+    fileInfo.num_files_type = 0;
+    fileInfo.num_file_added = 0;
+    fileInfo.num_file_deleted = 0;
+    fileInfo.num_binary_file = 0;
+    fileInfo.num_segs_added = 0;
+
     for (let key in revisions) {
         let files = revisions[key].files;
         for (let index in files) {
+            let status = files[index].status;
+            let filename = files[index];
+            if (status) {
+                if (status === "A") {
+                    if(addFiles.indexOf(index) === -1){
+                        addFiles.push(index);
+                    }
+                } else if (status === "D") {
+                    if(removeFiles.indexOf(index) === -1){
+                        removeFiles.push(index);
+                    }
+                }
+            }
+            if (files[index].binary)
+                if (files[index].binary === true)
+                    fileInfo.num_binary_file++;
+
             let ext = index.substr(index.lastIndexOf('.') + 1);
             if (filesExtJson[ext]) {
                 filesExtJson[ext] = filesExtJson[ext] + 1;
             } else {
                 filesExtJson[ext] = 1;
             }
-        }
-    }
 
-    return Object.keys(filesExtJson).length;
-}
-
-function num_directory(json) {
-    let revisions = json.revisions;
-    let directoryJson = {};
-    for (let key in revisions) {
-        let files = revisions[key].files;
-        for (let index in files) {
+            //count dir
             let dir = index.substr(0, index.lastIndexOf('/') + 1);
             //console.log("dir : " + dir);
             if (directoryJson[dir]) {
@@ -297,11 +283,25 @@ function num_directory(json) {
             } else {
                 directoryJson[dir] = 1;
             }
+
+            //count files
+            if (filesJson[index]) {
+                filesJson[index] = filesJson[index] + 1;
+            } else {
+                filesJson[index] = 1;
+            }
         }
     }
-    //console.log("directoryJson" + JSON.stringify(directoryJson));
-    return Object.keys(directoryJson).length;
+
+    fileInfo.num_files = Object.keys(filesJson).length;
+    fileInfo.num_files_type = Object.keys(filesExtJson).length;
+    fileInfo.num_file_added = Object.keys(addFiles).length;
+    fileInfo.num_file_deleted = Object.keys(removeFiles).length;
+    fileInfo.num_directory = Object.keys(directoryJson).length;
+
+    return fileInfo;
 }
+
 
 function num_subsystem(json) {
     let subsystem = [];
@@ -387,7 +387,7 @@ async function review_num(json) {
     else
         recent_merged_ratio = 0;
 
-    let returnJson =  {
+    let returnJson = {
         change_num: change_num,
         recent_change_num: recent_change_num,
         review_num: review_num,
@@ -417,8 +417,4 @@ function getReviewersId(json) {
         reviewerArray.push(reviewers[id]._account_id)
     }
     return reviewerArray;
-}
-
-function changes_files_modified(json) {
-    let filesJson = get_files(json);
 }
