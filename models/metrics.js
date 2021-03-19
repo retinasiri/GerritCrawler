@@ -46,6 +46,10 @@ var MetricsSchema = new Schema({
     recent_merged_ratio: Number,
     subsystem_merged_ratio:Number,
 
+    moy_time_owner_pass_on_change_files:Number,
+    moy_number_of_time_reviewer_review_the_files:Number,
+    moy_time_reviewer_pass_on_this_files:Number,
+
     msg_length: Number,
     has_bug: Number,
     has_feature: Number,

@@ -1,6 +1,7 @@
 const Mongoose = require('mongoose');
 const Moment = require('moment');
 const MathJs = require('mathjs');
+const jsnx = require('jsnetworkx');
 const dbUtils = require('./config/dbUtils');
 const Database = require('./config/databaseConfig');
 const Change = require('./models/change');
@@ -11,11 +12,13 @@ const Extension = require('./res/extension.json');
 let projectDBUrl = Database.libreOfficeDBUrl;
 
 let NUM_DAYS_FOR_RECENT = 120;
-let NUM_OF_CHANGES_LIMIT = 600;
+let NUM_OF_CHANGES_LIMIT = 50;
 
 let metricsJson = {};
 
 let i = 0;
+
+//todo reviewer experience on file
 
 mainFunction()
     .then(() => {
@@ -137,6 +140,10 @@ async function collectMetrics(json) {
     metric["file_developer_num"] = changesFileInfo.num_dev;
     metric["file_developer_experience"] = changesFileInfo.dev_exp;
 
+    metric["moy_time_owner_pass_on_change_files"] = changesFileInfo.moy_time_owner_pass_on_change_files;
+    metric["moy_number_of_time_reviewer_review_the_files"] = changesFileInfo.moy_number_of_time_reviewer_review_the_files;
+    metric["moy_time_reviewer_pass_on_this_files"] = changesFileInfo.moy_time_reviewer_pass_on_this_files;
+
     let ownerInfo = get_owner_property(json);
 
     metric["change_num"] = ownerInfo.owner_num_changed;
@@ -148,11 +155,22 @@ async function collectMetrics(json) {
     metric["subsystem_merged_ratio"] = ownerInfo.owner_sub_sys_merged_ratio;
     metric["review_num"] = ownerInfo.owner_num_review;
 
+
+    let socialGraph = getSocialGraph(json);
+    metric["betweenness_centrality"] = socialGraph.betweenness_centrality;
+    //metric["eigenvector_centrality"] = socialGraph.eigenvector_centrality;
+    //metric["clustering_coefficient"] = socialGraph.betweennessCentrality;
+    //metric["k_coreness"] = socialGraph.betweennessCentrality;
+
+
     /*
     metric["recent_change_num"] = get_recent_change_num(json);
     */
 
     /*
+    moy_time_owner_pass_on_change_files: moy_time_owner_pass_on_change_files,
+        moy_number_of_time_reviewer_review_the_files: moy_number_of_time_reviewer_review_the_files,
+        moy_time_reviewer_pass_on_this_files: moy_time_reviewer_pass_on_this_files
 
     num_segs_added: Number,
     num_segs_deleted: Number,
@@ -242,134 +260,108 @@ function get_changes_files_modified(json) {
     let number_per_review = [];
     let number_of_dev = [];
     let dev_experience = [];
+    let dev_experience_time = [];
+    let rev_experience = [];
+    let rev_experience_time = [];
+    let time = [];
+    let number = [];
+
     for (let key in revisions) {
         //Get only the first revision
         let revision_number = revisions[key]._number;
-        if(revision_number !== 1)
-            break;
+        if (revision_number !== 1)
+            continue;
 
+        let reviewersIds = getReviewersId(json);
         console.log(json.id);
-        //console.log(revision_number);
 
-        let time = [];
-        let number = [];
         let files = revisions[key].files;
         for (let index in files) {
             if (!files_change_json[index]) {
-                files_change_json[index] = {number_of_modif: 0, time_of_modif: [], dev: {}, reviewer:{}};
+                files_change_json[index] = {number_of_modif: 0, time_of_modif: [], dev: {}, reviewer: {}};
             }
             files_change_json[index]["number_of_modif"] = files_change_json[index]["number_of_modif"] + 1;
             let diff_time = diffCreatedUpdatedTime(json)
             files_change_json[index]["time_of_modif"].push(diff_time);
-            //console.log("files_change_json[index][\"time_of_modif\"]" + files_change_json[index]["time_of_modif"]);
 
-            /*if (!(ownerId in files_change_json[index]["dev"])) {
-                files_change_json[index]["dev"].push(ownerId);
-            }
-            files_change_json[index]["dev"][ownerId]["time_of_modif"].push(time);
-            */
-
-            if(ownerId in files_change_json[index]["dev"]){
+            if (ownerId in files_change_json[index]["dev"]) {
                 files_change_json[index]["dev"][ownerId]["number_of_modif"] = files_change_json[index]["dev"][ownerId]["number_of_modif"] + 1;
+                files_change_json[index]["dev"][ownerId]["time_of_modif"].push(diff_time);
             } else {
                 files_change_json[index]["dev"][ownerId] = {};
                 files_change_json[index]["dev"][ownerId]["number_of_modif"] = 1;
+                files_change_json[index]["dev"][ownerId]["time_of_modif"] = [diff_time];
             }
-            //console.log("files_change_json : " + JSON.stringify(files_change_json[index]["dev"][ownerId]));
+            dev_experience_time.push(files_change_json[index]["dev"][ownerId]["time_of_modif"])
+
             let count_dev = Object.keys(files_change_json[index]["dev"]).length;
             number_of_dev.push(count_dev);
-            //console.log("count_dev : " + count_dev);
 
             let number_of_modif = files_change_json[index]["dev"][ownerId]["number_of_modif"];
             dev_experience.push(number_of_modif);
 
             number.push(files_change_json[index]["number_of_modif"]);
             time.push(files_change_json[index]["time_of_modif"]);
-            //console.log("time " + time);
+
+            //reviewer experience
+            for (let k in reviewersIds) {
+                let reviewerId = reviewersIds[k];
+                if (reviewerId in files_change_json[index]["reviewer"]) {
+                    files_change_json[index]["reviewer"][reviewerId]["number_of_modif"] = files_change_json[index]["reviewer"][reviewerId]["number_of_modif"] + 1;
+                    files_change_json[index]["reviewer"][reviewerId]["time_of_modif"].push(diff_time);
+                } else {
+                    files_change_json[index]["reviewer"][reviewerId] = {};
+                    files_change_json[index]["reviewer"][reviewerId]["number_of_modif"] = 1;
+                    files_change_json[index]["reviewer"][reviewerId]["time_of_modif"] = [diff_time];
+                }
+            }
+
+            for (let k in reviewersIds) {
+                let reviewerId = reviewersIds[k];
+                rev_experience.push(files_change_json[index]["reviewer"][reviewerId]["number_of_modif"])
+                rev_experience_time.push(files_change_json[index]["reviewer"][reviewerId]["time_of_modif"])
+            }
+            //console.log("rev_experience" + average(rev_experience));
+
         }
-
-        /*
-        let time = [];
-        let number = [];
-        for (let index in files) {
-            number.push(files_change_json[index]["number_of_modif"]);
-            time.push(files_change_json[index]["time_of_modif"]);
-        }
-        */
-
-        let moy_time;
-        if (time.length > 0)
-            moy_time = MathJs.mean(time);
-        else
-            moy_time = 0;
-        time_per_review.push(moy_time);
-        //console.log("time_per_review " + time_per_review);
-
-        let moy_number;
-        if (number.length > 0)
-            moy_number = MathJs.mean(number);
-        else
-            moy_number = 0;
-        number_per_review.push(moy_number);
-        console.log("1 time_per_review " + MathJs.mean(time_per_review));
-        console.log("1 number_per_review " + MathJs.mean(number_per_review));
+        time_per_review.push(MathJs.mean(time));
+        number_per_review.push(MathJs.mean(number));
     }
-    //console.log("2 time_per_review " + MathJs.mean(time_per_review.reverse()));
-    //console.log("2 number_per_review " + MathJs.mean(number_per_review.reverse()));
-    //console.log("2 time_per_review " + MathJs.mean(time_per_review));
-    //console.log("2 number_per_review " + MathJs.mean(number_per_review));
-    //console.log("number_per_review.length : " + number_per_review.length);
-    //console.log( Array.isArray(number_per_review));
-    //let KKKK = MathJs.mean(number_per_review);
-    //console.log("2 KKKK " + KKKK);
-    //console.log("2 2 " + [1, 2]);
 
-    let moy_number_per_review = average(time_per_review);
-    let moy_time_per_review = average(number_per_review);
-    let num_dev = average(number_of_dev);
-    let dev_exp = average(dev_experience);
+    let num_dev = MathJs.mean(number_of_dev);
+    let dev_exp = MathJs.mean(dev_experience);
+    let moy_number_per_review = MathJs.mean(number_per_review);
+    let moy_time_per_review = MathJs.mean(time_per_review);
+    let moy_time_owner_pass_on_change_files = MathJs.mean(dev_experience_time);
+    let moy_number_of_time_reviewer_review_the_files = average(rev_experience);
+    let moy_time_reviewer_pass_on_this_files = average(rev_experience_time);
 
-    /*if (number_of_dev.length > 0)
-        num_dev = MathJs.mean(number_of_dev);
-    else
-        num_dev = 0;
-
-    if (dev_experience.length > 0)
-        dev_exp = MathJs.mean(dev_experience);
-    else
-        dev_exp = 0;*/
-
-    //console.log("time_per_review " + time_per_review);
-
-
-    /*let moy_time_per_review;
-    if (time_per_review.length > 0)
-    else
-        moy_time_per_review = 0;
-
-   // console.log("moy_time_per_review " + moy_time_per_review);
-
-    let moy_number_per_review;
-    if (number_per_review.length > 0)
-    else
-        moy_number_per_review = 0;
-    //console.log("moy_number_per_review " + moy_number_per_review);*/
+    //console.log("MathJs.mean(number_per_review) " + MathJs.mean(number_per_review));
+    //console.log("MathJs.mean(time_per_review) " + MathJs.mean(time_per_review));
 
     return {
         num_dev: num_dev,
         dev_exp: dev_exp,
         moy_time_per_review: moy_time_per_review,
-        moy_number_per_review: moy_number_per_review
+        moy_number_per_review: moy_number_per_review,
+        moy_time_owner_pass_on_change_files: moy_time_owner_pass_on_change_files,
+        moy_number_of_time_reviewer_review_the_files: moy_number_of_time_reviewer_review_the_files,
+        moy_time_reviewer_pass_on_this_files: moy_time_reviewer_pass_on_this_files
     }
 }
 
 function average(array) {
-    let i = 0, sum = 0, len = array.length;
+    /*let i = 0, sum = 0, len = array.length;
     while (i < len) {
         sum = sum + array[i++];
     }
-    return sum / len;
+    return sum / len;*/
+    if (array.length > 0)
+        return MathJs.mean(array)
+    else
+        return 0;
 }
+
 function get_date_submitted(json) {
     if (json.submitted)
         return json.submitted;
@@ -487,8 +479,8 @@ function get_files_info(json) {
 
         //Get only the first revision
         let revision_number = revisions[key]._number;
-        if(revision_number !== 1)
-            break;
+        if (revision_number !== 1)
+            continue;
 
         let files = revisions[key].files;
         let num_lines_added_for_all_files = 0;
@@ -727,13 +719,89 @@ function getReviewersId(json) {
     return reviewerArray;
 }
 
-let user = {};
-
-function getReviewerExperienceOnFile(json){
-
+function getParticipantId(json) {
+    let ownerId = json.owner._account_id;
+    let reviewersId = getReviewersId(json);
+    let user = []
+    //add user
+    user.push(ownerId);
+    for (let i in reviewersId) {
+        user.push(reviewersId[i]);
+    }
+    return user;
 }
 
+let G = new jsnx.DiGraph();
 
-function getOwnerExperienceOnFile(json){
 
+function getSocialGraph(json) {
+
+    let usersId = getParticipantId(json);
+
+    //add node in graph
+    for (let id in usersId) {
+        G.addNode(usersId[id]);
+    }
+
+    for (let i in usersId) {
+        let user1 = usersId[i];
+        for (let j in usersId) {
+            let user2 = usersId[j];
+            if (user1 !== user2) {
+                let w = 1;
+                if (G.edge.get(user1).get(user2)){
+                    w = G.edge.get(user1).get(user2).weight + 1;
+                    //console.log(w);
+                }
+
+                G.addEdge(user1, user2, {weight: w});
+                //console.log(G.edge.get(user1).get(user2).weight);
+                console.log("jsnx.getEdgeAttributes(G)" + JSON.stringify(jsnx.getEdgeAttributes(G, 'weight')));
+            }
+        }
+    }
+    //G.betweennessCentrality(ownerId);
+    //console.log(JSON.stringify(jsnx.betweennessCentrality(G)));
+    //console.log(jsnx.betweennessCentrality(G));
+    //console.log(G.nodes());
+    //console.log(G.edges());
+    //let stringJSON = JSON.stringify(betweennessCentrality); // check your object structure for serializability!
+    //let objsJSON = JSON.parse(stringJSON);
+    //console.log(numberB);
+    let betweennessCentrality = jsnx.betweennessCentrality(G);
+    let numberB = betweennessCentrality._numberValues;
+
+    /*let eigenvector_centrality =jsnx.eigenvectorCentrality(G);
+    console.log(eigenvector_centrality);
+    let numberE = betweennessCentrality._numberValues;*/
+
+
+    let bcArray = [];
+    //let ecArray = [];
+    for (let j in usersId) {
+        let user = usersId[j];
+        let bc = numberB[user];
+        //let ec = numberE[userId]
+        //console.log(userId);
+        //console.log(bc);
+        if (bc)
+            bcArray.push(bc);
+        else
+            bcArray.push(0);
+
+        /*if (ec)
+            ecArray.push(bc);
+        else
+            ecArray.push(0);*/
+
+    }
+
+    let moy_bc = MathJs.mean(bcArray);
+    //let moy_ec = MathJs.mean(ecArray);
+    //console.log(moy_bc);
+
+    return {
+        betweenness_centrality: moy_bc
+        //eigenvector_centrality: moy_ec
+    }
 }
