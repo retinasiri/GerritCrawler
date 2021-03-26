@@ -50,12 +50,22 @@ var MetricsSchema = new Schema({
     moy_number_of_time_reviewer_review_the_files:Number,
     moy_time_reviewer_pass_on_this_files:Number,
 
+    num_human_reviewer:Number,
+    num_revisions:Number,
+
     msg_length: Number,
+    msg_word_count: Number,
     has_bug: Number,
     has_feature: Number,
     has_improve: Number,
     has_document: Number,
     has_refactor: Number,
+
+    is_corrective: Number,
+    is_merge: Number,
+    is_non_fonctional: Number,
+    is_perfective: Number,
+    is_refactoring: Number,
 
     degree_centrality: Number,
     closeness_centrality: Number,

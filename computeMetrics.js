@@ -8,11 +8,12 @@ const Change = require('./models/change');
 const Metrics = require('./models/metrics');
 const Utils = require('./config/utils');
 const Extension = require('./res/extension.json');
+const Keywords = require('./res/keywords.json');
 
 let projectDBUrl = Database.libreOfficeDBUrl;
 
 let NUM_DAYS_FOR_RECENT = 120;
-let NUM_OF_CHANGES_LIMIT = 50;
+let NUM_OF_CHANGES_LIMIT = 3;
 
 let metricsJson = {};
 
@@ -82,9 +83,10 @@ async function collectDocs(docs) {
         return;
     let promiseArray = []
     for (let key in docs) {
-        let promise = await collectMetrics(docs[key]).then((json) => {
-            return saveMetrics(json);
-        });
+        let promise = await collectMetrics(docs[key])
+            .then((json) => {
+                return saveMetrics(json);
+            })
         promiseArray.push(promise);
     }
     return Promise.all(promiseArray);
@@ -93,8 +95,12 @@ async function collectDocs(docs) {
 function saveMetrics(json) {
     return Metrics.updateOne({id: json.id}, json, {upsert: true})
         .then(() => {
+            metricsJson[json.id] = json;
+            return Utils.add_line_to_file(json)
+        })
+        .then(() => {
             console.log('Metrics saved : ' + json.id)
-        });
+        })
 }
 
 async function collectMetrics(json) {
@@ -139,55 +145,51 @@ async function collectMetrics(json) {
     metric["moy_changes_files_modified_time"] = changesFileInfo.moy_time_per_review;
     metric["file_developer_num"] = changesFileInfo.num_dev;
     metric["file_developer_experience"] = changesFileInfo.dev_exp;
-
     metric["moy_time_owner_pass_on_change_files"] = changesFileInfo.moy_time_owner_pass_on_change_files;
     metric["moy_number_of_time_reviewer_review_the_files"] = changesFileInfo.moy_number_of_time_reviewer_review_the_files;
     metric["moy_time_reviewer_pass_on_this_files"] = changesFileInfo.moy_time_reviewer_pass_on_this_files;
+    metric["num_human_reviewer"] = get_num_human_reviewer(json);
+    metric["num_revisions"] = get_num_revisions(json);
 
     let ownerInfo = get_owner_property(json);
-
     metric["change_num"] = ownerInfo.owner_num_changed;
     metric["subsystem_change_num"] = ownerInfo.owner_project
     metric["num_merged"] = ownerInfo.owner_num_merged;
     metric["merged_ratio"] = ownerInfo.owner_num_merged_ratio;
-    //metric["recent_merged_ratio"] = ownerInfo.owner_num_merged_ratio;
     metric["subsystem_merged"] = ownerInfo.owner_sub_sys_merged;
     metric["subsystem_merged_ratio"] = ownerInfo.owner_sub_sys_merged_ratio;
     metric["review_num"] = ownerInfo.owner_num_review;
 
-
     let socialGraph = getSocialGraph(json);
+    metric["degree_centrality"] = socialGraph.degree_centrality;
+    metric["closeness_centrality"] = socialGraph.closeness_centrality;
     metric["betweenness_centrality"] = socialGraph.betweenness_centrality;
-    //metric["eigenvector_centrality"] = socialGraph.eigenvector_centrality;
-    //metric["clustering_coefficient"] = socialGraph.betweennessCentrality;
-    //metric["k_coreness"] = socialGraph.betweennessCentrality;
+    metric["eigenvector_centrality"] = socialGraph.eigenvector_centrality;
+    metric["clustering_coefficient"] = socialGraph.clustering_coefficient;
+    metric["k_coreness"] = socialGraph.coreness;
 
+    metric["msg_length"] = get_msg_length(json);
+    metric["msg_word_count"] = get_msg_word_count(json);
+    /*metric["has_bug"] = msg_has_bug(json);
+    metric["has_feature"] = msg_has_feature(json);
+    metric["has_improve"] = msg_has_improve(json);
+    metric["has_document"] = msg_has_document(json);
+    metric["has_refactor"] = msg_has_refactor(json);*/
+
+    //New
+    metric["is_corrective"] = msg_is_corrective(json);
+    metric["is_merge"] = msg_is_merge(json);
+    metric["is_non_fonctional"] = msg_is_non_fonctional(json);
+    metric["is_perfective"] = msg_is_perfective(json);
+    metric["is_preventive"] = msg_is_preventive(json);
+    metric["is_refactoring"] = msg_is_refactoring(json);
 
     /*
-    metric["recent_change_num"] = get_recent_change_num(json);
-    */
-
-    /*
-    moy_time_owner_pass_on_change_files: moy_time_owner_pass_on_change_files,
-        moy_number_of_time_reviewer_review_the_files: moy_number_of_time_reviewer_review_the_files,
-        moy_time_reviewer_pass_on_this_files: moy_time_reviewer_pass_on_this_files
-
     num_segs_added: Number,
     num_segs_deleted: Number,
     num_segs_updated: Number,
-
-    metric["change_num"] = get_change_num(json);
     metric["recent_change_num"] = get_recent_change_num(json);
-    metric["subsystem_change_num"] = get_subsystem_change_num(json);
     metric["recent_merged_ratio"] = get_recent_merged_ratio(json);
-    metric["subsystem_merged_ratio"] = get_subsystem_merged_ratio(json);
-
-    metric["msg_length"] = get_msg_length(json);
-    metric["has_bug"] = get_has_feature(json);
-    metric["has_feature"] = get_has_feature(json);
-    metric["has_improve"] = get_has_improve(json);
-    metric["has_document"] = get_has_document(json);
-    metric["has_refactor"] = get_has_refactor(json);
     */
 
     return metric;
@@ -731,11 +733,11 @@ function getParticipantId(json) {
     return user;
 }
 
-let G = new jsnx.DiGraph();
-
+let G = new jsnx.Graph();
 
 function getSocialGraph(json) {
 
+    let ownerId = json.owner._account_id;
     let usersId = getParticipantId(json);
 
     //add node in graph
@@ -749,59 +751,250 @@ function getSocialGraph(json) {
             let user2 = usersId[j];
             if (user1 !== user2) {
                 let w = 1;
-                if (G.edge.get(user1).get(user2)){
+                if (G.edge.get(user1).get(user2)) {
                     w = G.edge.get(user1).get(user2).weight + 1;
-                    //console.log(w);
                 }
-
                 G.addEdge(user1, user2, {weight: w});
-                //console.log(G.edge.get(user1).get(user2).weight);
-                console.log("jsnx.getEdgeAttributes(G)" + JSON.stringify(jsnx.getEdgeAttributes(G, 'weight')));
+                //console.log("jsnx.getEdgeAttributes(G)" + JSON.stringify(jsnx.getEdgeAttributes(G, 'weight')));
             }
         }
     }
-    //G.betweennessCentrality(ownerId);
-    //console.log(JSON.stringify(jsnx.betweennessCentrality(G)));
-    //console.log(jsnx.betweennessCentrality(G));
-    //console.log(G.nodes());
+
+    let degree = jsnx.degree(G);
+    let edge_num = G.edges().length;
+    let degree_centrality = MathJs.divide(degree.get(ownerId), (edge_num - 1));
+    let closeness_centrality = closenessCentrality(G, ownerId);
+    let betweennessCentrality = jsnx.betweennessCentrality(G, {weight: true});
+    let eigenvector_centrality = jsnx.eigenvectorCentrality(G, {maxIter: 500});
+    let clustering_coefficient = jsnx.clustering(G);
+    //console.log("degree_centrality = " + degree_centrality);
+    //console.log("closeness_centrality = " + closenessCentrality(G, ownerId));
+    //console.log("betweenness_centrality = " + betweennessCentrality.get(ownerId));
+    //console.log("eigenvector_centrality = " + eigenvector_centrality.get(ownerId));
+    //console.log("clustering_coefficient = " + clustering_coefficient.get(ownerId))
     //console.log(G.edges());
-    //let stringJSON = JSON.stringify(betweennessCentrality); // check your object structure for serializability!
-    //let objsJSON = JSON.parse(stringJSON);
-    //console.log(numberB);
-    let betweennessCentrality = jsnx.betweennessCentrality(G);
-    let numberB = betweennessCentrality._numberValues;
-
-    /*let eigenvector_centrality =jsnx.eigenvectorCentrality(G);
-    console.log(eigenvector_centrality);
-    let numberE = betweennessCentrality._numberValues;*/
-
+    //console.log(G.edges().length);
+    //console.log(G.nodes());
+    //console.log("distance " + jsnx.shortestPathLength(G, {source: 1000023, target: 1000031}));
+    let coreness = core_number(G);
+    //console.log("coreness : " + JSON.stringify(coreness));
 
     let bcArray = [];
-    //let ecArray = [];
-    for (let j in usersId) {
-        let user = usersId[j];
-        let bc = numberB[user];
-        //let ec = numberE[userId]
-        //console.log(userId);
-        //console.log(bc);
-        if (bc)
-            bcArray.push(bc);
-        else
-            bcArray.push(0);
-
-        /*if (ec)
-            ecArray.push(bc);
-        else
-            ecArray.push(0);*/
-
+    let ecArray = [];
+    let ccArray = [];
+    for (let i in usersId) {
+        let user = usersId[i];
+        let bc = betweennessCentrality.get(user);
+        let ec = eigenvector_centrality.get(user);
+        let cc = clustering_coefficient.get(user);
+        bc ? bcArray.push(bc) : bcArray.push(0);
+        ec ? ecArray.push(ec) : bcArray.push(0);
+        cc ? ccArray.push(ec) : bcArray.push(0);
     }
 
-    let moy_bc = MathJs.mean(bcArray);
-    //let moy_ec = MathJs.mean(ecArray);
-    //console.log(moy_bc);
+    let moy_bc = bcArray.length > 0 ? MathJs.mean(bcArray) : 0;
+    let moy_ec = ecArray.length > 0 ? MathJs.mean(ecArray) : 0;
+    let moy_cc = ccArray.length > 0 ? MathJs.mean(ccArray) : 0;
 
     return {
-        betweenness_centrality: moy_bc
-        //eigenvector_centrality: moy_ec
+        degree: degree.get(ownerId),
+        degree_centrality: degree_centrality,
+        closeness_centrality: closeness_centrality,
+        betweenness_centrality: betweennessCentrality.get(ownerId),
+        eigenvector_centrality: eigenvector_centrality.get(ownerId),
+        clustering_coefficient: clustering_coefficient.get(ownerId),
+        coreness: coreness[ownerId],
+        moy_betweenness_centrality: moy_bc,
+        moy_eigenvector_centrality: moy_ec,
+        moy_clustering_coefficient: moy_cc
     }
+}
+
+/*References
+----------
+.. [1] An O(m) Algorithm for Cores Decomposition of Networks
+Vladimir Batagelj and Matjaz Zaversnik, 2003.
+https://arxiv.org/abs/cs.DS/0310049
+*/
+function core_number(G) {
+
+    let node = []
+    let degree = jsnx.degree(G)._numberValues;
+
+    Object.keys(degree).forEach(function (key) {
+        let u = {};
+        u[key] = degree[key];
+        node.push(u);
+    })
+
+    order_node_by_degree(node);
+    let core = degree;
+
+    for (let i in node) {
+        let key_v = Object.keys(node[i])[0];
+        key_v = parseInt(key_v);
+        core[key_v] = degree[key_v];
+        let neighbors = jsnx.neighbors(G, key_v);
+        //console.log("key_v = " + key_v);
+        //console.log("neighbors = " + neighbors);
+        for (let j in neighbors) {
+            let key_u = neighbors[j];
+            key_u = parseInt(key_u);
+            //console.log("d[" + key_v + "] - d[" + key_u + "] = " + degree[key_v] + " - " + degree[key_u]);
+            ////console.log("key_v - key_u = " + key_v +" - " + key_u);
+            ////console.log("d[key_v] - d[key_u] = " + degree[key_v] +" - " + degree[key_u]);
+            if (degree[key_u] > degree[key_v]) {
+                degree[key_u] = degree[key_u] - 1;
+                order_node_by_degree(node);
+            }
+        }
+    }
+    //console.log("degree = " + JSON.stringify(jsnx.degree(G)._numberValues));
+    //console.log("core = " + JSON.stringify(core));
+    return degree;
+}
+
+function order_node_by_degree(node) {
+    node.sort(function (a, b) {
+        return a[Object.keys(a)[0]] - b[Object.keys(b)[0]];
+    });
+}
+
+function closenessCentrality(graph, nodeSource) {
+    let nodes = graph.nodes();
+    let nodes_num = graph.nodes().length; //todo remove G
+    let edges = graph.edges();
+
+    let distance_sum = 0;
+    for (let i in nodes) {
+        let node = nodes[i];
+        if (jsnx.hasPath(graph, {source: nodeSource, target: node})) {
+            let distance = jsnx.shortestPathLength(graph, {source: nodeSource, target: node}); //todo remove G
+            distance_sum = distance_sum + distance;
+        }
+    }
+
+    let inv = MathJs.divide(1, distance_sum);
+    return MathJs.multiply((nodes_num - 1), inv);
+}
+
+//human reviewers
+
+function get_human_reviewers(json) {
+    let reviewers = getReviewers(json);
+    let rev = [];
+    for (let i in reviewers) {
+        if (reviewers[i].email) {
+            rev.push(reviewers[i])
+        }
+    }
+
+    return rev;
+}
+
+function get_num_human_reviewer(json) {
+    let reviewers = get_human_reviewers(json);
+    return reviewers.length;
+}
+
+function get_num_revisions(json) {
+    let revisions = json.revisions;
+    return Object.keys(revisions).length
+}
+
+//msg metrics
+function get_commit_msg(json) {
+    let revisions = json.revisions;
+    let messages = [];
+    for (let i in revisions) {
+        let revision = revisions[i];
+        if (revision.commit) {
+            let message = revision.commit.message;
+            messages.push(message);
+        }
+    }
+    return messages;
+}
+
+function get_msg_length(json) {
+    let messages = get_commit_msg(json);
+    return countLetter(messages[0]);
+}
+
+function get_msg_word_count(json) {
+    let messages = get_commit_msg(json);
+    return countWord(messages[0]);
+}
+
+function msg_has_words(json, wordArray) {
+    let messages = get_commit_msg(json);
+    let concatMsg = "";
+    for (let i in messages) {
+        concatMsg += messages[i].toLowerCase();
+    }
+    //console.log("messages = " + messages);
+
+    let num = 0;
+    for (let j in wordArray) {
+        if (concatMsg.indexOf(wordArray[j].toLowerCase()) >= 0) {
+            num = num + 1;
+        }
+    }
+
+    return num > 0;
+}
+
+function msg_has_bug(json) {
+    let wordArray = ['bug', 'bugs', 'debug', 'bugdoc', 'fixture', 'resolve'];
+    return msg_has_words(json, wordArray);
+}
+
+function msg_has_feature(json) {
+    let wordArray = ['feature', 'features'];
+    return msg_has_words(json, wordArray);
+}
+
+function msg_has_improve(json) {
+    let wordArray = ['improve', 'improves', 'improvements', 'improvement', 'correction', 'better', 'remove'];
+    return msg_has_words(json, wordArray);
+}
+
+function msg_has_document(json) {
+    let wordArray = ['document', 'documentation', 'doc', 'docs'];
+    return msg_has_words(json, wordArray);
+}
+
+function msg_has_refactor(json) {
+    let wordArray = ['refactor', 'cleanup', 'refactoring', 'clean', 'cleaning'];
+    return msg_has_words(json, wordArray);
+}
+
+function msg_is_corrective(json) {
+    let wordArray = Keywords.corrective;
+    return msg_has_words(json, wordArray);
+}
+
+function msg_is_merge(json) {
+    let wordArray = Keywords.merge;
+    return msg_has_words(json, wordArray);
+}
+
+function msg_is_non_fonctional(json) {
+    let wordArray = Keywords["non-functional"];
+    return msg_has_words(json, wordArray);
+}
+
+function msg_is_perfective(json) {
+    let wordArray = Keywords.perfective;
+    return msg_has_words(json, wordArray);
+}
+
+function msg_is_preventive(json) {
+    let wordArray = Keywords.preventive;
+    return msg_has_words(json, wordArray);
+}
+
+function msg_is_refactoring(json) {
+    let wordArray = Keywords.refactoring;
+    return msg_has_words(json, wordArray);
 }

@@ -1,14 +1,7 @@
 const fsExtra = require("fs-extra");
 const fs = require('fs');
-let metricsJson = require("../data/metrics.json");
+//let metricsJson = require("../data/metrics.json");
 let programming_languages_extension = require("../res/Programming_Languages_Extensions.json");
-
-//main();
-
-function main() {
-    //let data = csvFunction(metricsJson);
-    //saveFile("csv_metrics", data, "csv");
-}
 
 async function saveJsonToFile(name, json) {
     return saveFileJSON(name, json, "json");
@@ -25,11 +18,6 @@ function saveFileJSON(name, data, ext) {
         .catch(err => {
             console.log(err)
         });
-
-    /*fs.writeFile(fileName, json, (err) => {
-        if (err) throw err;
-        console.log('Data written to file');
-    });*/
 }
 
 function saveFile(name, data, ext) {
@@ -44,40 +32,14 @@ function saveFile(name, data, ext) {
         });
 }
 
-/*function saveFile2(name, data, ext) {
-    let fileName = "data/" + name + "." + ext;
-    let json = JSON.stringify(data, null, 2);
-    fsExtra.ensureDirSync("data");
-
-    let array = data.split('\n');
-
-    for (let id in array){
-        fs.appendFile('message.txt', 'data to append', function (err) {
-            if (err) throw err;
-            console.log('Saved!');
-        });
-    }
-
-
-    return fsExtra.outputFile(fileName, json)
-        .then(() => {
-            console.log('Data written to file');
-        })
-        .catch(err => {
-            console.log(err)
-        });
-}*/
-
 function csvFunction(json) {
-    let jsonArray = Object.values(json)
-    let csvRecord = Object.keys(jsonArray[0]).join(',') + '\n';
-    jsonArray.forEach(function (jsonRecord) {
+    let array_of_json = Object.values(json)
+    let csvRecord = Object.keys(array_of_json[0]).join(',') + '\n';
+    array_of_json.forEach(function (jsonRecord) {
         csvRecord += Object.values(jsonRecord).join(',') + '\n';
     });
-
     return csvRecord;
 }
-
 
 function jsonToCsv(json) {
     let fields = Object.keys(json)
@@ -96,12 +58,11 @@ function jsonToCsv(json) {
     return csv
 }
 
-//generate_extension();
-
+//generate_extension;
 function generate_extension(){
     let extension = get_programming_language_extensions(programming_languages_extension);
-    saveJsonToFile("extension", extension).then(() => {
-        //console.log('Data written to file');
+    return saveJsonToFile("extension", extension).then(() => {
+        console.log('extension file generated');
     });
 }
 
@@ -115,7 +76,6 @@ function get_programming_language_extensions(ArrayOfJson) {
         if (!extension_language[type]) {
             extension_language[type] = {};
         }
-
         for (let i in extensions) {
             let extension = extensions[i];
             extension = extension.slice(1);
@@ -124,13 +84,44 @@ function get_programming_language_extensions(ArrayOfJson) {
             extension_language[type][extension].push(ArrayOfJson[index].name);
         }
     }
-
     return extension_language;
+}
+
+//create metrics file
+
+let csv_separator = ",";
+let data_dir_name = "data"
+let metric_file_name = "metrics.csv";
+let metric_file_path = data_dir_name + "/" + metric_file_name;
+
+function write_line_on_file(str) {
+    fsExtra.ensureDirSync(data_dir_name);
+    return fsExtra.appendFileSync(metric_file_path, str);
+    /*
+        .then(() => {
+            console.log('line added into the file');
+        })
+        .catch(err => {
+            console.log(err)
+        });*/
+}
+
+function add_line_to_file(json) {
+    let line = Object.values(json).join(csv_separator) + "\r\n";
+    fsExtra.ensureDirSync(data_dir_name);
+    if (!fs.existsSync(metric_file_path)) {
+        let header = Object.keys(json).join(csv_separator) + "\r\n";
+        write_line_on_file(header);
+        write_line_on_file(line);
+    } else {
+        write_line_on_file(line);
+    }
 }
 
 module.exports = {
     saveFile: saveFile,
     saveJsonToFile: saveJsonToFile,
     jsonToCsv: jsonToCsv,
+    add_line_to_file: add_line_to_file,
     saveFile: saveFile
 };
