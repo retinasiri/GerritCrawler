@@ -97,13 +97,6 @@ let metric_file_path = data_dir_name + "/" + metric_file_name;
 function write_line_on_file(str) {
     fsExtra.ensureDirSync(data_dir_name);
     return fsExtra.appendFileSync(metric_file_path, str);
-    /*
-        .then(() => {
-            console.log('line added into the file');
-        })
-        .catch(err => {
-            console.log(err)
-        });*/
 }
 
 function add_line_to_file(json) {
@@ -118,10 +111,16 @@ function add_line_to_file(json) {
     }
 }
 
+function getTime() {
+    let dt = new Date();
+    return dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds() + " : ";
+}
+
 module.exports = {
     saveFile: saveFile,
     saveJsonToFile: saveJsonToFile,
     jsonToCsv: jsonToCsv,
     add_line_to_file: add_line_to_file,
-    saveFile: saveFile
+    saveFile: saveFile,
+    getTime: getTime
 };

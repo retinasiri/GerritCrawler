@@ -1,0 +1,2272 @@
+{
+  "All-Clang-Projects": {
+    "id": "All-Clang-Projects",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=All-Clang-Projects.git;a=summary"
+      }
+    ]
+  },
+  "All-Dead-Projects": {
+    "id": "All-Dead-Projects",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=All-Dead-Projects.git;a=summary"
+      }
+    ]
+  },
+  "All-Non-CI-Projects": {
+    "id": "All-Non-CI-Projects",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=All-Non-CI-Projects.git;a=summary"
+      }
+    ]
+  },
+  "All-Non-Mirrored-Projects": {
+    "id": "All-Non-Mirrored-Projects",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=All-Non-Mirrored-Projects.git;a=summary"
+      }
+    ]
+  },
+  "All-Projects": {
+    "id": "All-Projects",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=All-Projects.git;a=summary"
+      }
+    ]
+  },
+  "All-Qt-Extensions": {
+    "id": "All-Qt-Extensions",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=All-Qt-Extensions.git;a=summary"
+      }
+    ]
+  },
+  "All-Qt-Projects": {
+    "id": "All-Qt-Projects",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=All-Qt-Projects.git;a=summary"
+      }
+    ]
+  },
+  "All-QtCreator-Projects": {
+    "id": "All-QtCreator-Projects",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=All-QtCreator-Projects.git;a=summary"
+      }
+    ]
+  },
+  "All-Test-Projects": {
+    "id": "All-Test-Projects",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=All-Test-Projects.git;a=summary"
+      }
+    ]
+  },
+  "All-Users": {
+    "id": "All-Users",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=All-Users.git;a=summary"
+      }
+    ]
+  },
+  "clang/clang": {
+    "id": "clang%2Fclang",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=clang%2Fclang.git;a=summary"
+      }
+    ]
+  },
+  "clang/clang-tools-extra": {
+    "id": "clang%2Fclang-tools-extra",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=clang%2Fclang-tools-extra.git;a=summary"
+      }
+    ]
+  },
+  "clang/clazy": {
+    "id": "clang%2Fclazy",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=clang%2Fclazy.git;a=summary"
+      }
+    ]
+  },
+  "clang/llvm": {
+    "id": "clang%2Fllvm",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=clang%2Fllvm.git;a=summary"
+      }
+    ]
+  },
+  "clang/llvm-project": {
+    "id": "clang%2Fllvm-project",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=clang%2Fllvm-project.git;a=summary"
+      }
+    ]
+  },
+  "installer-framework/installer-framework": {
+    "id": "installer-framework%2Finstaller-framework",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=installer-framework%2Finstaller-framework.git;a=summary"
+      }
+    ]
+  },
+  "meta/quips": {
+    "id": "meta%2Fquips",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=meta%2Fquips.git;a=summary"
+      }
+    ]
+  },
+  "ministro/ministro": {
+    "id": "ministro%2Fministro",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=ministro%2Fministro.git;a=summary"
+      }
+    ]
+  },
+  "playground/alignedtimer": {
+    "id": "playground%2Falignedtimer",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Falignedtimer.git;a=summary"
+      }
+    ]
+  },
+  "playground/conan": {
+    "id": "playground%2Fconan",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fconan.git;a=summary"
+      }
+    ]
+  },
+  "playground/mimetypes": {
+    "id": "playground%2Fmimetypes",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fmimetypes.git;a=summary"
+      }
+    ]
+  },
+  "playground/qlitehtml": {
+    "id": "playground%2Fqlitehtml",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fqlitehtml.git;a=summary"
+      }
+    ]
+  },
+  "playground/qmldbusplugin": {
+    "id": "playground%2Fqmldbusplugin",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fqmldbusplugin.git;a=summary"
+      }
+    ]
+  },
+  "playground/qt-creator/plugin-gammaray": {
+    "id": "playground%2Fqt-creator%2Fplugin-gammaray",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fqt-creator%2Fplugin-gammaray.git;a=summary"
+      }
+    ]
+  },
+  "playground/qt-creator/plugin-scripting": {
+    "id": "playground%2Fqt-creator%2Fplugin-scripting",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fqt-creator%2Fplugin-scripting.git;a=summary"
+      }
+    ]
+  },
+  "playground/qtaudio3d": {
+    "id": "playground%2Fqtaudio3d",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fqtaudio3d.git;a=summary"
+      }
+    ]
+  },
+  "playground/qtjsonstream": {
+    "id": "playground%2Fqtjsonstream",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fqtjsonstream.git;a=summary"
+      }
+    ]
+  },
+  "playground/qtmirserver": {
+    "id": "playground%2Fqtmirserver",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fqtmirserver.git;a=summary"
+      }
+    ]
+  },
+  "playground/qtmock-ng": {
+    "id": "playground%2Fqtmock-ng",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fqtmock-ng.git;a=summary"
+      }
+    ]
+  },
+  "playground/qtprocessmanager": {
+    "id": "playground%2Fqtprocessmanager",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fqtprocessmanager.git;a=summary"
+      }
+    ]
+  },
+  "playground/qtqmlandroid": {
+    "id": "playground%2Fqtqmlandroid",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fqtqmlandroid.git;a=summary"
+      }
+    ]
+  },
+  "playground/qtsystemtest": {
+    "id": "playground%2Fqtsystemtest",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fqtsystemtest.git;a=summary"
+      }
+    ]
+  },
+  "playground/scenegraph": {
+    "id": "playground%2Fscenegraph",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fscenegraph.git;a=summary"
+      }
+    ]
+  },
+  "playground/uihelpers": {
+    "id": "playground%2Fuihelpers",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=playground%2Fuihelpers.git;a=summary"
+      }
+    ]
+  },
+  "pyside/apiextractor": {
+    "id": "pyside%2Fapiextractor",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=pyside%2Fapiextractor.git;a=summary"
+      }
+    ]
+  },
+  "pyside/examples": {
+    "id": "pyside%2Fexamples",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=pyside%2Fexamples.git;a=summary"
+      }
+    ]
+  },
+  "pyside/generatorrunner": {
+    "id": "pyside%2Fgeneratorrunner",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=pyside%2Fgeneratorrunner.git;a=summary"
+      }
+    ]
+  },
+  "pyside/pyside": {
+    "id": "pyside%2Fpyside",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=pyside%2Fpyside.git;a=summary"
+      }
+    ]
+  },
+  "pyside/pyside-setup": {
+    "id": "pyside%2Fpyside-setup",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=pyside%2Fpyside-setup.git;a=summary"
+      }
+    ]
+  },
+  "pyside/pyside-tools": {
+    "id": "pyside%2Fpyside-tools",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=pyside%2Fpyside-tools.git;a=summary"
+      }
+    ]
+  },
+  "pyside/shiboken": {
+    "id": "pyside%2Fshiboken",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=pyside%2Fshiboken.git;a=summary"
+      }
+    ]
+  },
+  "qbs/qbs": {
+    "id": "qbs%2Fqbs",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qbs%2Fqbs.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/boot2qt-appcontroller": {
+    "id": "qt-apps%2Fboot2qt-appcontroller",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fboot2qt-appcontroller.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/boot2qt-demos": {
+    "id": "qt-apps%2Fboot2qt-demos",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fboot2qt-demos.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/boot2qt-launcher": {
+    "id": "qt-apps%2Fboot2qt-launcher",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fboot2qt-launcher.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/demo-assets": {
+    "id": "qt-apps%2Fdemo-assets",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fdemo-assets.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/gammaray-plugin-qtivi": {
+    "id": "qt-apps%2Fgammaray-plugin-qtivi",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fgammaray-plugin-qtivi.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/kria-cluster-2d-demo": {
+    "id": "qt-apps%2Fkria-cluster-2d-demo",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fkria-cluster-2d-demo.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/multiscreen-demo": {
+    "id": "qt-apps%2Fmultiscreen-demo",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fmultiscreen-demo.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/neptune-ui": {
+    "id": "qt-apps%2Fneptune-ui",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fneptune-ui.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/neptune3-ui": {
+    "id": "qt-apps%2Fneptune3-ui",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fneptune3-ui.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/qdb": {
+    "id": "qt-apps%2Fqdb",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fqdb.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/qmllive": {
+    "id": "qt-apps%2Fqmllive",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fqmllive.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/qt-auto-extra-apps": {
+    "id": "qt-apps%2Fqt-auto-extra-apps",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fqt-auto-extra-apps.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/qtauto-deployment-server": {
+    "id": "qt-apps%2Fqtauto-deployment-server",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fqtauto-deployment-server.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/qtdemos-super": {
+    "id": "qt-apps%2Fqtdemos-super",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fqtdemos-super.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/qtwebbrowser": {
+    "id": "qt-apps%2Fqtwebbrowser",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fqtwebbrowser.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/snowshoe": {
+    "id": "qt-apps%2Fsnowshoe",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fsnowshoe.git;a=summary"
+      }
+    ]
+  },
+  "qt-apps/stb-demo": {
+    "id": "qt-apps%2Fstb-demo",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-apps%2Fstb-demo.git;a=summary"
+      }
+    ]
+  },
+  "qt-creator/binary-artifacts": {
+    "id": "qt-creator%2Fbinary-artifacts",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-creator%2Fbinary-artifacts.git;a=summary"
+      }
+    ]
+  },
+  "qt-creator/elfutils": {
+    "id": "qt-creator%2Felfutils",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-creator%2Felfutils.git;a=summary"
+      }
+    ]
+  },
+  "qt-creator/perfparser": {
+    "id": "qt-creator%2Fperfparser",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-creator%2Fperfparser.git;a=summary"
+      }
+    ]
+  },
+  "qt-creator/plugin-fossil-scm": {
+    "id": "qt-creator%2Fplugin-fossil-scm",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-creator%2Fplugin-fossil-scm.git;a=summary"
+      }
+    ]
+  },
+  "qt-creator/plugin-haskell": {
+    "id": "qt-creator%2Fplugin-haskell",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-creator%2Fplugin-haskell.git;a=summary"
+      }
+    ]
+  },
+  "qt-creator/plugin-pythonextensions": {
+    "id": "qt-creator%2Fplugin-pythonextensions",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-creator%2Fplugin-pythonextensions.git;a=summary"
+      }
+    ]
+  },
+  "qt-creator/plugin-telemetry": {
+    "id": "qt-creator%2Fplugin-telemetry",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-creator%2Fplugin-telemetry.git;a=summary"
+      }
+    ]
+  },
+  "qt-creator/qt-creator": {
+    "id": "qt-creator%2Fqt-creator",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-creator%2Fqt-creator.git;a=summary"
+      }
+    ]
+  },
+  "qt-creator/qtc-super": {
+    "id": "qt-creator%2Fqtc-super",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-creator%2Fqtc-super.git;a=summary"
+      }
+    ]
+  },
+  "qt-extensions/qthttpserver": {
+    "id": "qt-extensions%2Fqthttpserver",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-extensions%2Fqthttpserver.git;a=summary"
+      }
+    ]
+  },
+  "qt-extensions/qtquickcalendar": {
+    "id": "qt-extensions%2Fqtquickcalendar",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-extensions%2Fqtquickcalendar.git;a=summary"
+      }
+    ]
+  },
+  "qt-extensions/qtquickmultieffect": {
+    "id": "qt-extensions%2Fqtquickmultieffect",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-extensions%2Fqtquickmultieffect.git;a=summary"
+      }
+    ]
+  },
+  "qt-extensions/qttreeview": {
+    "id": "qt-extensions%2Fqttreeview",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-extensions%2Fqttreeview.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/cinematic3d": {
+    "id": "qt-labs%2Fcinematic3d",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fcinematic3d.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/cursormanagement": {
+    "id": "qt-labs%2Fcursormanagement",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fcursormanagement.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/gimp-qmlexporter": {
+    "id": "qt-labs%2Fgimp-qmlexporter",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fgimp-qmlexporter.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/jira2gv": {
+    "id": "qt-labs%2Fjira2gv",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fjira2gv.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/jom": {
+    "id": "qt-labs%2Fjom",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fjom.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/messagingframework": {
+    "id": "qt-labs%2Fmessagingframework",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fmessagingframework.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/photoshop-qmlexporter": {
+    "id": "qt-labs%2Fphotoshop-qmlexporter",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fphotoshop-qmlexporter.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qml-presentation-system": {
+    "id": "qt-labs%2Fqml-presentation-system",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqml-presentation-system.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qmlbench": {
+    "id": "qt-labs%2Fqmlbench",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqmlbench.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qsettings-refactor": {
+    "id": "qt-labs%2Fqsettings-refactor",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqsettings-refactor.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qt3d-editor": {
+    "id": "qt-labs%2Fqt3d-editor",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqt3d-editor.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qt5-everywhere-demo": {
+    "id": "qt-labs%2Fqt5-everywhere-demo",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqt5-everywhere-demo.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qtaddonmimetype": {
+    "id": "qt-labs%2Fqtaddonmimetype",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqtaddonmimetype.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qtd3d12window": {
+    "id": "qt-labs%2Fqtd3d12window",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqtd3d12window.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qtest-qml": {
+    "id": "qt-labs%2Fqtest-qml",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqtest-qml.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qtgeoservices-omim": {
+    "id": "qt-labs%2Fqtgeoservices-omim",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqtgeoservices-omim.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qtpdf": {
+    "id": "qt-labs%2Fqtpdf",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqtpdf.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qtquickcl": {
+    "id": "qt-labs%2Fqtquickcl",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqtquickcl.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qtquickdesigner-components": {
+    "id": "qt-labs%2Fqtquickdesigner-components",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqtquickdesigner-components.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qtscriptgenerator": {
+    "id": "qt-labs%2Fqtscriptgenerator",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqtscriptgenerator.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qtsensehat": {
+    "id": "qt-labs%2Fqtsensehat",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqtsensehat.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/qtshadertools": {
+    "id": "qt-labs%2Fqtshadertools",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fqtshadertools.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/talk-schedule": {
+    "id": "qt-labs%2Ftalk-schedule",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Ftalk-schedule.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/umlquick": {
+    "id": "qt-labs%2Fumlquick",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fumlquick.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/vstools": {
+    "id": "qt-labs%2Fvstools",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fvstools.git;a=summary"
+      }
+    ]
+  },
+  "qt-labs/weather-app": {
+    "id": "qt-labs%2Fweather-app",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-labs%2Fweather-app.git;a=summary"
+      }
+    ]
+  },
+  "qt-learning/education-course-materials": {
+    "id": "qt-learning%2Feducation-course-materials",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-learning%2Feducation-course-materials.git;a=summary"
+      }
+    ]
+  },
+  "qt-learning/learning-guides": {
+    "id": "qt-learning%2Flearning-guides",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-learning%2Flearning-guides.git;a=summary"
+      }
+    ]
+  },
+  "qt-mobility/qt-mobility": {
+    "id": "qt-mobility%2Fqt-mobility",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-mobility%2Fqt-mobility.git;a=summary"
+      }
+    ]
+  },
+  "qt-solutions/qt-solutions": {
+    "id": "qt-solutions%2Fqt-solutions",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt-solutions%2Fqt-solutions.git;a=summary"
+      }
+    ]
+  },
+  "qt/qlalr": {
+    "id": "qt%2Fqlalr",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqlalr.git;a=summary"
+      }
+    ]
+  },
+  "qt/qt": {
+    "id": "qt%2Fqt",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqt.git;a=summary"
+      }
+    ]
+  },
+  "qt/qt-conan-common": {
+    "id": "qt%2Fqt-conan-common",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqt-conan-common.git;a=summary"
+      }
+    ]
+  },
+  "qt/qt-conan-config": {
+    "id": "qt%2Fqt-conan-config",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqt-conan-config.git;a=summary"
+      }
+    ]
+  },
+  "qt/qt3d": {
+    "id": "qt%2Fqt3d",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqt3d.git;a=summary"
+      }
+    ]
+  },
+  "qt/qt5": {
+    "id": "qt%2Fqt5",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqt5.git;a=summary"
+      }
+    ]
+  },
+  "qt/qt5compat": {
+    "id": "qt%2Fqt5compat",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqt5compat.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtactiveqt": {
+    "id": "qt%2Fqtactiveqt",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtactiveqt.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtanalytics": {
+    "id": "qt%2Fqtanalytics",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtanalytics.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtandroidextras": {
+    "id": "qt%2Fqtandroidextras",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtandroidextras.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtapplicationmanager": {
+    "id": "qt%2Fqtapplicationmanager",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtapplicationmanager.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtbase": {
+    "id": "qt%2Fqtbase",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtbase.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtcanvas3d": {
+    "id": "qt%2Fqtcanvas3d",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtcanvas3d.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtcharts": {
+    "id": "qt%2Fqtcharts",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtcharts.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtcloudmessaging": {
+    "id": "qt%2Fqtcloudmessaging",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtcloudmessaging.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtcoap": {
+    "id": "qt%2Fqtcoap",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtcoap.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtconnectivity": {
+    "id": "qt%2Fqtconnectivity",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtconnectivity.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtdatavis3d": {
+    "id": "qt%2Fqtdatavis3d",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtdatavis3d.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtdeclarative": {
+    "id": "qt%2Fqtdeclarative",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtdeclarative.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtdeclarative-render2d": {
+    "id": "qt%2Fqtdeclarative-render2d",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtdeclarative-render2d.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtdeclarative-testsuites": {
+    "id": "qt%2Fqtdeclarative-testsuites",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtdeclarative-testsuites.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtdeviceutilities": {
+    "id": "qt%2Fqtdeviceutilities",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtdeviceutilities.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtdoc": {
+    "id": "qt%2Fqtdoc",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtdoc.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtdocgallery": {
+    "id": "qt%2Fqtdocgallery",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtdocgallery.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtenginio": {
+    "id": "qt%2Fqtenginio",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtenginio.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtfeedback": {
+    "id": "qt%2Fqtfeedback",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtfeedback.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtftp": {
+    "id": "qt%2Fqtftp",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtftp.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtgamepad": {
+    "id": "qt%2Fqtgamepad",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtgamepad.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtgraphicaleffects": {
+    "id": "qt%2Fqtgraphicaleffects",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtgraphicaleffects.git;a=summary"
+      }
+    ]
+  },
+  "qt/qthttp": {
+    "id": "qt%2Fqthttp",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqthttp.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtimageformats": {
+    "id": "qt%2Fqtimageformats",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtimageformats.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtivi": {
+    "id": "qt%2Fqtivi",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtivi.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtivi-qface": {
+    "id": "qt%2Fqtivi-qface",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtivi-qface.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtivi-taglib": {
+    "id": "qt%2Fqtivi-taglib",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtivi-taglib.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtknx": {
+    "id": "qt%2Fqtknx",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtknx.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtlanguageserver": {
+    "id": "qt%2Fqtlanguageserver",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtlanguageserver.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtlocation": {
+    "id": "qt%2Fqtlocation",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtlocation.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtlocation-mapboxgl": {
+    "id": "qt%2Fqtlocation-mapboxgl",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtlocation-mapboxgl.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtlottie": {
+    "id": "qt%2Fqtlottie",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtlottie.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtmacextras": {
+    "id": "qt%2Fqtmacextras",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtmacextras.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtmodeling": {
+    "id": "qt%2Fqtmodeling",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtmodeling.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtmqtt": {
+    "id": "qt%2Fqtmqtt",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtmqtt.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtmultimedia": {
+    "id": "qt%2Fqtmultimedia",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtmultimedia.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtnetworkauth": {
+    "id": "qt%2Fqtnetworkauth",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtnetworkauth.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtopcua": {
+    "id": "qt%2Fqtopcua",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtopcua.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtotaupdate": {
+    "id": "qt%2Fqtotaupdate",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtotaupdate.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtpim": {
+    "id": "qt%2Fqtpim",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtpim.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtpurchasing": {
+    "id": "qt%2Fqtpurchasing",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtpurchasing.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtqa": {
+    "id": "qt%2Fqtqa",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtqa.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtquick1": {
+    "id": "qt%2Fqtquick1",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtquick1.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtquick3d": {
+    "id": "qt%2Fqtquick3d",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtquick3d.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtquick3d-assimp": {
+    "id": "qt%2Fqtquick3d-assimp",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtquick3d-assimp.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtquickcontrols": {
+    "id": "qt%2Fqtquickcontrols",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtquickcontrols.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtquickcontrols-tizen": {
+    "id": "qt%2Fqtquickcontrols-tizen",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtquickcontrols-tizen.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtquickcontrols2": {
+    "id": "qt%2Fqtquickcontrols2",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtquickcontrols2.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtquicktimeline": {
+    "id": "qt%2Fqtquicktimeline",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtquicktimeline.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtreleasenotes": {
+    "id": "qt%2Fqtreleasenotes",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtreleasenotes.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtremoteobjects": {
+    "id": "qt%2Fqtremoteobjects",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtremoteobjects.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtrepotools": {
+    "id": "qt%2Fqtrepotools",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtrepotools.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtscript": {
+    "id": "qt%2Fqtscript",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtscript.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtscxml": {
+    "id": "qt%2Fqtscxml",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtscxml.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtsensors": {
+    "id": "qt%2Fqtsensors",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtsensors.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtserialbus": {
+    "id": "qt%2Fqtserialbus",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtserialbus.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtserialport": {
+    "id": "qt%2Fqtserialport",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtserialport.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtshadertools": {
+    "id": "qt%2Fqtshadertools",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtshadertools.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtspeech": {
+    "id": "qt%2Fqtspeech",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtspeech.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtstyleplugins": {
+    "id": "qt%2Fqtstyleplugins",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtstyleplugins.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtsvg": {
+    "id": "qt%2Fqtsvg",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtsvg.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtsystems": {
+    "id": "qt%2Fqtsystems",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtsystems.git;a=summary"
+      }
+    ]
+  },
+  "qt/qttools": {
+    "id": "qt%2Fqttools",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqttools.git;a=summary"
+      }
+    ]
+  },
+  "qt/qttranslations": {
+    "id": "qt%2Fqttranslations",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqttranslations.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtvirtualkeyboard": {
+    "id": "qt%2Fqtvirtualkeyboard",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtvirtualkeyboard.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtvoiceassistant": {
+    "id": "qt%2Fqtvoiceassistant",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtvoiceassistant.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtwayland": {
+    "id": "qt%2Fqtwayland",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtwayland.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtwebchannel": {
+    "id": "qt%2Fqtwebchannel",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtwebchannel.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtwebengine": {
+    "id": "qt%2Fqtwebengine",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtwebengine.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtwebengine-chromium": {
+    "id": "qt%2Fqtwebengine-chromium",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtwebengine-chromium.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtwebglplugin": {
+    "id": "qt%2Fqtwebglplugin",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtwebglplugin.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtwebkit": {
+    "id": "qt%2Fqtwebkit",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtwebkit.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtwebkit-examples": {
+    "id": "qt%2Fqtwebkit-examples",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtwebkit-examples.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtwebsockets": {
+    "id": "qt%2Fqtwebsockets",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtwebsockets.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtwebview": {
+    "id": "qt%2Fqtwebview",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtwebview.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtwinextras": {
+    "id": "qt%2Fqtwinextras",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtwinextras.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtx11extras": {
+    "id": "qt%2Fqtx11extras",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtx11extras.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtx509": {
+    "id": "qt%2Fqtx509",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtx509.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtxmlpatterns": {
+    "id": "qt%2Fqtxmlpatterns",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtxmlpatterns.git;a=summary"
+      }
+    ]
+  },
+  "qt/qtxmlpatterns-testsuites": {
+    "id": "qt%2Fqtxmlpatterns-testsuites",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt%2Fqtxmlpatterns-testsuites.git;a=summary"
+      }
+    ]
+  },
+  "qt3dstudio/ogl-runtime": {
+    "id": "qt3dstudio%2Fogl-runtime",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt3dstudio%2Fogl-runtime.git;a=summary"
+      }
+    ]
+  },
+  "qt3dstudio/qt3d-runtime": {
+    "id": "qt3dstudio%2Fqt3d-runtime",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt3dstudio%2Fqt3d-runtime.git;a=summary"
+      }
+    ]
+  },
+  "qt3dstudio/qt3dstudio": {
+    "id": "qt3dstudio%2Fqt3dstudio",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt3dstudio%2Fqt3dstudio.git;a=summary"
+      }
+    ]
+  },
+  "qt3dstudio/qt3dstudio-collada-dom": {
+    "id": "qt3dstudio%2Fqt3dstudio-collada-dom",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt3dstudio%2Fqt3dstudio-collada-dom.git;a=summary"
+      }
+    ]
+  },
+  "qt3dstudio/qt3dstudio-eastl": {
+    "id": "qt3dstudio%2Fqt3dstudio-eastl",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt3dstudio%2Fqt3dstudio-eastl.git;a=summary"
+      }
+    ]
+  },
+  "qt3dstudio/qt3dstudio-lua": {
+    "id": "qt3dstudio%2Fqt3dstudio-lua",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt3dstudio%2Fqt3dstudio-lua.git;a=summary"
+      }
+    ]
+  },
+  "qt3dstudio/qt3dstudio-pcre": {
+    "id": "qt3dstudio%2Fqt3dstudio-pcre",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt3dstudio%2Fqt3dstudio-pcre.git;a=summary"
+      }
+    ]
+  },
+  "qt4ia/doc": {
+    "id": "qt4ia%2Fdoc",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qt4ia%2Fdoc.git;a=summary"
+      }
+    ]
+  },
+  "qtdesigntools/sharedcomponents": {
+    "id": "qtdesigntools%2Fsharedcomponents",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qtdesigntools%2Fsharedcomponents.git;a=summary"
+      }
+    ]
+  },
+  "qtonpi/mt-cross-tools": {
+    "id": "qtonpi%2Fmt-cross-tools",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qtonpi%2Fmt-cross-tools.git;a=summary"
+      }
+    ]
+  },
+  "qtqa/gerrit": {
+    "id": "qtqa%2Fgerrit",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qtqa%2Fgerrit.git;a=summary"
+      }
+    ]
+  },
+  "qtqa/gerrit-plugin-qt-workflow": {
+    "id": "qtqa%2Fgerrit-plugin-qt-workflow",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qtqa%2Fgerrit-plugin-qt-workflow.git;a=summary"
+      }
+    ]
+  },
+  "qtqa/gerrit-plugin-replication": {
+    "id": "qtqa%2Fgerrit-plugin-replication",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qtqa%2Fgerrit-plugin-replication.git;a=summary"
+      }
+    ]
+  },
+  "qtqa/release-testing": {
+    "id": "qtqa%2Frelease-testing",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qtqa%2Frelease-testing.git;a=summary"
+      }
+    ]
+  },
+  "qtqa/sysadmin": {
+    "id": "qtqa%2Fsysadmin",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qtqa%2Fsysadmin.git;a=summary"
+      }
+    ]
+  },
+  "qtqa/testconfig": {
+    "id": "qtqa%2Ftestconfig",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qtqa%2Ftestconfig.git;a=summary"
+      }
+    ]
+  },
+  "qtsdk/qtchooser": {
+    "id": "qtsdk%2Fqtchooser",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qtsdk%2Fqtchooser.git;a=summary"
+      }
+    ]
+  },
+  "qtsdk/qtsdk": {
+    "id": "qtsdk%2Fqtsdk",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=qtsdk%2Fqtsdk.git;a=summary"
+      }
+    ]
+  },
+  "test/project": {
+    "id": "test%2Fproject",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=test%2Fproject.git;a=summary"
+      }
+    ]
+  },
+  "www/doctools": {
+    "id": "www%2Fdoctools",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=www%2Fdoctools.git;a=summary"
+      }
+    ]
+  },
+  "www/downloads": {
+    "id": "www%2Fdownloads",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=www%2Fdownloads.git;a=summary"
+      }
+    ]
+  },
+  "www/planetqt": {
+    "id": "www%2Fplanetqt",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=www%2Fplanetqt.git;a=summary"
+      }
+    ]
+  },
+  "www/qtproject": {
+    "id": "www%2Fqtproject",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=www%2Fqtproject.git;a=summary"
+      }
+    ]
+  },
+  "yocto/boot2qt-manifest": {
+    "id": "yocto%2Fboot2qt-manifest",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=yocto%2Fboot2qt-manifest.git;a=summary"
+      }
+    ]
+  },
+  "yocto/meta-boot2qt": {
+    "id": "yocto%2Fmeta-boot2qt",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=yocto%2Fmeta-boot2qt.git;a=summary"
+      }
+    ]
+  },
+  "yocto/meta-boot2qt-renesas": {
+    "id": "yocto%2Fmeta-boot2qt-renesas",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=yocto%2Fmeta-boot2qt-renesas.git;a=summary"
+      }
+    ]
+  },
+  "yocto/meta-mingw": {
+    "id": "yocto%2Fmeta-mingw",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=yocto%2Fmeta-mingw.git;a=summary"
+      }
+    ]
+  },
+  "yocto/meta-qt5": {
+    "id": "yocto%2Fmeta-qt5",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=yocto%2Fmeta-qt5.git;a=summary"
+      }
+    ]
+  },
+  "yocto/meta-qt6": {
+    "id": "yocto%2Fmeta-qt6",
+    "state": "ACTIVE",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=yocto%2Fmeta-qt6.git;a=summary"
+      }
+    ]
+  },
+  "{graveyard}/qlogger": {
+    "id": "%7Bgraveyard%7D%2Fqlogger",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=%7Bgraveyard%7D%2Fqlogger.git;a=summary"
+      }
+    ]
+  },
+  "{graveyard}/qtbinaryjson": {
+    "id": "%7Bgraveyard%7D%2Fqtbinaryjson",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=%7Bgraveyard%7D%2Fqtbinaryjson.git;a=summary"
+      }
+    ]
+  },
+  "{graveyard}/qtjsbackend": {
+    "id": "%7Bgraveyard%7D%2Fqtjsbackend",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=%7Bgraveyard%7D%2Fqtjsbackend.git;a=summary"
+      }
+    ]
+  },
+  "{graveyard}/qtjsondb": {
+    "id": "%7Bgraveyard%7D%2Fqtjsondb",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=%7Bgraveyard%7D%2Fqtjsondb.git;a=summary"
+      }
+    ]
+  },
+  "{graveyard}/qtmultimediakit": {
+    "id": "%7Bgraveyard%7D%2Fqtmultimediakit",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=%7Bgraveyard%7D%2Fqtmultimediakit.git;a=summary"
+      }
+    ]
+  },
+  "{graveyard}/qtphonon": {
+    "id": "%7Bgraveyard%7D%2Fqtphonon",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=%7Bgraveyard%7D%2Fqtphonon.git;a=summary"
+      }
+    ]
+  },
+  "{graveyard}/qtx11support": {
+    "id": "%7Bgraveyard%7D%2Fqtx11support",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=%7Bgraveyard%7D%2Fqtx11support.git;a=summary"
+      }
+    ]
+  },
+  "{graveyard}/quick3d": {
+    "id": "%7Bgraveyard%7D%2Fquick3d",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=%7Bgraveyard%7D%2Fquick3d.git;a=summary"
+      }
+    ]
+  },
+  "{graveyard}/v4vm": {
+    "id": "%7Bgraveyard%7D%2Fv4vm",
+    "state": "READ_ONLY",
+    "web_links": [
+      {
+        "name": "gitweb",
+        "url": "/gitweb?p=%7Bgraveyard%7D%2Fv4vm.git;a=summary"
+      }
+    ]
+  }
+}

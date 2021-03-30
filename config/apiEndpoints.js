@@ -25,6 +25,10 @@ function getProjectsUrl(url){
     return new URL(url + projectsEndpoint);
 }
 
+function getProjectsUrlHref(url){
+    return url + projectsEndpoint;
+}
+
 function getChangesUrl(url){
     return url + changeEndpoint;
 }
@@ -70,6 +74,10 @@ function getMergedChangeUrl(url, start){
     return new URL(url + changeEndpoint + queryBuilder + mergedChangeQuery + query + "&" + pagingQuery + start);
 }
 
+function getProjectName(url){
+    return (url.hostname.split("."))[1]
+}
+
 URL.prototype.startAt = function (start) {
     this.searchParams.set('S', start);
     return this;
@@ -89,6 +97,7 @@ module.exports = {
     mergedChangeQuery: mergedChangeQuery,
     abandonedChangeQuery: abandonedChangeQuery,
     getProjectsUrl: getProjectsUrl,
+    getProjectsUrlHref: getProjectsUrlHref,
     getChangesUrl: getChangesUrl,
     getChangeDetailsUrl: getChangeDetailsUrl,
     getAccountsDetail: getAccountsDetail,
@@ -96,7 +105,8 @@ module.exports = {
     getMergedChangeUrl: getMergedChangeUrl,
     getAbandonedChangeUrl: getAbandonedChangeUrl,
     startAt: URL.prototype.startAt,
-    getStartValue: URL.prototype.getStartValue
+    getStartValue: URL.prototype.getStartValue,
+    getProjectName: getProjectName
 };
 
 /*
