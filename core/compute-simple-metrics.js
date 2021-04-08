@@ -1,5 +1,3 @@
-//code metrics
-//graph metrics
 const Mongoose = require('mongoose');
 const Moment = require('moment');
 const MathJs = require('mathjs');
@@ -12,48 +10,40 @@ const Extension = require('../res/extension.json');
 const Keywords = require('../res/keywords.json');
 
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
-
 let projectDBUrl = Database.libreOfficeDBUrl;
 
 let STARTING_POINT = 0;
-let NUM_DAYS_FOR_RECENT = 120;
-let NUM_OF_CHANGES_LIMIT = 10000;
+let NUM_OF_CHANGES_LIMIT = 35000;
+let NUMBER_DATABASE_REQUEST = 3;
+
+//todo add data type beside programming language
 
 //let metricsJson = {};
 
 let i = 0;
 
-mainFunction()
+mainFunction(projectDBUrl)
     .catch(err => {
         console.log(err)
     });
 
-function mainFunction() {
-    return dbConnection()
+function mainFunction(projectDBUrl) {
+    return Database.dbConnection(projectDBUrl)
         .then(() => { // Counts the number of change
-            return Change.countDocuments({})
+            return Change.estimatedDocumentCount({});;
         })
         .then((count) => {
-            console.log("Processing data...");
+            NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
+            console.log("Processing data... by " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
             return getChanges(STARTING_POINT);
         })
         .then(() => {
             progressBar.stop();
             console.log("Finished!!!!");
+            return Database.closeConnection();
             //return Utils.saveJsonToFile("metrics", metricsJson);
             //process.exit();
-        })
-        .catch(err => {
-            console.log(err)
-        });
-}
-
-function dbConnection() {
-    return Mongoose.connect(projectDBUrl, {useNewUrlParser: true, useUnifiedTopology: true})
-        .then(() => {
-            console.log("Connected to the database");
-            return Promise.resolve(true);
         })
         .catch(err => {
             console.log(err)
@@ -64,9 +54,9 @@ function dbConnection() {
 function getChanges(skip) {
     return Change
         .aggregate([
-            {$sort: {created: 1}},
-            {$skip: skip},
-            {$limit: skip + NUM_OF_CHANGES_LIMIT}
+            { $sort: { created: 1 } },
+            { $skip: skip },
+            { $limit: NUM_OF_CHANGES_LIMIT }
         ])
         .allowDiskUse(true)
         .exec()
@@ -74,7 +64,7 @@ function getChanges(skip) {
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
         })
         .then(result => {
-            return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT + 1) : Promise.resolve(false);
+            return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
         })
         .catch(err => {
             console.log(err)
@@ -97,7 +87,7 @@ async function collectDocs(docs) {
  * @param {JSON} json Output json to save
  */
 function saveMetrics(json) {
-    return Metrics.updateOne({id: json.id}, json, {upsert: true})
+    return Metrics.updateOne({ id: json.id }, json, { upsert: true })
         .then(() => {
             //metricsJson[json.id] = json;
             return Utils.add_line_to_file(json)
@@ -125,12 +115,11 @@ async function collectMetrics(json) {
     return metric;
 }
 
-
 /**
  * @param {JSON} json Input Json
  * @param {JSON} metric Output Json
  */
-function collectIdentityMetrics(json, metric){
+function collectIdentityMetrics(json, metric) {
     metric["n"] = i;
     metric["number"] = json._number;
     metric["id"] = json.id;
@@ -141,27 +130,32 @@ function collectIdentityMetrics(json, metric){
  * @param {JSON} json Input Json
  * @param {JSON} metric Output Json
  */
-function collectTimeMetrics(json, metric){
+function collectTimeMetrics(json, metric) {
     metric["date_created"] = json.created;
     metric["date_created_time"] = get_date_created_time(json);
     metric["date_updated"] = json.updated;
     metric["date_updated_time"] = get_date_updated_time(json);
     metric["date_commit"] = get_commit_date(json);
     metric["date_commit_time"] = get_commit_date_time(json);
-    metric["days_of_the_weeks_of_date_created"] = get_days_of_the_weeks(json);
-    metric["committer_timezone"] = get_committer_timezone(json);
-    metric["created_date_is_weekend"] = get_created_date_is_weekend(json);
-
+    metric["days_of_the_weeks_of_date_created"] = get_days_of_the_weeks_date_created(json);
+    metric["days_of_the_weeks_of_date_updated"] = get_days_of_the_weeks_date_updated(json);
+    metric["is_created_date_a_weekend"] = is_created_date_a_weekend(json);
+    metric["is_updated_date_a_weekend"] = is_updated_date_a_weekend(json);
     metric["diff_created_updated"] = diffCreatedUpdatedTime(json);
-    metric["diff_created_updated_days"] = diff_date_days(json);
+    metric["diff_created_updated_in_days"] = diff_date_days(json);
+    metric["diff_created_updated_in_days_ceil"] = MathJs.ceil(diff_date_days(json));
     //metric["date_submitted"] = get_date_submitted(json);
+
+    metric["committer_timezone"] = get_timezone(json).committer;
+    metric["author_timezone"] = get_timezone(json).author;
+
 }
 
 /**
  * @param {JSON} json Input Json
  * @param {JSON} metric Output Json
  */
-function collectCodeMetrics(json, metric){
+function collectCodeMetrics(json, metric) {
     metric["lines_added_num"] = json.insertions;
     metric["lines_deleted_num"] = json.deletions;
     metric["diff_lines_added_line_deleted"] = json.insertions - json.deletions;
@@ -171,7 +165,7 @@ function collectCodeMetrics(json, metric){
  * @param {JSON} json Input Json
  * @param {JSON} metric Output Json
  */
-function collectFileMetrics(json, metric){
+function collectFileMetrics(json, metric) {
     let fileInfo = get_files_info(json);
 
     metric["num_files"] = fileInfo.num_files;
@@ -200,7 +194,7 @@ function collectFileMetrics(json, metric){
  * @param {JSON} json Input Json
  * @param {JSON} metric Output Json
  */
-function collectOwnerMetrics(json, metric){
+function collectOwnerMetrics(json, metric) {
     let ownerInfo = get_owner_property(json);
     metric["change_num"] = ownerInfo.owner_num_changed;
     metric["subsystem_change_num"] = ownerInfo.owner_project
@@ -216,7 +210,7 @@ function collectOwnerMetrics(json, metric){
  * @param {JSON} json Input Json
  * @param {JSON} metric Output Json
  */
-function collectMsgMetrics(json, metric){
+function collectMsgMetrics(json, metric) {
     metric["subject_length"] = countSubjectLength(json);
     metric["subject_word_count"] = numberOfWordInSubject(json);
     metric["msg_length"] = get_msg_length(json);
@@ -242,13 +236,21 @@ function get_date_updated_time(json) {
     return Moment(json.updated).toDate().getTime();
 }
 
-function get_days_of_the_weeks(json){
+function get_days_of_the_weeks(json) {
     return Moment(json.created).isoWeekday();
 }
 
-function get_commit_date(json){
+function get_days_of_the_weeks_date_created(json) {
+    return Moment(json.created).isoWeekday();
+}
+
+function get_days_of_the_weeks_date_updated(json) {
+    return Moment(json.updated).isoWeekday();
+}
+
+function get_commit_date(json) {
     let cd = 0;
-    try{
+    try {
         cd = json.revisions.commit.committer.date;
     } catch (e) {
 
@@ -256,22 +258,33 @@ function get_commit_date(json){
     return cd;
 }
 
-function get_commit_date_time(json){
+function get_commit_date_time(json) {
     let date = get_commit_date(json);
     return Moment(date).toDate().getTime()
 }
 
-function get_created_date_is_weekend(json){
+function is_created_date_a_weekend(json) {
     let date = Moment(json.created).isoWeekday();
     return (date === 6) || (date === 7)
 }
 
-function get_committer_timezone(json) {
-    let tz = 0;
-    try{
-        tz = json.revisions.commit.committer.tz;
-    } catch (e) {
+function is_updated_date_a_weekend(json) {
+    let date = Moment(json.updated).isoWeekday();
+    return (date === 6) || (date === 7)
+}
 
+function get_timezone(json) {
+    let tz = { "committer": 0, "author": 0 };
+    let revisions = json.revisions
+    for (let id in revisions) {
+        let revision = revisions[id]
+        if (!!revision["commit"]) {
+            if (!!revision["commit"]["committer"])
+                tz.committer = revision.commit.committer.tz;
+            if (!!revision["commit"]["author"])
+                tz.author = revision.commit.author.tz;
+            break;
+        }
     }
     return tz;
 }
@@ -361,7 +374,7 @@ function get_changes_files_modified(json) {
         let files = revisions[key].files;
         for (let index in files) {
             if (!files_change_json[index]) {
-                files_change_json[index] = {number_of_modif: 0, time_of_modif: [], dev: {}, reviewer: {}};
+                files_change_json[index] = { number_of_modif: 0, time_of_modif: [], dev: {}, reviewer: {} };
             }
             files_change_json[index]["number_of_modif"] = files_change_json[index]["number_of_modif"] + 1;
             let diff_time = diffCreatedUpdatedTime(json)
@@ -532,7 +545,7 @@ function get_files_info(json) {
     return fileInfo;
 }
 
-function calculate_entropy(array){
+function calculate_entropy(array) {
     let entropy = 0;
     if (array.length > 0) {
         let som = MathJs.sum(array);
@@ -661,7 +674,7 @@ function getParticipantId(json) {
     let ownerId = json.owner._account_id;
     let reviewersId = getReviewersId(json);
     let user = []
-    //add user
+        //add user
     user.push(ownerId);
     for (let i in reviewersId) {
         user.push(reviewersId[i]);
@@ -706,7 +719,7 @@ function countLetter(word) {
 function countWord(phrase) {
     if (phrase)
         return phrase.split(' ')
-            .filter(function (n) {
+            .filter(function(n) {
                 return n != ''
             })
             .length;

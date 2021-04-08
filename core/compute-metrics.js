@@ -70,7 +70,7 @@ function getChanges() {
         ])
         .allowDiskUse(true)
         //.sort({'created': 1})
-        .limit(NUM_OF_CHANGES_LIMIT)
+        //.limit(NUM_OF_CHANGES_LIMIT)
         .exec()
         .then(docs => {
             /*for (let key in docs) {

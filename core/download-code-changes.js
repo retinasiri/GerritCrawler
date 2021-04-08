@@ -12,7 +12,7 @@ const Crawling = require('../models/crawling');
 const Database = require('../config/databaseConfig');
 const ApiEndPoints = require('../config/apiEndpoints');
 
-const axios = RateLimit(Axios.create(), {maxRPS: 80})
+const axios = RateLimit(Axios.create(), { maxRPS: 80 })
 const TIMEOUT = 20 * 60 * 1000;
 
 let projectDBUrl = Database.qtDbUrl;
@@ -29,6 +29,7 @@ function crawling(json) {
         LAST_YEAR_TO_COLLECT = json["LAST_YEAR_TO_COLLECT"];
     if (json["NUMBER_OF_CHANGES_REQUESTED"])
         NUMBER_OF_CHANGES_REQUESTED = json["NUMBER_OF_CHANGES_REQUESTED"];
+
     return startCrawling(projectApiUrl).then(() => {
         let project_name = new URL(projectApiUrl).hostname
         console.log(project_name + " Finished !!!!");
@@ -55,7 +56,7 @@ async function startCrawling(projectApiUrl) {
 
 //Connect to the database
 function dbConnection() {
-    return Mongoose.connect(projectDBUrl, {useNewUrlParser: true, useUnifiedTopology: true})
+    return Mongoose.connect(projectDBUrl, { useNewUrlParser: true, useUnifiedTopology: true })
         .then(() => {
             console.log("Connected to the database");
             return Promise.resolve(true);
@@ -86,7 +87,7 @@ function getAllChanges(changesUrl) {
     //console.log(getTime() + "ChangesUrl : " + changesUrl);
 
     return getChanges(changesUrl.href)
-        .then(function (params) {
+        .then(function(params) {
             if (params) {
                 if (params.created) {
                     let date = Moment(params.created).toDate();
@@ -105,7 +106,7 @@ function getAllChanges(changesUrl) {
             }
             return Promise.resolve(false);
         })
-        .catch(function (err) {
+        .catch(function(err) {
             console.log("Error : " + JSON.stringify(err.toString()));
         });
 }
@@ -114,7 +115,7 @@ function getAllChanges(changesUrl) {
  * @param {String} changesUrl The date
  */
 function getChanges(changesUrl) {
-    return fetchFromApi(changesUrl, function (params) {
+    return fetchFromApi(changesUrl, function(params) {
         return saveFiles(changesUrl, params);
     });
 }
@@ -125,7 +126,7 @@ function getChanges(changesUrl) {
  */
 function fetchFromApi(apiEndpoint, functionToExecute) {
     //console.log("apiEndpoint : " + apiEndpoint);
-    return axios.get(apiEndpoint, {timeout: TIMEOUT})
+    return axios.get(apiEndpoint, { timeout: TIMEOUT })
         .then(response => {
             //console.log("fetchFromApi start : " + start);
             let json = JSON.parse(response.data.slice(5));
@@ -146,7 +147,7 @@ function fetchFromApi(apiEndpoint, functionToExecute) {
 
             return lastJson;
         })
-        .catch(function (err) {
+        .catch(function(err) {
             console.log("Api Error : " + err);
             return getAllChanges(new URL(apiEndpoint));
         });
@@ -179,13 +180,13 @@ function saveCrawlingProgression(url, number) {
     let type = url.searchParams.get('q');
     let json = {}
     if (type === ApiEndPoints.openChangeQuery) {
-        json = {number_of_open_changes_collected: number};
+        json = { number_of_open_changes_collected: number };
     } else if (type === ApiEndPoints.mergedChangeQuery) {
-        json = {number_of_merged_changes_collected: number};
+        json = { number_of_merged_changes_collected: number };
     } else if (type === ApiEndPoints.abandonedChangeQuery) {
-        json = {number_of_abandoned_changes_collected: number};
+        json = { number_of_abandoned_changes_collected: number };
     }
-    return Crawling.updateOne({url: projectApiUrl}, json);
+    return Crawling.updateOne({ url: projectApiUrl }, json);
 }
 
 /**
@@ -200,7 +201,7 @@ function initCrawlingProgression(url) {
         "number_of_abandoned_changes_collected": 0
     });
 
-    return Crawling.findOne({url: url})
+    return Crawling.findOne({ url: url })
         .then(result => {
             if (result) {
                 return Promise.resolve(result);

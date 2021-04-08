@@ -2,79 +2,65 @@ const Mongoose = require('mongoose');
 const Moment = require('moment');
 const MathJs = require('mathjs');
 const jsnx = require('jsnetworkx');
-const dbUtils = require('../config/dbUtils');
 const cliProgress = require('cli-progress');
 const Database = require('../config/databaseConfig');
 const Change = require('../models/change');
 const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
-const Extension = require('../res/extension.json');
-const Keywords = require('../res/keywords.json');
 
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
-
 let projectDBUrl = Database.libreOfficeDBUrl;
 
+let STARTING_POINT = 0;
 let NUM_DAYS_FOR_RECENT = 120;
 let NUM_OF_CHANGES_LIMIT = 80000;
+let NUMBER_DATABASE_REQUEST = 3;
 
 let i = 0;
 
-mainFunction()
-    .then(() => {
-        progressBar.stop();
-        console.log("Finished!!!!");
-        process.exit();
-    })
+mainFunction(projectDBUrl)
     .catch(err => {
         console.log(err)
     });
 
-function mainFunction() {
-    return dbConnection()
-        .then(() => {
-            console.log("Processing data...");
-            progressBar.start(NUM_OF_CHANGES_LIMIT, 0);
-            return getChanges();
+function mainFunction(projectDBUrl) {
+    return Database.dbConnection(projectDBUrl)
+        .then(() => { // Counts the number of change
+            return Change.estimatedDocumentCount({});;
         })
-        /*.then(() => {
-            return Utils.saveJsonToFile("metrics", metricsJson);
-        })*/
+        .then((count) => {
+            NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
+            console.log("Processing data... by " + NUM_OF_CHANGES_LIMIT);
+            progressBar.start(count, 0);
+            return getChanges(STARTING_POINT);
+        })
+        .then(() => {
+            progressBar.stop();
+            console.log("Finished!!!!");
+            return Database.closeConnection();
+            //return Utils.saveJsonToFile("metrics", metricsJson);
+            //process.exit();
+        })
         .catch(err => {
             console.log(err)
         });
 }
 
-async function dbConnection() {
-    return Mongoose.connect(projectDBUrl, { useNewUrlParser: true, useUnifiedTopology: true },
-        function(err) {
-            if (err) {
-                console.log(err);
-            } else {
-                //console.log("Connected to the database");
-            }
-        });
-}
-
-
 //get changes id
-function getChanges() {
-
+function getChanges(skip) {
     return Change
-        //.find({})
         .aggregate([
             { $sort: { created: 1 } },
+            { $skip: skip },
             { $limit: NUM_OF_CHANGES_LIMIT }
         ])
         .allowDiskUse(true)
-        //.sort({'created': 1})
-        .limit(NUM_OF_CHANGES_LIMIT)
         .exec()
         .then(docs => {
-            /*for (let key in docs) {
-                console.log("doc : " + docs[key].created);
-            }*/
-            return collectDocs(docs);
+            return docs.length ? collectDocs(docs) : Promise.resolve(false);
+        })
+        .then(result => {
+            return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
         })
         .catch(err => {
             console.log(err)
@@ -83,7 +69,7 @@ function getChanges() {
 
 async function collectDocs(docs) {
     if (!docs)
-        return;
+        return Promise.resolve(true);
     let promiseArray = []
     for (let key in docs) {
         let promise = await collectMetrics(docs[key])
@@ -96,10 +82,10 @@ async function collectDocs(docs) {
 }
 
 function saveMetrics(json) {
-    return Metrics.updateOne({id: json.id}, json, {upsert: true})
-        .then(() => {
+    return Metrics.updateOne({ id: json.id }, json, { upsert: true })
+        /*.then(() => {
             return Utils.add_line_to_file(json)
-        });
+        });*/
 }
 
 function updateProgress() {
@@ -312,7 +298,7 @@ function getParticipantId(json) {
     let ownerId = json.owner._account_id;
     let reviewersId = getReviewersId(json);
     let user = []
-    //add user
+        //add user
     user.push(ownerId);
     for (let i in reviewersId) {
         user.push(reviewersId[i]);

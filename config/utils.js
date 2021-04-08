@@ -3,30 +3,18 @@ const fs = require('fs');
 //let metricsJson = require("../data/metrics.json");
 let programming_languages_extension = require("../res/Programming_Languages_Extensions.json");
 
-async function saveJsonToFile(name, json) {
-    return saveFileJSON(name, json, "json");
-}
-
-function saveFileJSON(name, data, ext) {
-    let fileName = "data/" + name + "." + ext;
+function saveJSONInFile(directory = "data/", name, data) {
     let json = JSON.stringify(data, null, 2);
-    fsExtra.ensureDirSync("data");
-    return fsExtra.outputFile(fileName, json)
-        .then(() => {
-            console.log('Data written to file');
-        })
-        .catch(err => {
-            console.log(err)
-        });
+    return saveFile(directory, name, json, "json")
 }
 
-function saveFile(name, data, ext) {
-    let fileName = "data/" + name + "." + ext;
-    fsExtra.ensureDirSync("data");
+function saveFile(directory = "data/", name, data, ext) {
+    let fileName = directory + name + "." + ext;
+    fsExtra.ensureDirSync(directory);
     return fsExtra.outputFile(fileName, data)
-        .then(() => {
+        /*.then(() => {
             console.log('Data written to file');
-        })
+        })*/
         .catch(err => {
             console.log(err)
         });
@@ -35,7 +23,7 @@ function saveFile(name, data, ext) {
 function csvFunction(json) {
     let array_of_json = Object.values(json)
     let csvRecord = Object.keys(array_of_json[0]).join(',') + '\n';
-    array_of_json.forEach(function (jsonRecord) {
+    array_of_json.forEach(function(jsonRecord) {
         csvRecord += Object.values(jsonRecord).join(',') + '\n';
     });
     return csvRecord;
@@ -45,11 +33,11 @@ function jsonToCsv(json) {
     let fields = Object.keys(json)
     let jsonArray = Object.values(json)
     console.log(jsonArray);
-    let replacer = function (key, value) {
+    let replacer = function(key, value) {
         return value === null ? '' : value
     }
-    let csv = jsonArray.map(function (row) {
-        return fields.map(function (fieldName) {
+    let csv = jsonArray.map(function(row) {
+        return fields.map(function(fieldName) {
             return JSON.stringify(row[fieldName], replacer)
         }).join(',')
     })
@@ -59,7 +47,7 @@ function jsonToCsv(json) {
 }
 
 //generate_extension;
-function generate_extension(){
+function generate_extension() {
     let extension = get_programming_language_extensions(programming_languages_extension);
     return saveJsonToFile("extension", extension).then(() => {
         console.log('extension file generated');
@@ -67,6 +55,7 @@ function generate_extension(){
 }
 
 //extension to programming language
+//https://gist.github.com/ppisarczyk/43962d06686722d26d176fad46879d41
 function get_programming_language_extensions(ArrayOfJson) {
     let extension_language = {};
     for (let index in ArrayOfJson) {
@@ -118,9 +107,8 @@ function getTime() {
 
 module.exports = {
     saveFile: saveFile,
-    saveJsonToFile: saveJsonToFile,
+    saveJSONInFile: saveJSONInFile,
     jsonToCsv: jsonToCsv,
     add_line_to_file: add_line_to_file,
-    saveFile: saveFile,
     getTime: getTime
 };

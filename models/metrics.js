@@ -13,8 +13,11 @@ var MetricsSchema = new Schema({
     date_created_time: Number,
     date_updated_time: Number,
     days_of_the_weeks_of_date_created: Number,
+    days_of_the_weeks_of_date_updated: Number,
+    is_created_date_a_weekend: Number,
+    is_updated_date_a_weekend: Number,
     committer_timezone: Number,
-    created_date_is_weekend: Number,
+    author_timezone: Number,
 
     subject_length: Number,
     subject_word_count: Number,
@@ -38,7 +41,7 @@ var MetricsSchema = new Schema({
     num_files_type: Number,
     num_directory: Number,
     num_file_added: String,
-    num_file_deleted:String,
+    num_file_deleted: String,
     num_subsystem: Number,
     is_a_bot: Boolean,
     num_binary_file: Number,
@@ -59,32 +62,33 @@ var MetricsSchema = new Schema({
     review_num: Number,
     num_merged: Number,
     merged_ratio: Number,
-    subsystem_merged:Number,
+    subsystem_merged: Number,
     recent_merged_ratio: Number,
-    subsystem_merged_ratio:Number,
+    subsystem_merged_ratio: Number,
 
-    moy_time_owner_pass_on_change_files:Number,
-    moy_number_of_time_reviewer_review_the_files:Number,
-    moy_time_reviewer_pass_on_this_files:Number,
+    moy_time_owner_pass_on_change_files: Number,
+    moy_number_of_time_reviewer_review_the_files: Number,
+    moy_time_reviewer_pass_on_this_files: Number,
 
-    num_human_reviewer:Number,
-    num_revisions:Number,
+    num_human_reviewer: Number,
+    num_revisions: Number,
 
     degree_centrality: Number,
     closeness_centrality: Number,
     betweenness_centrality: Number,
     eigenvector_centrality: Number,
     clustering_coefficient: Number,
-    k_coreness : Number,
+    k_coreness: Number,
 
     diff_created_updated: Number,
     diff_created_updated_in_days: Number,
+    diff_created_updated_in_days_ceil: Number,
 
 }, {
     versionKey: false
 });
 
 const Metric = mongoose.model('Metric', MetricsSchema)
-//Account.createIndexes();
+    //Account.createIndexes();
 
 module.exports = Metric;

@@ -27,19 +27,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df22d5de-0498-4008-9a04-2f268069076d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/core/add-code-change-in-db.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/compute-graph-metrics.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/compute-simple-metrics.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/download-code-changes.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/download-project-info.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/collect-project-to-download.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/download-projects-repo.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/computeMetrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/core/compute-metrics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/apiEndpoints.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/apiEndpoints.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/databaseConfig.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/databaseConfig.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/dbUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/dbUtils.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/metrics.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/metrics.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/compute-graph-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/core/compute-graph-metrics.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/compute-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/core/compute-metrics.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/compute-simple-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/core/compute-simple-metrics.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/download-code-changes.js" beforeDir="false" afterPath="$PROJECT_DIR$/core/download-code-changes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/metrics.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/metrics.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
@@ -149,7 +148,12 @@
       <workItem from="1616696418397" duration="3059000" />
       <workItem from="1616738537117" duration="15124000" />
       <workItem from="1617035996284" duration="23382000" />
-      <workItem from="1617121292505" duration="6644000" />
+      <workItem from="1617121292505" duration="6812000" />
+      <workItem from="1617189107977" duration="857000" />
+      <workItem from="1617770273053" duration="203000" />
+      <workItem from="1617773362220" duration="328000" />
+      <workItem from="1617780560848" duration="13723000" />
+      <workItem from="1617844947913" duration="909000" />
     </task>
     <servers />
   </component>
@@ -203,11 +207,11 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="240" y="17" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1616761040384" />
-    <state x="341" y="32" width="598" height="735" key="find.popup" timestamp="1617125246819">
+    <state x="341" y="32" width="598" height="735" key="find.popup" timestamp="1617797057108">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="341" y="32" width="598" height="735" key="find.popup/0.0.1280.800/-282.-1080.1920.1080@0.0.1280.800" timestamp="1610932134199" />
-    <state x="341" y="32" width="598" height="735" key="find.popup/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1617125246819" />
+    <state x="341" y="32" width="598" height="735" key="find.popup/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1617797057108" />
     <state x="341" y="32" width="598" height="735" key="find.popup/0.0.1280.800@0.0.1280.800" timestamp="1615544632229" />
     <state x="305" y="124" width="670" height="676" key="search.everywhere.popup" timestamp="1614571639235">
       <screen x="0" y="0" width="1280" height="800" />
