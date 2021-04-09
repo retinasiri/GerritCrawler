@@ -1,2 +1,4 @@
-node_modules/
-trash/
+DownloadModule/node_modules/
+DownloadModule/data/
+DownloadModule/__pycache__/
+MetricsAnalysisModule/venv37/
