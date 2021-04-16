@@ -1,4 +1,3 @@
-const Mongoose = require('mongoose');
 const Moment = require('moment');
 const MathJs = require('mathjs');
 const cliProgress = require('cli-progress');
@@ -8,44 +7,63 @@ const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
 const Extension = require('../res/extension.json');
 const Keywords = require('../res/keywords.json');
+const ApiEndPoints = require('../config/apiEndpoints');
+const MetricsUtils = require('./metrics-utils');
+
 
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
 let projectDBUrl = Database.libreOfficeDBUrl;
+let projectApiUrl = ApiEndPoints.qtApiUrl;
+
+let DATA_PATH = "data/"
 
 let STARTING_POINT = 0;
 let NUM_OF_CHANGES_LIMIT = 35000;
 let NUMBER_DATABASE_REQUEST = 3;
 
-//todo add data type beside programming language
-//todo collecte recent data
-//todo export module
+//do remove bot
+//do add data type and programming language
 
-//let metricsJson = {};
+let metricsJson = {};
+let i = 1;
 
-let i = 0;
+let libreOffice = {
+    projectApiUrl: ApiEndPoints.libreOfficeApiUrl,
+    projectDBUrl: Database.libreOfficeDBUrl,
+    directory: DATA_PATH
+}
 
-mainFunction(projectDBUrl)
-    .catch(err => {
-        console.log(err)
-    });
+startComputeMetrics(libreOffice).catch(err => {
+    console.log(err)
+});
 
-function mainFunction(projectDBUrl) {
+function startComputeMetrics(json) {
+    if (json["projectDBUrl"])
+        projectDBUrl = json["projectDBUrl"];
+    if (json["projectApiUrl"])
+        projectApiUrl = json["projectApiUrl"];
+    if (json["directory"])
+        DATA_PATH = json["directory"];
+
     return Database.dbConnection(projectDBUrl)
         .then(() => { // Counts the number of change
-            return Change.estimatedDocumentCount({});;
+            return Change.estimatedDocumentCount({});
         })
         .then((count) => {
             NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
-            console.log("Processing data... by " + NUM_OF_CHANGES_LIMIT);
+            console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
             return getChanges(STARTING_POINT);
+        })
+        .then(() => {
+            let projectName = Utils.getProjectName(ApiEndPoints.getProjectsUrl(projectApiUrl));
+            let name = projectName + "-simple-metrics"
+            return Utils.saveJSONInFile(DATA_PATH,name, metricsJson);
         })
         .then(() => {
             progressBar.stop();
             console.log("Finished!!!!");
             return Database.closeConnection();
-            //return Utils.saveJsonToFile("metrics", metricsJson);
-            //process.exit();
         })
         .catch(err => {
             console.log(err)
@@ -56,7 +74,7 @@ function mainFunction(projectDBUrl) {
 function getChanges(skip) {
     return Change
         .aggregate([
-            { $sort: { created: 1 } },
+            { $sort: { _number: 1, created:1 } },
             { $skip: skip },
             { $limit: NUM_OF_CHANGES_LIMIT }
         ])
@@ -91,13 +109,15 @@ async function collectDocs(docs) {
 function saveMetrics(json) {
     return Metrics.updateOne({ id: json.id }, json, { upsert: true })
         .then(() => {
-            //metricsJson[json.id] = json;
-            return Utils.add_line_to_file(json)
+            metricsJson[json.id] = json;
+            let prefix = Utils.getProjectName(projectApiUrl);
+            let filename = prefix + "-simple-metrics.csv"
+            return Utils.add_line_to_file(json, filename, DATA_PATH)
         });
 }
 
 function updateProgress() {
-    progressBar.update(i);
+    progressBar.update(1);
     i++;
 }
 
@@ -107,6 +127,7 @@ function updateProgress() {
  */
 async function collectMetrics(json) {
     let metric = {};
+    //checkMetrics(json)
     collectIdentityMetrics(json, metric);
     collectTimeMetrics(json, metric);
     collectCodeMetrics(json, metric);
@@ -117,6 +138,8 @@ async function collectMetrics(json) {
     return metric;
 }
 
+//function (checkMetrics)
+
 /**
  * @param {JSON} json Input Json
  * @param {JSON} metric Output Json
@@ -126,6 +149,7 @@ function collectIdentityMetrics(json, metric) {
     metric["number"] = json._number;
     metric["id"] = json.id;
     metric["change_id"] = json.change_id;
+    metric["status"] = json.status;
 }
 
 /**
@@ -176,9 +200,12 @@ function collectFileMetrics(json, metric) {
     metric["num_file_added"] = fileInfo.num_file_added;
     metric["num_file_deleted"] = fileInfo.num_file_deleted;
     metric["num_binary_file"] = fileInfo.num_binary_file;
-    metric["num_language"] = fileInfo.num_programming_language;
     metric["modify_entropy"] = fileInfo.modify_entropy;
     metric["num_subsystem"] = num_subsystem(json);
+    metric["num_programming_language"] = fileInfo.num_programming_language;
+    metric["num_data_language"] = fileInfo.num_data_language;
+    metric["num_prose_language"] = fileInfo.num_prose_language;
+    metric["num_markup_language"] = fileInfo.num_markup_language;
 
     let changesFileInfo = get_changes_files_modified(json)
     metric["moy_changes_files_modified"] = changesFileInfo.moy_number_per_review;
@@ -331,7 +358,7 @@ function get_owner_property(json) {
         sub_sys_merged_ratio = MathJs.divide(owner[ownerId]["sub_sys_merged"].length, owner[ownerId]["sub_sys"].length);
     }
 
-    let reviewers = json.reviewers.REVIEWER
+    let reviewers = MetricsUtils.getHumanReviewers(json);
     for (let id in reviewers) {
         let reviewerId = reviewers[id]._account_id;
         initOwner(reviewerId);
@@ -370,7 +397,7 @@ function get_changes_files_modified(json) {
         if (revision_number !== 1)
             continue;
 
-        let reviewersIds = getReviewersId(json);
+        let reviewersIds = MetricsUtils.getHumanReviewersID(json);
         //console.log(json.id);
 
         let files = revisions[key].files;
@@ -541,8 +568,12 @@ function get_files_info(json) {
     fileInfo.num_file_added = Object.keys(addFiles).length;
     fileInfo.num_file_deleted = Object.keys(removeFiles).length;
     fileInfo.num_directory = Object.keys(directoryJson).length;
-    fileInfo.num_programming_language = get_num_of_language(filesExtJson);
     fileInfo.modify_entropy = average(entropyArray);
+
+    fileInfo.num_programming_language = get_num_of_language(filesExtJson);
+    fileInfo.num_markup_language =  get_num_of_markup_type(filesExtJson);
+    fileInfo.num_data_language = get_num_of_data_type(filesExtJson);
+    fileInfo.num_prose_language = get_num_of_prose_type(filesExtJson);
 
     return fileInfo;
 }
@@ -621,10 +652,26 @@ function plusFn(l, r) {
 }
 
 function get_num_of_language(extJson) {
-    let programming_list_json = Extension.programming;
+    return get_num_of_extension_type(extJson, Extension.programming)
+}
+
+function get_num_of_markup_type(extJson) {
+    return get_num_of_extension_type(extJson, Extension.markup)
+}
+
+function get_num_of_data_type(extJson) {
+    return get_num_of_extension_type(extJson, Extension.data)
+}
+
+function get_num_of_prose_type(extJson) {
+    return get_num_of_extension_type(extJson, Extension.prose)
+}
+
+function get_num_of_extension_type(json, extTypeJson) {
+    let programming_list_json = extTypeJson;
     let number = 0;
     let prog_list = new Set;
-    for (let extension in extJson) {
+    for (let extension in json) {
         if (programming_list_json[extension]) {
             if (!prog_list.has(programming_list_json[extension][0])) {
                 number++
@@ -823,3 +870,7 @@ function msg_is_refactoring(json) {
     let wordArray = Keywords.refactoring;
     return msg_has_words(json, wordArray);
 }
+
+module.exports = {
+    start: startComputeMetrics
+};

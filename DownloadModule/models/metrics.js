@@ -6,6 +6,7 @@ var MetricsSchema = new Schema({
     number: String,
     id: String,
     change_id: String,
+    status: String,
 
     date_created: String,
     date_updated: String,
@@ -45,13 +46,16 @@ var MetricsSchema = new Schema({
     num_subsystem: Number,
     is_a_bot: Boolean,
     num_binary_file: Number,
-    num_language: Number,
     modify_entropy: Number,
     num_segs_added: Number,
     num_segs_deleted: Number,
     num_segs_updated: Number,
     moy_changes_files_modified: Number,
     moy_changes_files_modified_time: Number,
+    num_programming_language: Number,
+    num_data_language: Number,
+    num_prose_language: Number,
+    num_markup_language: Number,
 
     file_developer_num: Number,
     file_developer_experience: Number,
@@ -72,6 +76,14 @@ var MetricsSchema = new Schema({
 
     num_human_reviewer: Number,
     num_revisions: Number,
+
+    recent_total_merged_ratio: Number,
+    recent_owner_merged_ratio: Number,
+    recent_owner_percentage_of_merged: Number,
+    recent_owner_change_num: Number,
+    recent_review_num_mean: Number,
+    recent_reviews_non_close_mean: Number,
+    recent_reviews_non_close_max: Number,
 
     degree_centrality: Number,
     closeness_centrality: Number,

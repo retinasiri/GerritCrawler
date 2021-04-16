@@ -19,7 +19,13 @@ let openChangeQuery = "status:open";
 let abandonedChangeQuery = "status:abandoned";
 let mergedChangeQuery = "status:merged" ;
 //let query = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=CURRENT_COMMIT&o=ALL_FILES&o=DETAILED_ACCOUNTS&o=REVIEWER_UPDATES&o=MESSAGES";
-let query = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS&o=REVIEWER_UPDATES&o=MESSAGES";
+//let query = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS&o=REVIEWER_UPDATES&o=MESSAGES&o=DOWNLOAD_COMMANDS";
+//let query = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS" +
+    //"&o=REVIEWER_UPDATES&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS"
+    //"&o=CHANGE_ACTIONS&o=REVIEWED&o=SUBMITTABLE&o=CHECK&o=COMMIT_FOOTERS&o=TRACKING_IDS";
+
+let query = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS" +
+    "&o=REVIEWER_UPDATES&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS&o=COMMIT_FOOTERS"
 
 function getProjectsUrl(url){
     return new URL(url + projectsEndpoint);
@@ -88,6 +94,16 @@ URL.prototype.getStartValue = function () {
     return this.searchParams.get('S');
 };
 
+URL.prototype.numChanges = function (number) {
+    this.searchParams.set('n', number);
+    return this;
+};
+
+URL.prototype.getNumChanges = function () {
+    //return this + "&" + pagingQuery + start;
+    return this.searchParams.get('n');
+};
+
 module.exports = {
     libreOfficeApiUrl: libreOfficeUrl,
     qtApiUrl: qtUrl,
@@ -106,7 +122,8 @@ module.exports = {
     getAbandonedChangeUrl: getAbandonedChangeUrl,
     startAt: URL.prototype.startAt,
     getStartValue: URL.prototype.getStartValue,
-    getProjectName: getProjectName
+    numChanges: URL.prototype.numChanges,
+    getNumChanges: URL.prototype.getNumChanges
 };
 
 /*

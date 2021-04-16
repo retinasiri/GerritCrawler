@@ -1,0 +1,34 @@
+{
+    "1000239": {
+        "_account_id": 1000239,
+        "name": "Gerrit Buildbot for LibreOffice",
+        "username": "libreoffice-gerrit-buildbot"
+    },
+    "1000855": {
+        "_account_id": 1000855,
+        "name": "Jenkins",
+        "username": "ci"
+    },
+    "1001371": {
+        "_account_id": 1001371,
+        "name": "Pootle bot",
+        "username": "pootlebot"
+    },
+    "1001867": {
+        "_account_id": 1001867,
+        "name": "redacted",
+        "username": "AmbientLighter",
+        "inactive": true
+    },
+    "1001945": {
+        "_account_id": 1001945,
+        "name": "mrprobot",
+        "username": "mrprobot"
+    },
+    "1002299": {
+        "_account_id": 1002299,
+        "name": "[REDACTED]",
+        "username": "dundar",
+        "inactive": true
+    }
+}

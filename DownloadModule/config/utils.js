@@ -13,7 +13,7 @@ function saveFile(directory = "data/", name, data, ext) {
     fsExtra.ensureDirSync(directory);
     return fsExtra.outputFile(fileName, data)
         /*.then(() => {
-            console.log('Data written to file');
+            console.log('data written to file');
         })*/
         .catch(err => {
             console.log(err)
@@ -79,24 +79,26 @@ function get_programming_language_extensions(ArrayOfJson) {
 //create metrics file
 
 let csv_separator = ",";
-let data_dir_name = "data"
-let metric_file_name = "metrics.csv";
-let metric_file_path = data_dir_name + "/" + metric_file_name;
+//let data_dir_name = "data"
+//let metric_file_name = "metrics.csv";
+//let metric_file_path = data_dir_name + "/" + metric_file_name;
 
-function write_line_on_file(str) {
+function write_line_on_file(str, filename, data_dir_name) {
+    let metric_file_path = data_dir_name + "/" + filename;
     fsExtra.ensureDirSync(data_dir_name);
     return fsExtra.appendFileSync(metric_file_path, str);
 }
 
-function add_line_to_file(json) {
+function add_line_to_file(json, filename, data_dir_name) {
     let line = Object.values(json).join(csv_separator) + "\r\n";
+    let metric_file_path = data_dir_name + "/" + filename;
     fsExtra.ensureDirSync(data_dir_name);
     if (!fs.existsSync(metric_file_path)) {
         let header = Object.keys(json).join(csv_separator) + "\r\n";
-        write_line_on_file(header);
-        write_line_on_file(line);
+        write_line_on_file(header, filename, data_dir_name);
+        write_line_on_file(line, filename, data_dir_name);
     } else {
-        write_line_on_file(line);
+        write_line_on_file(line, filename, data_dir_name);
     }
 }
 
@@ -105,10 +107,19 @@ function getTime() {
     return dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds() + " : ";
 }
 
+/**
+ * @param {String} projectAPIUrl The date
+ */
+function getProjectName(projectAPIUrl){
+    let url = new URL(projectAPIUrl)
+    return (url.hostname.split("."))[1]
+}
+
 module.exports = {
     saveFile: saveFile,
     saveJSONInFile: saveJSONInFile,
     jsonToCsv: jsonToCsv,
     add_line_to_file: add_line_to_file,
-    getTime: getTime
+    getTime: getTime,
+    getProjectName: getProjectName
 };

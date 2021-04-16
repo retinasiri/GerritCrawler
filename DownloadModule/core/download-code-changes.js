@@ -9,22 +9,24 @@ const ApiEndPoints = require('../config/apiEndpoints');
 
 const axios = RateLimit(Axios.create(), { maxRPS: 80 })
 const TIMEOUT = 20 * 60 * 1000;
-const RACINE_PATH = "data/"
+let RACINE_PATH = "data/"
 
 let projectDBUrl = Database.qtDbUrl;
 let projectApiUrl = ApiEndPoints.qtApiUrl;
-let LAST_YEAR_TO_COLLECT = 2021;
-let NUMBER_OF_CHANGES_REQUESTED = 500;
+let LAST_YEAR_TO_COLLECT = 2010;
+let NUMBER_OF_CHANGES_REQUESTED = 250;
 
-function crawling(json) {
+function startDownload(json) {
     if (json["projectDBUrl"])
         projectDBUrl = json["projectDBUrl"];
     if (json["projectApiUrl"])
         projectApiUrl = json["projectApiUrl"];
-    if (json["LAST_YEAR_TO_COLLECT"])
-        LAST_YEAR_TO_COLLECT = json["LAST_YEAR_TO_COLLECT"];
-    if (json["NUMBER_OF_CHANGES_REQUESTED"])
-        NUMBER_OF_CHANGES_REQUESTED = json["NUMBER_OF_CHANGES_REQUESTED"];
+    if (json["last_year"])
+        LAST_YEAR_TO_COLLECT = json["last_year"];
+    if (json["number_of_changes"])
+        NUMBER_OF_CHANGES_REQUESTED = json["number_of_changes"];
+    if (json["directory"])
+        RACINE_PATH = json["directory"];
 
     return startCrawling(projectApiUrl, projectDBUrl)
         .then(() => {
@@ -56,7 +58,8 @@ function getTime() {
 
 function getStartRange(url) {
     let start = Number(url.getStartValue());
-    return start + " - " + (start + NUMBER_OF_CHANGES_REQUESTED);
+    let number = Number(url.getNumChanges());
+    return start + " - " + (start + number);
 }
 
 /**
@@ -66,6 +69,7 @@ function getAllChanges(changesUrl) {
 
     let start = Number(changesUrl.getStartValue());
     let typeOfChange = changesUrl.searchParams.get('q');
+    changesUrl = changesUrl.numChanges(NUMBER_OF_CHANGES_REQUESTED)
     console.log(getTime() + typeOfChange + " - changes : " + getStartRange(changesUrl));
     //console.log(getTime() + "ChangesUrl : " + changesUrl);
 
@@ -73,15 +77,13 @@ function getAllChanges(changesUrl) {
         .then(function(params) {
             if (params) {
                 if (params.created) {
-                    let date = Moment(params.created).toDate();
-                    if (date.getFullYear() > LAST_YEAR_TO_COLLECT) {
+                    let lastChangeYear = Moment(params.created).toDate().getFullYear();
+                    if (lastChangeYear > LAST_YEAR_TO_COLLECT) {
                         if (params._more_changes) {
                             if (params._more_changes === true) {
-                                //console.log("changesUrl + 500 : " + changesUrl);
                                 changesUrl = changesUrl.startAt(start + NUMBER_OF_CHANGES_REQUESTED);
-                                return saveCrawlingProgression(changesUrl, start + NUMBER_OF_CHANGES_REQUESTED).then(() => {
-                                    return getAllChanges(changesUrl).then();
-                                });
+                                changesUrl = changesUrl.numChanges(NUMBER_OF_CHANGES_REQUESTED)
+                                return getAllChanges(changesUrl);
                             }
                         }
                     }
@@ -99,7 +101,12 @@ function getAllChanges(changesUrl) {
  */
 function getChanges(changesUrl) {
     return fetchFromApi(changesUrl, function(params) {
-        return saveFiles(changesUrl, params);
+        return saveFiles(changesUrl, params).then(() =>{
+            let url = new URL(changesUrl);
+            let start = Number(url.getStartValue());
+            return saveCrawlingProgression(url, start + NUMBER_OF_CHANGES_REQUESTED);
+        });
+        //todo save crawling progression here
     });
 }
 
@@ -115,7 +122,11 @@ function fetchFromApi(apiEndpoint, functionToExecute) {
             let json = JSON.parse(response.data.slice(5));
             let lastJson;
 
+            if(Object.keys(json).length === 0)
+                return {};
+
             functionToExecute(json);
+
 
             for (let key in json) {
                 if (json.hasOwnProperty(key)) {
@@ -131,7 +142,8 @@ function fetchFromApi(apiEndpoint, functionToExecute) {
             return lastJson;
         })
         .catch(function(err) {
-            console.log("Api Error : " + err);
+            let typeOfChange = (new URL(apiEndpoint)).searchParams.get('q');
+            console.log(getTime() + typeOfChange + "- Api Error : " + err);
             return getAllChanges(new URL(apiEndpoint));
         });
 }
@@ -140,7 +152,7 @@ function fetchFromApi(apiEndpoint, functionToExecute) {
  * @param {String} changeUrlString The date
  * @param {json} json The date
  */
-function saveFiles(changeUrlString, json) {
+async function saveFiles(changeUrlString, json) {
     //console.log('saveFiles : ' + changeUrl);
     let changeUrl = new URL(changeUrlString)
     let type = changeUrl.searchParams.get('q');
@@ -152,6 +164,13 @@ function saveFiles(changeUrlString, json) {
 
     fsExtra.ensureDirSync(dirname + "/" + subDirname);
     return fsExtra.outputFile(fileName, data);
+}
+
+/**
+ * @param {URL} url The date
+ */
+function getUrlHost(url){
+    return (url.hostname.split("."))[1]
 }
 
 /**
@@ -168,7 +187,9 @@ function saveCrawlingProgression(url, number) {
     } else if (type === ApiEndPoints.abandonedChangeQuery) {
         json = { number_of_abandoned_changes_collected: number };
     }
-    return Crawling.updateOne({ url: projectApiUrl }, json);
+    return Crawling.updateOne({ url: projectApiUrl }, json).then(()=>{
+        return Promise.resolve(true);
+    });
 }
 
 /**
@@ -194,5 +215,5 @@ function initCrawlingProgression(url) {
 }
 
 module.exports = {
-    crawling: crawling
+    start: startDownload
 };

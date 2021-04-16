@@ -6,7 +6,7 @@ const Database = require('../config/databaseConfig');
 const ApiEndPoints = require('../config/apiEndpoints');
 
 //lire les fichiers
-let racinePath = "/Users/jeefer/Workplace/data/";
+let DATA_PATH = "data/";
 let projectName = "libreoffice";
 
 let account = {};
@@ -16,41 +16,37 @@ let humanAccount = {};
 let projectDBUrl = Database.qtDbUrl;
 let projectApiUrl = ApiEndPoints.qtApiUrl;
 
-addChangeInDB(projectDBUrl)
-    .then(() => {
-        console.log("Finished !!!!");
-    })
+/*addChangeInDB(projectDBUrl)
     .catch(err => {
         console.log(err)
-    });
+    });*/
 
-function addChangeInDB(json) {
+function addChangesInDB(json) {
     if (json["projectDBUrl"])
         projectDBUrl = json["projectDBUrl"];
     if (json["projectApiUrl"])
         projectApiUrl = json["projectApiUrl"];
-    if (json["racinePath"])
-        racinePath = json["racinePath"];
+    if (json["directory"])
+        DATA_PATH = json["directory"];
 
-    projectName = ApiEndPoints.getProjectsUrl(projectApiUrl);
+    projectName = Utils.getProjectName(ApiEndPoints.getProjectsUrl(projectApiUrl));
 
-    dbConnection(projectDBUrl);
-    return getFilesLoad()
+    return Database.dbConnection(projectDBUrl).then(() => {
+        console.log("Start !!!!");
+        return getFilesLoad()
+    })
         .then(() => {
             // save file of account
             let promises = [];
-            promises.push(Utils.saveJsonToFile(projectName + "-account", account));
-            promises.push(Utils.saveJsonToFile(projectName + "-bot-account", botAccount));
-            promises.push(Utils.saveJsonToFile(projectName + "-human-account", humanAccount));
+            let path = DATA_PATH + projectName + "/"
+            promises.push(Utils.saveJSONInFile(path, projectName + "-account", account));
+            promises.push(Utils.saveJSONInFile(path, projectName + "-bot-account", botAccount));
+            promises.push(Utils.saveJSONInFile(path, projectName + "-human-account", humanAccount));
             return Promise.all(promises);
-        });
-}
-
-function dbConnection(DBUrl) {
-    return Mongoose.connect(DBUrl, {useNewUrlParser: true, useUnifiedTopology: true})
+        })
         .then(() => {
-            console.log("Connected to the database");
-            return Promise.resolve(true);
+            console.log("Finished !!!!");
+            return Mongoose.connection.close();
         })
         .catch(err => {
             console.log(err)
@@ -58,16 +54,16 @@ function dbConnection(DBUrl) {
 }
 
 function getFilesLoad() {
+    console.log("Adding Open Changes !!!!");
     return getFiles(getOpenPath())
         .then(response => {
+            console.log("Adding Abandoned Changes !!!!");
             return getFiles(getAbandonedPath());
         })
         .then(response => {
+            console.log("Adding Merged Changes !!!!");
             return getFiles(getMergedPath());
         })
-        .catch(err => {
-            console.log(err)
-        });
 }
 
 async function getFiles(path) {
@@ -90,30 +86,34 @@ async function addInformationToDB(path, filename) {
     if (filename.includes(".DS_Store"))
         return;
     let json = JSON.parse(fs.readFileSync(getFilePath(path, filename), 'utf8'));
-    let promiseArray = []
+    //let promiseArray = []
 
     for (let key in json) {
         if (json.hasOwnProperty(key)) {
             //Add user
-            let participants = getParticipants(json);
-            promiseArray.push(addParticipantsInDB(participants));
+            let changeJson = json[key]
+            let participants = getParticipants(changeJson);
+            //promiseArray.push(addParticipantsInDB(participants));
             //Add changes
-            promiseArray.push(addChangeInDB(json[key]));
+            //promiseArray.push(saveChangeInDB(changeJson));
+            await addParticipantsInDB(participants);
+            await saveChangeInDB(changeJson);
         }
     }
-    return Promise.all(promiseArray);
+    return Promise.resolve(true);
+    //return Promise.all(promiseArray);
 }
 
 function getFilePath(path, filename) {
     return path + filename;
 }
 
-function addChangeInDB(json) {
+function saveChangeInDB(json) {
     return dbUtils.saveChange(json);
 }
 
-function addParticipantsInDB(participants) {
-    let promises = [];
+async function addParticipantsInDB(participants) {
+    //let promises = [];
     for (let id in participants) {
 
         account[participants[id]._account_id] = participants[id];
@@ -123,9 +123,11 @@ function addParticipantsInDB(participants) {
         else
             botAccount[participants[id]._account_id] = participants[id];
 
-        promises.push(dbUtils.saveAccount(participants[id]));
+        //promises.push(dbUtils.saveAccount(participants[id]));
+        await dbUtils.saveAccount(participants[id])
     }
-    return Promise.all(promises);
+    return Promise.resolve(true);
+    //return Promise.all(promises);
 }
 
 function getParticipants(json) {
@@ -139,18 +141,18 @@ function getParticipants(json) {
     return participant;
 }
 
-function getAbandonedPath(){
-    return racinePath + projectName + "/abandoned-changes/";
+function getAbandonedPath() {
+    return DATA_PATH + projectName + "/abandoned-changes/";
 }
 
-function getMergedPath(){
-    return racinePath + projectName + "/merged-changes/";
+function getMergedPath() {
+    return DATA_PATH + projectName + "/merged-changes/";
 }
 
-function getOpenPath(){
-    return racinePath + projectName + "/open-changes/";
+function getOpenPath() {
+    return DATA_PATH + projectName + "/open-changes/";
 }
 
 module.exports = {
-    addChangeInDB: addChangeInDB
+    start: addChangesInDB
 };

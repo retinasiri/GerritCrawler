@@ -2,9 +2,13 @@ const cliProgress = require('cli-progress');
 const Database = require('../config/databaseConfig');
 const Change = require('../models/change');
 const Utils = require('../config/utils');
+const ApiEndPoints = require('../config/apiEndpoints');
+
+const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+let DATA_PATH = "data/";
 
 let projectDBUrl = Database.libreOfficeDBUrl;
-const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+let projectApiUrl = ApiEndPoints.qtApiUrl;
 
 let STARTING_POINT = 0;
 let NUM_OF_CHANGES_LIMIT = 10000;
@@ -17,7 +21,14 @@ mainFunction(projectDBUrl)
         console.log(err)
     });
 
-function mainFunction(projectDBUrl) {
+function mainFunction(json) {
+    if (json["projectDBUrl"])
+        projectDBUrl = json["projectDBUrl"];
+    if (json["projectApiUrl"])
+        projectApiUrl = json["projectApiUrl"];
+    if (json["directory"])
+        DATA_PATH = json["directory"];
+
     return Database.dbConnection(projectDBUrl)
         .then(() => { // Counts the number of change
             return Change.estimatedDocumentCount({})
