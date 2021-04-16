@@ -11,7 +11,7 @@ letter, resulting in 14,135 edges. This example is described in Section 1.1 of
     Computing", ACM Press, New York, 1993.
     http://www-cs-faculty.stanford.edu/~knuth/sgb.html
 
-The data file can be found at:
+The Data file can be found at:
 
 - https://github.com/networkx/networkx/blob/master/examples/graph/words_dat.txt.gz
 """

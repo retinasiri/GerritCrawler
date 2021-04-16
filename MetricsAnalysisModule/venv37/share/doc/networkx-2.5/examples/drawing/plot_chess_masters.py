@@ -12,7 +12,7 @@ default file::
     chess_masters_WCC.pgn.bz2
 
 contains all 685 World Chess Championship matches from 1886--1985.
-(data from http://chessproblem.my-free-games.com/chess/games/Download-PGN.php)
+(Data from http://chessproblem.my-free-games.com/chess/games/Download-PGN.php)
 
 The `chess_pgn_graph()` function returns a `MultiDiGraph` with multiple edges.
 Each node is the last name of a chess master. Each edge is directed from white
@@ -39,7 +39,7 @@ def chess_pgn_graph(pgn_file="chess_masters_WCC.pgn.bz2"):
     Filenames ending in .gz or .bz2 will be uncompressed.
 
     Return the MultiDiGraph of players connected by a chess game.
-    Edges contain game data in a dict.
+    Edges contain game Data in a dict.
 
     """
     import bz2
@@ -125,7 +125,7 @@ nx.draw_networkx_labels(H, pos, font_size=14)
 font = {"fontname": "Helvetica", "color": "k", "fontweight": "bold", "fontsize": 14}
 plt.title("World Chess Championship Games: 1886 - 1985", font)
 
-# change font and write text (using data coordinates)
+# change font and write text (using Data coordinates)
 font = {"fontname": "Helvetica", "color": "r", "fontweight": "bold", "fontsize": 14}
 
 plt.text(

@@ -28,7 +28,7 @@ A = nx.nx_agraph.to_agraph(G)
 A.write("k5_attributes.dot")
 
 # convert back to networkx Graph with attributes on edges and
-# default attributes as dictionary data
+# default attributes as dictionary Data
 X = nx.nx_agraph.from_agraph(A)
 print("edges")
 print(list(X.edges(data=True)))

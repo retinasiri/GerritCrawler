@@ -27,10 +27,10 @@ sock.close()
 
 zf = zipfile.ZipFile(s)  # zipfile object
 txt = zf.read("football.txt").decode()  # read info file
-gml = zf.read("football.gml").decode()  # read gml data
+gml = zf.read("football.gml").decode()  # read gml Data
 # throw away bogus first line with # from mejn files
 gml = gml.split("\n")[1:]
-G = nx.parse_gml(gml)  # parse gml data
+G = nx.parse_gml(gml)  # parse gml Data
 
 print(txt)
 # print degree for each team - number of games

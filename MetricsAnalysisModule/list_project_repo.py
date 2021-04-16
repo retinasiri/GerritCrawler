@@ -1,14 +1,18 @@
 import json
 import math
-import MetricsAnalysisModule.DBUtils as DBUtils
-from MetricsAnalysisModule.Utils import SlowBar as SlowBar
+import dbutils
+from utils import SlowBar as SlowBar
 
+DATA_DIR_NAME = "/Volumes/SEAGATE-II/Data/libreoffice/"
+REPO_TO_CLONE_LIST = DATA_DIR_NAME + 'libreoffice-repositories-to-clone.txt'
+CHANGES_COMMIT_AND_FETCH_LIST = DATA_DIR_NAME + "libreoffice-changes-commit-and-fetch.json"
 STARTING_POINT = 0
-projects = {}
-repoToDownload = set()
+
+changes_commit_dic = {}
+repositories_list = set()
 downloadedGitRepo = {}
 
-Database = DBUtils.Database(DBUtils.LIBRE_OFFICE_DB_NAME)
+Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
 count = Database.get_changes_count()
 bar = SlowBar('Processing', max=count)
 
@@ -16,26 +20,22 @@ bar = SlowBar('Processing', max=count)
 def process_changes(skip):
     changes = Database.get_changes_list(skip)
     if len(changes) > 0:
-        collect_change(changes)
+        for doc in changes:
+            collect_repo(doc)
+            bar.next()
         del changes
-        return process_changes(skip + DBUtils.NUM_OF_CHANGES_LIMIT)
-    # else :
-    print("Finish")
-    bar.finish()
-    save_project_file(projects)
-    return projects
-
-
-def collect_change(changes):
-    for doc in changes:
-        collect_repo(doc)
-        bar.next()
-    del changes
+        return process_changes(skip + dbutils.NUM_OF_CHANGES_LIMIT)
+    else:
+        save_project_file(changes_commit_dic)
+        save_repo_clone_list(repositories_list)
+        print("\nFinish")
+        bar.finish()
+    return changes_commit_dic
 
 
 def collect_repo(doc):
-    id = doc["id"]
-    projects[id] = {}
+    pid = doc["id"]
+    changes_commit_dic[pid] = {}
     revisions = doc["revisions"]
     prev_number_save = math.inf
     for revId in revisions.keys():
@@ -43,23 +43,26 @@ def collect_repo(doc):
         has_commit = "commit" in revisions[revId]
         if has_commit:
             if number <= prev_number_save:
-                projects[id]["id"] = id
-                projects[id]["fetch_url"] = revisions[revId]["fetch"]["anonymous http"]["url"]
-                projects[id]["fetch_ref"] = revisions[revId]["fetch"]["anonymous http"]["ref"]
-                projects[id]["commit"] = revisions[revId]["commit"]["parents"][0]["commit"]
-                repoToDownload.add(projects[id]["fetch_url"])
+                changes_commit_dic[pid]["id"] = pid
+                changes_commit_dic[pid]["fetch_url"] = revisions[revId]["fetch"]["anonymous http"]["url"]
+                changes_commit_dic[pid]["fetch_ref"] = revisions[revId]["fetch"]["anonymous http"]["ref"]
+                changes_commit_dic[pid]["commit"] = revisions[revId]["commit"]["parents"][0]["commit"]
+                repositories_list.add(changes_commit_dic[pid]["fetch_url"])
                 prev_number_save = number
-                break
     del doc
-    return projects
+    return changes_commit_dic
 
 
 def save_project_file(prj):
-    with open("projects-repo.json", "wb") as f:
+    with open(CHANGES_COMMIT_AND_FETCH_LIST, "wb") as f:
         f.write(json.dumps(prj, indent=4).encode("utf-8"))
         f.close()
-    with open('repositories-to-download.txt', 'w') as f:
-        for item in repoToDownload:
+    return 0
+
+
+def save_repo_clone_list(clone_list):
+    with open(REPO_TO_CLONE_LIST, 'w') as f:
+        for item in clone_list:
             f.write("%s\n" % item)
         f.close()
     return 0

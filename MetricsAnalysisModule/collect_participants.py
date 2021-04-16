@@ -1,14 +1,15 @@
 import json
-import MetricsAnalysisModule.DBUtils as DBUtils
-from MetricsAnalysisModule.Utils import SlowBar as SlowBar
+from . import dbutils
+from .utils import SlowBar as SlowBar
 
-PATH_TO_SAVE_FILE = "Data/changes-participants.json"
+DATA_DIR_NAME = "data/"
+PATH_OF_SAVED_FILE = DATA_DIR_NAME + "changes-participants.json"
 STARTING_POINT = 0
-changes_to_save = {}
 
-Database = DBUtils.Database(DBUtils.LIBRE_OFFICE_DB_NAME)
+Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
 count = Database.get_changes_count()
 bar = SlowBar('Processing', max=count)
+changes_to_save = {}
 
 
 def process_changes(skip):
@@ -18,7 +19,7 @@ def process_changes(skip):
             collect_participants(doc)
             bar.next()
         del changes
-        return process_changes(skip + DBUtils.NUM_OF_CHANGES_LIMIT)
+        return process_changes(skip + dbutils.NUM_OF_CHANGES_LIMIT)
     else:
         bar.finish()
         print("Finish")
@@ -45,7 +46,7 @@ def collect_participants(doc):
 
 
 def save_project_file(changes):
-    with open(PATH_TO_SAVE_FILE, "wb") as f:
+    with open(PATH_OF_SAVED_FILE, "wb") as f:
         f.write(json.dumps(changes, indent=4).encode("utf-8"))
         f.close()
     return 0

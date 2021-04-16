@@ -6,7 +6,7 @@ Antigraph
 Complement graph class for small footprint when working on dense graphs.
 
 This class allows you to add the edges that *do not exist* in the dense
-graph. However, when applying algorithms to this complement graph data
+graph. However, when applying algorithms to this complement graph Data
 structure, it behaves as if it were the dense version. So it can be used
 directly in several NetworkX algorithms.
 

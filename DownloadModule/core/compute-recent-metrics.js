@@ -2,6 +2,8 @@ const MathJs = require('mathjs');
 const Moment = require('moment');
 const Mongoose = require('mongoose');
 const cliProgress = require('cli-progress');
+const ThrottledPromise = require('throttled-promise');
+const PromisePool = require('es6-promise-pool')
 const Database = require('../config/databaseConfig');
 const Change = require('../models/change');
 const Metrics = require('../models/metrics');
@@ -15,12 +17,13 @@ let projectApiUrl = ApiEndPoints.qtApiUrl;
 
 let STARTING_POINT = 0;
 let NUM_DAYS_FOR_RECENT = 120;
-let NUM_OF_CHANGES_LIMIT = 10000;
+let NUM_OF_CHANGES_LIMIT = 1000;
 let NUMBER_DATABASE_REQUEST = 3;
-let DATA_PATH = "data/"
+const NUM_CONCURRENCY = 100;
+
+let DATA_PATH = "data/";
 
 let metricsJson = {};
-let i=0
 
 let libreOffice = {
     projectApiUrl: ApiEndPoints.libreOfficeApiUrl,
@@ -47,7 +50,7 @@ function startComputeMetrics(json) {
         .then((count) => {
             //NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
-            progressBar.start(count, 0);
+            progressBar.start(count, STARTING_POINT);
             return getChanges(STARTING_POINT);
         })
         .then(() => {
@@ -69,7 +72,7 @@ function startComputeMetrics(json) {
 function getChanges(skip) {
     return Change
         .aggregate([
-            {$sort: {_number: 1, created:1}},
+            {$sort: {_number: 1, created: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
         ])
@@ -91,15 +94,28 @@ async function collectDocs(docs) {
         return Promise.resolve(true);
 
     //let tasks = [];
-    for (let key in docs) {
-        await collectMetrics(docs[key])
-            .then((json) => {
-                return saveMetrics(json);
-            })
-        //tasks.push(t)
+
+    const generatePromises = function* () {
+        for (let key in docs) {
+            yield collectMetrics(docs[key])
+                .then((json) => {
+                    return saveMetrics(json);
+                })
+            //tasks.push(t)
+        }
     }
+
+    const promiseIterator = generatePromises()
+    const pool = new PromisePool(promiseIterator, NUM_CONCURRENCY)
+
+    return pool.start()
+        .then(() => {
+            //console.log('Complete')
+            return Promise.resolve(true)
+        })
+
     //return Promise.all(tasks);
-    return Promise.resolve(true);
+    //return Promise.resolve(true);
 }
 
 /**
@@ -121,22 +137,37 @@ function updateProgress() {
 }
 
 async function collectMetrics(json) {
-    //console.log(json.id + " - " + json.created)
-    let metric = {};
-    let recentChange = await getRecentMetrics(json);
-    metric["n"] = i;
-    metric["id"] = json.id;
-    metric["recent_total_merged_ratio"] = recentChange.recent_total_merged_ratio;
-    metric["recent_owner_merged_ratio"] = recentChange.recent_owner_merged_ratio;
-    metric["recent_owner_percentage_of_merged"] = recentChange.recent_owner_percentage_of_merged;
-    metric["recent_owner_change_num"] = recentChange.recent_owner_change_num;
-    metric["recent_review_num_mean"] = recentChange.recent_review_num_mean;
-    metric["recent_reviews_non_close_mean"] = recentChange.recent_reviews_non_close_mean;
-    metric["recent_review_num_max"] = recentChange.recent_review_num_max;
-    metric["recent_reviews_non_close_max"] = recentChange.recent_reviews_non_close_max;
-    //console.log("\nmetric" + JSON.stringify(metric));
-    i++;
-    return Promise.resolve(metric)
+    return getRecentMetrics(json).then((recentChange) => {
+        let metric = {};
+        metric["number"] = json._number;
+        metric["id"] = json.id;
+
+        metric["recent_num_change"] = recentChange.recent_num_change;
+        metric["recent_total_num_merged"] = recentChange.recent_total_num_merged;
+        metric["recent_total_num_abandoned"] = recentChange.recent_total_num_abandoned;
+        metric["recent_total_num_non_close_change"] = recentChange.recent_total_num_non_close_change;
+
+        metric["recent_owner_num_change"] = recentChange.recent_owner_num_change;
+        metric["recent_owner_num_merged"] = recentChange.recent_owner_num_merged;
+        metric["recent_owner_num_abandoned"] = recentChange.recent_owner_num_abandoned;
+        metric["recent_owner_num_non_close_change"] = recentChange.recent_owner_num_non_close_change;
+
+        metric["recent_total_merged_ratio"] = recentChange.recent_total_merged_ratio;
+        metric["recent_owner_merged_ratio"] = recentChange.recent_owner_merged_ratio;
+        metric["recent_owner_percentage_of_merged"] = recentChange.recent_owner_percentage_of_merged;
+
+        metric["recent_review_num_mean"] = recentChange.recent_review_num_mean;
+        metric["recent_reviews_non_close_mean"] = recentChange.recent_reviews_non_close_mean;
+        metric["recent_review_num_max"] = recentChange.recent_review_num_max;
+        metric["recent_reviews_non_close_max"] = recentChange.recent_reviews_non_close_max;
+        return Promise.resolve(metric)
+    });
+}
+
+function getRecentMetrics(json) {
+    return getPreviousRecentChanges(json).then((previousRecentChanges) => {
+        return computePreviousChange(json, previousRecentChanges);
+    });
 }
 
 function getPreviousRecentChanges(json) {
@@ -160,41 +191,60 @@ function getPreviousRecentChanges(json) {
         });
 }
 
-async function getRecentMetrics(json) {
+function computePreviousChange(json, previousRecentChanges) {
+
     let reviewers = {}
 
     let ownerId = json.owner._account_id;
     let recent_total_num_merged = 0;
     let recent_owner_num_merged = 0;
-    let recent_owner_change_num = 0;
-    let recent_change_num = 0;
-    let date1 = Moment(json.create).toDate().getTime();
-
-    let previousRecentChanges = await getPreviousRecentChanges(json);
-    //Get information from previous changes
-    //console.log("\n\n")
+    let recent_owner_num_change = 0;
+    let recent_num_change = 0;
+    let recent_total_num_abandoned = 0;
+    let recent_owner_num_abandoned = 0;
+    let recent_total_num_non_close_change = 0;
+    let recent_owner_num_non_close_change = 0;
+    let date1 = Moment(json.created).toDate().getTime();
+    let oNumber = json._number;
 
     for (let id in previousRecentChanges) {
-        let rChange = previousRecentChanges[id]
+        let rChange = previousRecentChanges[id];
 
-        let date2 = Moment(rChange.created).toDate().getTime();
-        if (date1 < date2)
+        let rNumber = rChange._number;
+        if (oNumber <= rNumber)
             continue;
 
+        recent_num_change++;
+
         if (rChange.owner._account_id === ownerId) {
-            recent_owner_change_num++;
+            recent_owner_num_change++;
         }
 
-        if (rChange.status === "MERGED") {
-            recent_total_num_merged++;
+        let updateDate = Moment(rChange.updated).toDate().getTime();
+        //console.log("updateDate : " + updateDate);
+        //console.log("date1 " +  date1);
+        if (date1 >= updateDate) {
+            //console.log("date1 > updateDate");
+            if (rChange.status === "MERGED") {
+                recent_total_num_merged++;
+                if (rChange.owner._account_id === ownerId) {
+                    recent_owner_num_merged++;
+                }
+            } else if (rChange.status === "ABANDONED") {
+                recent_total_num_abandoned++;
+                if (rChange.owner._account_id === ownerId) {
+                    recent_owner_num_abandoned++;
+                }
+            }
+        } else {
+            recent_total_num_non_close_change++;
             if (rChange.owner._account_id === ownerId) {
-                recent_owner_num_merged++;
+                recent_owner_num_non_close_change++;
             }
         }
 
-        reviewers = collectReviewersMetrics(rChange, date1, reviewers);
+        reviewers = collectReviewersMetrics(rChange, reviewers, date1, oNumber);
 
-        recent_change_num++;
     }
 
     let humanReviewersID = MetricsUtils.getHumanReviewersID(json);
@@ -203,8 +253,11 @@ async function getRecentMetrics(json) {
 
     for (let k in humanReviewersID) {
         let revId = humanReviewersID[k];
-        recent_reviews_tab.push(reviewers[revId]["recent_review_num"])
-        recent_reviews_non_close_tab.push(reviewers[revId]["recent_non_close_review_num"])
+
+        if (reviewers[revId]) {
+            recent_reviews_tab.push(reviewers[revId]["recent_review_num"])
+            recent_reviews_non_close_tab.push(reviewers[revId]["recent_non_close_review_num"])
+        }
     }
 
     let recent_review_num_mean = recent_reviews_tab.length > 0 ? MathJs.mean(recent_reviews_tab) : 0;
@@ -213,15 +266,25 @@ async function getRecentMetrics(json) {
     let recent_reviews_non_close_mean = recent_reviews_non_close_tab.length > 0 ? MathJs.mean(recent_reviews_non_close_tab) : 0;
     let recent_reviews_non_close_max = recent_reviews_non_close_tab.length > 0 ? MathJs.max(recent_reviews_non_close_tab) : 0;
 
-    let total_merged_ratio = recent_change_num !== 0 ? recent_total_num_merged / recent_change_num : 0;
-    let owner_merged_ratio = recent_owner_change_num !== 0 ? recent_owner_num_merged / recent_owner_change_num : 0;
+    let total_merged_ratio = recent_num_change !== 0 ? recent_total_num_merged / recent_num_change : 0;
+    let owner_merged_ratio = recent_owner_num_change !== 0 ? recent_owner_num_merged / recent_owner_num_change : 0;
     let owner_percentage_of_merged = recent_total_num_merged !== 0 ? recent_owner_num_merged / recent_total_num_merged : 0;
 
     return {
-        recent_owner_change_num: recent_owner_change_num,
+        recent_num_change: recent_num_change,
+        recent_total_num_merged: recent_total_num_merged,
+        recent_total_num_abandoned: recent_total_num_abandoned,
+        recent_total_num_non_close_change: recent_total_num_non_close_change,
+
+        recent_owner_num_change: recent_owner_num_change,
+        recent_owner_num_merged: recent_owner_num_merged,
+        recent_owner_num_abandoned: recent_owner_num_abandoned,
+        recent_owner_num_non_close_change: recent_owner_num_non_close_change,
+
         recent_total_merged_ratio: total_merged_ratio,
         recent_owner_merged_ratio: owner_merged_ratio,
         recent_owner_percentage_of_merged: owner_percentage_of_merged,
+
         recent_review_num_mean: recent_review_num_mean,
         recent_reviews_non_close_mean: recent_reviews_non_close_mean,
         recent_review_num_max: recent_review_num_max,
@@ -229,13 +292,15 @@ async function getRecentMetrics(json) {
     }
 }
 
-
-function collectReviewersMetrics(recentChange, date1, reviewers) {
+function collectReviewersMetrics(recentChange, reviewers, date1, oNumber) {
     let changeReviewersID = MetricsUtils.getHumanReviewersID(recentChange);
-    //console.log("changeReviewers 2 : " + JSON.stringify(changeReviewersID))
 
     for (let p in changeReviewersID) {
         let revId = changeReviewersID[p];
+
+        if (oNumber <= recentChange._number)
+            continue;
+
         reviewers[revId] = {};
 
         if (!reviewers[revId]["recent_review_num"])
@@ -246,8 +311,9 @@ function collectReviewersMetrics(recentChange, date1, reviewers) {
 
         reviewers[revId]["recent_review_num"] += 1;
 
-        let date2 = Moment(recentChange.updated).toDate().getTime();
-        if (date1 < date2) {
+        let date_updated = Moment(recentChange.updated).toDate().getTime();
+
+        if (date1 < date_updated) {
             reviewers[revId]["recent_non_close_review_num"] += 1;
         }
     }
@@ -255,4 +321,3 @@ function collectReviewersMetrics(recentChange, date1, reviewers) {
 
     return reviewers;
 }
-

@@ -5,10 +5,10 @@ Unix Email
 
 Create a directed graph, allowing multiple edges and self loops, from a unix
 mailbox.  The nodes are email addresses with links that point from the sender
-to the receivers.  The edge data is a Python email.Message object which
-contains all of the email message data.
+to the receivers.  The edge Data is a Python email.Message object which
+contains all of the email message Data.
 
-This example shows the power of `DiGraph` to hold edge data of arbitrary Python
+This example shows the power of `DiGraph` to hold edge Data of arbitrary Python
 objects (in this case a list of email messages).
 
 

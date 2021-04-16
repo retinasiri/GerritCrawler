@@ -1,16 +1,16 @@
-import MetricsAnalysisModule.DBUtils as DBUtils
-from MetricsAnalysisModule.Utils import SlowBar as SlowBar
+from . import dbutils
+from .utils import SlowBar as SlowBar
 import networkx as nx
 
 # todo multithread the collection of graph metrics
 # todo save the graph then compute
 # todo collect recent metrics
-# todo make every metrics output a Data file
+# todo make every metrics output a data file
 
 STARTING_POINT = 0
 G = nx.Graph()
 
-Database = DBUtils.Database(DBUtils.LIBRE_OFFICE_DB_NAME)
+Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
 count = Database.get_changes_count()
 bar = SlowBar('Processing Graph Metrics', max=count)
 
@@ -20,7 +20,7 @@ def processChanges(skip):
     if len(changes) > 0:
         for doc in changes:
             collectMetric(doc)
-        return processChanges(skip + DBUtils.NUM_OF_CHANGES_LIMIT)
+        return processChanges(skip + dbutils.NUM_OF_CHANGES_LIMIT)
     else:
         bar.finish()
         print("Finish")
@@ -30,7 +30,7 @@ def processChanges(skip):
 def collectMetric(doc):
     addAccountToGraph(doc)
     metrics = getOwnerMetrics(doc)
-    Database.saveMetrics(metrics)
+    Database.save_metrics(metrics)
     bar.next()
     return metrics
 
@@ -38,7 +38,8 @@ def collectMetric(doc):
 def addAccountToGraph(doc):
     ownerId = getOwnerId(doc)
     reviewersId = getHumanReviewersId(doc)
-    if ownerId in reviewersId: reviewersId.remove(ownerId)
+    if ownerId in reviewersId:
+        reviewersId.remove(ownerId)
 
     G.add_node(ownerId)
     G.add_nodes_from(reviewersId)
@@ -65,7 +66,6 @@ def getOwnerMetrics(doc):
     metrics["eigenvector_centrality"] = nx.eigenvector_centrality(G, max_iter=700, weight='weight')[ownerId]
     metrics["clustering_coefficient"] = nx.clustering(G)[ownerId]
     metrics["core_number"] = nx.core_number(G)[ownerId]
-
     return metrics
 
 

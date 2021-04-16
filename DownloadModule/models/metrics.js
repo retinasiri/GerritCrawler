@@ -2,12 +2,15 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var MetricsSchema = new Schema({
+
+    //identification
     n: String,
     number: String,
     id: String,
     change_id: String,
     status: String,
 
+    //time metrics
     date_created: String,
     date_updated: String,
     date_submitted: String,
@@ -19,7 +22,11 @@ var MetricsSchema = new Schema({
     is_updated_date_a_weekend: Number,
     committer_timezone: Number,
     author_timezone: Number,
+    diff_created_updated: Number,
+    diff_created_updated_in_days: Number,
+    diff_created_updated_in_days_ceil: Number,
 
+    //Word metrics
     subject_length: Number,
     subject_word_count: Number,
     msg_length: Number,
@@ -35,6 +42,7 @@ var MetricsSchema = new Schema({
     is_perfective: Number,
     is_refactoring: Number,
 
+    //code metrics
     lines_added: String,
     lines_deleted: String,
 
@@ -77,24 +85,59 @@ var MetricsSchema = new Schema({
     num_human_reviewer: Number,
     num_revisions: Number,
 
+    //merged metrics
+    priorChangesCount: Number,
+    priorMergedChangesCount: Number,
+    priorAbandonedChangesCount: Number,
+    ownerPriorChangesCount: Number,
+    ownerPriorMergedChangesCount: Number,
+    ownerPriorAbandonedChangesCount: Number,
+    ownerMergedRatio: Number,
+    ownerPercentageOfMerged: Number,
+    ownerPercentageOfAbandoned: Number,
+    mergedRatio: Number,
+    abandonedRatio: Number,
+
+    priorSubsystemChangesCount: Number,
+    priorSubsystemMergedChangesCount: Number,
+    priorSubsystemAbandonedChangesCount: Number,
+    priorOwnerSubsystemChangesCount: Number,
+    priorOwnerSubsystemMergedChangesCount: Number,
+    priorOwnerSubsystemAbandonedChangesCount: Number,
+    priorSubsystemRatio: Number,
+    priorSubsystemMergedRatio: Number,
+    priorSubsystemAbandonedRatio: Number,
+    priorOwnerSubsystemChangesRatio: Number,
+    priorOwnerSubsystemMergedChangesRatio: Number,
+    priorOwnerSubsystemAbandonedChangesRatio: Number,
+
+    //recent change
+    recent_num_change: Number,
+    recent_total_num_merged: Number,
+    recent_total_num_abandoned: Number,
+    recent_total_num_non_close_change: Number,
+
+    recent_owner_num_change: Number,
+    recent_owner_num_merged: Number,
+    recent_owner_num_abandoned: Number,
+    recent_owner_num_non_close_change: Number,
+
     recent_total_merged_ratio: Number,
     recent_owner_merged_ratio: Number,
     recent_owner_percentage_of_merged: Number,
-    recent_owner_change_num: Number,
+
     recent_review_num_mean: Number,
     recent_reviews_non_close_mean: Number,
+    recent_review_num_max: Number,
     recent_reviews_non_close_max: Number,
 
+    //graph metrics
     degree_centrality: Number,
     closeness_centrality: Number,
     betweenness_centrality: Number,
     eigenvector_centrality: Number,
     clustering_coefficient: Number,
     k_coreness: Number,
-
-    diff_created_updated: Number,
-    diff_created_updated_in_days: Number,
-    diff_created_updated_in_days_ceil: Number,
 
 }, {
     versionKey: false

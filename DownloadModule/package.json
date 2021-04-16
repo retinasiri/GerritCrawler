@@ -15,6 +15,7 @@
     "cli-progress": "^3.9.0",
     "cytoscape": "^3.18.1",
     "dotenv": "^8.2.0",
+    "es6-promise-pool": "^2.5.0",
     "fs-extra": "^9.0.1",
     "jsnetworkx": "0.3.4",
     "json-stringify-pretty-compact": "^2.0.0",
@@ -27,7 +28,8 @@
     "n-readlines": "^1.0.1",
     "nodegit": "^0.27.0",
     "process": "^0.11.10",
-    "promise": "^8.1.0"
+    "promise": "^8.1.0",
+    "throttled-promise": "^1.0.1"
   },
   "devDependencies": {
     "exportmongodatabase": "^1.0.2"

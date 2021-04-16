@@ -3,7 +3,7 @@
 Javascript
 ==========
 
-Example of writing JSON format graph data and using the D3 Javascript library
+Example of writing JSON format graph Data and using the D3 Javascript library
 to produce an HTML/Javascript drawing.
 
 You will need to download the following directory:
@@ -21,11 +21,11 @@ G = nx.barbell_graph(6, 3)
 # so add a name to each node
 for n in G:
     G.nodes[n]["name"] = n
-# write json formatted data
+# write json formatted Data
 d = json_graph.node_link_data(G)  # node-link format to serialize
 # write json
 json.dump(d, open("force/force.json", "w"))
-print("Wrote node-link JSON data to force/force.json")
+print("Wrote node-link JSON Data to force/force.json")
 
 # Serve the file over http to allow for cross origin requests
 app = flask.Flask(__name__, static_folder="force")

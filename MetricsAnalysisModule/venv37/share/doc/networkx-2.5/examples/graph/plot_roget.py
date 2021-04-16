@@ -15,7 +15,7 @@ Note that one of the 5075 cross references is a self loop yet it is included in
 the graph built here because the standard networkx `DiGraph` class allows self
 loops.  (cf. 400pungency:400 401 403 405).
 
-The data file can be found at:
+The Data file can be found at:
 
 - https://github.com/networkx/networkx/blob/master/examples/graph/roget_dat.txt.gz
 """

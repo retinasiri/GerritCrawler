@@ -1,59 +1,65 @@
 import os
-
-from git import diff
-from pydriller.domain.commit import ModificationType
-import MetricsAnalysisModule.DBUtils as DBUtils
 import json
 import re
 import urllib.parse as urlparse
-from MetricsAnalysisModule.Utils import SlowBar as SlowBar
+from . import dbutils
+from .utils import SlowBar as SlowBar
 from pydriller import RepositoryMining, ModificationType
 
-Database = DBUtils.Database(DBUtils.LIBRE_OFFICE_DB_NAME)
-count = Database.get_changes_count()
-# bar = SlowBar('Processing ', max=count)
+#database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
+#count = database.get_changes_count()
+bar = SlowBar('Processing ')
 
-LIST_OF_COMMIT = "projects-repo-2.json"
-REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
+LIST_OF_COMMIT = "data/projects-repo-2.json"
+REPOSITORIES_ROOT_PATH = "/Volumes/SEAGATE-II/data/Repositories"
+DATA_DIR_PATH = "data/"
+OUTPUT_FILE = "code-metrics.json"
+
+code_metrics = {}
 
 
-def processData():
-    json_data = loadJson()
-    for id in json_data:
-        print(id)
-        downloadCodeFetch(json_data[id])
-    # bar.finish()
+def processData(list_of_commit, repo_root_path, data_dir_path):
+    json_data = load_json(list_of_commit)
+    bar.max = len(json_data)
+    for i in json_data:
+        metric = download_code_fetch(json_data[i], repo_root_path)
+        mid = metric["id"]
+        code_metrics[mid] = metric
+        #save_metrics(metric)
+        bar.next()
+    save_metrics_file(code_metrics, data_dir_path)
+    bar.finish()
     pass
 
 
-def loadJson():
-    with open(LIST_OF_COMMIT) as f:
+def load_json(path):
+    with open(path) as f:
         json_file = json.load(f)
     return json_file
 
 
-def downloadCodeFetch(data):
+def save_metrics_file(metrics, data_path):
+    full_path = data_path + OUTPUT_FILE;
+    with open(full_path, "wb") as f:
+        f.write(json.dumps(metrics, indent=4).encode("utf-8"))
+        f.close()
+    return 0
+
+
+def download_code_fetch(data, repo_root_path):
     fetch_url = data["fetch_url"]
     fetch_ref = data["fetch_ref"]
     commit_hash = data["commit"]
-
-    repo_name = REPOSITORIES_PATH + urlparse.urlsplit(fetch_url).path
-    command_to_exec = "cd " + repo_name + " && " + "git fetch " + fetch_url + " " + fetch_ref
-
-    print(command_to_exec)
-
+    repo_path = repo_root_path + urlparse.urlsplit(fetch_url).path
+    command_to_exec = "cd " + repo_path + " && " + "git fetch " + fetch_url + " " + fetch_ref
     os.system(command_to_exec)
-    getCodeMetrics(repo_name, commit_hash)
-    os.system("cd " + REPOSITORIES_PATH)
-
-    # saveMetrics
-    # DBUtils.saveMetrics(DBUtils.LIBRE_OFFICE_DB_NAME, metrics)
-    # bar.next()
-    pass
+    metrics = get_code_metrics(data["id"], repo_path, commit_hash)
+    return metrics
 
 
-def initData():
+def init_data(cid):
     return {
+        "id": cid,
         "changed_methods_count": 0,
         "added_lines": 0,
         "removed_lines": 0,
@@ -69,11 +75,10 @@ def initData():
     }
 
 
-def getCodeMetrics(repoPath, commitHash):
-    # analyser les données
-    print(commitHash)
-    data = initData()
-    for commit in RepositoryMining(repoPath, single=commitHash).traverse_commits():
+def get_code_metrics(cid, repo_path, commit_hash):
+    data = init_data(cid)
+
+    for commit in RepositoryMining(repo_path, single=commit_hash).traverse_commits():
         for modification in commit.modifications:
 
             data["changed_methods_count"] += len(modification.changed_methods)
@@ -99,46 +104,46 @@ def getCodeMetrics(repoPath, commitHash):
             if modification.change_type == ModificationType.UNKNOWN:
                 data["num_unknown_modification"] += 1
 
-    codeSegment = count_code_segment(data["diff"])
-    data["num_segs_added"] = codeSegment["added"]
-    data["num_segs_deleted"] = codeSegment["deleted"]
-    data["num_segs_modify"] = codeSegment["modify"]
-    print(data)
-    return 0;
+    code_segment = count_code_segment(data["diff"])
+    data["num_segs_added"] = code_segment["added"]
+    data["num_segs_deleted"] = code_segment["deleted"]
+    data["num_segs_modify"] = code_segment["modify"]
+    del data["diff"]
+    return data
 
 
-def count_code_segment(diff):
-    codeSegment = {"added": 0, "deleted": 0, "modify": 0}
-    addLine = deletedLine = 0
+def count_code_segment(diff_str):
+    code_segment = {"added": 0, "deleted": 0, "modify": 0}
+    add_line = deleted_line = 0
 
     # alternative "(@@ .[0-9]*,[0-9]* .[0-9]*,[0-9]* @@)" or "(@@ ([-+][0-9]*,{0,1}[0-9]* *){0,2} @@)"
-    regexBegin = r"^(@@ ([-+][0-9]*,[0-9]* *){2} @@)"
-    regexLineAdded = r"^[+]"
-    regexLineDeleted = r"^[-]"
+    regex_begin = r"^(@@ ([-+][0-9]*,[0-9]* *){2} @@)"
+    regex_line_added = r"^[+]"
+    regex_line_deleted = r"^[-]"
 
-    for line in diff.splitlines():
-        if re.search(regexBegin, line):
-            codeSegment = update_code_segment_count(codeSegment, addLine, deletedLine)
-            addLine = deletedLine = 0
-        elif re.search(regexLineAdded, line):
-            addLine += 1;
-        elif re.search(regexLineDeleted, line):
-            deletedLine += 1;
+    for line in diff_str.splitlines():
+        if re.search(regex_begin, line):
+            code_segment = update_code_segment_count(code_segment, add_line, deleted_line)
+            add_line = deleted_line = 0
+        elif re.search(regex_line_added, line):
+            add_line += 1
+        elif re.search(regex_line_deleted, line):
+            deleted_line += 1
 
-    codeSegment = update_code_segment_count(codeSegment, addLine, deletedLine)
-    addLine = deletedLine = 0
+    code_segment = update_code_segment_count(code_segment, add_line, deleted_line)
+    add_line = deleted_line = 0
 
-    return codeSegment
-
-
-def update_code_segment_count(codeSegment, addLine, deletedLine):
-    if (addLine > 0 and deletedLine > 0):
-        codeSegment["modify"] += 1
-    elif addLine > 0 and deletedLine == 0:
-        codeSegment["added"] += 1
-    elif addLine == 0 and deletedLine > 0:
-        codeSegment["deleted"] += 1
-    return codeSegment
+    return code_segment
 
 
-processData()
+def update_code_segment_count(code_segment, add_line, deleted_line):
+    if add_line > 0 and deleted_line > 0:
+        code_segment["modify"] += 1
+    elif add_line > 0 and deleted_line == 0:
+        code_segment["added"] += 1
+    elif add_line == 0 and deleted_line > 0:
+        code_segment["deleted"] += 1
+    return code_segment
+
+
+processData(LIST_OF_COMMIT, REPOSITORIES_ROOT_PATH, DATA_DIR_PATH)

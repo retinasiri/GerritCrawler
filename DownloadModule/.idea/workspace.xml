@@ -20,41 +20,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/core/compute-recent-metrics.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/metrics-utils.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_participants.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/compute-merged-metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/jsLibraryMappings.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/parseur.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/apiEndpoints.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/apiEndpoints.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/add-code-change-in-db.js" beforeDir="false" afterPath="$PROJECT_DIR$/core/add-code-change-in-db.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/collect-project-to-download.js" beforeDir="false" afterPath="$PROJECT_DIR$/core/collect-project-to-download.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/compute-simple-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/core/compute-simple-metrics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/download-code-changes.js" beforeDir="false" afterPath="$PROJECT_DIR$/core/download-code-changes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/metrics.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/metrics_1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/metrics_2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/projects-repo.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/qt-project/projects-qt-project.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/repositories-to-clone.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/compute-recent-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/core/compute-recent-metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/metrics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/CollectParticipantOfCodeReview.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/CollectProjectRepoToDownload.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/list_project_repo.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/ComputeCodeMetrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_code_metrics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/ComputeGraphMetrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/ComputeGraphMetricsV2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/DBUtils.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/DownloadRepoToLocal.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/Test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/Utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/changes-participants.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_participants.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_participants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_code_metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_code_metrics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics_v2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/db_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/download_repo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/list_project_repo.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/list_project_repo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/projects-repo-2.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/projects-repo.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/repositories-to-clone.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/venv37/lib/python3.7/site-packages/bson/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/venv37/lib/python3.7/site-packages/bson/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/venv37/lib/python3.7/site-packages/bson/binary.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/venv37/lib/python3.7/site-packages/bson/binary.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/venv37/lib/python3.7/site-packages/bson/codec_options.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/venv37/lib/python3.7/site-packages/bson/codec_options.py" afterDir="false" />
@@ -448,7 +437,8 @@
       <workItem from="1618148547749" duration="7470000" />
       <workItem from="1618206462714" duration="26652000" />
       <workItem from="1618447959277" duration="1006000" />
-      <workItem from="1618505326981" duration="20432000" />
+      <workItem from="1618505326981" duration="25558000" />
+      <workItem from="1618548533925" duration="15954000" />
     </task>
     <servers />
   </component>
@@ -472,18 +462,19 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="358" y="209" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1618506855491" />
-    <state x="149" y="39" key="SettingsEditor" timestamp="1618524724233">
-      <screen x="0" y="23" width="1280" height="777" />
+    <state x="149" y="16" key="SettingsEditor" timestamp="1618548499532">
+      <screen x="0" y="0" width="1280" height="800" />
     </state>
+    <state x="149" y="16" key="SettingsEditor/0.0.1280.800/0.-1057.1920.1057@0.0.1280.800" timestamp="1618548499532" />
     <state x="149" y="39" key="SettingsEditor/0.23.1280.777/0.-1057.1920.1057@0.23.1280.777" timestamp="1618524724233" />
     <state width="500" height="445" key="SwitcherDM" timestamp="1618507558320">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state width="500" height="445" key="SwitcherDM/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1618507558320" />
-    <state x="241" y="17" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1618384306039">
+    <state x="241" y="17" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1618541985016">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="241" y="17" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1618384306039" />
+    <state x="241" y="17" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1618541985016" />
     <state x="507" y="225" width="598" height="490" key="find.popup" timestamp="1618515033343">
       <screen x="0" y="0" width="1280" height="800" />
     </state>

@@ -5,7 +5,7 @@ Lanl Routes
 
 Routes to LANL from 186 sites on the Internet.
 
-The data file can be found at:
+The Data file can be found at:
 
 - https://github.com/networkx/networkx/blob/master/examples/drawing/lanl_routes.edgelist
 """

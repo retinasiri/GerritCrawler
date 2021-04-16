@@ -3,11 +3,11 @@
 Sampson
 =======
 
-Sampson's monastery data.
+Sampson's monastery Data.
 
-Shows how to read data from a zip file and plot multiple frames.
+Shows how to read Data from a zip file and plot multiple frames.
 
-The data file can be found at:
+The Data file can be found at:
 
 - https://github.com/networkx/networkx/blob/master/examples/drawing/sampson_data.zip
 """

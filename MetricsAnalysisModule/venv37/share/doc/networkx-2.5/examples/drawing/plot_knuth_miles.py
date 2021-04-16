@@ -4,7 +4,7 @@ Knuth Miles
 ===========
 
 `miles_graph()` returns an undirected graph over the 128 US cities from.  The
-cities each have location and population data.  The edges are labeled with the
+cities each have location and population Data.  The edges are labeled with the
 distance between the two cities.
 
 This example is described in Section 1.1 of
@@ -13,7 +13,7 @@ This example is described in Section 1.1 of
     Computing", ACM Press, New York, 1993.
     http://www-cs-faculty.stanford.edu/~knuth/sgb.html
 
-The data file can be found at:
+The Data file can be found at:
 
 - https://github.com/networkx/networkx/blob/master/examples/drawing/knuth_miles.txt.gz
 """

@@ -1,4 +1,6 @@
+Data/
 DownloadModule/node_modules/
 DownloadModule/data/
-DownloadModule/__pycache__/
+MetricsAnalysisModule/__pycache__/
 MetricsAnalysisModule/venv37/
+MetricsAnalysisModule/data/
