@@ -8,6 +8,8 @@
 //join python and java
 //todo write test
 
+//todo make a plan
+
 const Database = require('./config/databaseConfig');
 const DownloadCodeChanges = require('./core/download-code-changes');
 const DownloadProjects = require('./core/download-project-info');

@@ -15,7 +15,7 @@ let projectApiUrl = ApiEndPoints.qtApiUrl;
 
 let STARTING_POINT = 0;
 let NUM_OF_CHANGES_LIMIT = 1000;
-let NUMBER_DATABASE_REQUEST = 3;
+let NUMBER_DATABASE_REQUEST = 4;
 const NUM_CONCURRENCY = 100;
 
 let DATA_PATH = "data/";
@@ -45,10 +45,15 @@ function startComputeMetrics(json) {
             return Change.estimatedDocumentCount({});
         })
         .then((count) => {
-            //NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
+            NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, STARTING_POINT);
-            return getChanges(STARTING_POINT);
+
+            let tasks = []
+            for (let i = 0; i < NUMBER_DATABASE_REQUEST; i++) {
+                tasks.push(getChanges(NUM_OF_CHANGES_LIMIT * i))
+            }
+            return Promise.all(tasks);
         })
         .then(() => {
             let projectName = Utils.getProjectName(ApiEndPoints.getProjectsUrl(projectApiUrl));
@@ -69,28 +74,30 @@ function startComputeMetrics(json) {
 function getChanges(skip) {
     return Change
         .aggregate([
-            {$sort: {_number: 1, created: 1}},
-            {$skip: skip},
-            {$limit: NUM_OF_CHANGES_LIMIT}
+            { $sort: { _number: 1, created: 1 } },
+            { $skip: skip },
+            { $limit: NUM_OF_CHANGES_LIMIT }
         ])
         .allowDiskUse(true)
         .exec()
         .then(docs => {
+            if (!docs)
+                Promise.resolve(false)
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
         })
-        .then(result => {
+        /*.then(result => {
             return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
-        })
+        })*/
         .catch(err => {
             console.log(err)
         });
 }
 
-async function collectDocs(docs) {
+/*async function collectDocs(docs) {
     if (!docs)
         return Promise.resolve(true);
 
-    const generatePromises = function* () {
+    const generatePromises = function*() {
         for (let key in docs) {
             yield collectMetrics(docs[key])
                 .then((json) => {
@@ -106,13 +113,25 @@ async function collectDocs(docs) {
         .then(() => {
             return Promise.resolve(true)
         })
+}*/
+
+async function collectDocs(docs) {
+    if (!docs)
+        return Promise.resolve(true);
+    for (let key in docs) {
+        await collectMetrics(docs[key])
+            .then((json) => {
+                return saveMetrics(json);
+            })
+    }
+    return Promise.resolve(true);
 }
 
 /**
  * @param {JSON} json Output json to save
  */
 function saveMetrics(json) {
-    return Metrics.updateOne({id: json.id}, json, {upsert: true}).then(() => {
+    return Metrics.updateOne({ id: json.id }, json, { upsert: true }).then(() => {
         metricsJson[json.id] = json;
         let prefix = Utils.getProjectName(projectApiUrl);
         let filename = prefix + "-merged-metrics.csv"
@@ -191,9 +210,9 @@ function getChangesInfo(json) {
     return Promise.all([
         priorChangesCount, //0
         priorMergedChangesCount, //1
-        priorAbandonedChangesCount,  //2
+        priorAbandonedChangesCount, //2
         ownerPriorChangesCount, //3
-        ownerPriorMergedChangesCount,  //4
+        ownerPriorMergedChangesCount, //4
         ownerPriorAbandonedChangesCount, //5
         priorSubsystemChangesCount, //6
         priorSubsystemMergedChangesCount, //7
@@ -246,6 +265,7 @@ function safeDivision(number1, number2) {
 function dbRequest(pipeline) {
     return Change
         .aggregate(pipeline)
+        .allowDiskUse(true)
         .exec()
         .then(docs => {
             if (!docs)
@@ -261,8 +281,8 @@ function getPriorTypeChangesCount(json, TYPE) {
     let created_date = Moment(json.created).toDate().toISOString();
     let number = json._number;
     let pipeline = [
-        {$match: {status: TYPE, _number: {$lt: number}, updated: {$lte: created_date}}},
-        {$count: "count"}
+        { $match: { status: TYPE, _number: { $lt: number }, updated: { $lte: created_date } } },
+        { $count: "count" }
     ];
     return dbRequest(pipeline);
 }
@@ -270,8 +290,8 @@ function getPriorTypeChangesCount(json, TYPE) {
 function getPriorChangesCount(json) {
     let number = json._number;
     let pipeline = [
-        {$match: {_number: {$lt: number}}},
-        {$count: "count"}
+        { $match: { _number: { $lt: number } } },
+        { $count: "count" }
     ]
     return dbRequest(pipeline);
 }
@@ -280,8 +300,8 @@ function getOwnerPriorChangesCount(json) {
     let number = json._number;
     let ownerId = json.owner._account_id;
     let pipeline = [
-        {$match: {'owner._account_id': ownerId, _number: {$lt: number}}},
-        {$count: "count"}
+        { $match: { 'owner._account_id': ownerId, _number: { $lt: number } } },
+        { $count: "count" }
     ]
     return dbRequest(pipeline);
 }
@@ -290,16 +310,15 @@ function getOwnerPriorTypeChangesCount(json, TYPE) {
     let created_date = Moment(json.created).toDate().toISOString();
     let number = json._number;
     let ownerId = json.owner._account_id;
-    let pipeline = [
-        {
+    let pipeline = [{
             $match: {
                 'owner._account_id': ownerId,
                 status: TYPE,
-                _number: {$lt: number},
-                updated: {$lte: created_date}
+                _number: { $lt: number },
+                updated: { $lte: created_date }
             }
         },
-        {$count: "count"}
+        { $count: "count" }
     ]
     return dbRequest(pipeline);
 }
@@ -310,14 +329,13 @@ function getOwnerPriorTypeChangesCount(json, TYPE) {
 function getPriorSubsystemChangesCount(json) {
     let number = json._number;
     let project = json.project;
-    let pipeline = [
-        {
+    let pipeline = [{
             $match: {
                 project: project,
-                _number: {$lt: number},
+                _number: { $lt: number },
             }
         },
-        {$count: "count"}
+        { $count: "count" }
     ]
 
     return dbRequest(pipeline);
@@ -327,16 +345,15 @@ function getPriorSubsystemTypeChangesCount(json, TYPE) {
     let created_date = Moment(json.created).toDate().toISOString();
     let number = json._number;
     let project = json.project;
-    let pipeline = [
-        {
+    let pipeline = [{
             $match: {
                 project: project,
                 status: TYPE,
-                _number: {$lt: number},
-                updated: {$lte: created_date}
+                _number: { $lt: number },
+                updated: { $lte: created_date }
             }
         },
-        {$count: "count"}
+        { $count: "count" }
     ]
     return dbRequest(pipeline);
 }
@@ -345,15 +362,14 @@ function getPriorSubsystemOwnerChangesCount(json) {
     let number = json._number;
     let project = json.project;
     let ownerId = json.owner._account_id;
-    let pipeline = [
-        {
+    let pipeline = [{
             $match: {
                 'owner._account_id': ownerId,
                 project: project,
-                _number: {$lt: number},
+                _number: { $lt: number },
             }
         },
-        {$count: "count"}
+        { $count: "count" }
     ]
     return dbRequest(pipeline);
 }
@@ -363,17 +379,93 @@ function getPriorSubsystemOwnerTypeChangesCount(json, TYPE) {
     let number = json._number;
     let project = json.project;
     let ownerId = json.owner._account_id;
-    let pipeline = [
-        {
+    let pipeline = [{
             $match: {
                 'owner._account_id': ownerId,
                 project: project,
                 status: TYPE,
-                _number: {$lt: number},
-                updated: {$lte: created_date}
+                _number: { $lt: number },
+                updated: { $lte: created_date }
             }
         },
-        {$count: "count"}
+        { $count: "count" }
     ]
     return dbRequest(pipeline);
 }
+
+//time metrics
+//mean time merged
+//mean time abandoned
+//mean owner time merged
+//mean owner time abandoned
+
+//mean reviewer num merged
+//mean reviewer num abandoned
+//mean reviewer merged ratio
+//mean reviewer abandoned ratio
+//mean reviewer percentage of merged
+//mean reviewer percentage of abandoned
+//mean reviewer time merged
+//mean reviewer time abandoned
+
+//mean file time ratio per owner
+//mean file time ratio per reviewer
+//mean file num of merged
+//mean file num of abandoned
+
+
+function getPriorTimeMerged(json, TYPE) {
+    let created_date = Moment(json.created).toDate().toISOString();
+    let number = json._number;
+    let project = json.project;
+    let ownerId = json.owner._account_id;
+    let pipeline = [{
+        $match: {
+            'owner._account_id': ownerId,
+            project: project,
+            status: TYPE,
+            _number: { $lt: number },
+            updated: { $lte: created_date }
+        }
+    },
+        { $count: "count" }
+    ]
+    return dbRequest(pipeline);
+}
+
+/*
+db.getCollection('changes').aggregate([
+        { $match: {_number: { $lte: 30000}}},
+        { $project: {_id: 0,
+            //created: 1,
+            //updated: 1,
+            dateDiff: {$subtract: [
+                    { $dateFromString: { dateString: {$substr: ["$updated", 0, 22]}, timezone:  "UTC"}},
+                    { $dateFromString: { dateString: {$substr: ["$created", 0, 22]}, timezone:  "UTC"}}
+                ]}
+            }
+         },
+         { $group: { _id: 1, avg: { $avg: "$dateDiff" } } }
+         //{count: {sum: "$dateDiff"}}
+
+    ])
+ */
+
+/*
+db.getCollection('changes').aggregate([
+    { $match: {_number: { $lt: 2}}},
+    { $project: {_id: 0,
+            created: 1,
+            updated: 1,
+            dateDiff: {$subtract: [
+                    { $dateFromString: { dateString: {$substr: ["$updated", 0, 22]}, timezone:  "UTC"}},
+                    { $dateFromString: { dateString: {$substr: ["$created", 0, 22]}, timezone:  "UTC"}}
+                    //{date:"$created"},
+                    //{date:"$updated"}
+                    //{ $dateFromString: { dateString: "$created", timezone:  "UTC"}},
+                    //{ $dateFromString: { dateString: "$updated", timezone:  "UTC"}}
+                    //{ $toDate: {$dateToString:{date:"$created"}}},
+                    //{ $toDate: {$dateToString:{date:"$updated"}}},
+                ]}
+        }}
+])*/

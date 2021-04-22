@@ -1,19 +1,21 @@
 const Git = require("nodegit");
+const url = require('url');
 const lineByLine = require('n-readlines');
+const shell = require('shelljs');
+const fsExtra = require('fs-extra');
 
 let PATH_TO_FILE = "data/repositories-to-clone.txt";
 let REPOSITORIES_PATH = "/Volumes/SEAGATE-II/data/repositories";
 
-mainFunction()
+mainFunction(REPOSITORIES_PATH)
     .catch(err => {
         console.log(err)
     });
 
-function mainFunction() {
-    //console.log("Processing data...");
+function mainFunction(path) {
     return readFileOfRepo()
         .then((array) => {
-            return cloneRepo(array)
+            return clone_repositories(array, path)
         })
 }
 
@@ -23,12 +25,34 @@ async function readFileOfRepo() {
     let line;
     let repoArray = [];
     while (line = liner.next()) {
-        repoArray.push(line.toString('ascii').replace('\r', ''));
+        let str = line.toString('ascii').replace('\r', '');
+        if (str.trim().length)
+            repoArray.push(line.toString('ascii').replace('\r', ''));
     }
-    //console.log(repoArray);
     return repoArray;
 }
 
+function clone_repositories(repoArray, root_path) {
+    for (let id in repoArray) {
+        let repoUrl = repoArray[id];
+        let command = "git clone " + repoUrl;
+        let path = root_path;
+        //let path = root_path + (new URL(repoUrl)).pathname;
+        fsExtra.ensureDirSync(path);
+        clone(path, command);
+    }
+}
+
+function clone(path, command) {
+    shell.cd(path)
+    shell.exec(command, {silent:true}, function(code, stdout, stderr) {
+        //console.log('Exit code:', code);
+        //console.log('Program output:', stdout);
+        //console.log('Program stderr: ' +  stderr);
+    })
+}
+
+/*
 async function cloneRepo(repoArray) {
     let tasks = []
 
@@ -37,7 +61,7 @@ async function cloneRepo(repoArray) {
     let opts = {
         fetchOpts: {
             callbacks: {
-                transferProgress: function(progress) {
+                transferProgress: function (progress) {
                     console.log(JSON.stringify(progress));
                 }
             }
@@ -53,3 +77,4 @@ async function cloneRepo(repoArray) {
     }
     return Promise.all(tasks);
 }
+*/

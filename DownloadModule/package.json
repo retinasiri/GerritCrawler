@@ -29,6 +29,7 @@
     "nodegit": "^0.27.0",
     "process": "^0.11.10",
     "promise": "^8.1.0",
+    "shelljs": "^0.8.4",
     "throttled-promise": "^1.0.1"
   },
   "devDependencies": {

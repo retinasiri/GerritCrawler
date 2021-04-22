@@ -3,7 +3,7 @@ const Moment = require('moment');
 const Mongoose = require('mongoose');
 const cliProgress = require('cli-progress');
 const ThrottledPromise = require('throttled-promise');
-const PromisePool = require('es6-promise-pool')
+const PromisePool = require('es6-promise-pool');
 const Database = require('../config/databaseConfig');
 const Change = require('../models/change');
 const Metrics = require('../models/metrics');
@@ -18,7 +18,7 @@ let projectApiUrl = ApiEndPoints.qtApiUrl;
 let STARTING_POINT = 0;
 let NUM_DAYS_FOR_RECENT = 120;
 let NUM_OF_CHANGES_LIMIT = 1000;
-let NUMBER_DATABASE_REQUEST = 3;
+let NUMBER_DATABASE_REQUEST = 4;
 const NUM_CONCURRENCY = 100;
 
 let DATA_PATH = "data/";
@@ -48,10 +48,15 @@ function startComputeMetrics(json) {
             return Change.estimatedDocumentCount({});
         })
         .then((count) => {
-            //NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
+            NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, STARTING_POINT);
-            return getChanges(STARTING_POINT);
+
+            let tasks = []
+            for (let i = 0; i < NUMBER_DATABASE_REQUEST; i++) {
+                tasks.push(getChanges(NUM_OF_CHANGES_LIMIT * i))
+            }
+            return Promise.all(tasks);
         })
         .then(() => {
             let projectName = Utils.getProjectName(ApiEndPoints.getProjectsUrl(projectApiUrl));
@@ -81,20 +86,19 @@ function getChanges(skip) {
         .then(docs => {
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
         })
-        .then(result => {
+        /*.then(result => {
             return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
-        })
+        })*/
         .catch(err => {
             console.log(err)
         });
 }
 
-async function collectDocs(docs) {
+/*async function collectDocs(docs) {
     if (!docs)
         return Promise.resolve(true);
 
     //let tasks = [];
-
     const generatePromises = function* () {
         for (let key in docs) {
             yield collectMetrics(docs[key])
@@ -104,7 +108,6 @@ async function collectDocs(docs) {
             //tasks.push(t)
         }
     }
-
     const promiseIterator = generatePromises()
     const pool = new PromisePool(promiseIterator, NUM_CONCURRENCY)
 
@@ -116,6 +119,18 @@ async function collectDocs(docs) {
 
     //return Promise.all(tasks);
     //return Promise.resolve(true);
+}*/
+
+async function collectDocs(docs) {
+    if (!docs)
+        return Promise.resolve(true);
+    for (let key in docs) {
+        await collectMetrics(docs[key])
+            .then((json) => {
+                return saveMetrics(json);
+            })
+    }
+    return Promise.resolve(true);
 }
 
 /**

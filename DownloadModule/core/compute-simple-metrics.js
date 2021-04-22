@@ -167,14 +167,14 @@ function collectTimeMetrics(json, metric) {
     metric["days_of_the_weeks_of_date_updated"] = get_days_of_the_weeks_date_updated(json);
     metric["is_created_date_a_weekend"] = is_created_date_a_weekend(json);
     metric["is_updated_date_a_weekend"] = is_updated_date_a_weekend(json);
+    metric["committer_timezone"] = get_timezone(json).committer;
+    metric["author_timezone"] = get_timezone(json).author;
+
+    //metrics to forecast
     metric["diff_created_updated"] = diffCreatedUpdatedTime(json);
     metric["diff_created_updated_in_days"] = diff_date_days(json);
     metric["diff_created_updated_in_days_ceil"] = MathJs.ceil(diff_date_days(json));
     //metric["date_submitted"] = get_date_submitted(json);
-
-    metric["committer_timezone"] = get_timezone(json).committer;
-    metric["author_timezone"] = get_timezone(json).author;
-
 }
 
 /**
@@ -212,11 +212,11 @@ function collectFileMetrics(json, metric) {
     metric["moy_changes_files_modified_time"] = changesFileInfo.moy_time_per_review;
     metric["file_developer_num"] = changesFileInfo.num_dev;
     metric["file_developer_experience"] = changesFileInfo.dev_exp;
+
     metric["moy_time_owner_pass_on_change_files"] = changesFileInfo.moy_time_owner_pass_on_change_files;
     metric["moy_number_of_time_reviewer_review_the_files"] = changesFileInfo.moy_number_of_time_reviewer_review_the_files;
     metric["moy_time_reviewer_pass_on_this_files"] = changesFileInfo.moy_time_reviewer_pass_on_this_files;
-    metric["num_human_reviewer"] = get_num_human_reviewer(json);
-    metric["num_revisions"] = get_num_revisions(json);
+
 }
 
 /**
@@ -226,13 +226,20 @@ function collectFileMetrics(json, metric) {
 function collectOwnerMetrics(json, metric) {
     let ownerInfo = get_owner_property(json);
     metric["change_num"] = ownerInfo.owner_num_changed;
-    metric["subsystem_change_num"] = ownerInfo.owner_project
-    metric["num_merged"] = ownerInfo.owner_num_merged;
-    metric["merged_ratio"] = ownerInfo.owner_num_merged_ratio;
-    metric["subsystem_merged"] = ownerInfo.owner_sub_sys_merged;
-    metric["subsystem_merged_ratio"] = ownerInfo.owner_sub_sys_merged_ratio;
     metric["review_num"] = ownerInfo.owner_num_review;
     metric["is_a_bot"] = is_owner_a_bot(json);
+    metric["num_human_reviewer"] = MetricsUtils.getHumanReviewersCount(json);
+
+    //post metrics
+    metric["num_revisions"] = get_num_revisions(json);
+
+    /*
+    metric["num_merged"] = ownerInfo.owner_num_merged;
+    metric["merged_ratio"] = ownerInfo.owner_num_merged_ratio;
+    metric["subsystem_change_num"] = ownerInfo.owner_project
+    metric["subsystem_merged"] = ownerInfo.owner_sub_sys_merged;
+    metric["subsystem_merged_ratio"] = ownerInfo.owner_sub_sys_merged_ratio;
+    */
 }
 
 /**

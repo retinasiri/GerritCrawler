@@ -22,6 +22,10 @@ function getHumanReviewersID(json) {
     return reviewersIDArray;
 }
 
+function getHumanReviewersCount(json) {
+    return getHumanReviewersID? getHumanReviewersID.length : 0;
+}
+
 function isABot(accountId) {
     let bot = false;
     for (let key in BotAccounts) {
@@ -36,6 +40,6 @@ function isABot(accountId) {
 module.exports = {
     getHumanReviewers: getHumanReviewers,
     getHumanReviewersID: getHumanReviewersID,
-    isABot: isABot,
-
+    getHumanReviewersCount : getHumanReviewersCount,
+    isABot: isABot
 };
