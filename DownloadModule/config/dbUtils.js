@@ -43,7 +43,7 @@ function saveChangeSummary(changeJson) {
 function saveChange(changeJson) {
     return Change.updateOne({id: changeJson.id}, changeJson, {upsert: true})
         .then(() => {
-            console.log('Change saved : ' + JSON.stringify(changeJson.id))
+            //console.log('Change saved : ' + JSON.stringify(changeJson.id))
         })
         .catch(function (err) {
             console.log("save Change Error : " + JSON.stringify(err));

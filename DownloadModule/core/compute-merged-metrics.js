@@ -8,6 +8,7 @@ const Change = require('../models/change');
 const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
 const ApiEndPoints = require('../config/apiEndpoints');
+const MetricsUtils = require("./metrics-utils");
 
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
 let projectDBUrl = Database.libreOfficeDBUrl;
@@ -74,9 +75,9 @@ function startComputeMetrics(json) {
 function getChanges(skip) {
     return Change
         .aggregate([
-            { $sort: { _number: 1, created: 1 } },
-            { $skip: skip },
-            { $limit: NUM_OF_CHANGES_LIMIT }
+            {$sort: {_number: 1, created: 1}},
+            {$skip: skip},
+            {$limit: NUM_OF_CHANGES_LIMIT}
         ])
         .allowDiskUse(true)
         .exec()
@@ -131,7 +132,7 @@ async function collectDocs(docs) {
  * @param {JSON} json Output json to save
  */
 function saveMetrics(json) {
-    return Metrics.updateOne({ id: json.id }, json, { upsert: true }).then(() => {
+    return Metrics.updateOne({id: json.id}, json, {upsert: true}).then(() => {
         metricsJson[json.id] = json;
         let prefix = Utils.getProjectName(projectApiUrl);
         let filename = prefix + "-merged-metrics.csv"
@@ -158,6 +159,10 @@ async function collectMetrics(json) {
         let metric = {};
         metric["number"] = json._number;
         metric["id"] = json.id;
+
+        Object.keys(values).forEach(function(key) {
+            metric[key] = values[key];
+        })
 
         metric["priorChangesCount"] = values.priorChangesCount;
         metric["priorMergedChangesCount"] = values.priorMergedChangesCount;
@@ -188,7 +193,57 @@ async function collectMetrics(json) {
         metric["priorOwnerSubsystemChangesRatio"] = values.priorOwnerSubsystemChangesRatio;
         metric["priorOwnerSubsystemMergedChangesRatio"] = values.priorOwnerSubsystemMergedChangesRatio;
         metric["priorOwnerSubsystemAbandonedChangesRatio"] = values.priorOwnerSubsystemAbandonedChangesRatio;
-        return Promise.resolve(metric)
+
+        let changesTimeInfo = getChangesTimeInfo(json,values.priorMergedChangesCount, values.priorAbandonedChangesCount)
+        let task =  Promise.resolve(metric)
+        return Promise.all([changesTimeInfo, task]);
+    }).then((results) => {
+        let metric = results[1];
+        let values = results[0];
+
+        Object.keys(values).forEach(function(key) {
+            metric[key] = values[key];
+        })
+
+        metric["priorMergedChangeMeanTime"] = values.priorMergedChangeMeanTime;
+        metric["priorAbandonedChangeMeanTime"] = values.priorAbandonedChangeMeanTime;
+        metric["priorOwnerMergedChangesMeanTime"] = values.priorOwnerMergedChangesMeanTime;
+        metric["priorOwnerAbandonedChangesMeanTime"] = values.priorOwnerAbandonedChangesMeanTime;
+
+        metric["reviewersMergedChangesCountAvg"] = values.reviewersMergedChangesCountAvg;
+        metric["reviewersMergedChangesCountMax"] = values.reviewersMergedChangesCountMax;
+        metric["reviewersMergedChangesCountMin"] = values.reviewersMergedChangesCountMin;
+        metric["reviewersMergedChangesTimeAvg"] = values.reviewersMergedChangesTimeAvg;
+        metric["reviewersMergedChangesTimeMax"] = values.reviewersMergedChangesTimeMax;
+        metric["reviewersMergedChangesTimeMin"] = values.reviewersMergedChangesTimeMin;
+        metric["reviewersMergedChangesPercentageAvg"] = values.reviewersMergedChangesPercentageAvg;
+        metric["reviewersMergedChangesRatioAvg"] = values.reviewersMergedChangesRatioAvg;
+
+        metric["reviewersAbandonedChangesCountAvg"] = values.reviewersAbandonedChangesCountAvg;
+        metric["reviewersAbandonedChangesCountMax"] = values.reviewersAbandonedChangesCountMax;
+        metric["reviewersAbandonedChangesCountMin"] = values.reviewersAbandonedChangesCountMin;
+        metric["reviewersAbandonedChangesTimeAvg"] = values.reviewersAbandonedChangesTimeAvg;
+        metric["reviewersAbandonedChangesTimeMax"] = values.reviewersAbandonedChangesTimeMax;
+        metric["reviewersAbandonedChangesTimeMin"] = values.reviewersAbandonedChangesTimeMin;
+        metric["reviewersAbandonedChangesPercentageAvg"] = values.reviewersAbandonedChangesPercentageAvg;
+        metric["reviewersAbandonedChangesRatioAvg"] = values.reviewersAbandonedChangesRatioAvg;
+
+        metric["mergedFileCountAvg"] = values.mergedFileCountAvg;
+        metric["mergedFileTimeAvg"] = values.mergedFileTimeAvg;
+        metric["abandonedFileCountAvg"] = values.abandonedFileCountAvg;
+        metric["abandonedFileTimeAvg"] = values.abandonedFileTimeAvg;
+
+        metric["ownerMergedFileCountAvg"] = values.ownerMergedFileCountAvg;
+        metric["ownerMergedFileTimeAvg"] = values.ownerMergedFileTimeAvg;
+        metric["ownerAbandonedFileCountAvg"] = values.ownerAbandonedFileCountAvg;
+        metric["ownerAbandonedFileTimeAvg"] = values.ownerAbandonedFileTimeAvg;
+
+        metric["reviewersMergedFileCountAvg"] = values.reviewersMergedFileCountAvg;
+        metric["reviewersMergedFileTimeAvg"] = values.reviewersMergedFileTimeAvg;
+        metric["reviewersAbandonedFileCountAvg"] = values.reviewersAbandonedChangesRatioAvg;
+        metric["reviewersAbandonedFileTimeAvg"] = values.reviewersAbandonedFileTimeAvg;
+
+        return Promise.resolve(metric);
     });
 }
 
@@ -281,8 +336,8 @@ function getPriorTypeChangesCount(json, TYPE) {
     let created_date = Moment(json.created).toDate().toISOString();
     let number = json._number;
     let pipeline = [
-        { $match: { status: TYPE, _number: { $lt: number }, updated: { $lte: created_date } } },
-        { $count: "count" }
+        {$match: {status: TYPE, _number: {$lt: number}, updated: {$lte: created_date}}},
+        {$count: "count"}
     ];
     return dbRequest(pipeline);
 }
@@ -290,8 +345,8 @@ function getPriorTypeChangesCount(json, TYPE) {
 function getPriorChangesCount(json) {
     let number = json._number;
     let pipeline = [
-        { $match: { _number: { $lt: number } } },
-        { $count: "count" }
+        {$match: {_number: {$lt: number}}},
+        {$count: "count"}
     ]
     return dbRequest(pipeline);
 }
@@ -300,8 +355,8 @@ function getOwnerPriorChangesCount(json) {
     let number = json._number;
     let ownerId = json.owner._account_id;
     let pipeline = [
-        { $match: { 'owner._account_id': ownerId, _number: { $lt: number } } },
-        { $count: "count" }
+        {$match: {'owner._account_id': ownerId, _number: {$lt: number}}},
+        {$count: "count"}
     ]
     return dbRequest(pipeline);
 }
@@ -311,31 +366,28 @@ function getOwnerPriorTypeChangesCount(json, TYPE) {
     let number = json._number;
     let ownerId = json.owner._account_id;
     let pipeline = [{
-            $match: {
-                'owner._account_id': ownerId,
-                status: TYPE,
-                _number: { $lt: number },
-                updated: { $lte: created_date }
-            }
-        },
-        { $count: "count" }
+        $match: {
+            'owner._account_id': ownerId,
+            status: TYPE,
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    },
+        {$count: "count"}
     ]
     return dbRequest(pipeline);
 }
-
-//todo subsystem merged
-//todo subsystem merged ratio
 
 function getPriorSubsystemChangesCount(json) {
     let number = json._number;
     let project = json.project;
     let pipeline = [{
-            $match: {
-                project: project,
-                _number: { $lt: number },
-            }
-        },
-        { $count: "count" }
+        $match: {
+            project: project,
+            _number: {$lt: number},
+        }
+    },
+        {$count: "count"}
     ]
 
     return dbRequest(pipeline);
@@ -346,14 +398,14 @@ function getPriorSubsystemTypeChangesCount(json, TYPE) {
     let number = json._number;
     let project = json.project;
     let pipeline = [{
-            $match: {
-                project: project,
-                status: TYPE,
-                _number: { $lt: number },
-                updated: { $lte: created_date }
-            }
-        },
-        { $count: "count" }
+        $match: {
+            project: project,
+            status: TYPE,
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    },
+        {$count: "count"}
     ]
     return dbRequest(pipeline);
 }
@@ -363,13 +415,13 @@ function getPriorSubsystemOwnerChangesCount(json) {
     let project = json.project;
     let ownerId = json.owner._account_id;
     let pipeline = [{
-            $match: {
-                'owner._account_id': ownerId,
-                project: project,
-                _number: { $lt: number },
-            }
-        },
-        { $count: "count" }
+        $match: {
+            'owner._account_id': ownerId,
+            project: project,
+            _number: {$lt: number},
+        }
+    },
+        {$count: "count"}
     ]
     return dbRequest(pipeline);
 }
@@ -380,92 +432,349 @@ function getPriorSubsystemOwnerTypeChangesCount(json, TYPE) {
     let project = json.project;
     let ownerId = json.owner._account_id;
     let pipeline = [{
-            $match: {
-                'owner._account_id': ownerId,
-                project: project,
-                status: TYPE,
-                _number: { $lt: number },
-                updated: { $lte: created_date }
-            }
-        },
-        { $count: "count" }
+        $match: {
+            'owner._account_id': ownerId,
+            project: project,
+            status: TYPE,
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    },
+        {$count: "count"}
     ]
     return dbRequest(pipeline);
 }
 
 //time metrics
-//mean time merged
-//mean time abandoned
-//mean owner time merged
-//mean owner time abandoned
+//-mean time merged
+//-mean time abandoned
+//-mean owner time merged
+//-mean owner time abandoned
 
-//mean reviewer num merged
-//mean reviewer num abandoned
-//mean reviewer merged ratio
-//mean reviewer abandoned ratio
-//mean reviewer percentage of merged
-//mean reviewer percentage of abandoned
-//mean reviewer time merged
-//mean reviewer time abandoned
+//reviewer num changes
+//-mean reviewer num merged
+//-mean reviewer num abandoned
 
-//mean file time ratio per owner
-//mean file time ratio per reviewer
-//mean file num of merged
-//mean file num of abandoned
+//-mean reviewer time merged
+//-mean reviewer time abandoned
 
+//-mean reviewer percentage of merged
+//-mean reviewer percentage of abandoned
 
-function getPriorTimeMerged(json, TYPE) {
-    let created_date = Moment(json.created).toDate().toISOString();
-    let number = json._number;
-    let project = json.project;
-    let ownerId = json.owner._account_id;
-    let pipeline = [{
-        $match: {
-            'owner._account_id': ownerId,
-            project: project,
-            status: TYPE,
-            _number: { $lt: number },
-            updated: { $lte: created_date }
-        }
-    },
-        { $count: "count" }
-    ]
-    return dbRequest(pipeline);
+//-mean reviewer merged ratio
+//-mean reviewer abandoned ratio
+
+//-mean file num of merged
+//-mean file num of abandoned
+//-mean file time of merged
+//-mean file time of abandoned
+//-mean file time per owner
+//-mean file time per reviewer
+
+function genericDBRequest(pipeline) {
+    return Change
+        .aggregate(pipeline)
+        .allowDiskUse(true)
+        .exec()
+        .then(docs => {
+            if (!docs)
+                return 0;
+            return docs.length > 0 ? docs[0]: [];
+        })
+        .catch(err => {
+            console.log(err)
+        });
 }
 
-/*
-db.getCollection('changes').aggregate([
-        { $match: {_number: { $lte: 30000}}},
-        { $project: {_id: 0,
-            //created: 1,
-            //updated: 1,
-            dateDiff: {$subtract: [
-                    { $dateFromString: { dateString: {$substr: ["$updated", 0, 22]}, timezone:  "UTC"}},
-                    { $dateFromString: { dateString: {$substr: ["$created", 0, 22]}, timezone:  "UTC"}}
-                ]}
+async function getChangesTimeInfo(json, mergedCount, abandonedCount) {
+    let priorChangeMeanTimeMerged = getPriorChangeMeanTimeType(json, "MERGED");
+    let priorChangeMeanTimeAbandoned = getPriorChangeMeanTimeType(json, "ABANDONED");
+
+    let priorOwnerChangesMeanTimeMerged = getPriorOwnerChangesMeanTimeType(json, "MERGED");
+    let priorOwnerChangesMeanTimeAbandoned = getPriorOwnerChangesMeanTimeType(json, "ABANDONED");
+
+    let reviewersChangesMeanNumMerged = getReviewersChangesMeanNumType(json, "MERGED", mergedCount);
+    let reviewersChangesMeanNumAbandoned = getReviewersChangesMeanNumType(json, "ABANDONED", abandonedCount);
+
+    let fileTimeAndCountMerged = getFileTimeAndCount(json, "MERGED");
+    let fileTimeAndCountAbandoned = getFileTimeAndCount(json, "ABANDONED");
+
+    let fileTimeAndCountForOwnerMerged = getFileTimeAndCountForOwner(json, "MERGED");
+    let fileTimeAndCountForOwnerAbandoned = getFileTimeAndCountForOwner(json, "ABANDONED");
+
+    let fileTimeAndCountForReviewersMerged = getFileTimeAndCountForReviewers(json, "MERGED");
+    let fileTimeAndCountForReviewersAbandoned = getFileTimeAndCountForReviewers(json, "ABANDONED");
+
+    return Promise.all([
+        priorChangeMeanTimeMerged, //0
+        priorChangeMeanTimeAbandoned, //1
+
+        priorOwnerChangesMeanTimeMerged, //2
+        priorOwnerChangesMeanTimeAbandoned, //3
+
+        reviewersChangesMeanNumMerged, //4
+        reviewersChangesMeanNumAbandoned, //5
+
+        fileTimeAndCountMerged, //6
+        fileTimeAndCountAbandoned, //7
+
+        fileTimeAndCountForOwnerMerged, //8
+        fileTimeAndCountForOwnerAbandoned, //9
+
+        fileTimeAndCountForReviewersMerged, //10
+        fileTimeAndCountForReviewersAbandoned, //11
+    ]).then((results) => {
+        //console.log(results);
+        return {
+            priorMergedChangeMeanTime: results[0].avg,
+            priorAbandonedChangeMeanTime: results[1].avg,
+            priorOwnerMergedChangesMeanTime: results[2].avg,
+            priorOwnerAbandonedChangesMeanTime: results[3].avg,
+
+            reviewersMergedChangesCountAvg: results[4].count_avg,
+            reviewersMergedChangesCountMax: results[4].count_max,
+            reviewersMergedChangesCountMin: results[4].count_min,
+            reviewersMergedChangesTimeAvg: results[4].time_avg,
+            reviewersMergedChangesTimeMax: results[4].time_max,
+            reviewersMergedChangesTimeMin: results[4].time_min,
+            reviewersMergedChangesPercentageAvg: results[4].percentage_avg,
+            reviewersMergedChangesRatioAvg: results[4].ratio_avg,
+
+            reviewersAbandonedChangesCountAvg: results[5].count_avg,
+            reviewersAbandonedChangesCountMax: results[5].count_max,
+            reviewersAbandonedChangesCountMin: results[5].count_min,
+            reviewersAbandonedChangesTimeAvg: results[5].time_avg,
+            reviewersAbandonedChangesTimeMax: results[5].time_max,
+            reviewersAbandonedChangesTimeMin: results[5].time_min,
+            reviewersAbandonedChangesPercentageAvg: results[5].percentage_avg,
+            reviewersAbandonedChangesRatioAvg: results[5].ratio_avg,
+
+            mergedFileCountAvg: results[6].count_avg,
+            mergedFileTimeAvg: results[6].time_avg,
+            abandonedFileCountAvg: results[7].count_avg,
+            abandonedFileTimeAvg: results[7].time_avg,
+
+            ownerMergedFileCountAvg: results[8].count_avg,
+            ownerMergedFileTimeAvg: results[8].time_avg,
+            ownerAbandonedFileCountAvg: results[9].count_avg,
+            ownerAbandonedFileTimeAvg: results[9].time_avg,
+
+            reviewersMergedFileCountAvg: results[10].count_avg,
+            reviewersMergedFileTimeAvg: results[10].time_avg,
+            reviewersAbandonedFileCountAvg: results[11].count_avg,
+            reviewersAbandonedFileTimeAvg: results[11].time_avg,
+
+        };
+    })
+}
+
+
+function getPriorChangeMeanTimeType(json, TYPE) {
+    let created_date = Moment(json.created).toDate().toISOString();
+    let number = json._number;
+    let match = {
+        $match: {
+            status: TYPE,
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    };
+    let project = getProject();
+    let pipeline = [
+        match,
+        project,
+        {$group: {_id: 1, avg: {$avg: "$dateDiff"}}}
+    ]
+    return genericDBRequest(pipeline);
+}
+
+function getPriorOwnerChangesMeanTimeType(json, TYPE) {
+    let created_date = Moment(json.created).toDate().toISOString();
+    let ownerId = json.owner._account_id;
+    let number = json._number;
+    let project = getProject();
+    let match = {
+        $match: {
+            status: TYPE,
+            'owner._account_id': ownerId,
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    };
+    let pipeline = [
+        match,
+        project,
+        {$group: {_id: 1, avg: {$avg: "$dateDiff"}}}
+    ]
+    return genericDBRequest(pipeline);
+}
+
+function getProject() {
+    return {
+        $project: {
+            _id: 0,
+            dateDiff: {
+                $subtract: [
+                    {$dateFromString: {dateString: {$substr: ["$updated", 0, 22]}, timezone: "UTC"}},
+                    {$dateFromString: {dateString: {$substr: ["$created", 0, 22]}, timezone: "UTC"}}
+                ]
             }
-         },
-         { $group: { _id: 1, avg: { $avg: "$dateDiff" } } }
-         //{count: {sum: "$dateDiff"}}
+        }
+    }
+}
 
-    ])
- */
+//exclude bot in reviewersIdArray
+function getReviewersChangesMeanNumType(json, TYPE, count) {
+    let created_date = Moment(json.created).toDate().toISOString();
+    let number = json._number;
+    let reviewersIdArray = MetricsUtils.getHumanReviewersID(json);
+    let match = {
+        $match: {
+            status: TYPE,
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    };
+    if (TYPE == null) delete match.$match.status;
+    let pipeline = [
+        match,
+        {$unwind: "$reviewers.REVIEWER"},
+        {
+            $project: {
+                id: 1,
+                owner_id: "$owner._account_id",
+                reviewers_id: "$reviewers.REVIEWER._account_id",
+                dateDiff: {
+                    $subtract: [
+                        {$dateFromString: {dateString: {$substr: ["$updated", 0, 22]}, timezone: "UTC"}},
+                        {$dateFromString: {dateString: {$substr: ["$created", 0, 22]}, timezone: "UTC"}}
+                    ]
+                }
+            }
+        },
+        {
+            $group: {
+                _id: "$reviewers_id",
+                count: {$sum: 1},
+                ratio: {"$divide": [{$sum: 1}, count]},
+                time: {$avg: "$dateDiff"}
+            }
+        },
+        {$match: {_id: {$in: reviewersIdArray}}},
+        {
+            $group: {
+                _id: 1,
+                count_avg: {$avg: "$count"},
+                count_max: {$max: "$count"},
+                count_min: {$min: "$count"},
+                time_avg: {$avg: "$time"},
+                time_max: {$max: "$time"},
+                time_min: {$min: "$time"},
+                percentage_avg: {$divide: [{$avg: "$count"}, count]},
+                ratio_avg: {$avg: "$ratio"}
+            }
+        }
+    ]
+    return genericDBRequest(pipeline);
+}
 
-/*
-db.getCollection('changes').aggregate([
-    { $match: {_number: { $lt: 2}}},
-    { $project: {_id: 0,
-            created: 1,
-            updated: 1,
-            dateDiff: {$subtract: [
-                    { $dateFromString: { dateString: {$substr: ["$updated", 0, 22]}, timezone:  "UTC"}},
-                    { $dateFromString: { dateString: {$substr: ["$created", 0, 22]}, timezone:  "UTC"}}
-                    //{date:"$created"},
-                    //{date:"$updated"}
-                    //{ $dateFromString: { dateString: "$created", timezone:  "UTC"}},
-                    //{ $dateFromString: { dateString: "$updated", timezone:  "UTC"}}
-                    //{ $toDate: {$dateToString:{date:"$created"}}},
-                    //{ $toDate: {$dateToString:{date:"$updated"}}},
-                ]}
-        }}
-])*/
+//mean file num of merged
+//mean file num of abandoned
+//mean file time per owner
+//mean file time per reviewer
+
+function get_file_pipeline(match, files_list){
+    return [
+        match,
+        {$unwind: "$files_list"},
+        {
+            $project: {
+                id: 1, filename: "$files_list", dateDiff: {
+                    $subtract: [
+                        {$dateFromString: {dateString: {$substr: ["$updated", 0, 22]}, timezone: "UTC"}},
+                        {$dateFromString: {dateString: {$substr: ["$created", 0, 22]}, timezone: "UTC"}}
+                    ]
+                }
+            }
+        },
+        {$group: {_id: "$filename", count: {$sum: 1}, time: {$avg: "$dateDiff"}}},
+        {$match: {_id: {$in: files_list}}},
+        {
+            $group: {
+                _id: 1,
+                count_avg: {$avg: "$count"},
+                time_avg: {$avg: "$time"}
+            }
+        }
+    ]
+}
+
+function getFileTimeAndCount(json, TYPE) {
+    let created_date = Moment(json.created).toDate().toISOString();
+    let number = json._number;
+    let files_list = json.files_list;
+    let match = {
+        $match: {
+            status: TYPE,
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    };
+    if (TYPE == null) delete match.$match.status;
+    let pipeline = get_file_pipeline(match, files_list);
+    return genericDBRequest(pipeline);
+}
+
+function getFileTimeAndCountForOwner(json, TYPE) {
+    let created_date = Moment(json.created).toDate().toISOString();
+    let ownerId = json.owner._account_id;
+    let number = json._number;
+    let files_list = json.files_list;
+    let match = {
+        $match: {
+            status: TYPE,
+            'owner._account_id': ownerId,
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    };
+    if (TYPE == null) delete match.$match.status;
+    let pipeline = get_file_pipeline(match, files_list);
+    return genericDBRequest(pipeline);
+}
+
+//reviewer
+function getFileTimeAndCountForReviewers(json, TYPE) {
+    let created_date = Moment(json.created).toDate().toISOString();
+    let number = json._number;
+    let files_list = json.files_list;
+    let reviewersIdArray = MetricsUtils.getHumanReviewersID(json);
+    let match = {
+        $match: {
+            status: TYPE,
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    }
+    let pipeline = [
+        match,
+        {$unwind: "$reviewers.REVIEWER"},
+        {$unwind: "$files_list"},
+        {$project: {id:1,
+                filename:"$files_list",
+                reviewers_id: "$reviewers.REVIEWER._account_id",
+                dateDiff: {
+                    $subtract: [
+                        {$dateFromString: {dateString: {$substr: ["$updated", 0, 22]}, timezone: "UTC"}},
+                        {$dateFromString: {dateString: {$substr: ["$created", 0, 22]}, timezone: "UTC"}}
+                    ]
+                }}},
+        {$match: {
+                filename: {$in: files_list},
+                reviewers_id: {$in: reviewersIdArray}
+            }},
+        {$group: { _id: "$filename", count : { $sum: 1}, time: {$avg: "$dateDiff"}}},
+        {$group: { _id: 1, count_avg: { $avg: "$count" }, time_avg: {$avg: "$time"} } }
+    ]
+    return genericDBRequest(pipeline);
+}

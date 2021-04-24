@@ -208,11 +208,11 @@ function collectFileMetrics(json, metric) {
     metric["num_markup_language"] = fileInfo.num_markup_language;
 
     let changesFileInfo = get_changes_files_modified(json)
-    metric["moy_changes_files_modified"] = changesFileInfo.moy_number_per_review;
-    metric["moy_changes_files_modified_time"] = changesFileInfo.moy_time_per_review;
     metric["file_developer_num"] = changesFileInfo.num_dev;
     metric["file_developer_experience"] = changesFileInfo.dev_exp;
 
+    metric["moy_changes_files_modified"] = changesFileInfo.moy_number_per_review;
+    metric["moy_changes_files_modified_time"] = changesFileInfo.moy_time_per_review;
     metric["moy_time_owner_pass_on_change_files"] = changesFileInfo.moy_time_owner_pass_on_change_files;
     metric["moy_number_of_time_reviewer_review_the_files"] = changesFileInfo.moy_number_of_time_reviewer_review_the_files;
     metric["moy_time_reviewer_pass_on_this_files"] = changesFileInfo.moy_time_reviewer_pass_on_this_files;

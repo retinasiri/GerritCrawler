@@ -43,16 +43,18 @@ let libreOffice = {
 }
 
 //collect changes
+/*
 collectAllCodeChanges(qt).then(() => {
     console.log("Finished !!!!");
 });
+*/
 
 function collectAllCodeChanges(projectJson) {
     return DownloadCodeChanges.start(projectJson);
 }
 
 //add metrics to database
-//AddChangesInDB.start(libreOffice);
+AddChangesInDB.start(libreOffice);
 
 /*computeMetrics(libreOffice).then(() => {
     console.log("Finished !!!!");

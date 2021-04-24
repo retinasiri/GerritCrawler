@@ -53,7 +53,8 @@ var ChangeSchema = new Schema({
     requirements: [],
     current_revision: String,
     revisions: {},
-    _more_changes: Boolean
+    _more_changes: Boolean,
+    files_list: []
 }, {
     versionKey: false
 });

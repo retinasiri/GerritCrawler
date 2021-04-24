@@ -4,9 +4,17 @@ const dbUtils = require('../config/dbUtils');
 const Utils = require('../config/utils')
 const Database = require('../config/databaseConfig');
 const ApiEndPoints = require('../config/apiEndpoints');
+const cliProgress = require('cli-progress');
+
 
 //lire les fichiers
-let DATA_PATH = "data/";
+//let DATA_PATH = "data/";
+const multibar = new cliProgress.MultiBar({
+    format: '{type} [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | {name}',
+    clearOnComplete: false,
+    hideCursor: true
+}, cliProgress.Presets.shades_classic);
+let DATA_PATH = "/Volumes/SEAGATE-II/Data/";
 let projectName = "libreoffice";
 
 let account = {};
@@ -32,7 +40,7 @@ function addChangesInDB(json) {
     projectName = Utils.getProjectName(ApiEndPoints.getProjectsUrl(projectApiUrl));
 
     return Database.dbConnection(projectDBUrl).then(() => {
-        console.log("Start !!!!");
+        console.log("Adding files to the database !!!!");
         return getFilesLoad()
     })
         .then(() => {
@@ -45,6 +53,7 @@ function addChangesInDB(json) {
             return Promise.all(promises);
         })
         .then(() => {
+            multibar.stop();
             console.log("Finished !!!!");
             return Mongoose.connection.close();
         })
@@ -54,54 +63,54 @@ function addChangesInDB(json) {
 }
 
 function getFilesLoad() {
-    console.log("Adding Open Changes !!!!");
-    return getFiles(getOpenPath())
-        .then(response => {
-            console.log("Adding Abandoned Changes !!!!");
-            return getFiles(getAbandonedPath());
+    const b1 = multibar.create(0, 0, {type: 'Open Changes     '});
+    return getFiles(getOpenPath(), b1)
+        .then(() => {
+            const b2 = multibar.create(0, 0, {type: 'Abandoned Changes'});
+            return getFiles(getAbandonedPath(), b2);
         })
-        .then(response => {
-            console.log("Adding Merged Changes !!!!");
-            return getFiles(getMergedPath());
+        .then(() => {
+            const b3 = multibar.create(0, 0, {type: 'Merged Changes   '});
+            return getFiles(getMergedPath(), b3);
         })
 }
 
-async function getFiles(path) {
+async function getFiles(path, b) {
     return fs.promises.readdir(path)
         .then(filenames => {
-            return info(path, filenames);
+            return info(path, filenames, b);
         }).catch(err => {
             console.log(err)
         });
 }
 
-async function info(path, filenames) {
+async function info(path, filenames, b) {
+    let total =  filenames.length;
+    b.setTotal(total)
     for (let filename of filenames) {
-        await addInformationToDB(path, filename);
+        await addInformationToDB(path, filename).then(() => {
+            b.increment(1, {name: filename});
+        });
     }
 }
 
 async function addInformationToDB(path, filename) {
-    console.log(path + filename);
+    //console.log(path + filename);
     if (filename.includes(".DS_Store"))
-        return;
+        return Promise.resolve(true);
     let json = JSON.parse(fs.readFileSync(getFilePath(path, filename), 'utf8'));
-    //let promiseArray = []
 
     for (let key in json) {
         if (json.hasOwnProperty(key)) {
             //Add user
             let changeJson = json[key]
             let participants = getParticipants(changeJson);
-            //promiseArray.push(addParticipantsInDB(participants));
-            //Add changes
-            //promiseArray.push(saveChangeInDB(changeJson));
+            changeJson["files_list"] = get_files_list(changeJson);
             await addParticipantsInDB(participants);
             await saveChangeInDB(changeJson);
         }
     }
     return Promise.resolve(true);
-    //return Promise.all(promiseArray);
 }
 
 function getFilePath(path, filename) {
@@ -113,21 +122,15 @@ function saveChangeInDB(json) {
 }
 
 async function addParticipantsInDB(participants) {
-    //let promises = [];
     for (let id in participants) {
-
         account[participants[id]._account_id] = participants[id];
-
         if (participants[id].email)
             humanAccount[participants[id]._account_id] = participants[id];
         else
             botAccount[participants[id]._account_id] = participants[id];
-
-        //promises.push(dbUtils.saveAccount(participants[id]));
         await dbUtils.saveAccount(participants[id])
     }
     return Promise.resolve(true);
-    //return Promise.all(promises);
 }
 
 function getParticipants(json) {
@@ -156,3 +159,18 @@ function getOpenPath() {
 module.exports = {
     start: addChangesInDB
 };
+
+function get_files_list(json) {
+    let revisions = json.revisions
+    let files_list = [];
+    for (let key in revisions) {
+        //Get only the first revision
+        let revision_number = revisions[key]._number;
+        if (revision_number !== 1)
+            continue;
+        for (let name in revisions[key].files) {
+            files_list.push(name + "")
+        }
+    }
+    return files_list;
+}
