@@ -20,29 +20,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/csv-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/csv-plugin.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/add-code-change-in-db.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/add-code-change-in-db.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/clone-projects-repositories.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/collect-graph.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/collect-graph.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/collect-project-to-download.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/collect-project-to-download.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/compute-graph-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-graph-metrics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/compute-merged-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-merged-metrics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/compute-metrics.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/compute-recent-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-recent-metrics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/compute-simple-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-simple-metrics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/download-code-changes.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/download-code-changes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/download-project-info.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/download-project-info.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/metrics-utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/metrics-utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/metrics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/clone_repositories.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_participants.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_code_metrics.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/googlecolab_code_metrics/clone_repositories.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/googlecolab_code_metrics/clone_repositories.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/list_project_repo.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,6 +85,7 @@
       <workItem from="1619208208054" duration="15408000" />
       <workItem from="1619271662145" duration="610000" />
       <workItem from="1619275858321" duration="2812000" />
+      <workItem from="1619324075671" duration="892000" />
     </task>
     <servers />
   </component>

@@ -1,5 +1,5 @@
 {
-  "data_path": "/Volumes/SEAGATE-II/Data/",
+  "data_path": "data/",
   "database_url": "mongodb://localhost:27017/",
   "project": {
     "libreoffice": {

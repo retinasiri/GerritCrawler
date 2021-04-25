@@ -16,8 +16,9 @@ const DownloadProjects = require('./prepare_code_change/download-project-info');
 const AddChangesInDB = require('./prepare_code_change/add-code-change-in-db');
 //const ComputeSimpleMetrics = require('./core/compute-simple-metrics');
 const ApiEndPoints = require('./config/apiEndpoints');
+const Config = require('./config');
 
-let DATA_PATH = "/Volumes/SEAGATE-II/Data/"
+let DATA_PATH = "data/"
 
 let openStack = {
     projectApiUrl: ApiEndPoints.openstackApiUrl,
@@ -30,6 +31,7 @@ let android = {
     directory: DATA_PATH
 
 }
+
 let qt = {
     projectApiUrl: ApiEndPoints.qtApiUrl,
     projectDBUrl: Database.qtDbUrl,
@@ -43,26 +45,26 @@ let libreOffice = {
 }
 
 //collect changes
-/*
-collectAllCodeChanges(qt).then(() => {
+
+collectAllCodeChanges(libreOffice).then(() => {
     console.log("Finished !!!!");
 });
-*/
+
 
 function collectAllCodeChanges(projectJson) {
     return DownloadCodeChanges.start(projectJson);
 }
 
 //add metrics to database
-AddChangesInDB.start(libreOffice);
+//AddChangesInDB.start(libreOffice);
 
 /*computeMetrics(libreOffice).then(() => {
     console.log("Finished !!!!");
 });*/
 
-function computeMetrics(projectJson) {
+/*function computeMetrics(projectJson) {
     return ComputeSimpleMetrics.start(projectJson)
         .catch(err => {
             console.log(err)
         });
-}
+}*/
