@@ -140,7 +140,8 @@ var MetricsSchema = new Schema({
     k_coreness: Number,
 
 }, {
-    versionKey: false
+    versionKey: false,
+    strict: false
 });
 
 const Metric = mongoose.model('Metric', MetricsSchema)

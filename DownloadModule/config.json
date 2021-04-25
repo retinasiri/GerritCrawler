@@ -1,0 +1,22 @@
+{
+  "data_path": "/Volumes/SEAGATE-II/Data/",
+  "database_url": "mongodb://localhost:27017/",
+  "project": {
+    "libreoffice": {
+      "api_url": "https://gerrit.libreoffice.org/",
+      "db_name": "libreoffice"
+    },
+    "openstack": {
+      "api_url": "https://review.opendev.org/",
+      "db_name": "openstack"
+    },
+    "qt": {
+      "api_url": "https://codereview.qt-project.org/",
+      "db_name": "qt"
+    },
+    "googlesource": {
+      "api_url": "https://android-review.googlesource.com/",
+      "db_name": "googlesource"
+    }
+  }
+}

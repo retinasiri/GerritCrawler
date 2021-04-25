@@ -11,9 +11,9 @@
 //todo make a plan
 
 const Database = require('./config/databaseConfig');
-const DownloadCodeChanges = require('./core/download-code-changes');
-const DownloadProjects = require('./core/download-project-info');
-const AddChangesInDB = require('./core/add-code-change-in-db');
+const DownloadCodeChanges = require('./prepare_code_change/download-code-changes');
+const DownloadProjects = require('./prepare_code_change/download-project-info');
+const AddChangesInDB = require('./prepare_code_change/add-code-change-in-db');
 //const ComputeSimpleMetrics = require('./core/compute-simple-metrics');
 const ApiEndPoints = require('./config/apiEndpoints');
 

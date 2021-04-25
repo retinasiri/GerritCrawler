@@ -1,19 +1,18 @@
-import os
 import json
 import re
 import urllib.parse as urlparse
-from . import dbutils
-from .utils import SlowBar as SlowBar
+from utils import SlowBar as SlowBar
 from pydriller import RepositoryMining, ModificationType
 
-#database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
-#count = database.get_changes_count()
+
 bar = SlowBar('Processing ')
 
-LIST_OF_COMMIT = "data/projects-repo-2.json"
-REPOSITORIES_ROOT_PATH = "/Volumes/SEAGATE-II/data/Repositories"
+LIST_OF_COMMIT = "/Volumes/SEAGATE-II/Data/libreoffice/libreoffice-changes-commit-and-fetch.json"
+REPOSITORIES_ROOT_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 DATA_DIR_PATH = "data/"
-OUTPUT_FILE = "code-metrics.json"
+PROJET_NAME = "libreoffice"
+OUTPUT_FILE = PROJET_NAME + "-code-metrics.json"
+
 
 code_metrics = {}
 
@@ -22,13 +21,14 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
     json_data = load_json(list_of_commit)
     bar.max = len(json_data)
     for i in json_data:
-        metric = download_code_fetch(json_data[i], repo_root_path)
+        metric = get_code_metrics(json_data[i], repo_root_path)
         mid = metric["id"]
         code_metrics[mid] = metric
         #save_metrics(metric)
         bar.next()
     save_metrics_file(code_metrics, data_dir_path)
     bar.finish()
+    print("Finished with code metrics !!!!!")
     pass
 
 
@@ -46,26 +46,23 @@ def save_metrics_file(metrics, data_path):
     return 0
 
 
-def download_code_fetch(data, repo_root_path):
+def get_code_metrics(data, repo_root_path):
     fetch_url = data["fetch_url"]
-    fetch_ref = data["fetch_ref"]
     commit_hash = data["commit"]
     repo_path = repo_root_path + urlparse.urlsplit(fetch_url).path
-    command_to_exec = "cd " + repo_path + " && " + "git fetch " + fetch_url + " " + fetch_ref
-    os.system(command_to_exec)
-    metrics = get_code_metrics(data["id"], repo_path, commit_hash)
+    metrics = compute_code_metrics(data["id"], repo_path, commit_hash)
     return metrics
 
 
 def init_data(cid):
     return {
         "id": cid,
-        "changed_methods_count": 0,
-        "added_lines": 0,
-        "removed_lines": 0,
+        "sum_changed_methods_count": 0,
+        "sum_added_lines": 0,
+        "sum_removed_lines": 0,
         "diff": "",
-        "loc": 0,
-        "complexity": 0,
+        "sum_loc": 0,
+        "sum_complexity": 0,
         "num_modify_modification": 0,
         "num_add_modification": 0,
         "num_copy_modification": 0,
@@ -75,21 +72,21 @@ def init_data(cid):
     }
 
 
-def get_code_metrics(cid, repo_path, commit_hash):
+def compute_code_metrics(cid, repo_path, commit_hash):
     data = init_data(cid)
 
     for commit in RepositoryMining(repo_path, single=commit_hash).traverse_commits():
         for modification in commit.modifications:
 
-            data["changed_methods_count"] += len(modification.changed_methods)
-            data["added_lines"] += modification.added
-            data["removed_lines"] += modification.removed
+            data["sum_changed_methods_count"] += len(modification.changed_methods)
+            data["sum_added_lines"] += modification.added
+            data["sum_removed_lines"] += modification.removed
             data["diff"] += modification.diff + "\n"
 
             if modification.nloc is not None:
-                data["loc"] += modification.nloc
+                data["sum_loc"] += modification.nloc
             if modification.complexity is not None:
-                data["complexity"] += modification.complexity
+                data["sum_complexity"] += modification.complexity
 
             if modification.change_type == ModificationType.MODIFY:
                 data["num_modify_modification"] += 1
@@ -146,4 +143,5 @@ def update_code_segment_count(code_segment, add_line, deleted_line):
     return code_segment
 
 
-processData(LIST_OF_COMMIT, REPOSITORIES_ROOT_PATH, DATA_DIR_PATH)
+if __name__ == '__main__':  
+    processData(LIST_OF_COMMIT, REPOSITORIES_ROOT_PATH, DATA_DIR_PATH)

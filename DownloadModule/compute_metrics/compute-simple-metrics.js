@@ -209,13 +209,13 @@ function collectFileMetrics(json, metric) {
 
     let changesFileInfo = get_changes_files_modified(json)
     metric["file_developer_num"] = changesFileInfo.num_dev;
-    metric["file_developer_experience"] = changesFileInfo.dev_exp;
 
-    metric["moy_changes_files_modified"] = changesFileInfo.moy_number_per_review;
-    metric["moy_changes_files_modified_time"] = changesFileInfo.moy_time_per_review;
-    metric["moy_time_owner_pass_on_change_files"] = changesFileInfo.moy_time_owner_pass_on_change_files;
-    metric["moy_number_of_time_reviewer_review_the_files"] = changesFileInfo.moy_number_of_time_reviewer_review_the_files;
-    metric["moy_time_reviewer_pass_on_this_files"] = changesFileInfo.moy_time_reviewer_pass_on_this_files;
+    //metric["file_developer_experience"] = changesFileInfo.dev_exp;
+    //metric["moy_changes_files_modified"] = changesFileInfo.moy_number_per_review;
+    //metric["moy_changes_files_modified_time"] = changesFileInfo.moy_time_per_review;
+    //metric["moy_time_owner_pass_on_change_files"] = changesFileInfo.moy_time_owner_pass_on_change_files;
+    //metric["moy_number_of_time_reviewer_review_the_files"] = changesFileInfo.moy_number_of_time_reviewer_review_the_files;
+    //metric["moy_time_reviewer_pass_on_this_files"] = changesFileInfo.moy_time_reviewer_pass_on_this_files;
 
 }
 
@@ -224,16 +224,16 @@ function collectFileMetrics(json, metric) {
  * @param {JSON} metric Output Json
  */
 function collectOwnerMetrics(json, metric) {
-    let ownerInfo = get_owner_property(json);
-    metric["change_num"] = ownerInfo.owner_num_changed;
-    metric["review_num"] = ownerInfo.owner_num_review;
     metric["is_a_bot"] = is_owner_a_bot(json);
     metric["num_human_reviewer"] = MetricsUtils.getHumanReviewersCount(json);
 
-    //post metrics
+    let ownerInfo = get_owner_property(json);
     metric["num_revisions"] = get_num_revisions(json);
+    metric["review_num"] = ownerInfo.owner_num_review;
+    //post metrics
 
     /*
+    //metric["change_num"] = ownerInfo.owner_num_changed;
     metric["num_merged"] = ownerInfo.owner_num_merged;
     metric["merged_ratio"] = ownerInfo.owner_num_merged_ratio;
     metric["subsystem_change_num"] = ownerInfo.owner_project

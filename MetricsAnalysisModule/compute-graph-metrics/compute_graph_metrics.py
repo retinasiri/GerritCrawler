@@ -1,5 +1,5 @@
-from . import dbutils
-from .utils import SlowBar as SlowBar
+import dbutils
+from utils import SlowBar as SlowBar
 import networkx as nx
 
 # todo multithread the collection of graph metrics
@@ -47,7 +47,7 @@ def addAccountToGraph(doc):
         if G.has_edge(ownerId, revId):
             G[ownerId][revId]['weight'] += 1
         else:
-            G.add_edge(ownerId, revId, weight=1)
+            G.add_edge(ownerId, revId, weight=1) #date created 365
 
     return G
 
@@ -100,4 +100,5 @@ def getHumanReviewersId(doc):
     return reviewers_id
 
 
-processChanges(STARTING_POINT)
+if __name__ == '__main__':
+    processChanges(STARTING_POINT)

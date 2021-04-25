@@ -1,6 +1,6 @@
 import json
-from . import dbutils
-from .utils import SlowBar as SlowBar
+import dbutils
+from utils import SlowBar as SlowBar
 
 DATA_DIR_NAME = "data/"
 PATH_OF_SAVED_FILE = DATA_DIR_NAME + "changes-participants.json"

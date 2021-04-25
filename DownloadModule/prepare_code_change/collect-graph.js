@@ -6,7 +6,7 @@ const cliProgress = require('cli-progress');
 const Database = require('../config/databaseConfig');
 const Change = require('../models/change');
 const Metrics = require('../models/metrics');
-const MetricsUtils = require('../core/metrics-utils');
+const MetricsUtils = require('../compute_metrics/metrics-utils');
 const Utils = require('../config/utils');
 const ApiEndPoints = require('../config/apiEndpoints');
 
