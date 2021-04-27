@@ -19,13 +19,13 @@ let projectApiUrl = projectJson["projectApiUrl"];
 let projectName = projectJson["projectName"];
 
 
-const multibar = new cliProgress.MultiBar({
+/*const multibar = new cliProgress.MultiBar({
     format: '{type} [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | {name}',
     barCompleteChar: '#',
     barIncompleteChar: '-',
     clearOnComplete: false,
     hideCursor: true
-}, cliProgress.Presets.shades_classic);
+}, cliProgress.Presets.shades_classic);*/
 
 function addChangesInDB(json) {
     if (json["projectDBUrl"])
@@ -52,7 +52,7 @@ function addChangesInDB(json) {
             return Promise.all(promises);
         })
         .then(() => {
-            multibar.stop();
+            //multibar.stop();
             console.log("Finished !!!!");
             return Mongoose.connection.close();
         })
@@ -62,33 +62,40 @@ function addChangesInDB(json) {
 }
 
 function getFilesLoad() {
-    const b1 = multibar.create(0, 0, {type: 'Open Changes     '});
-    return getFiles(getOpenPath(), b1)
+    //const b1 = multibar.create(0, 0, {type: 'Open Changes     '});
+    //return getFiles(getOpenPath(), b1)
+    return getFiles(getOpenPath())
         .then(() => {
-            const b2 = multibar.create(0, 0, {type: 'Abandoned Changes'});
-            return getFiles(getAbandonedPath(), b2);
+            //const b2 = multibar.create(0, 0, {type: 'Abandoned Changes'});
+            //return getFiles(getAbandonedPath(), b2);
+            return getFiles(getAbandonedPath());
         })
         .then(() => {
-            const b3 = multibar.create(0, 0, {type: 'Merged Changes   '});
-            return getFiles(getMergedPath(), b3);
+            //const b3 = multibar.create(0, 0, {type: 'Merged Changes   '});
+            //return getFiles(getMergedPath(), b3);
+            return getFiles(getMergedPath());
         })
 }
 
-async function getFiles(path, b) {
+//async function getFiles(path, b) {
+async function getFiles(path) {
     return fs.promises.readdir(path)
         .then(filenames => {
-            return info(path, filenames, b);
+            //return info(path, filenames, b);
+            return info(path, filenames);
         }).catch(err => {
             console.log(err)
         });
 }
 
-async function info(path, filenames, b) {
+//async function info(path, filenames, b) {
+async function info(path, filenames) {
     let total = filenames.length;
-    b.setTotal(total)
+    //b.setTotal(total)
     for (let filename of filenames) {
         await addInformationToDB(path, filename).then(() => {
-            b.increment(1, {name: filename});
+            //b.increment(1, {name: filename});
+            console.log(path + filename)
         });
     }
 }
