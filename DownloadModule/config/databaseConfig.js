@@ -1,20 +1,30 @@
 //Database
 const Mongoose = require('mongoose');
+const Config = require('../config.json')
 
-let libreOfficeDbName = 'libreOfficeDB';
+let dbBaseUrl = getMainDatabaseUrl(Config.database_hostname, Config.database_port, Config.database_username, Config.database_port);
+
+/*let libreOfficeDbName = 'libreOfficeDB';
 let qtDbName = 'qtDB';
 let openStackDbName = 'openstackDB';
 let androidDbName = 'androidDB';
 
-let dbBaseUrl = "mongodb://localhost:27017/";
-
 let libreOfficeDbUrl = dbBaseUrl + libreOfficeDbName;
 let qtDbUrl = dbBaseUrl + qtDbName;
 let openstackDbUrl = dbBaseUrl + openStackDbName;
-let androidDbUrl = dbBaseUrl + androidDbName;
+let androidDbUrl = dbBaseUrl + androidDbName;*/
+
+function getMainDatabaseUrl(hostname, port, username, password) {
+    let projectName = port ? port : 27017;
+    if (username)
+        return "mongodb://" + username + ":" + encodeURIComponent(password) + "@" + hostname + ":" + projectName + "/";
+    else
+        return "mongodb://" + hostname + ":" + projectName + "/";
+}
+
 
 function dbConnection(projectDBUrl) {
-    return Mongoose.connect(projectDBUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+    return Mongoose.connect(projectDBUrl, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => {
             console.log("Connected to the database");
             return Promise.resolve(true);
@@ -24,17 +34,27 @@ function dbConnection(projectDBUrl) {
         });
 }
 
-function closeConnection(){
+function closeConnection() {
     return Mongoose.connection.close();
+}
+
+function getProjectDBName(projectName) {
+    return Config.project[projectName]["db_name"] + "DB";
+}
+
+function getProjectDBUrl(projectName) {
+    return dbBaseUrl + getProjectDBName(projectName)
 }
 
 module.exports = {
     dbConnection: dbConnection,
     closeConnection: closeConnection,
-    databaseRoot: dbBaseUrl,
+    getProjectDBName: getProjectDBName,
+    getProjectDBUrl: getProjectDBUrl,
+    /*databaseRoot: dbBaseUrl,
     libreOfficeDBUrl: libreOfficeDbUrl,
     qtDbUrl: qtDbUrl,
     openstackDbUrl: openstackDbUrl,
     androidDbUrl: androidDbUrl,
-    port: 27017
+    port: Config.database_port ? Config.database_port : 27017*/
 };

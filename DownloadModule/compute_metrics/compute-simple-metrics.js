@@ -7,43 +7,37 @@ const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
 const Extension = require('../res/extension.json');
 const Keywords = require('../res/keywords.json');
-const ApiEndPoints = require('../config/apiEndpoints');
 const MetricsUtils = require('./metrics-utils');
-
-
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
-let projectDBUrl = Database.libreOfficeDBUrl;
-let projectApiUrl = ApiEndPoints.qtApiUrl;
+const PathLibrary = require('path');
+
+let libreOfficeJson = Utils.getProjectParameters("libreoffice");
+let projectDBUrl = libreOfficeJson["projectDBUrl"];
+let projectApiUrl = libreOfficeJson["projectApiUrl"];
+let projectName = libreOfficeJson["projectName"];
 
 let DATA_PATH = "data/"
-
 let STARTING_POINT = 0;
 let NUM_OF_CHANGES_LIMIT = 35000;
-let NUMBER_DATABASE_REQUEST = 3;
-
-//do remove bot
-//do add data type and programming language
-
+let NUMBER_DATABASE_REQUEST = 2;
 let metricsJson = {};
 let i = 1;
 
-let libreOffice = {
-    projectApiUrl: ApiEndPoints.libreOfficeApiUrl,
-    projectDBUrl: Database.libreOfficeDBUrl,
-    directory: DATA_PATH
+if (typeof require !== 'undefined' && require.main === module) {
+    startComputeMetrics(libreOfficeJson).catch(err => {
+        console.log(err)
+    });
 }
-
-startComputeMetrics(libreOffice).catch(err => {
-    console.log(err)
-});
 
 function startComputeMetrics(json) {
     if (json["projectDBUrl"])
         projectDBUrl = json["projectDBUrl"];
     if (json["projectApiUrl"])
         projectApiUrl = json["projectApiUrl"];
-    if (json["directory"])
-        DATA_PATH = json["directory"];
+    if (json["output_directory"])
+        DATA_PATH = json["output_directory"];
+    if (json["projectName"])
+        projectName = json["projectName"];
 
     return Database.dbConnection(projectDBUrl)
         .then(() => { // Counts the number of change
@@ -56,9 +50,9 @@ function startComputeMetrics(json) {
             return getChanges(STARTING_POINT);
         })
         .then(() => {
-            let projectName = Utils.getProjectName(ApiEndPoints.getProjectsUrl(projectApiUrl));
-            let name = projectName + "-simple-metrics"
-            return Utils.saveJSONInFile(DATA_PATH,name, metricsJson);
+            let name = projectName + "-simple-metrics";
+            let path = PathLibrary.join(DATA_PATH, projectName);
+            return Utils.saveJSONInFile(path, name, metricsJson);
         })
         .then(() => {
             progressBar.stop();
@@ -74,13 +68,15 @@ function startComputeMetrics(json) {
 function getChanges(skip) {
     return Change
         .aggregate([
-            { $sort: { _number: 1, created:1 } },
-            { $skip: skip },
-            { $limit: NUM_OF_CHANGES_LIMIT }
+            {$sort: {_number: 1, created: 1}},
+            {$skip: skip},
+            {$limit: NUM_OF_CHANGES_LIMIT}
         ])
         .allowDiskUse(true)
         .exec()
         .then(docs => {
+            if (!docs)
+                return Promise.resolve(false)
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
         })
         .then(result => {
@@ -107,18 +103,20 @@ async function collectDocs(docs) {
  * @param {JSON} json Output json to save
  */
 function saveMetrics(json) {
-    return Metrics.updateOne({ id: json.id }, json, { upsert: true })
+    return Metrics.updateOne({id: json.id}, json, {upsert: true})
         .then(() => {
             metricsJson[json.id] = json;
             let prefix = Utils.getProjectName(projectApiUrl);
             let filename = prefix + "-simple-metrics.csv"
             return Utils.add_line_to_file(json, filename, DATA_PATH)
+        }).then(() => {
+            return updateProgress();
         });
 }
 
-function updateProgress() {
-    progressBar.update(1);
-    i++;
+async function updateProgress() {
+    progressBar.increment(1);
+    return Promise.resolve(true);
 }
 
 /**
@@ -127,14 +125,12 @@ function updateProgress() {
  */
 async function collectMetrics(json) {
     let metric = {};
-    //checkMetrics(json)
     collectIdentityMetrics(json, metric);
     collectTimeMetrics(json, metric);
     collectCodeMetrics(json, metric);
     collectFileMetrics(json, metric);
     collectOwnerMetrics(json, metric);
     collectMsgMetrics(json, metric);
-    updateProgress();
     return metric;
 }
 
@@ -193,7 +189,6 @@ function collectCodeMetrics(json, metric) {
  */
 function collectFileMetrics(json, metric) {
     let fileInfo = get_files_info(json);
-
     metric["num_files"] = fileInfo.num_files;
     metric["num_files_type"] = fileInfo.num_files_type;
     metric["num_directory"] = fileInfo.num_directory;
@@ -206,17 +201,6 @@ function collectFileMetrics(json, metric) {
     metric["num_data_language"] = fileInfo.num_data_language;
     metric["num_prose_language"] = fileInfo.num_prose_language;
     metric["num_markup_language"] = fileInfo.num_markup_language;
-
-    let changesFileInfo = get_changes_files_modified(json)
-    metric["file_developer_num"] = changesFileInfo.num_dev;
-
-    //metric["file_developer_experience"] = changesFileInfo.dev_exp;
-    //metric["moy_changes_files_modified"] = changesFileInfo.moy_number_per_review;
-    //metric["moy_changes_files_modified_time"] = changesFileInfo.moy_time_per_review;
-    //metric["moy_time_owner_pass_on_change_files"] = changesFileInfo.moy_time_owner_pass_on_change_files;
-    //metric["moy_number_of_time_reviewer_review_the_files"] = changesFileInfo.moy_number_of_time_reviewer_review_the_files;
-    //metric["moy_time_reviewer_pass_on_this_files"] = changesFileInfo.moy_time_reviewer_pass_on_this_files;
-
 }
 
 /**
@@ -224,22 +208,8 @@ function collectFileMetrics(json, metric) {
  * @param {JSON} metric Output Json
  */
 function collectOwnerMetrics(json, metric) {
-    metric["is_a_bot"] = is_owner_a_bot(json);
-    metric["num_human_reviewer"] = MetricsUtils.getHumanReviewersCount(json);
-
-    let ownerInfo = get_owner_property(json);
-    metric["num_revisions"] = get_num_revisions(json);
-    metric["review_num"] = ownerInfo.owner_num_review;
-    //post metrics
-
-    /*
-    //metric["change_num"] = ownerInfo.owner_num_changed;
-    metric["num_merged"] = ownerInfo.owner_num_merged;
-    metric["merged_ratio"] = ownerInfo.owner_num_merged_ratio;
-    metric["subsystem_change_num"] = ownerInfo.owner_project
-    metric["subsystem_merged"] = ownerInfo.owner_sub_sys_merged;
-    metric["subsystem_merged_ratio"] = ownerInfo.owner_sub_sys_merged_ratio;
-    */
+    metric["is_a_bot"] = MetricsUtils.isABot(json.owner, projectName);
+    metric["num_human_reviewer"] = MetricsUtils.getHumanReviewersCount(json, projectName);
 }
 
 /**
@@ -310,7 +280,7 @@ function is_updated_date_a_weekend(json) {
 }
 
 function get_timezone(json) {
-    let tz = { "committer": 0, "author": 0 };
+    let tz = {"committer": 0, "author": 0};
     let revisions = json.revisions
     for (let id in revisions) {
         let revision = revisions[id]
@@ -365,7 +335,7 @@ function get_owner_property(json) {
         sub_sys_merged_ratio = MathJs.divide(owner[ownerId]["sub_sys_merged"].length, owner[ownerId]["sub_sys"].length);
     }
 
-    let reviewers = MetricsUtils.getHumanReviewers(json);
+    let reviewers = MetricsUtils.getHumanReviewers(json, projectName);
     for (let id in reviewers) {
         let reviewerId = reviewers[id]._account_id;
         initOwner(reviewerId);
@@ -404,13 +374,13 @@ function get_changes_files_modified(json) {
         if (revision_number !== 1)
             continue;
 
-        let reviewersIds = MetricsUtils.getHumanReviewersID(json);
+        let reviewersIds = MetricsUtils.getHumanReviewersID(json, projectName);
         //console.log(json.id);
 
         let files = revisions[key].files;
         for (let index in files) {
             if (!files_change_json[index]) {
-                files_change_json[index] = { number_of_modif: 0, time_of_modif: [], dev: {}, reviewer: {} };
+                files_change_json[index] = {number_of_modif: 0, time_of_modif: [], dev: {}, reviewer: {}};
             }
             files_change_json[index]["number_of_modif"] = files_change_json[index]["number_of_modif"] + 1;
             let diff_time = diffCreatedUpdatedTime(json)
@@ -578,7 +548,7 @@ function get_files_info(json) {
     fileInfo.modify_entropy = average(entropyArray);
 
     fileInfo.num_programming_language = get_num_of_language(filesExtJson);
-    fileInfo.num_markup_language =  get_num_of_markup_type(filesExtJson);
+    fileInfo.num_markup_language = get_num_of_markup_type(filesExtJson);
     fileInfo.num_data_language = get_num_of_data_type(filesExtJson);
     fileInfo.num_prose_language = get_num_of_prose_type(filesExtJson);
 
@@ -730,7 +700,7 @@ function getParticipantId(json) {
     let ownerId = json.owner._account_id;
     let reviewersId = getReviewersId(json);
     let user = []
-        //add user
+    //add user
     user.push(ownerId);
     for (let i in reviewersId) {
         user.push(reviewersId[i]);
@@ -775,7 +745,7 @@ function countLetter(word) {
 function countWord(phrase) {
     if (phrase)
         return phrase.split(' ')
-            .filter(function(n) {
+            .filter(function (n) {
                 return n != ''
             })
             .length;

@@ -9,57 +9,59 @@ const Metrics = require('../models/metrics');
 const MetricsUtils = require('../compute_metrics/metrics-utils');
 const Utils = require('../config/utils');
 const ApiEndPoints = require('../config/apiEndpoints');
+const Path = require('path');
 
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
-let projectDBUrl = Database.libreOfficeDBUrl;
-let projectApiUrl = ApiEndPoints.qtApiUrl;
+
+let projectJson = Utils.getProjectParameters("libreoffice");
+let projectDBUrl = projectJson["projectDBUrl"];
+let projectApiUrl = projectJson["projectApiUrl"];
+let projectName = projectJson["projectName"];
+let DATA_PATH = "data/";
 
 let STARTING_POINT = 0;
 let NUM_DAYS_FOR_RECENT = 365;
 let NUM_OF_CHANGES_LIMIT = 100;
-let NUMBER_DATABASE_REQUEST = 3;
-let DATA_PATH = "data/";
+let NUMBER_DATABASE_REQUEST = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
 let overAllGraphJson = {};
 let overAllFullConnectedGraphJson = {};
 
-let i = 0;
 
-let libreOfficeJson = {
-    projectApiUrl: ApiEndPoints.libreOfficeApiUrl,
-    projectDBUrl: Database.libreOfficeDBUrl,
-    directory: DATA_PATH
+if (typeof require !== 'undefined' && require.main === module) {
+    start(projectJson)
+        .catch(err => {
+            console.log(err)
+        });
 }
 
-mainFunction(libreOfficeJson)
-    .catch(err => {
-        console.log(err)
-    });
-
-function mainFunction(json) {
+function start(json) {
     if (json["projectDBUrl"])
         projectDBUrl = json["projectDBUrl"];
     if (json["projectApiUrl"])
         projectApiUrl = json["projectApiUrl"];
-    if (json["directory"])
-        DATA_PATH = json["directory"];
+    if (json["output_directory"])
+        DATA_PATH = json["output_directory"];
+    if (json["projectName"])
+        projectName = projectJson["projectName"];
+
+    console.log("Collecting account graph !!!!");
 
     return Database.dbConnection(projectDBUrl)
         .then(() => { // Counts the number of change
             return Change.estimatedDocumentCount({});
-            ;
         })
         .then((count) => {
-            //NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
-            //console.log("Processing data... by " + NUM_OF_CHANGES_LIMIT);
+            NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
+            console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
             return getChanges(STARTING_POINT);
         })
         .then(() => {
-            let projectName = Utils.getProjectName(ApiEndPoints.getProjectsUrl(projectApiUrl));
             let name1 = projectName + "-graph";
             let name2 = projectName + "-full-connected-graph";
-            let t1 = Utils.saveJSONInFile(DATA_PATH, name1, overAllGraphJson);
-            let t2 = Utils.saveJSONInFile(DATA_PATH, name2, overAllFullConnectedGraphJson);
+            let path = PathLibrary.join(DATA_PATH, projectName);
+            let t1 = Utils.saveJSONInFile(path, name1, overAllGraphJson);
+            let t2 = Utils.saveJSONInFile(path, name2, overAllFullConnectedGraphJson);
             return Promise.all([t1, t2]);
         })
         .then(() => {
@@ -84,11 +86,10 @@ function getChanges(skip) {
         .exec()
         .then(docs => {
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
-            //return docs.length ? collectDocs(docs) : Promise.resolve(false);
         })
-        /*.then(result => {
+        .then(result => {
             return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
-        })*/
+        })
         .catch(err => {
             console.log(err)
         });
@@ -172,7 +173,7 @@ async function buildGraph(docs, id, owner) {
                 let rev_id = reviewersId[j];
                 //console.log(reviewersId[j]);
                 if (!rev_id) continue;
-                if (MetricsUtils.isABot(rev_id)) continue;
+                if (MetricsUtils.isABot(rev_id, projectName)) continue;
                 nodes.add(rev_id);
                 let edge = [owner_id, rev_id];
                 edges.push(edge);
@@ -204,12 +205,14 @@ function buildFullConnectedGraph(docs, id, owner) {
         if (reviewersId)
             for (let j = 0; j < reviewersId.length; j++) {
                 let revId1 = reviewersId[j];
+                if (MetricsUtils.isABot(revId1, projectName)) continue;
                 nodes.add(revId1);
                 let edge = [owner_id, revId1];
                 edges.push(edge);
 
                 for (let k = 0; k < reviewersId.length; k++) {
                     let revId2 = reviewersId[k];
+                    if (MetricsUtils.isABot(revId2, projectName)) continue;
                     if (revId1 === revId2) continue;
                     let edge = [revId1, revId2];
                     edges.push(edge);
@@ -224,3 +227,7 @@ function buildFullConnectedGraph(docs, id, owner) {
     graph["edges"] = [...edges];
     return graph;
 }
+
+module.exports = {
+    start: start
+};

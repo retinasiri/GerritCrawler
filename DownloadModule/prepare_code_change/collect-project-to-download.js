@@ -7,8 +7,9 @@ const ApiEndPoints = require('../config/apiEndpoints');
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
 let DATA_PATH = "data/";
 
-let projectDBUrl = Database.libreOfficeDBUrl;
-let projectApiUrl = ApiEndPoints.qtApiUrl;
+let projectJson = Utils.getProjectParameters("libreoffice");
+let projectDBUrl = projectJson["projectDBUrl"];
+let projectApiUrl = projectJson["projectApiUrl"];
 
 let STARTING_POINT = 0;
 let NUM_OF_CHANGES_LIMIT = 10000;
@@ -26,8 +27,8 @@ function mainFunction(json) {
         projectDBUrl = json["projectDBUrl"];
     if (json["projectApiUrl"])
         projectApiUrl = json["projectApiUrl"];
-    if (json["directory"])
-        DATA_PATH = json["directory"];
+    if (json["output_directory"])
+        DATA_PATH = json["output_directory"];
 
     return Database.dbConnection(projectDBUrl)
         .then(() => { // Counts the number of change

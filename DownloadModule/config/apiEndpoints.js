@@ -1,3 +1,5 @@
+const Config = require('../config.json')
+
 let libreOfficeUrl = 'https://gerrit.libreoffice.org/';
 let qtUrl = 'https://codereview.qt-project.org/';
 let openStackUrl = 'https://review.opendev.org/';
@@ -26,6 +28,10 @@ let mergedChangeQuery = "status:merged" ;
 
 let query = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS" +
     "&o=REVIEWER_UPDATES&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS&o=COMMIT_FOOTERS"
+
+function getProjectApi(projectName){
+    return Config.project[projectName]["api_url"];
+}
 
 function getProjectsUrl(url){
     return new URL(url + projectsEndpoint);
@@ -123,7 +129,8 @@ module.exports = {
     startAt: URL.prototype.startAt,
     getStartValue: URL.prototype.getStartValue,
     numChanges: URL.prototype.numChanges,
-    getNumChanges: URL.prototype.getNumChanges
+    getNumChanges: URL.prototype.getNumChanges,
+    getProjectApi: getProjectApi
 };
 
 /*

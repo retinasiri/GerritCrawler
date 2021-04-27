@@ -6,15 +6,19 @@ const RateLimit = require('axios-rate-limit');
 const Crawling = require('../models/crawling');
 const Database = require('../config/databaseConfig');
 const ApiEndPoints = require('../config/apiEndpoints');
+const Utils = require("../config/utils");
 
-const axios = RateLimit(Axios.create(), { maxRPS: 80 })
+const axios = RateLimit(Axios.create(), {maxRPS: 80})
 const TIMEOUT = 20 * 60 * 1000;
-let RACINE_PATH = "data/"
-
-let projectDBUrl = Database.qtDbUrl;
-let projectApiUrl = ApiEndPoints.qtApiUrl;
 let LAST_YEAR_TO_COLLECT = 2010;
 let NUMBER_OF_CHANGES_REQUESTED = 250;
+
+let projectJson = Utils.getProjectParameters("libreoffice");
+let projectDBUrl = projectJson["projectDBUrl"];
+let projectApiUrl = projectJson["projectApiUrl"];
+let DIRECTORY_NAME = projectJson["name"];
+let OUTPUT_DATA_PATH = "data/"
+
 
 function startDownload(json) {
     if (json["projectDBUrl"])
@@ -25,8 +29,11 @@ function startDownload(json) {
         LAST_YEAR_TO_COLLECT = json["last_year"];
     if (json["number_of_changes"])
         NUMBER_OF_CHANGES_REQUESTED = json["number_of_changes"];
-    if (json["directory"])
-        RACINE_PATH = json["directory"];
+    if (json["output_directory"])
+        OUTPUT_DATA_PATH = json["output_directory"];
+    if (json["name"])
+        DIRECTORY_NAME = projectJson["name"];
+
 
     return startCrawling(projectApiUrl, projectDBUrl)
         .then(() => {
@@ -49,6 +56,9 @@ async function startCrawling(projectApiUrl, projectDBUrl) {
     let mergedChangePromise = getAllChanges(mergedChangesUrl);
     let abandonedChangedPromise = getAllChanges(abandonedChangesUrl);
     return Promise.all([openChangePromise, mergedChangePromise, abandonedChangedPromise])
+        .catch(err => {
+            console.log(err)
+        });
 }
 
 function getTime() {
@@ -71,81 +81,92 @@ function getAllChanges(changesUrl) {
     let typeOfChange = changesUrl.searchParams.get('q');
     changesUrl = changesUrl.numChanges(NUMBER_OF_CHANGES_REQUESTED)
     console.log(getTime() + typeOfChange + " - changes : " + getStartRange(changesUrl));
-    //console.log(getTime() + "ChangesUrl : " + changesUrl);
 
     return getChanges(changesUrl.href)
-        .then(function(params) {
-            if (params) {
-                if (params.created) {
-                    let lastChangeYear = Moment(params.created).toDate().getFullYear();
-                    if (lastChangeYear > LAST_YEAR_TO_COLLECT) {
-                        if (params._more_changes) {
-                            if (params._more_changes === true) {
-                                changesUrl = changesUrl.startAt(start + NUMBER_OF_CHANGES_REQUESTED);
-                                changesUrl = changesUrl.numChanges(NUMBER_OF_CHANGES_REQUESTED)
-                                return getAllChanges(changesUrl);
-                            }
-                        }
-                    }
-                }
+        .then(function (json) {
+            let bool = hasToDownloadMoreChange(json, changesUrl);
+            if (bool) {
+                changesUrl = changesUrl.startAt(start + NUMBER_OF_CHANGES_REQUESTED);
+                changesUrl = changesUrl.numChanges(NUMBER_OF_CHANGES_REQUESTED)
+                return getAllChanges(changesUrl);
             }
-            return Promise.resolve(false);
+            return Promise.resolve(true);
         })
-        .catch(function(err) {
+        .catch(function (err) {
             console.log("Error : " + JSON.stringify(err.toString()));
         });
+}
+
+function hasToDownloadMoreChange(json, changesUrl) {
+    let lastJson = getLastJson(json);
+    if (lastJson)
+        if (lastJson._more_changes) {
+            let typeOfChange = changesUrl.searchParams.get('q');
+            console.log(getTime() + typeOfChange + ' - more changes : ' + JSON.stringify(lastJson._more_changes))
+        }
+
+    let bool = false;
+
+    if (lastJson) {
+        if (lastJson.created) {
+            let lastChangeYear = Moment(lastJson.created).toDate().getFullYear();
+            if (lastChangeYear > LAST_YEAR_TO_COLLECT)
+                if (lastJson._more_changes)
+                    if (lastJson._more_changes === true)
+                        bool = true;
+
+
+        }
+    }
+
+    return bool;
 }
 
 /**
  * @param {String} changesUrl The date
  */
 function getChanges(changesUrl) {
-    return fetchFromApi(changesUrl, function(params) {
-        return saveFiles(changesUrl, params).then(() =>{
+    return fetchFromApi(changesUrl)
+        .then((json) => {
+            return saveFiles(changesUrl, json)
+        })
+        .then((json) => {
             let url = new URL(changesUrl);
             let start = Number(url.getStartValue());
-            return saveCrawlingProgression(url, start + NUMBER_OF_CHANGES_REQUESTED);
-        });
-        //todo save crawling progression here
-    });
+            return saveCrawlingProgression(url, start + NUMBER_OF_CHANGES_REQUESTED)
+                .then(() => {
+                    return Promise.resolve(json);
+                })
+        })
 }
 
 /**
- * @param {String} apiEndpoint The date
+ * @param {String} apiEndpoint The url of the code changes
  * @param {function} functionToExecute The date
  */
-function fetchFromApi(apiEndpoint, functionToExecute) {
-    //console.log("apiEndpoint : " + apiEndpoint);
-    return axios.get(apiEndpoint, { timeout: TIMEOUT })
+function fetchFromApi(apiEndpoint) {
+    return axios.get(apiEndpoint, {timeout: TIMEOUT})
         .then(response => {
-            //console.log("fetchFromApi start : " + start);
             let json = JSON.parse(response.data.slice(5));
-            let lastJson;
-
-            if(Object.keys(json).length === 0)
+            if (Object.keys(json).length === 0)
                 return {};
-
-            functionToExecute(json);
-
-
-            for (let key in json) {
-                if (json.hasOwnProperty(key)) {
-                    lastJson = json[key];
-                }
-            }
-            if (lastJson)
-                if (lastJson._more_changes) {
-                    let typeOfChange = (new URL(apiEndpoint)).searchParams.get('q');
-                    console.log(getTime() + typeOfChange + ' - more changes : ' + JSON.stringify(lastJson._more_changes))
-                }
-
-            return lastJson;
+            return json;
         })
-        .catch(function(err) {
+        .catch(function (err) {
             let typeOfChange = (new URL(apiEndpoint)).searchParams.get('q');
             console.log(getTime() + typeOfChange + "- Api Error : " + err);
             return getAllChanges(new URL(apiEndpoint));
         });
+}
+
+function getLastJson(json) {
+    let lastJson;
+    for (let key in json) {
+        if (json.hasOwnProperty(key)) {
+            lastJson = json[key];
+        }
+    }
+    return lastJson
 }
 
 /**
@@ -154,22 +175,32 @@ function fetchFromApi(apiEndpoint, functionToExecute) {
  */
 async function saveFiles(changeUrlString, json) {
     //console.log('saveFiles : ' + changeUrl);
+    if (Object.keys(json).length === 0)
+        return Promise.resolve(json);
+
     let changeUrl = new URL(changeUrlString)
     let type = changeUrl.searchParams.get('q');
     let start = new Number(changeUrl.getStartValue());
     let subDirname = (type.split(":"))[1] + "-changes";
-    let dirname = RACINE_PATH + (changeUrl.hostname.split("."))[1];
+    let dirname = get_directory_name(DIRECTORY_NAME);
     let fileName = dirname + "/" + subDirname + "/" + start + "-" + (start + NUMBER_OF_CHANGES_REQUESTED) + ".json";
     let data = JSON.stringify(json, null, 2);
 
-    fsExtra.ensureDirSync(dirname + "/" + subDirname);
-    return fsExtra.outputFile(fileName, data);
+    await fsExtra.ensureDirSync(dirname + "/" + subDirname);
+    return fsExtra.outputFile(fileName, data).then(() => {
+        return Promise.resolve(json)
+    });
+}
+
+function get_directory_name(directory_name) {
+    //let dirname = OUTPUT_DATA_PATH + (changeUrl.hostname.split("."))[1];
+    return OUTPUT_DATA_PATH + directory_name;
 }
 
 /**
  * @param {URL} url The date
  */
-function getUrlHost(url){
+function getUrlHost(url) {
     return (url.hostname.split("."))[1]
 }
 
@@ -181,15 +212,16 @@ function saveCrawlingProgression(url, number) {
     let type = url.searchParams.get('q');
     let json = {}
     if (type === ApiEndPoints.openChangeQuery) {
-        json = { number_of_open_changes_collected: number };
+        json = {number_of_open_changes_collected: number};
     } else if (type === ApiEndPoints.mergedChangeQuery) {
-        json = { number_of_merged_changes_collected: number };
+        json = {number_of_merged_changes_collected: number};
     } else if (type === ApiEndPoints.abandonedChangeQuery) {
-        json = { number_of_abandoned_changes_collected: number };
+        json = {number_of_abandoned_changes_collected: number};
     }
-    return Crawling.updateOne({ url: projectApiUrl }, json).then(()=>{
-        return Promise.resolve(true);
-    });
+    return Crawling.updateOne({url: projectApiUrl}, json)
+        .catch(err => {
+            console.log(err)
+        });
 }
 
 /**
@@ -204,7 +236,7 @@ function initCrawlingProgression(url) {
         "number_of_abandoned_changes_collected": 0
     });
 
-    return Crawling.findOne({ url: url })
+    return Crawling.findOne({url: url})
         .then(result => {
             if (result) {
                 return Promise.resolve(result);
@@ -213,6 +245,7 @@ function initCrawlingProgression(url) {
             }
         });
 }
+
 
 module.exports = {
     start: startDownload

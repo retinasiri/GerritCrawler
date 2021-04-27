@@ -1,6 +1,7 @@
 import pymongo
 
 DB_URL = "mongodb://localhost:27017/"
+
 LIBRE_OFFICE_DB_NAME = 'libreOfficeDB'
 QT_DB_NAME = 'qtDB'
 OPENSTACK_DB_NAME = 'openstackDB'

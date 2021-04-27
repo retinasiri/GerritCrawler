@@ -2,64 +2,62 @@ const MathJs = require('mathjs');
 const Moment = require('moment');
 const Mongoose = require('mongoose');
 const cliProgress = require('cli-progress');
-const PromisePool = require('es6-promise-pool')
 const Database = require('../config/databaseConfig');
 const Change = require('../models/change');
 const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
-const ApiEndPoints = require('../config/apiEndpoints');
 const MetricsUtils = require("./metrics-utils");
-
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
-let projectDBUrl = Database.libreOfficeDBUrl;
-let projectApiUrl = ApiEndPoints.qtApiUrl;
+const PathLibrary = require('path');
+
+
+let libreOfficeJson = Utils.getProjectParameters("libreoffice");
+let projectDBUrl = libreOfficeJson["projectDBUrl"];
+let projectApiUrl = libreOfficeJson["projectApiUrl"];
+let projectName = libreOfficeJson["projectName"];
 
 let STARTING_POINT = 0;
 let NUM_OF_CHANGES_LIMIT = 1000;
-let NUMBER_DATABASE_REQUEST = 4;
-const NUM_CONCURRENCY = 100;
-
+let NUM_CONCURRENCY = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
 let DATA_PATH = "data/";
 
 let metricsJson = {};
 
-let libreOffice = {
-    projectApiUrl: ApiEndPoints.libreOfficeApiUrl,
-    projectDBUrl: Database.libreOfficeDBUrl,
-    directory: DATA_PATH
+if (typeof require !== 'undefined' && require.main === module) {
+    startComputeMetrics(libreOfficeJson).catch(err => {
+        console.log(err)
+    });
 }
-
-startComputeMetrics(libreOffice).catch(err => {
-    console.log(err)
-});
 
 function startComputeMetrics(json) {
     if (json["projectDBUrl"])
         projectDBUrl = json["projectDBUrl"];
     if (json["projectApiUrl"])
         projectApiUrl = json["projectApiUrl"];
-    if (json["directory"])
-        DATA_PATH = json["directory"];
+    if (json["output_directory"])
+        DATA_PATH = json["output_directory"];
+    if (json["projectName"])
+        projectName = json["projectName"];
 
     return Database.dbConnection(projectDBUrl)
         .then(() => { // Counts the number of change
             return Change.estimatedDocumentCount({});
         })
         .then((count) => {
-            NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
+            NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUM_CONCURRENCY);
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, STARTING_POINT);
 
             let tasks = []
-            for (let i = 0; i < NUMBER_DATABASE_REQUEST; i++) {
+            for (let i = 0; i < NUM_CONCURRENCY; i++) {
                 tasks.push(getChanges(NUM_OF_CHANGES_LIMIT * i))
             }
             return Promise.all(tasks);
         })
         .then(() => {
-            let projectName = Utils.getProjectName(ApiEndPoints.getProjectsUrl(projectApiUrl));
-            let name = projectName + "-merged-metrics"
-            return Utils.saveJSONInFile(DATA_PATH, name, metricsJson);
+            let name = projectName + "-merged-metrics";
+            let path = PathLibrary.join(DATA_PATH, projectName);
+            return Utils.saveJSONInFile(path, name, metricsJson);
         })
         .then(() => {
             progressBar.stop();
@@ -83,38 +81,16 @@ function getChanges(skip) {
         .exec()
         .then(docs => {
             if (!docs)
-                Promise.resolve(false)
+                return Promise.resolve(false)
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
         })
-        /*.then(result => {
+        .then(result => {
             return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
-        })*/
+        })
         .catch(err => {
             console.log(err)
         });
 }
-
-/*async function collectDocs(docs) {
-    if (!docs)
-        return Promise.resolve(true);
-
-    const generatePromises = function*() {
-        for (let key in docs) {
-            yield collectMetrics(docs[key])
-                .then((json) => {
-                    return saveMetrics(json);
-                })
-        }
-    }
-
-    const promiseIterator = generatePromises()
-    const pool = new PromisePool(promiseIterator, NUM_CONCURRENCY)
-
-    return pool.start()
-        .then(() => {
-            return Promise.resolve(true)
-        })
-}*/
 
 async function collectDocs(docs) {
     if (!docs)
@@ -135,24 +111,17 @@ function saveMetrics(json) {
     return Metrics.updateOne({id: json.id}, json, {upsert: true}).then(() => {
         metricsJson[json.id] = json;
         let prefix = Utils.getProjectName(projectApiUrl);
-        let filename = prefix + "-merged-metrics.csv"
+        let filename = prefix + "-owner-metrics.csv"
         return Utils.add_line_to_file(json, filename, DATA_PATH)
     }).then(() => {
-        updateProgress();
+        return updateProgress();
     });
 }
 
-function updateProgress() {
+async function updateProgress() {
     progressBar.increment(1);
+    return Promise.resolve(true);
 }
-
-//count all merged
-//count total change
-//count owner merged
-//count owner all change
-//count owner merge ratio
-//count percentage of merged
-//count owner percentage of merge
 
 async function collectMetrics(json) {
     return getChangesInfo(json).then((values) => {
@@ -181,10 +150,39 @@ async function collectMetrics(json) {
     });
 }
 
+//count prior code changes
+//count prior merged changes
+//count prior abandoned changes
+
+//count owner prior code changes
+//count owner prior merged changes
+//count owner prior abandoned changes
+
+//count subsystem prior code changes
+//count subsystem prior merged changes
+//count subsystem prior abandoned changes
+
+//count owner subsystem prior code changes
+//count owner subsystem prior merged changes
+//count owner subsystem prior abandoned changes
+
+//count merge ratio
+//count abandoned ratio
+
+//count prior Subsystem percentage
+
+//count total change
+//count owner merged
+//count owner all change
+//count owner merge ratio
+//count percentage of merged
+//count owner percentage of merge
+
 function getChangesInfo(json) {
     let priorChangesCount = getPriorChangesCount(json);
     let priorMergedChangesCount = getPriorTypeChangesCount(json, "MERGED");
     let priorAbandonedChangesCount = getPriorTypeChangesCount(json, "ABANDONED");
+
     let ownerPriorChangesCount = getOwnerPriorChangesCount(json);
     let ownerPriorMergedChangesCount = getOwnerPriorTypeChangesCount(json, "MERGED");
     let ownerPriorAbandonedChangesCount = getOwnerPriorTypeChangesCount(json, "ABANDONED");
@@ -192,6 +190,7 @@ function getChangesInfo(json) {
     let priorSubsystemChangesCount = getPriorSubsystemChangesCount(json);
     let priorSubsystemMergedChangesCount = getPriorSubsystemTypeChangesCount(json, "MERGED");
     let priorSubsystemAbandonedChangesCount = getPriorSubsystemTypeChangesCount(json, "ABANDONED");
+
     let priorSubsystemOwnerChangesCount = getPriorSubsystemOwnerChangesCount(json);
     let priorSubsystemOwnerMergedChangesCount = getPriorSubsystemOwnerTypeChangesCount(json, "MERGED");
     let priorSubsystemOwnerAbandonedChangesCount = getPriorSubsystemOwnerTypeChangesCount(json, "ABANDONED");
@@ -235,13 +234,19 @@ function getChangesInfo(json) {
             priorOwnerSubsystemMergedChangesCount: results[10],
             priorOwnerSubsystemAbandonedChangesCount: results[11],
 
-            priorSubsystemRatio: safeDivision(results[6], results[0]),
-            priorSubsystemMergedRatio: safeDivision(results[7], results[1]),
-            priorSubsystemAbandonedRatio: safeDivision(results[8], results[2]),
+            priorSubsystemPercentage: safeDivision(results[6], results[0]),
+            priorSubsystemMergedRatio: safeDivision(results[7], results[6]),
+            priorSubsystemAbandonedRatio: safeDivision(results[8], results[6]),
+
+            priorSubsystemMergedPercentageInMerged: safeDivision(results[7], results[1]),
+            priorSubsystemAbandonedPercentageInAbandoned: safeDivision(results[8], results[2]),
 
             priorOwnerSubsystemChangesRatio: safeDivision(results[9], results[6]),
-            priorOwnerSubsystemMergedChangesRatio: safeDivision(results[10], results[7]),
-            priorOwnerSubsystemAbandonedChangesRatio: safeDivision(results[11], results[8]),
+            priorOwnerSubsystemMergedChangesRatio: safeDivision(results[10], results[9]),
+            priorOwnerSubsystemAbandonedChangesRatio: safeDivision(results[11], results[9]),
+
+            priorOwnerPercentageOfMergedInSubsystem: safeDivision(results[10], results[7]),
+            priorOwnerPercentageOfAbandonedInSubsystem: safeDivision(results[11], results[8]),
 
         };
     })
@@ -405,9 +410,6 @@ function getPriorSubsystemOwnerTypeChangesCount(json, TYPE) {
 //-mean file time per owner
 //-mean file time per reviewer
 
-//todo count owner num of review
-//todo count file num of dev
-
 function genericDBRequest(pipeline) {
     return Change
         .aggregate(pipeline)
@@ -465,6 +467,7 @@ async function getChangesTimeInfo(json, mergedCount, abandonedCount) {
         return {
             priorMergedChangeMeanTime: results[0].avg,
             priorAbandonedChangeMeanTime: results[1].avg,
+
             priorOwnerMergedChangesMeanTime: results[2].avg,
             priorOwnerAbandonedChangesMeanTime: results[3].avg,
 
@@ -505,6 +508,19 @@ async function getChangesTimeInfo(json, mergedCount, abandonedCount) {
     })
 }
 
+function getProject() {
+    return {
+        $project: {
+            _id: 0,
+            dateDiff: {
+                $subtract: [
+                    {$dateFromString: {dateString: {$substr: ["$updated", 0, 22]}, timezone: "UTC"}},
+                    {$dateFromString: {dateString: {$substr: ["$created", 0, 22]}, timezone: "UTC"}}
+                ]
+            }
+        }
+    }
+}
 
 function getPriorChangeMeanTimeType(json, TYPE) {
     let created_date = Moment(json.created).toDate().toISOString();
@@ -546,25 +562,11 @@ function getPriorOwnerChangesMeanTimeType(json, TYPE) {
     return genericDBRequest(pipeline);
 }
 
-function getProject() {
-    return {
-        $project: {
-            _id: 0,
-            dateDiff: {
-                $subtract: [
-                    {$dateFromString: {dateString: {$substr: ["$updated", 0, 22]}, timezone: "UTC"}},
-                    {$dateFromString: {dateString: {$substr: ["$created", 0, 22]}, timezone: "UTC"}}
-                ]
-            }
-        }
-    }
-}
-
 //exclude bot in reviewersIdArray
 function getReviewersChangesMeanNumType(json, TYPE, count) {
     let created_date = Moment(json.created).toDate().toISOString();
     let number = json._number;
-    let reviewersIdArray = MetricsUtils.getHumanReviewersID(json);
+    let reviewersIdArray = MetricsUtils.getHumanReviewersID(json, projectName);
     let match = {
         $match: {
             status: TYPE,
@@ -685,7 +687,7 @@ function getFileTimeAndCountForReviewers(json, TYPE) {
     let created_date = Moment(json.created).toDate().toISOString();
     let number = json._number;
     let files_list = json.files_list;
-    let reviewersIdArray = MetricsUtils.getHumanReviewersID(json);
+    let reviewersIdArray = MetricsUtils.getHumanReviewersID(json, projectName);
     let match = {
         $match: {
             status: TYPE,
@@ -799,3 +801,6 @@ function getFileDeveloperNumber(json, TYPE) {
     return genericDBRequest(pipeline);
 }
 
+module.exports = {
+    start: startComputeMetrics
+};

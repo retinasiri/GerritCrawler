@@ -1,6 +1,10 @@
 const fsExtra = require("fs-extra");
 const fs = require('fs');
-//let metricsJson = require("../data/metrics.json");
+const DatabaseConfig = require('../config/databaseConfig');
+const ApiEndPoints = require('../config/apiEndpoints');
+const Config = require('../config.json');
+const os = require('os');
+const PathLibrary = require('path');
 let programming_languages_extension = require("../res/Programming_Languages_Extensions.json");
 
 function saveJSONInFile(directory = "data/", name, data) {
@@ -9,9 +13,13 @@ function saveJSONInFile(directory = "data/", name, data) {
 }
 
 function saveFile(directory = "data/", name, data, ext) {
-    let fileName = directory + name + "." + ext;
+    let fileName = name + "." + ext;
+    let filepath = fileName;
+    if (directory)
+        filepath = PathLibrary.join(directory, fileName);
+
     fsExtra.ensureDirSync(directory);
-    return fsExtra.outputFile(fileName, data)
+    return fsExtra.outputFile(filepath, data)
         /*.then(() => {
             console.log('data written to file');
         })*/
@@ -23,7 +31,7 @@ function saveFile(directory = "data/", name, data, ext) {
 function csvFunction(json) {
     let array_of_json = Object.values(json)
     let csvRecord = Object.keys(array_of_json[0]).join(',') + '\n';
-    array_of_json.forEach(function(jsonRecord) {
+    array_of_json.forEach(function (jsonRecord) {
         csvRecord += Object.values(jsonRecord).join(',') + '\n';
     });
     return csvRecord;
@@ -33,11 +41,11 @@ function jsonToCsv(json) {
     let fields = Object.keys(json)
     let jsonArray = Object.values(json)
     console.log(jsonArray);
-    let replacer = function(key, value) {
+    let replacer = function (key, value) {
         return value === null ? '' : value
     }
-    let csv = jsonArray.map(function(row) {
-        return fields.map(function(fieldName) {
+    let csv = jsonArray.map(function (row) {
+        return fields.map(function (fieldName) {
             return JSON.stringify(row[fieldName], replacer)
         }).join(',')
     })
@@ -110,10 +118,25 @@ function getTime() {
 /**
  * @param {String} projectAPIUrl The date
  */
-function getProjectName(projectAPIUrl){
+function getProjectName(projectAPIUrl) {
     let url = new URL(projectAPIUrl)
     return (url.hostname.split("."))[1]
 }
+
+function getProjectParameters(projectName) {
+    let json = {};
+    json["projectDBUrl"] = DatabaseConfig.getProjectDBUrl(projectName);
+    json["projectApiUrl"] = ApiEndPoints.getProjectApi(projectName);
+    json["projectName"] = projectName;
+    json["projectDBName"] = Config.project[projectName]["db_name"];
+    json["output_directory"] = Config.output_data_path;
+    return json;
+}
+
+function getCPUCount() {
+    return os.cpus().length;
+}
+
 
 module.exports = {
     saveFile: saveFile,
@@ -121,5 +144,7 @@ module.exports = {
     jsonToCsv: jsonToCsv,
     add_line_to_file: add_line_to_file,
     getTime: getTime,
-    getProjectName: getProjectName
+    getProjectName: getProjectName,
+    getProjectParameters: getProjectParameters,
+    getCPUCount: getCPUCount
 };

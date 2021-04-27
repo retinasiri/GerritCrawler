@@ -5,48 +5,45 @@ const Utils = require('../config/utils')
 const Database = require('../config/databaseConfig');
 const ApiEndPoints = require('../config/apiEndpoints');
 const cliProgress = require('cli-progress');
+const PathLibrary = require('path');
 
-
-//lire les fichiers
-//let DATA_PATH = "data/";
-const multibar = new cliProgress.MultiBar({
-    format: '{type} [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | {name}',
-    clearOnComplete: false,
-    hideCursor: true
-}, cliProgress.Presets.shades_classic);
-let DATA_PATH = "/Volumes/SEAGATE-II/Data/";
-let projectName = "libreoffice";
+let DATA_PATH = "data/";
 
 let account = {};
 let botAccount = {};
 let humanAccount = {};
 
-let projectDBUrl = Database.qtDbUrl;
-let projectApiUrl = ApiEndPoints.qtApiUrl;
+let projectJson = Utils.getProjectParameters("libreoffice");
+let projectDBUrl = projectJson["projectDBUrl"];
+let projectApiUrl = projectJson["projectApiUrl"];
+let projectName = projectJson["projectName"];
 
-/*addChangeInDB(projectDBUrl)
-    .catch(err => {
-        console.log(err)
-    });*/
+
+const multibar = new cliProgress.MultiBar({
+    format: '{type} [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | {name}',
+    clearOnComplete: false,
+    hideCursor: true
+}, cliProgress.Presets.shades_classic);
 
 function addChangesInDB(json) {
     if (json["projectDBUrl"])
         projectDBUrl = json["projectDBUrl"];
     if (json["projectApiUrl"])
         projectApiUrl = json["projectApiUrl"];
-    if (json["directory"])
-        DATA_PATH = json["directory"];
+    if (json["output_directory"])
+        DATA_PATH = json["output_directory"];
+    if (json["projectName"])
+        projectName = projectJson["projectName"];
 
-    projectName = Utils.getProjectName(ApiEndPoints.getProjectsUrl(projectApiUrl));
+    console.log("Adding files to the database !!!!");
 
     return Database.dbConnection(projectDBUrl).then(() => {
-        console.log("Adding files to the database !!!!");
         return getFilesLoad()
     })
         .then(() => {
             // save file of account
             let promises = [];
-            let path = DATA_PATH + projectName + "/"
+            let path = PathLibrary.join(DATA_PATH, projectName);
             promises.push(Utils.saveJSONInFile(path, projectName + "-account", account));
             promises.push(Utils.saveJSONInFile(path, projectName + "-bot-account", botAccount));
             promises.push(Utils.saveJSONInFile(path, projectName + "-human-account", humanAccount));
@@ -145,15 +142,18 @@ function getParticipants(json) {
 }
 
 function getAbandonedPath() {
-    return DATA_PATH + projectName + "/abandoned-changes/";
+    return PathLibrary.join(DATA_PATH , projectName , "abandoned-changes");
+    //return DATA_PATH + projectName + "/abandoned-changes/";
 }
 
 function getMergedPath() {
-    return DATA_PATH + projectName + "/merged-changes/";
+    return PathLibrary.join(DATA_PATH , projectName , "merged-changes");
+    //return DATA_PATH + projectName + "/merged-changes/";
 }
 
 function getOpenPath() {
-    return DATA_PATH + projectName + "/open-changes/";
+    return PathLibrary.join(DATA_PATH , projectName , "open-changes");
+    //return DATA_PATH + projectName + "/open-changes/";
 }
 
 module.exports = {

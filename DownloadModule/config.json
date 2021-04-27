@@ -1,22 +1,29 @@
 {
-  "data_path": "data/",
-  "database_url": "mongodb://localhost:27017/",
+  "output_data_path": "data/",
+  "database_hostname": "localhost",
+  "database_port": 27017,
+  "database_username": "",
+  "database_password": "",
   "project": {
     "libreoffice": {
       "api_url": "https://gerrit.libreoffice.org/",
-      "db_name": "libreoffice"
+      "db_name": "libreOffice",
+      "description": ""
     },
     "openstack": {
       "api_url": "https://review.opendev.org/",
-      "db_name": "openstack"
+      "db_name": "openstack",
+      "description": ""
     },
     "qt": {
       "api_url": "https://codereview.qt-project.org/",
-      "db_name": "qt"
+      "db_name": "qt",
+      "description": ""
     },
-    "googlesource": {
+    "android": {
       "api_url": "https://android-review.googlesource.com/",
-      "db_name": "googlesource"
+      "db_name": "android",
+      "description": ""
     }
   }
 }

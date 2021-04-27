@@ -30,7 +30,8 @@
     "process": "^0.11.10",
     "promise": "^8.1.0",
     "shelljs": "^0.8.4",
-    "throttled-promise": "^1.0.1"
+    "throttled-promise": "^1.0.1",
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
     "exportmongodatabase": "^1.0.2"

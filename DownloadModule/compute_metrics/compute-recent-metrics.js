@@ -2,66 +2,63 @@ const MathJs = require('mathjs');
 const Moment = require('moment');
 const Mongoose = require('mongoose');
 const cliProgress = require('cli-progress');
-const ThrottledPromise = require('throttled-promise');
-const PromisePool = require('es6-promise-pool');
 const Database = require('../config/databaseConfig');
 const Change = require('../models/change');
 const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
 const MetricsUtils = require('./metrics-utils');
-const ApiEndPoints = require('../config/apiEndpoints');
-
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
-let projectDBUrl = Database.libreOfficeDBUrl;
-let projectApiUrl = ApiEndPoints.qtApiUrl;
+const PathLibrary = require('path');
+
+let libreOfficeJson = Utils.getProjectParameters("libreoffice");
+let projectDBUrl = libreOfficeJson["projectDBUrl"];
+let projectApiUrl = libreOfficeJson["projectApiUrl"];
+let projectName = libreOfficeJson["projectName"];
 
 let STARTING_POINT = 0;
 let NUM_DAYS_FOR_RECENT = 120;
 let NUM_OF_CHANGES_LIMIT = 1000;
-let NUMBER_DATABASE_REQUEST = 4;
-const NUM_CONCURRENCY = 100;
-
+let NUM_CONCURRENCY = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
 let DATA_PATH = "data/";
 
 let metricsJson = {};
 
-let libreOffice = {
-    projectApiUrl: ApiEndPoints.libreOfficeApiUrl,
-    projectDBUrl: Database.libreOfficeDBUrl,
-    directory: DATA_PATH
+if (typeof require !== 'undefined' && require.main === module) {
+    startComputeMetrics(libreOfficeJson).catch(err => {
+        console.log(err)
+    });
 }
-
-startComputeMetrics(libreOffice).catch(err => {
-    console.log(err)
-});
 
 function startComputeMetrics(json) {
     if (json["projectDBUrl"])
         projectDBUrl = json["projectDBUrl"];
     if (json["projectApiUrl"])
         projectApiUrl = json["projectApiUrl"];
-    if (json["directory"])
-        DATA_PATH = json["directory"];
+    if (json["output_directory"])
+        DATA_PATH = json["output_directory"];
+    if (json["projectName"])
+        projectName = json["projectName"];
 
     return Database.dbConnection(projectDBUrl)
         .then(() => { // Counts the number of change
             return Change.estimatedDocumentCount({});
         })
         .then((count) => {
-            NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
+            NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUM_CONCURRENCY);
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, STARTING_POINT);
 
             let tasks = []
-            for (let i = 0; i < NUMBER_DATABASE_REQUEST; i++) {
+            for (let i = 0; i < NUM_CONCURRENCY; i++) {
                 tasks.push(getChanges(NUM_OF_CHANGES_LIMIT * i))
             }
+
             return Promise.all(tasks);
         })
         .then(() => {
-            let projectName = Utils.getProjectName(ApiEndPoints.getProjectsUrl(projectApiUrl));
-            let name = projectName + "-recent-metrics"
-            return Utils.saveJSONInFile(DATA_PATH, name, metricsJson);
+            let name = projectName + "-recent-metrics";
+            let path = PathLibrary.join(DATA_PATH, projectName);
+            return Utils.saveJSONInFile(path, name, metricsJson);
         })
         .then(() => {
             progressBar.stop();
@@ -84,42 +81,17 @@ function getChanges(skip) {
         .allowDiskUse(true)
         .exec()
         .then(docs => {
+            if (!docs)
+                return Promise.resolve(false)
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
         })
-        /*.then(result => {
+        .then(result => {
             return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
-        })*/
+        })
         .catch(err => {
             console.log(err)
         });
 }
-
-/*async function collectDocs(docs) {
-    if (!docs)
-        return Promise.resolve(true);
-
-    //let tasks = [];
-    const generatePromises = function* () {
-        for (let key in docs) {
-            yield collectMetrics(docs[key])
-                .then((json) => {
-                    return saveMetrics(json);
-                })
-            //tasks.push(t)
-        }
-    }
-    const promiseIterator = generatePromises()
-    const pool = new PromisePool(promiseIterator, NUM_CONCURRENCY)
-
-    return pool.start()
-        .then(() => {
-            //console.log('Complete')
-            return Promise.resolve(true)
-        })
-
-    //return Promise.all(tasks);
-    //return Promise.resolve(true);
-}*/
 
 async function collectDocs(docs) {
     if (!docs)
@@ -143,12 +115,13 @@ function saveMetrics(json) {
         let filename = prefix + "-recent-metrics.csv"
         return Utils.add_line_to_file(json, filename, DATA_PATH)
     }).then(() => {
-        updateProgress();
+        return updateProgress();
     });
 }
 
-function updateProgress() {
+async function updateProgress() {
     progressBar.increment(1);
+    return Promise.resolve(true);
 }
 
 async function collectMetrics(json) {
@@ -189,7 +162,6 @@ function getPreviousRecentChanges(json) {
     let endDate = Moment(json.created).toDate().toISOString();
     let startDate = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').toDate().toISOString();
     let number = json._number
-    //console.log("startDate - endDate : " + startDate + " - " + endDate);
     return Change
         .find({
             '_number': {$lte: number},
@@ -262,7 +234,7 @@ function computePreviousChange(json, previousRecentChanges) {
 
     }
 
-    let humanReviewersID = MetricsUtils.getHumanReviewersID(json);
+    let humanReviewersID = MetricsUtils.getHumanReviewersID(json, projectName);
     let recent_reviews_tab = []
     let recent_reviews_non_close_tab = []
 
@@ -308,7 +280,7 @@ function computePreviousChange(json, previousRecentChanges) {
 }
 
 function collectReviewersMetrics(recentChange, reviewers, date1, oNumber) {
-    let changeReviewersID = MetricsUtils.getHumanReviewersID(recentChange);
+    let changeReviewersID = MetricsUtils.getHumanReviewersID(recentChange, projectName);
 
     for (let p in changeReviewersID) {
         let revId = changeReviewersID[p];
@@ -336,3 +308,7 @@ function collectReviewersMetrics(recentChange, reviewers, date1, oNumber) {
 
     return reviewers;
 }
+
+module.exports = {
+    start: startComputeMetrics
+};

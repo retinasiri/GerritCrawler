@@ -4,17 +4,21 @@ const fsExtra = require("fs-extra");
 const RateLimit = require('axios-rate-limit');
 const Database = require('../config/databaseConfig');
 const ApiEndPoints = require('../config/apiEndpoints');
+const Utils = require("../config/utils");
 const axios = RateLimit(Axios.create(), {maxRPS: 80})
 
 const TIMEOUT = 20 * 60 * 1000;
-let projectDBUrl = Database.qtDbUrl;
-let projectApiUrl = ApiEndPoints.qtApiUrl;
 
-function crawling(json) {
+let projectJson = Utils.getProjectParameters("libreoffice");
+let projectDBUrl = projectJson["projectDBUrl"];
+let projectApiUrl = projectJson["projectApiUrl"];
+
+function start(json) {
     if (json["projectDBUrl"])
         projectDBUrl = json["projectDBUrl"];
     if (json["projectApiUrl"])
         projectApiUrl = json["projectApiUrl"];
+
     return startCrawling(projectApiUrl).then(() => {
         let project_name = new URL(projectApiUrl).hostname
         console.log(project_name + " Finished !!!!");
@@ -65,5 +69,5 @@ function saveFiles(changeUrlString, json) {
 }
 
 module.exports = {
-    crawling: crawling
+    start: start
 };

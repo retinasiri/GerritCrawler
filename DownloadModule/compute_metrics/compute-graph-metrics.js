@@ -9,28 +9,40 @@ const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
 
 const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
-let projectDBUrl = Database.libreOfficeDBUrl;
 
-let STARTING_POINT = 0;
-let NUM_DAYS_FOR_RECENT = 120;
-let NUM_OF_CHANGES_LIMIT = 80000;
-let NUMBER_DATABASE_REQUEST = 3;
+let projectJson = Utils.getProjectParameters("libreoffice");
+let projectDBUrl = projectJson["projectDBUrl"];
+let projectApiUrl = projectJson["projectApiUrl"];
+let DIRECTORY_NAME = projectJson["name"];
+let OUTPUT_DATA_PATH = "data/"
 
 let i = 0;
+let STARTING_POINT = 0;
+let NUM_OF_CHANGES_LIMIT = 80000;
+let NUMBER_DATABASE_REQUEST = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
 
-mainFunction(projectDBUrl)
-    .catch(err => {
-        console.log(err)
-    });
+if (typeof require !== 'undefined' && require.main === module) {
+    mainFunction(projectDBUrl)
+        .catch(err => {
+            console.log(err)
+        });
+}
 
-function mainFunction(projectDBUrl) {
+function mainFunction(json) {
+    if (json["projectDBUrl"])
+        projectDBUrl = json["projectDBUrl"];
+    if (json["output_directory"])
+        OUTPUT_DATA_PATH = json["output_directory"];
+    if (json["name"])
+        DIRECTORY_NAME = projectJson["name"];
+
     return Database.dbConnection(projectDBUrl)
         .then(() => { // Counts the number of change
             return Change.estimatedDocumentCount({});;
         })
         .then((count) => {
             NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
-            console.log("Processing data... by " + NUM_OF_CHANGES_LIMIT);
+            console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
             return getChanges(STARTING_POINT);
         })
@@ -38,19 +50,16 @@ function mainFunction(projectDBUrl) {
             progressBar.stop();
             console.log("Finished!!!!");
             return Database.closeConnection();
-            //return Utils.saveJsonToFile("metrics", metricsJson);
-            //process.exit();
         })
         .catch(err => {
             console.log(err)
         });
 }
 
-//get changes id
 function getChanges(skip) {
     return Change
         .aggregate([
-            { $sort: { created: 1 } },
+            { $sort: { _number: 1, created:1 } },
             { $skip: skip },
             { $limit: NUM_OF_CHANGES_LIMIT }
         ])

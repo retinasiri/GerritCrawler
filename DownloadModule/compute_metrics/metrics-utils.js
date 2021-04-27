@@ -1,32 +1,45 @@
-const BotAccounts = require('../res/libreoffice-bot-account.json')
+//const BotAccounts = require('../res/libreoffice-bot-account.json');
+const Config = require('../config.json');
+const AllBotAccountJson = loadAllBotAccounts();
 
-function getHumanReviewers(json) {
+function getHumanReviewers(json, projectName) {
     let reviewers = json.reviewers.REVIEWER;
     let reviewerArray = [];
     for (let id in reviewers) {
         let reviewerId = reviewers[id]._account_id;
-        if (!isABot(reviewerId))
+        if (!isABot(reviewerId, projectName))
             reviewerArray.push(reviewers[id])
     }
     return reviewerArray;
 }
 
-function getHumanReviewersID(json) {
+function getHumanReviewersID(json, projectName) {
     let reviewers = json.reviewers.REVIEWER;
     let reviewersIDArray = [];
     for (let id in reviewers) {
         let reviewerId = reviewers[id]._account_id;
-        if (!isABot(reviewerId))
+        if (!isABot(reviewerId, projectName))
             reviewersIDArray.push(reviewers[id]._account_id)
     }
     return reviewersIDArray;
 }
 
-function getHumanReviewersCount(json) {
-    return getHumanReviewersID? getHumanReviewersID.length : 0;
+function getHumanReviewersCount(json, projectName) {
+    return getHumanReviewersID(json, projectName)? getHumanReviewersID(json, projectName).length : 0;
 }
 
-function isABot(accountId) {
+function isABot(accountId, projectName) {
+    let bot = false;
+    let BotAccounts = AllBotAccountJson[projectName]
+    for (let key in BotAccounts) {
+        let botId = BotAccounts[key]._account_id;
+        if (botId === accountId)
+            bot = true;
+    }
+    return bot;
+}
+
+/*function isABot(accountId) {
     let bot = false;
     for (let key in BotAccounts) {
         let botId = BotAccounts[key]._account_id;
@@ -34,6 +47,23 @@ function isABot(accountId) {
             bot = true;
     }
     return bot;
+}*/
+
+function getBotAccountFromConfig(projectName){
+    let filePath = Config.output_data_path + "/"
+        + Config.project[projectName]["db_name"] + "/"
+        + projectName + "-bot-account.json";
+    //let botAccount = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    return require(filePath);
+}
+
+function loadAllBotAccounts(){
+    let project = Config.project;
+    let allBotAccountJson = {};
+    Object.keys(project).forEach(function (key) {
+        allBotAccountJson[key] = getBotAccountFromConfig(key);
+    })
+    return allBotAccountJson;
 }
 
 
