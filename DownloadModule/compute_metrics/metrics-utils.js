@@ -1,5 +1,7 @@
 //const BotAccounts = require('../res/libreoffice-bot-account.json');
 const Config = require('../config.json');
+const PathLibrary = require('path');
+const fs = require('fs');
 const AllBotAccountJson = loadAllBotAccounts();
 
 function getHumanReviewers(json, projectName) {
@@ -50,11 +52,17 @@ function isABot(accountId, projectName) {
 }*/
 
 function getBotAccountFromConfig(projectName){
-    let filePath = Config.output_data_path + "/"
-        + Config.project[projectName]["db_name"] + "/"
-        + projectName + "-bot-account.json";
+    let filename = projectName + "-bot-account.json";
+    let filePath = PathLibrary.join(Config.output_data_path, Config.project[projectName]["db_name"], filename)
     //let botAccount = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    return require(filePath);
+    try {
+        if (fs.existsSync(filePath)) {
+            return require(filePath)
+        }
+    } catch(err) {
+        console.error(err)
+    }
+    return {};
 }
 
 function loadAllBotAccounts(){
