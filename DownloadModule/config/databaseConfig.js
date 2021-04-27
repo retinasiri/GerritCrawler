@@ -17,9 +17,9 @@ let androidDbUrl = dbBaseUrl + androidDbName;*/
 function getMainDatabaseUrl(hostname, port, username, password) {
     let projectName = port ? port : 27017;
     if (username)
-        return "mongodb://" + username + ":" + encodeURIComponent(password) + "@" + hostname + ":" + projectName + "/";
+        return "mongodb://" + username + ":" + encodeURIComponent(password) + "@" + hostname + ":" + port + "/";
     else
-        return "mongodb://" + hostname + ":" + projectName + "/";
+        return "mongodb://" + hostname + ":" + port + "/";
 }
 
 
