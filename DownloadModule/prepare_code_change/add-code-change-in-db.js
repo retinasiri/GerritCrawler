@@ -33,7 +33,7 @@ function addChangesInDB(json) {
     if (json["output_directory"])
         DATA_PATH = json["output_directory"];
     if (json["projectName"])
-        projectName = projectJson["projectName"];
+        projectName = json["projectName"];
 
     console.log("Adding files to the database !!!!");
 

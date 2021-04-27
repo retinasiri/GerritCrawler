@@ -33,8 +33,8 @@ function mainFunction(json) {
         projectDBUrl = json["projectDBUrl"];
     if (json["output_directory"])
         OUTPUT_DATA_PATH = json["output_directory"];
-    if (json["name"])
-        DIRECTORY_NAME = projectJson["name"];
+    if (json["projectName"])
+        DIRECTORY_NAME = json["projectName"];
 
     return Database.dbConnection(projectDBUrl)
         .then(() => { // Counts the number of change
