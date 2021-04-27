@@ -16,7 +16,7 @@ let NUMBER_OF_CHANGES_REQUESTED = 250;
 let projectJson = Utils.getProjectParameters("libreoffice");
 let projectDBUrl = projectJson["projectDBUrl"];
 let projectApiUrl = projectJson["projectApiUrl"];
-let DIRECTORY_NAME = projectJson["name"];
+let DIRECTORY_NAME = projectJson["projectName"];
 let OUTPUT_DATA_PATH = "data/"
 
 
@@ -31,8 +31,8 @@ function startDownload(json) {
         NUMBER_OF_CHANGES_REQUESTED = json["number_of_changes"];
     if (json["output_directory"])
         OUTPUT_DATA_PATH = json["output_directory"];
-    if (json["name"])
-        DIRECTORY_NAME = projectJson["name"];
+    if (json["projectName"])
+        DIRECTORY_NAME = projectJson["projectName"];
 
 
     return startCrawling(projectApiUrl, projectDBUrl)
