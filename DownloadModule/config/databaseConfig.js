@@ -43,8 +43,8 @@ function getProjectDBName(projectName) {
 }
 
 function getProjectDBUrl(projectName) {
-    console.log(dbBaseUrl + getProjectDBName(projectName));
-    return dbBaseUrl + getProjectDBName(projectName);
+    //console.log(dbBaseUrl + getProjectDBName(projectName));
+    return dbBaseUrl + getProjectDBName(projectName) + "?authSource=admin";
 }
 
 module.exports = {
