@@ -187,11 +187,11 @@ async function buildGraph(docs, id, owner) {
     return graph;
 }
 
-Array.prototype.except = function (val) {
+/*Array.prototype.except = function (val) {
     return this.filter(function (x) {
         return x !== val;
     });
-};
+};*/
 
 function buildFullConnectedGraph(docs, id, owner) {
     let nodes = new Set();
