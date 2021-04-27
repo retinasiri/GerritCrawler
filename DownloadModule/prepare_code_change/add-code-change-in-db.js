@@ -21,6 +21,8 @@ let projectName = projectJson["projectName"];
 
 const multibar = new cliProgress.MultiBar({
     format: '{type} [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | {name}',
+    barCompleteChar: '#',
+    barIncompleteChar: '-',
     clearOnComplete: false,
     hideCursor: true
 }, cliProgress.Presets.shades_classic);
@@ -82,7 +84,7 @@ async function getFiles(path, b) {
 }
 
 async function info(path, filenames, b) {
-    let total =  filenames.length;
+    let total = filenames.length;
     b.setTotal(total)
     for (let filename of filenames) {
         await addInformationToDB(path, filename).then(() => {
@@ -111,7 +113,7 @@ async function addInformationToDB(path, filename) {
 }
 
 function getFilePath(path, filename) {
-    return PathLibrary.join(path , filename);
+    return PathLibrary.join(path, filename);
 }
 
 function saveChangeInDB(json) {
@@ -142,35 +144,37 @@ function getParticipants(json) {
 }
 
 function getAbandonedPath() {
-    return PathLibrary.join(DATA_PATH , projectName , "abandoned-changes");
+    return PathLibrary.join(DATA_PATH, projectName, "abandoned-changes");
     //return DATA_PATH + projectName + "/abandoned-changes/";
 }
 
 function getMergedPath() {
-    return PathLibrary.join(DATA_PATH , projectName , "merged-changes");
+    return PathLibrary.join(DATA_PATH, projectName, "merged-changes");
     //return DATA_PATH + projectName + "/merged-changes/";
 }
 
 function getOpenPath() {
-    return PathLibrary.join(DATA_PATH , projectName , "open-changes");
+    return PathLibrary.join(DATA_PATH, projectName, "open-changes");
     //return DATA_PATH + projectName + "/open-changes/";
+}
+
+function get_files_list(json) {
+    let revisions = json.revisions
+    let files_list = [];
+    if (revisions)
+        for (let key in revisions) {
+            //Get only the first revision
+            let revision_number = revisions[key]._number;
+            if (revision_number !== 1)
+                continue;
+            for (let name in revisions[key].files) {
+                files_list.push(name + "")
+            }
+        }
+    return files_list;
 }
 
 module.exports = {
     start: addChangesInDB
 };
 
-function get_files_list(json) {
-    let revisions = json.revisions
-    let files_list = [];
-    for (let key in revisions) {
-        //Get only the first revision
-        let revision_number = revisions[key]._number;
-        if (revision_number !== 1)
-            continue;
-        for (let name in revisions[key].files) {
-            files_list.push(name + "")
-        }
-    }
-    return files_list;
-}
