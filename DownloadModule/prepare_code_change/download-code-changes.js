@@ -34,11 +34,7 @@ function startDownload(json) {
     if (json["projectName"])
         DIRECTORY_NAME = json["projectName"];
 
-    console.log(projectJson["projectName"]);
-    console.log(DIRECTORY_NAME);
-    console.log(OUTPUT_DATA_PATH);
-
-    /*return startCrawling(projectApiUrl, projectDBUrl)
+    return startCrawling(projectApiUrl, projectDBUrl)
         .then(() => {
             let project_name = new URL(projectApiUrl).hostname
             console.log(project_name + " Finished !!!!");
@@ -46,7 +42,7 @@ function startDownload(json) {
         })
         .catch(err => {
             console.log(err)
-        });*/
+        });
 }
 
 async function startCrawling(projectApiUrl, projectDBUrl) {
