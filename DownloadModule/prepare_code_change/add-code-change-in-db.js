@@ -79,6 +79,7 @@ function getFilesLoad() {
 
 //async function getFiles(path, b) {
 async function getFiles(path) {
+    console.log("getFiles : " + path)
     return fs.promises.readdir(path)
         .then(filenames => {
             //return info(path, filenames, b);
@@ -90,6 +91,7 @@ async function getFiles(path) {
 
 //async function info(path, filenames, b) {
 async function info(path, filenames) {
+    console.log("info : " + path + filenames)
     let total = filenames.length;
     //b.setTotal(total)
     for (let filename of filenames) {
