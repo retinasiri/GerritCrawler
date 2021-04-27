@@ -109,6 +109,12 @@ async function addInformationToDB(path, filename) {
             await saveChangeInDB(changeJson);
         }
     }
+
+    Object.keys(json).forEach(function(key) {
+        delete json[key];
+    })
+    json = null;
+
     return Promise.resolve(true);
 }
 
