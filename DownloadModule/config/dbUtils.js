@@ -51,14 +51,21 @@ function saveChange(changeJson) {
 }
 
 function saveChanges(changesJson) {
-    console.log('changes Json')
-    return Change.insertMany(changesJson)
+    //console.log('changes Json');
+    return Change.updateMany({id: changesJson.id}, changesJson, {upsert: true})
+        .then(() => {
+            //console.log('Change saved : ' + JSON.stringify(changeJson.id))
+        })
+        .catch(function (err) {
+            console.log("save Change Error : " + JSON.stringify(err));
+        });
+    /*return Change.insertMany(changesJson)
         .then(() => {
             console.log('Changes saved')
         })
         .catch(function (err) {
             console.log("Error : " + err );
-        });
+        });*/
 }
 
 

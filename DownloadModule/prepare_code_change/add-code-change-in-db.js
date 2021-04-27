@@ -19,13 +19,13 @@ let projectApiUrl = projectJson["projectApiUrl"];
 let projectName = projectJson["projectName"];
 
 
-/*const multibar = new cliProgress.MultiBar({
+const multibar = new cliProgress.MultiBar({
     format: '{type} [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | {name}',
     barCompleteChar: '#',
     barIncompleteChar: '-',
     clearOnComplete: false,
     hideCursor: true
-}, cliProgress.Presets.shades_classic);*/
+}, cliProgress.Presets.shades_classic);
 
 function addChangesInDB(json) {
     if (json["projectDBUrl"])
@@ -52,61 +52,76 @@ function addChangesInDB(json) {
             return Promise.all(promises);
         })
         .then(() => {
-            //multibar.stop();
+            multibar.stop();
             console.log("Finished !!!!");
             return Mongoose.connection.close();
         })
         .catch(err => {
-            console.log(err)
+            console.log("addChangesInDB : " + err)
         });
 }
 
 function getFilesLoad() {
-    //const b1 = multibar.create(0, 0, {type: 'Open Changes     '});
-    //return getFiles(getOpenPath(), b1)
-    return getFiles(getOpenPath())
+    const b1 = multibar.create(0, 0, {type: 'Open Changes     '});
+    return getFiles(getOpenPath(), b1)
+        //return getFiles(getOpenPath())
         .then(() => {
-            //const b2 = multibar.create(0, 0, {type: 'Abandoned Changes'});
-            //return getFiles(getAbandonedPath(), b2);
-            return getFiles(getAbandonedPath());
+            const b2 = multibar.create(0, 0, {type: 'Abandoned Changes'});
+            return getFiles(getAbandonedPath(), b2);
+            //return getFiles(getAbandonedPath());
         })
         .then(() => {
-            //const b3 = multibar.create(0, 0, {type: 'Merged Changes   '});
-            //return getFiles(getMergedPath(), b3);
-            return getFiles(getMergedPath());
+            const b3 = multibar.create(0, 0, {type: 'Merged Changes   '});
+            return getFiles(getMergedPath(), b3);
+            //return getFiles(getMergedPath());
         })
-}
-
-//async function getFiles(path, b) {
-async function getFiles(path) {
-    console.log("getFiles : " + path)
-    return fs.promises.readdir(path)
-        .then(filenames => {
-            //return info(path, filenames, b);
-            return info(path, filenames);
-        }).catch(err => {
-            console.log(err)
+        .catch(err => {
+            console.log("getFilesLoad : " + err)
         });
 }
 
-//async function info(path, filenames, b) {
-async function info(path, filenames) {
-    console.log("info : " + path + filenames)
+async function getFiles(path, b) {
+//async function getFiles(path) {
+    //console.log("getFiles : " + path)
+    return fs.promises.readdir(path)
+        .then(filenames => {
+            return info(path, filenames, b);
+            //return info(path, filenames);
+        }).catch(err => {
+            console.log(err)
+        })
+        .catch(err => {
+            console.log("getFiles : " + err)
+        });
+}
+
+async function info(path, filenames, b) {
+//async function info(path, filenames) {
+    //console.log("info : " + path + filenames)
     let total = filenames.length;
-    //b.setTotal(total)
+    b.setTotal(total)
     for (let filename of filenames) {
         await addInformationToDB(path, filename).then(() => {
-            //b.increment(1, {name: filename});
-            console.log(path + filename)
+            b.increment(1, {name: filename});
+            //console.log(path + filename)
         });
     }
 }
 
 async function addInformationToDB(path, filename) {
     //console.log(path + filename);
-    if (filename.includes(".DS_Store"))
+    if (filename.includes(".DS_Store") || filename.includes("._.DS_Store"))
         return Promise.resolve(true);
-    let json = JSON.parse(fs.readFileSync(getFilePath(path, filename), 'utf8'));
+
+    let json = {}
+    try{
+        json = JSON.parse(fs.readFileSync(getFilePath(path, filename), 'utf8'));
+    } catch (e) {
+
+    }
+
+    if (Object.keys(json).length === 0)
+        return Promise.resolve(false);
 
     for (let key in json) {
         if (json.hasOwnProperty(key)) {
@@ -119,7 +134,7 @@ async function addInformationToDB(path, filename) {
         }
     }
 
-    Object.keys(json).forEach(function(key) {
+    Object.keys(json).forEach(function (key) {
         delete json[key];
     })
     json = null;
@@ -128,11 +143,15 @@ async function addInformationToDB(path, filename) {
 }
 
 function getFilePath(path, filename) {
-    return PathLibrary.join(path, filename);
+    return PathLibrary.join(path, filename)
 }
 
 function saveChangeInDB(json) {
-    return dbUtils.saveChange(json);
+    return dbUtils.saveChange(json)
+        .catch(err => {
+            console.log("saveChangeInDB : " + err)
+        });
+    //return dbUtils.saveChanges(json);
 }
 
 async function addParticipantsInDB(participants) {
@@ -144,7 +163,10 @@ async function addParticipantsInDB(participants) {
             botAccount[participants[id]._account_id] = participants[id];
         await dbUtils.saveAccount(participants[id])
     }
-    return Promise.resolve(true);
+    return Promise.resolve(true)
+        .catch(err => {
+            console.log("saveChangeInDB : " + err)
+        });
 }
 
 function getParticipants(json) {
