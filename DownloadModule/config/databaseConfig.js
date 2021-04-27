@@ -2,7 +2,7 @@
 const Mongoose = require('mongoose');
 const Config = require('../config.json')
 
-let dbBaseUrl = getMainDatabaseUrl(Config.database_hostname, Config.database_port, Config.database_username, Config.database_port);
+let dbBaseUrl = getMainDatabaseUrl(Config.database_hostname, Config.database_port, Config.database_username, Config.database_password);
 
 /*let libreOfficeDbName = 'libreOfficeDB';
 let qtDbName = 'qtDB';
@@ -15,11 +15,11 @@ let openstackDbUrl = dbBaseUrl + openStackDbName;
 let androidDbUrl = dbBaseUrl + androidDbName;*/
 
 function getMainDatabaseUrl(hostname, port, username, password) {
-    let projectName = port ? port : 27017;
+    let newport = port ? port : 27017;
     if (username)
-        return "mongodb://" + username + ":" + encodeURIComponent(password) + "@" + hostname + ":" + port + "/";
+        return "mongodb://" + username + ":" + encodeURIComponent(password) + "@" + hostname + ":" + newport + "/";
     else
-        return "mongodb://" + hostname + ":" + port + "/";
+        return "mongodb://" + hostname + ":" + newport + "/";
 }
 
 
@@ -43,7 +43,8 @@ function getProjectDBName(projectName) {
 }
 
 function getProjectDBUrl(projectName) {
-    return dbBaseUrl + getProjectDBName(projectName)
+    console.log(dbBaseUrl + getProjectDBName(projectName));
+    return dbBaseUrl + getProjectDBName(projectName);
 }
 
 module.exports = {
