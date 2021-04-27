@@ -111,7 +111,7 @@ async function addInformationToDB(path, filename) {
 }
 
 function getFilePath(path, filename) {
-    return path + filename;
+    return PathLibrary.join(path , filename);
 }
 
 function saveChangeInDB(json) {
