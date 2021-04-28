@@ -92,14 +92,14 @@ let csv_separator = ",";
 //let metric_file_path = data_dir_name + "/" + metric_file_name;
 
 function write_line_on_file(str, filename, data_dir_name) {
-    let metric_file_path = data_dir_name + "/" + filename;
+    let metric_file_path = PathLibrary.join(data_dir_name, filename);
     fsExtra.ensureDirSync(data_dir_name);
     return fsExtra.appendFileSync(metric_file_path, str);
 }
 
 function add_line_to_file(json, filename, data_dir_name) {
     let line = Object.values(json).join(csv_separator) + "\r\n";
-    let metric_file_path = data_dir_name + "/" + filename;
+    let metric_file_path = PathLibrary.join(data_dir_name, filename);
     fsExtra.ensureDirSync(data_dir_name);
     if (!fs.existsSync(metric_file_path)) {
         let header = Object.keys(json).join(csv_separator) + "\r\n";
@@ -137,6 +137,14 @@ function getCPUCount() {
     return os.cpus().length;
 }
 
+function getSetStr(setCol) {
+    let str = ''
+    setCol.forEach(function (line) {
+        str += line + "\r\n";
+    })
+    return str;
+}
+
 
 module.exports = {
     saveFile: saveFile,
@@ -146,5 +154,6 @@ module.exports = {
     getTime: getTime,
     getProjectName: getProjectName,
     getProjectParameters: getProjectParameters,
-    getCPUCount: getCPUCount
+    getCPUCount: getCPUCount,
+    getSetStr : getSetStr
 };

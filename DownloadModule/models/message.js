@@ -8,7 +8,9 @@ var MessageSchema = new Schema({
     real_author: {type: Account},
     date: String,
     message: String,
-    _revision_number: Number
+    _revision_number: Number,
+    change_id: String,
+    _number: Number
 }, {
     versionKey: false
 });

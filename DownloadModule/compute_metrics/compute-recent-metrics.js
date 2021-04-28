@@ -7,7 +7,10 @@ const Change = require('../models/change');
 const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
 const MetricsUtils = require('./metrics-utils');
-const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+const progressBar = new cliProgress.SingleBar({
+    barCompleteChar: '#',
+    barIncompleteChar: '-',
+}, cliProgress.Presets.shades_classic);
 const PathLibrary = require('path');
 
 let libreOfficeJson = Utils.getProjectParameters("libreoffice");
@@ -61,9 +64,17 @@ function startComputeMetrics(json) {
             return Utils.saveJSONInFile(path, name, metricsJson);
         })
         .then(() => {
+            //free memory
+            Object.keys(metricsJson).forEach(function (key) {
+                delete metricsJson[key];
+            })
+            metricsJson = null;
             progressBar.stop();
-            console.log("Finished!!!!");
-            return Mongoose.connection.close();
+            console.log("Finished !!!!");
+            return Database.freeMemory();
+        })
+        .then(() => {
+            return Database.closeConnection();
         })
         .catch(err => {
             console.log(err)
@@ -111,9 +122,9 @@ async function collectDocs(docs) {
 function saveMetrics(json) {
     return Metrics.updateOne({id: json.id}, json, {upsert: true}).then(() => {
         metricsJson[json.id] = json;
-        let prefix = Utils.getProjectName(projectApiUrl);
-        let filename = prefix + "-recent-metrics.csv"
-        return Utils.add_line_to_file(json, filename, DATA_PATH)
+        let filename = projectName + "-recent-metrics.csv";
+        let path = PathLibrary.join(DATA_PATH, projectName);
+        return Utils.add_line_to_file(json, filename, path);
     }).then(() => {
         return updateProgress();
     });

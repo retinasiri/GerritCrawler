@@ -11,7 +11,10 @@ const Utils = require('../config/utils');
 const ApiEndPoints = require('../config/apiEndpoints');
 const Path = require('path');
 
-const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+const progressBar = new cliProgress.SingleBar({
+    barCompleteChar: '#',
+    barIncompleteChar: '-',
+}, cliProgress.Presets.shades_classic);
 
 let projectJson = Utils.getProjectParameters("libreoffice");
 let projectDBUrl = projectJson["projectDBUrl"];

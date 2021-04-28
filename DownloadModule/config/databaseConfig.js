@@ -24,7 +24,7 @@ function getMainDatabaseUrl(hostname, port, username, password) {
 
 
 function dbConnection(projectDBUrl) {
-    return Mongoose.connect(projectDBUrl, {useNewUrlParser: true, useUnifiedTopology: true})
+    return Mongoose.connect(projectDBUrl, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
         .then(() => {
             console.log("Connected to the database");
             return Promise.resolve(true);
@@ -47,11 +47,34 @@ function getProjectDBUrl(projectName) {
     return dbBaseUrl + getProjectDBName(projectName) + "?authSource=admin";
 }
 
+async function freeMemory(){
+    let t1 = Mongoose.connections.forEach(connection => {
+        const modelNames = Object.keys(connection.models)
+
+        modelNames.forEach(modelName => {
+            delete connection.models[modelName]
+        })
+
+        const collectionNames = Object.keys(connection.collections)
+        collectionNames.forEach(collectionName => {
+            delete connection.collections[collectionName]
+        })
+    })
+
+    const modelSchemaNames = Object.keys(Mongoose.modelSchemas)
+    let t2 = modelSchemaNames.forEach(modelSchemaName => {
+        delete Mongoose.modelSchemas[modelSchemaName]
+    })
+
+    return Promise.All([t1, t2])
+}
+
 module.exports = {
     dbConnection: dbConnection,
     closeConnection: closeConnection,
     getProjectDBName: getProjectDBName,
     getProjectDBUrl: getProjectDBUrl,
+    freeMemory: freeMemory,
     /*databaseRoot: dbBaseUrl,
     libreOfficeDBUrl: libreOfficeDbUrl,
     qtDbUrl: qtDbUrl,

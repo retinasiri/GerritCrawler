@@ -105,6 +105,7 @@ async function collectRepo(doc) {
         let has_commit = !!revisions[key]["commit"];
         if (has_commit) {
             if (number <= prev_number_save) {
+
                 projects[id]["id"] = id;
                 projects[id]["fetch_url"] = revisions[key]["fetch"]["anonymous http"]["url"];
                 projects[id]["fetch_ref"] = revisions[key]["fetch"]["anonymous http"]["ref"];
@@ -117,3 +118,4 @@ async function collectRepo(doc) {
 
     return Promise.resolve(true);
 }
+

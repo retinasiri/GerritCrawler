@@ -3,9 +3,10 @@ const fs = require('fs');
 const dbUtils = require('../config/dbUtils');
 const Utils = require('../config/utils')
 const Database = require('../config/databaseConfig');
-const ApiEndPoints = require('../config/apiEndpoints');
 const cliProgress = require('cli-progress');
 const PathLibrary = require('path');
+const Message = require('../models/message');
+const Changes = require('../models/message');
 
 let DATA_PATH = "data/";
 
@@ -49,12 +50,19 @@ function addChangesInDB(json) {
             promises.push(Utils.saveJSONInFile(path, projectName + "-account", account));
             promises.push(Utils.saveJSONInFile(path, projectName + "-bot-account", botAccount));
             promises.push(Utils.saveJSONInFile(path, projectName + "-human-account", humanAccount));
+            promises.push(Utils.saveJSONInFile(path, projectName + "-changes-commit-and-fetch", changes_commit_json));
+            promises.push(Utils.saveJSONInFile(path, projectName + "-refspec", refspec));
+            promises.push(Utils.saveFile(path, projectName + "-repositories-to-clone", Utils.getSetStr(repositories_list), "txt"))
             return Promise.all(promises);
         })
         .then(() => {
             multibar.stop();
             console.log("Finished !!!!");
+            return Database.freeMemory();
+        })
+        .then(() => {
             return Mongoose.connection.close();
+            //return Database.closeConnection();
         })
         .catch(err => {
             console.log("addChangesInDB : " + err)
@@ -114,7 +122,7 @@ async function addInformationToDB(path, filename) {
         return Promise.resolve(true);
 
     let json = {}
-    try{
+    try {
         json = JSON.parse(fs.readFileSync(getFilePath(path, filename), 'utf8'));
     } catch (e) {
 
@@ -129,8 +137,19 @@ async function addInformationToDB(path, filename) {
             let changeJson = json[key]
             let participants = getParticipants(changeJson);
             changeJson["files_list"] = get_files_list(changeJson);
-            await addParticipantsInDB(participants);
-            await saveChangeInDB(changeJson);
+            let task = [];
+            task.push(addParticipantsInDB(participants));
+            task.push(collectRepo(changeJson));
+            task.push(saveMessagesAndChanges(changeJson));
+            /*let t = saveChangeInDB(changeJson)
+                .then(() => {
+                    if (changeJson.messages)
+                        return saveMessages(changeJson);
+                    else
+                        return Promise.resolve(true);
+                })
+            task.push(t);*/
+            await Promise.all(task);
         }
     }
 
@@ -147,11 +166,12 @@ function getFilePath(path, filename) {
 }
 
 function saveChangeInDB(json) {
-    return dbUtils.saveChange(json)
-        .catch(err => {
-            console.log("saveChangeInDB : " + err)
-        });
-    //return dbUtils.saveChanges(json);
+    let newJson = {};
+    Object.keys(json).forEach(function (key) {
+        newJson[key] = json[key];
+    })
+    delete newJson["messages"];
+    return dbUtils.saveChange(newJson)
 }
 
 async function addParticipantsInDB(participants) {
@@ -209,6 +229,79 @@ function get_files_list(json) {
             }
         }
     return files_list;
+}
+
+let changes_commit_json = {}
+let repositories_list = new Set()
+let refspec = {}
+
+async function collectRepo(doc) {
+    let id = doc.id
+    changes_commit_json[id] = {}
+    let revisions = doc.revisions;
+    let prev_number_save = Infinity;
+    let fetch_url = "";
+    let fetch_refs = "";
+    let commit = "";
+
+    Object.keys(revisions).forEach(function (key) {
+        let number = revisions[key]["_number"]
+        let has_commit = !!revisions[key]["commit"];
+        if (has_commit) {
+            if (number <= prev_number_save) {
+                fetch_url = revisions[key]["fetch"]["anonymous http"]["url"];
+                fetch_refs = revisions[key]["fetch"]["anonymous http"]["ref"];
+                commit = revisions[key]["commit"]["parents"][0]["commit"];
+                prev_number_save = number;
+
+            }
+        }
+    })
+
+    changes_commit_json[id]["id"] = id;
+    changes_commit_json[id]["fetch_url"] = fetch_url;
+    changes_commit_json[id]["fetch_ref"] = fetch_refs;
+    changes_commit_json[id]["commit"] = commit
+    repositories_list.add(changes_commit_json[id]["fetch_url"]);
+
+    if (!refspec[fetch_url])
+        refspec[fetch_url] = {"fetch_url": fetch_url, "fetch_refs": [], "commits": []};
+
+    refspec[fetch_url]["fetch_refs"].push(fetch_refs);
+    refspec[fetch_url]["commits"].push(commit);
+
+    return Promise.resolve(true);
+}
+
+function saveMessagesAndChanges(change) {
+    let messages = change.messages;
+    let change_id = change.id;
+    let number = change._number;
+    let task = [];
+    for (let i = 0; i < messages.length; i++) {
+        let message = messages[i];
+        message["change_id"] = change_id;
+        message["_number"] = number;
+        task.push(saveMessageInDB(message));
+    }
+
+    return Promise.all(task)
+        .then((results) => {
+            delete change["messages"];
+            change["messages"] = [];
+            change.messages.push(...results);
+            return dbUtils.saveChange(change);
+        });
+}
+
+function saveMessageInDB(message) {
+    return dbUtils.saveMessage(message)
+        .then((savedMessage) => {
+            return Promise.resolve(savedMessage._id);
+        })
+        .catch(err => {
+            console.log("saveMessage : " + JSON.stringify(err))
+        });
 }
 
 module.exports = {

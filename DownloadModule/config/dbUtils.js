@@ -5,6 +5,7 @@ const Project = require('../models/project');
 const Account = require('../models/account');
 const ChangeSummary = require('../models/changeSummary');
 const Change = require('../models/change');
+const Message = require('../models/message');
 const Crawling = require('../models/crawling');
 const Database = require('../config/databaseConfig');
 const ApiEndPoints = require('../config/apiEndpoints');
@@ -12,9 +13,9 @@ const ApiEndPoints = require('../config/apiEndpoints');
 //Save project to the database
 function saveProject(projectJson) {
     return Project.updateOne({id: projectJson.id}, projectJson, {upsert: true})
-        .then(() => {
+        /*.then(() => {
             //console.log('Projects saved : ' + JSON.stringify(projectJson.id))
-        })
+        })*/
         .catch(function (err) {
             console.log("saveProject Error : " + JSON.stringify(err));
         });
@@ -23,9 +24,9 @@ function saveProject(projectJson) {
 //Save accounts to the database
 function saveAccount(accountJson) {
     return Account.updateOne({_account_id: accountJson._account_id}, accountJson, {upsert: true})
-        .then(() => {
+        /*.then(() => {
             //console.log('Account saved : ' + JSON.stringify(accountJson._account_id))
-        })
+        })*/
         .catch(function (err) {
             console.log("saveAccount Error : " + JSON.stringify(err));
         });
@@ -34,17 +35,17 @@ function saveAccount(accountJson) {
 //saves changes to the database
 function saveChangeSummary(changeJson) {
     return ChangeSummary.updateOne({id: changeJson.id}, changeJson, {upsert: true})
-        .then(() => {
+        /*.then(() => {
             //console.log('Change saved : ' + JSON.stringify(changeJson.id))
-        });
+        });*/
 }
 
 //saves changes to the database
 function saveChange(changeJson) {
     return Change.updateOne({id: changeJson.id}, changeJson, {upsert: true})
-        .then(() => {
+        /*.then(() => {
             //console.log('Change saved : ' + JSON.stringify(changeJson.id))
-        })
+        })*/
         .catch(function (err) {
             console.log("save Change Error : " + JSON.stringify(err));
         });
@@ -53,9 +54,9 @@ function saveChange(changeJson) {
 function saveChanges(changesJson) {
     //console.log('changes Json');
     return Change.updateMany({id: changesJson.id}, changesJson, {upsert: true})
-        .then(() => {
+        /*.then(() => {
             //console.log('Change saved : ' + JSON.stringify(changeJson.id))
-        })
+        })*/
         .catch(function (err) {
             console.log("save Change Error : " + JSON.stringify(err));
         });
@@ -68,6 +69,17 @@ function saveChanges(changesJson) {
         });*/
 }
 
+//saves changes to the database
+function saveMessage(message) {
+    //console.log(message);
+    return Message.findOneAndUpdate({id: message.id}, message, {upsert: true, new: true})
+        /*.then((savedDoc) => {
+            //console.log('Change saved : ' + JSON.stringify(changeJson.id))
+        })*/
+        .catch(function (err) {
+            console.log("save Change Error : " + JSON.stringify(err));
+        });
+}
 
 
 module.exports = {
@@ -75,5 +87,6 @@ module.exports = {
     saveChanges : saveChanges,
     saveChangeSummary: saveChangeSummary,
     saveAccount: saveAccount,
-    saveProject: saveProject
+    saveProject: saveProject,
+    saveMessage: saveMessage
 };

@@ -55,14 +55,22 @@ function startComputeMetrics(json) {
             return Promise.all(tasks);
         })
         .then(() => {
-            let name = projectName + "-merged-metrics";
+            let name = projectName + "-owner-metrics";
             let path = PathLibrary.join(DATA_PATH, projectName);
             return Utils.saveJSONInFile(path, name, metricsJson);
         })
         .then(() => {
+            //free memory
+            Object.keys(metricsJson).forEach(function (key) {
+                delete metricsJson[key];
+            })
+            metricsJson = null;
             progressBar.stop();
-            console.log("Finished!!!!");
-            return Mongoose.connection.close();
+            console.log("Finished !!!!");
+            return Database.freeMemory();
+        })
+        .then(() => {
+            return Database.closeConnection();
         })
         .catch(err => {
             console.log(err)
@@ -110,9 +118,9 @@ async function collectDocs(docs) {
 function saveMetrics(json) {
     return Metrics.updateOne({id: json.id}, json, {upsert: true}).then(() => {
         metricsJson[json.id] = json;
-        let prefix = Utils.getProjectName(projectApiUrl);
-        let filename = prefix + "-owner-metrics.csv"
-        return Utils.add_line_to_file(json, filename, DATA_PATH)
+        let filename = projectName + "-owner-metrics.csv";
+        let path = PathLibrary.join(DATA_PATH, projectName);
+        return Utils.add_line_to_file(json, filename, path);
     }).then(() => {
         return updateProgress();
     });

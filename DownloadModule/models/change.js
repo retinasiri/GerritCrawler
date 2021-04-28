@@ -47,8 +47,8 @@ var ChangeSchema = new Schema({
         type: ReviewerUpdate
     }],
     messages: [{
-        _id: false,
-        type: Message
+        //_id: false,
+        type: { type: Schema.Types.ObjectId, ref: 'Message' }
     }],
     requirements: [],
     current_revision: String,
