@@ -249,8 +249,14 @@ async function collectRepo(doc) {
         let has_commit = !!revisions[key]["commit"];
         if (has_commit) {
             if (number <= prev_number_save) {
-                fetch_url = revisions[key]["fetch"]["anonymous http"]["url"];
-                fetch_refs = revisions[key]["fetch"]["anonymous http"]["ref"];
+                if (revisions[key]["fetch"])
+                    if (revisions[key]["fetch"]["anonymous http"]){
+                        fetch_url = revisions[key]["fetch"]["anonymous http"]["url"];
+                        fetch_refs = revisions[key]["fetch"]["anonymous http"]["ref"];
+                    } else if(revisions[key]["fetch"]["http"]){
+                        fetch_url = revisions[key]["fetch"]["http"]["url"];
+                        fetch_refs = revisions[key]["fetch"]["http"]["ref"];
+                    }
                 commit = revisions[key]["commit"]["parents"][0]["commit"];
                 prev_number_save = number;
 
