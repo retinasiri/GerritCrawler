@@ -25,7 +25,6 @@
       <change beforePath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_metrics/compute-recent-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-recent-metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_metrics/compute-simple-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-simple-metrics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/databaseConfig.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/databaseConfig.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/dbUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/dbUtils.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/utils.js" afterDir="false" />
@@ -102,7 +101,7 @@
       <workItem from="1619358913060" duration="6812000" />
       <workItem from="1619483970719" duration="24905000" />
       <workItem from="1619534010294" duration="6374000" />
-      <workItem from="1619562808659" duration="14968000" />
+      <workItem from="1619562808659" duration="15312000" />
     </task>
     <servers />
   </component>

@@ -1,20 +1,46 @@
 import json
 import re
+import os
+import utils
 import urllib.parse as urlparse
+from pathlib import Path as pathlib
 from utils import SlowBar as SlowBar
 from pydriller import RepositoryMining, ModificationType
 
 
-bar = SlowBar('Processing ')
 
 LIST_OF_COMMIT = "/Volumes/SEAGATE-II/Data/libreoffice/libreoffice-changes-commit-and-fetch.json"
-REPOSITORIES_ROOT_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
+REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 DATA_DIR_PATH = "data/"
 PROJET_NAME = "libreoffice"
-OUTPUT_FILE = PROJET_NAME + "-code-metrics.json"
-
+CODE_METRICS_OUTPUT_FILE = PROJET_NAME + "-code-metrics.json"
 
 code_metrics = {}
+bar = SlowBar('')
+
+def start(json):
+    
+    global PROJET_NAME
+    PROJET_NAME = json["project_name"]
+
+    global DATA_DIR_PATH
+    DATA_DIR_PATH = json["output_data_path"]
+
+    global LIST_OF_COMMIT
+    LIST_OF_COMMIT = utils.get_refspec(PROJET_NAME, DATA_DIR_PATH)
+
+    global REPOSITORIES_PATH
+    REPOSITORIES_PATH = utils.get_repositories_path(PROJET_NAME, DATA_DIR_PATH)
+
+    global CODE_METRICS_OUTPUT_FILE
+    CODE_METRICS_OUTPUT_FILE = utils.get_code_metrics_output_file(PROJET_NAME, DATA_DIR_PATH)
+
+    global bar
+    bar = SlowBar('Downloading code fetch ... ')
+    
+    processData(LIST_OF_COMMIT, REPOSITORIES_PATH, DATA_DIR_PATH)
+    
+    return 0
 
 
 def processData(list_of_commit, repo_root_path, data_dir_path):
@@ -39,7 +65,9 @@ def load_json(path):
 
 
 def save_metrics_file(metrics, data_path):
-    full_path = data_path + OUTPUT_FILE;
+    full_path = os.path.join(data_path, CODE_METRICS_OUTPUT_FILE)
+    dir_path = pathlib(data_path)
+    dir_path.parent.mkdir(parents=True, exist_ok=True)
     with open(full_path, "wb") as f:
         f.write(json.dumps(metrics, indent=4).encode("utf-8"))
         f.close()
@@ -144,4 +172,4 @@ def update_code_segment_count(code_segment, add_line, deleted_line):
 
 
 if __name__ == '__main__':  
-    processData(LIST_OF_COMMIT, REPOSITORIES_ROOT_PATH, DATA_DIR_PATH)
+    processData(LIST_OF_COMMIT, REPOSITORIES_PATH, DATA_DIR_PATH)

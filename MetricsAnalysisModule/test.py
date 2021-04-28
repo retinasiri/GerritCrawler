@@ -3,6 +3,8 @@ import subprocess
 import json
 import urllib.parse as urlparse
 import time
+from pathlib import Path as pathlib
+
 
 
 DATA_DIR_NAME = "/Volumes/SEAGATE-II/Data/libreoffice/"
@@ -17,9 +19,12 @@ if __name__ == '__main__':
     git_url = "https://git.libreoffice.org/core"
     fetch_refs = "refs/changes/12/12/1"
     #command = ['cd', path, '&&', 'git', 'fetch', git_url, fetch_refs]
-    procs = subprocess.run(['git', 'fetch', git_url, fetch_refs], capture_output=True, text=True, cwd=path)
-    print(procs.stdout)
-    print(procs.stderr)
-    print(procs.args)
+    #procs = subprocess.run(['git', 'fetch', git_url, fetch_refs], capture_output=True, text=True, cwd=path)
+    #print(procs.stdout)
+    #print(procs.stderr)
+    #print(procs.args)
+
+    path = pathlib('/Users/jeefer/Desktop/test/filename.txt')
+    path.parent.mkdir(parents=True, exist_ok=True) 
 
             

@@ -1,19 +1,43 @@
 import multiprocessing as mp
 import subprocess
+import multiprocessing
 import json
+import os
 import urllib.parse as urlparse
 import time
+import utils
 from utils import SlowBar as SlowBar
 
-
+PROJET_NAME = "libreoffice"
 DATA_DIR_NAME = "/Volumes/SEAGATE-II/Data/libreoffice/"
 REFSPEC = DATA_DIR_NAME + "libreoffice-refspec.json"
-CLONE_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
+REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 
 refspec = {}
-NUMBER_OF_FETCH_PER_REQUEST = 5;
-NUMBER_OF_REQUEST = 5;
-bar = SlowBar('Downloading code fetch ... ')
+NUMBER_OF_FETCH_PER_REQUEST = 200;
+NUMBER_OF_REQUEST = multiprocessing.cpu_count() * 2;
+bar = SlowBar('')
+
+def start(json):
+    
+    global PROJET_NAME
+    PROJET_NAME = json["project_name"]
+
+    global DATA_DIR_NAME
+    DATA_DIR_NAME = json["output_data_path"]
+
+    global REFSPEC
+    REFSPEC = utils.get_refspec(PROJET_NAME, DATA_DIR_NAME)
+
+    global REPOSITORIES_PATH
+    REPOSITORIES_PATH = utils.get_repositories_path(PROJET_NAME, DATA_DIR_NAME)
+
+    global bar
+    bar = SlowBar('Downloading code fetch ... ')
+    
+    collect_fetch(REFSPEC, REPOSITORIES_PATH)
+    
+    return 0
 
 
 def collect_fetch(list_of_refspec, clone_path):
@@ -80,7 +104,7 @@ def check_process(running_procs):
 
 if __name__ == '__main__':
     #print('Number of CPUs available: ', mp.cpu_count())
-    collect_fetch(REFSPEC, CLONE_PATH)
+    collect_fetch(REFSPEC, REPOSITORIES_PATH)
 
 
 

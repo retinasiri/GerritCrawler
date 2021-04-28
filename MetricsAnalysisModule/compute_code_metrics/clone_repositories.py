@@ -1,5 +1,7 @@
+from sys import path
 import time
 import subprocess
+import os
 from utils import SlowBar as SlowBar
 import urllib.parse as urlparse
 
@@ -7,6 +9,32 @@ import urllib.parse as urlparse
 LIST_OF_REPOSITORIES = "/Volumes/SEAGATE-II/Data/libreoffice/libreoffice-repositories-to-clone.txt"
 REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 #bar = SlowBar('Cloning ')
+
+def get_repositories_path(data_dir, projectName):
+    return os.path.join(data_dir, projectName, "Repositories")
+
+def get_repo_clone_list_name(projectName, output_dir):
+    filename = projectName + "-repositories-to-clone.txt"
+    return os.path.join(output_dir,projectName, filename)
+
+
+def start(json):
+    
+    global project_name
+    project_name = json["project_name"]
+
+    global DATA_DIR_NAME
+    DATA_DIR_NAME = json["output_data_path"]
+
+    global LIST_OF_REPOSITORIES
+    LIST_OF_REPOSITORIES = get_repo_clone_list_name(project_name, DATA_DIR_NAME)
+
+    global REPOSITORIES_PATH
+    REPOSITORIES_PATH = get_repositories_path(project_name, DATA_DIR_NAME)
+    
+    clone_repo(LIST_OF_REPOSITORIES, REPOSITORIES_PATH)
+
+    return 0
 
 
 def clone_repo(repo_list_path, clone_path):

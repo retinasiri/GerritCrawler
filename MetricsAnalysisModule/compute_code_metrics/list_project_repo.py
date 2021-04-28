@@ -1,8 +1,12 @@
 import json
+import os
 import math
 import dbutils
+import utils
+from pathlib import Path as pathlib
 from utils import SlowBar as SlowBar
 
+PROJET_NAME = "libreoffice"
 DATA_DIR_NAME = "/Volumes/SEAGATE-II/Data/libreoffice/"
 REPO_TO_CLONE_LIST = DATA_DIR_NAME + 'libreoffice-repositories-to-clone.txt'
 CHANGES_COMMIT_AND_FETCH_LIST = DATA_DIR_NAME + "libreoffice-changes-commit-and-fetch.json"
@@ -16,7 +20,43 @@ refspec = {}
 
 Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
 count = Database.get_changes_count()
-bar = SlowBar('Processing', max=count)
+bar = SlowBar('')
+
+
+def start(json):
+
+    global PROJET_NAME
+    PROJET_NAME = json["project_name"]
+
+    global DATA_DIR_NAME
+    DATA_DIR_NAME = json["output_data_path"]
+
+    global REPO_TO_CLONE_LIST
+    REPO_TO_CLONE_LIST = utils.get_repo_clone_list_name(PROJET_NAME, DATA_DIR_NAME)
+    
+    global CHANGES_COMMIT_AND_FETCH_LIST
+    CHANGES_COMMIT_AND_FETCH_LIST = utils.get_changes_list_and_commit(PROJET_NAME, DATA_DIR_NAME)
+    
+    global REFSPEC
+    REFSPEC = utils.get_refspec(PROJET_NAME, DATA_DIR_NAME)
+    
+    database_name = dbutils.Database.get_db_name(json["db_name"])
+    hostname = json["database_hostname"]
+    port = json["database_port"]
+    username = json["database_username"]
+    password = json["database_password"]
+    
+    global Database
+    Database = dbutils.Database(database_name, hostname, port, username, password)
+    
+    global count
+    count = Database.get_changes_count()
+    
+    global bar
+    bar = SlowBar('Processing', max=count)
+
+    process_changes(STARTING_POINT)
+    return 0
 
 
 def process_changes(skip):
@@ -71,6 +111,8 @@ def collect_repo(doc):
 
 
 def save_dic_in_file(prj, path):
+    dir_path = pathlib(path)
+    dir_path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "wb") as f:
         f.write(json.dumps(prj, indent=4).encode("utf-8"))
         f.close()
@@ -78,6 +120,8 @@ def save_dic_in_file(prj, path):
 
 
 def save_set_in_file(clone_list, path):
+    dir_path = pathlib(path)
+    dir_path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, 'w') as f:
         for item in clone_list:
             f.write("%s\n" % item)
@@ -85,4 +129,5 @@ def save_set_in_file(clone_list, path):
     return 0
 
 
-process_changes(STARTING_POINT)
+if __name__ == '__main__':
+    process_changes(STARTING_POINT)
