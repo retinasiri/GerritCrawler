@@ -50,23 +50,19 @@ function getProjectDBUrl(projectName) {
 async function freeMemory(){
     let t1 = Mongoose.connections.forEach(connection => {
         const modelNames = Object.keys(connection.models)
-
         modelNames.forEach(modelName => {
             delete connection.models[modelName]
         })
-
         const collectionNames = Object.keys(connection.collections)
         collectionNames.forEach(collectionName => {
             delete connection.collections[collectionName]
         })
     })
-
     const modelSchemaNames = Object.keys(Mongoose.modelSchemas)
     let t2 = modelSchemaNames.forEach(modelSchemaName => {
         delete Mongoose.modelSchemas[modelSchemaName]
     })
-
-    return Promise.All([t1, t2])
+    return Promise.all([t1, t2])
 }
 
 module.exports = {

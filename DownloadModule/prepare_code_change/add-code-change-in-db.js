@@ -243,6 +243,9 @@ async function collectRepo(doc) {
     let fetch_refs = "";
     let commit = "";
 
+    if(!revisions)
+        return Promise.resolve(true);
+
     Object.keys(revisions).forEach(function (key) {
         let number = revisions[key]["_number"];
         if(number === 1){

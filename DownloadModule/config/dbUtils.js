@@ -47,7 +47,7 @@ function saveChange(changeJson) {
             //console.log('Change saved : ' + JSON.stringify(changeJson.id))
         })*/
         .catch(function (err) {
-            console.log("save Change Error : " + JSON.stringify(err));
+            console.log("save Change Error : " + changeJson.id + " " + JSON.stringify(err));
         });
 }
 
@@ -58,7 +58,7 @@ function saveChanges(changesJson) {
             //console.log('Change saved : ' + JSON.stringify(changeJson.id))
         })*/
         .catch(function (err) {
-            console.log("save Change Error : " + JSON.stringify(err));
+            console.log("save Change Error : "  + changesJson.id + " "  + JSON.stringify(err));
         });
     /*return Change.insertMany(changesJson)
         .then(() => {
@@ -77,7 +77,7 @@ function saveMessage(message) {
             //console.log('Change saved : ' + JSON.stringify(changeJson.id))
         })*/
         .catch(function (err) {
-            console.log("save Change Error : " + JSON.stringify(err));
+            console.log("save Message Error : " + message.id + " " + JSON.stringify(err));
         });
 }
 
