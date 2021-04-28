@@ -44,4 +44,4 @@ class Database:
         return x
 
     def get_db_name(projectDBName):
-        return projectDBName + "DB";
+        return projectDBName + "DB?authSource=admin";
