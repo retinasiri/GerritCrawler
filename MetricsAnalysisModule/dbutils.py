@@ -1,4 +1,5 @@
 import pymongo
+import urllib
 
 DB_URL = "mongodb://localhost:27017/"
 
@@ -13,8 +14,9 @@ NUM_OF_CHANGES_LIMIT = 20000
 
 
 class Database:
-    def __init__(self, database_name):
-        self.dbClient = pymongo.MongoClient(DB_URL)
+    def __init__(self, database_name, hostname = "localhost", port=27017, username ="", password=""):
+        db_url = getMainDatabaseUrl(hostname, port, username, password)
+        self.dbClient = pymongo.MongoClient(db_url)
         self.databaseName = database_name
 
     def get_db(self):
@@ -44,4 +46,17 @@ class Database:
         return x
 
     def get_db_name(projectDBName):
-        return projectDBName + "DB?authSource=admin";
+        return projectDBName + "DB";
+
+
+def getMainDatabaseUrl(hostname, port, username, password) :
+    real_port = 27017
+    if(port) :
+        real_port = port
+    
+    if (username) :
+        return "mongodb://" + username + ":" + str(urllib.quote(password.encode("utf-8"))) + "@" + hostname + ":" + str(real_port) + "/";
+    elif (hostname):
+        return "mongodb://" + hostname + ":" + str(real_port) + "/"
+    else :
+        return "mongodb://" + hostname
