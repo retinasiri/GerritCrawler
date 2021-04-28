@@ -19,10 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prepare_code_change/add-code-change-in-db.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/add-code-change-in-db.js" afterDir="false" />
-    </list>
+    <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -88,7 +85,7 @@
       <workItem from="1619358913060" duration="6812000" />
       <workItem from="1619483970719" duration="24905000" />
       <workItem from="1619534010294" duration="6374000" />
-      <workItem from="1619562808659" duration="16183000" />
+      <workItem from="1619562808659" duration="16429000" />
     </task>
     <servers />
   </component>

@@ -239,16 +239,15 @@ async function collectRepo(doc) {
     let id = doc.id
     changes_commit_json[id] = {}
     let revisions = doc.revisions;
-    let prev_number_save = Infinity;
     let fetch_url = "";
     let fetch_refs = "";
     let commit = "";
 
     Object.keys(revisions).forEach(function (key) {
-        let number = revisions[key]["_number"]
-        let has_commit = !!revisions[key]["commit"];
-        if (has_commit) {
-            if (number <= prev_number_save) {
+        let number = revisions[key]["_number"];
+        if(number === 1){
+            let has_commit = !!revisions[key]["commit"];
+            if (has_commit) {
                 if (revisions[key]["fetch"])
                     if (revisions[key]["fetch"]["anonymous http"]){
                         fetch_url = revisions[key]["fetch"]["anonymous http"]["url"];
@@ -258,8 +257,6 @@ async function collectRepo(doc) {
                         fetch_refs = revisions[key]["fetch"]["http"]["ref"];
                     }
                 commit = revisions[key]["commit"]["parents"][0]["commit"];
-                prev_number_save = number;
-
             }
         }
     })
