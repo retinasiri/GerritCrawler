@@ -47,6 +47,7 @@ function getProjectDBUrl(projectName) {
     return dbBaseUrl + getProjectDBName(projectName) + "?authSource=admin";
 }
 
+//https://github.com/Automattic/mongoose/issues/2874
 async function freeMemory(){
     let t1 = Mongoose.connections.forEach(connection => {
         const modelNames = Object.keys(connection.models)

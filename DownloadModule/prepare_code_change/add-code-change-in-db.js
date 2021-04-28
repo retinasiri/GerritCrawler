@@ -6,7 +6,7 @@ const Database = require('../config/databaseConfig');
 const cliProgress = require('cli-progress');
 const PathLibrary = require('path');
 const Message = require('../models/message');
-const Changes = require('../models/message');
+const Changes = require('../models/change');
 
 let DATA_PATH = "data/";
 
@@ -140,7 +140,8 @@ async function addInformationToDB(path, filename) {
             let task = [];
             task.push(addParticipantsInDB(participants));
             task.push(collectRepo(changeJson));
-            task.push(saveMessagesAndChanges(changeJson));
+            task.push(saveChangeInDB(changeJson));
+            //task.push(saveMessagesAndChanges(changeJson));
             /*let t = saveChangeInDB(changeJson)
                 .then(() => {
                     if (changeJson.messages)
@@ -153,10 +154,10 @@ async function addInformationToDB(path, filename) {
         }
     }
 
-    Object.keys(json).forEach(function (key) {
+    /*Object.keys(json).forEach(function (key) {
         delete json[key];
     })
-    json = null;
+    json = null;*/
 
     return Promise.resolve(true);
 }
@@ -166,12 +167,12 @@ function getFilePath(path, filename) {
 }
 
 function saveChangeInDB(json) {
-    let newJson = {};
+    /*let newJson = {};
     Object.keys(json).forEach(function (key) {
         newJson[key] = json[key];
-    })
-    delete newJson["messages"];
-    return dbUtils.saveChange(newJson)
+    })*/
+    //delete newJson["messages"];
+    return dbUtils.saveChange(json)
 }
 
 async function addParticipantsInDB(participants) {
@@ -222,8 +223,10 @@ function get_files_list(json) {
         for (let key in revisions) {
             //Get only the first revision
             let revision_number = revisions[key]._number;
-            if (revision_number !== 1)
+            if (revision_number !== 1) {
+                delete revisions[key].files
                 continue;
+            }
             for (let name in revisions[key].files) {
                 files_list.push(name + "")
             }
@@ -243,23 +246,28 @@ async function collectRepo(doc) {
     let fetch_refs = "";
     let commit = "";
 
-    if(!revisions)
+    if (!revisions)
         return Promise.resolve(true);
 
     Object.keys(revisions).forEach(function (key) {
-        let number = revisions[key]["_number"];
-        if(number === 1){
-            let has_commit = !!revisions[key]["commit"];
-            if (has_commit) {
-                if (revisions[key]["fetch"])
-                    if (revisions[key]["fetch"]["anonymous http"]){
-                        fetch_url = revisions[key]["fetch"]["anonymous http"]["url"];
-                        fetch_refs = revisions[key]["fetch"]["anonymous http"]["ref"];
-                    } else if(revisions[key]["fetch"]["http"]){
-                        fetch_url = revisions[key]["fetch"]["http"]["url"];
-                        fetch_refs = revisions[key]["fetch"]["http"]["ref"];
-                    }
-                commit = revisions[key]["commit"]["parents"][0]["commit"];
+        if (revisions[key]) {
+            let number = revisions[key]["_number"];
+            if (number === 1) {
+                let has_commit = !!revisions[key]["commit"];
+                if (has_commit) {
+                    if (revisions[key]["fetch"])
+                        if (revisions[key]["fetch"]["anonymous http"]) {
+                            fetch_url = revisions[key]["fetch"]["anonymous http"]["url"];
+                            fetch_refs = revisions[key]["fetch"]["anonymous http"]["ref"];
+                        } else if (revisions[key]["fetch"]["http"]) {
+                            fetch_url = revisions[key]["fetch"]["http"]["url"];
+                            fetch_refs = revisions[key]["fetch"]["http"]["ref"];
+                        }
+                    if (revisions[key]["commit"]["parents"][0])
+                        commit = revisions[key]["commit"]["parents"][0]["commit"];
+                    else
+                        commit = "parents = " + JSON.stringify(revisions[key]["commit"]["parents"]);
+                }
             }
         }
     })
@@ -283,21 +291,27 @@ function saveMessagesAndChanges(change) {
     let messages = change.messages;
     let change_id = change.id;
     let number = change._number;
-    let task = [];
+    let created = change.created;
+    let updated = change.updated;
+    //let task = [];
     for (let i = 0; i < messages.length; i++) {
         let message = messages[i];
         message["change_id"] = change_id;
         message["_number"] = number;
-        task.push(saveMessageInDB(message));
+        message["created"] = created;
+        message["updated"] = updated;
+        //task.push(saveMessageInDB(message));
     }
 
-    return Promise.all(task)
+    return dbUtils.saveChange(change);
+
+    /*return Promise.all(task)
         .then((results) => {
             delete change["messages"];
             change["messages"] = [];
             change.messages.push(...results);
             return dbUtils.saveChange(change);
-        });
+        });*/
 }
 
 function saveMessageInDB(message) {
