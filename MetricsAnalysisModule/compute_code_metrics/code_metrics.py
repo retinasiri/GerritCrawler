@@ -20,9 +20,9 @@ projectName = "libreoffice"
 
 def process(projectName):
     projectJson = get_project_json(projectName)
-    list_repo.start(projectJson)
+    #list_repo.start(projectJson)
     #clone.start(projectJson)
-    #fetch.start(projectJson)
+    fetch.start(projectJson)
     #metrics.start(projectJson)
     pass
 

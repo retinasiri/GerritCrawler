@@ -14,8 +14,8 @@ REFSPEC = DATA_DIR_NAME + "libreoffice-refspec.json"
 REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 
 refspec = {}
-NUMBER_OF_FETCH_PER_REQUEST = 200;
-NUMBER_OF_REQUEST = multiprocessing.cpu_count() * 2;
+NUMBER_OF_FETCH_PER_REQUEST = 300;
+NUMBER_OF_REQUEST = multiprocessing.cpu_count();
 bar = SlowBar('')
 
 def start(json):
