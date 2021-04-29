@@ -35,9 +35,9 @@ def start(json):
 
     global bar
     bar = SlowBar('Downloading code fetch ... ')
-    path = os.path.join(REPOSITORIES_PATH, PROJET_NAME)
-    print("path " + path)
-    collect_fetch(REFSPEC, path)
+    #path = os.path.join(REPOSITORIES_PATH, PROJET_NAME)
+    #print("path " + path)
+    collect_fetch(REFSPEC, REPOSITORIES_PATH)
     
     return 0
 
@@ -51,7 +51,7 @@ def collect_fetch(list_of_refspec, clone_path):
         git_url = refspecs_data[i]["fetch_url"]
         fetch_refs = refspecs_data[i]["fetch_refs"]
         path = os.path.join(clone_path , *urlparse.urlsplit(git_url).path.split("/"))
-        print("path " + path)
+        #print("path " + path)
         n = NUMBER_OF_FETCH_PER_REQUEST
         bar.max += len(fetch_refs)
         #print(bar.max)
