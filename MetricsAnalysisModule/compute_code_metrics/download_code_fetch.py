@@ -6,6 +6,7 @@ import os
 import urllib.parse as urlparse
 import time
 import utils
+import code_metrics
 from utils import SlowBar as SlowBar
 
 PROJET_NAME = "libreoffice"
@@ -30,11 +31,12 @@ def start(json):
     REFSPEC = utils.get_refspec(PROJET_NAME, DATA_DIR_NAME)
 
     global REPOSITORIES_PATH
-    REPOSITORIES_PATH = utils.get_repositories_path(PROJET_NAME, DATA_DIR_NAME)
+    REPOSITORIES_PATH = utils.get_repositories_path(DATA_DIR_NAME, PROJET_NAME)
 
     global bar
     bar = SlowBar('Downloading code fetch ... ')
     path = os.path.join(REPOSITORIES_PATH, PROJET_NAME)
+    print("path " + path)
     collect_fetch(REFSPEC, path)
     
     return 0
@@ -48,7 +50,8 @@ def collect_fetch(list_of_refspec, clone_path):
     for i in refspecs_data:
         git_url = refspecs_data[i]["fetch_url"]
         fetch_refs = refspecs_data[i]["fetch_refs"]
-        path = os.path.join(clone_path , urlparse.urlsplit(git_url).path)
+        path = os.path.join(clone_path , *urlparse.urlsplit(git_url).path.split("/"))
+        print("path " + path)
         n = NUMBER_OF_FETCH_PER_REQUEST
         bar.max += len(fetch_refs)
         #print(bar.max)
@@ -104,7 +107,8 @@ def check_process(running_procs):
 
 if __name__ == '__main__':
     #print('Number of CPUs available: ', mp.cpu_count())
-    collect_fetch(REFSPEC, REPOSITORIES_PATH)
+    #collect_fetch(REFSPEC, REPOSITORIES_PATH)
+    start(code_metrics.get_project_json("libreoffice"))
 
 
 
