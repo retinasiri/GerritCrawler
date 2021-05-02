@@ -35,8 +35,6 @@ if (typeof require !== 'undefined' && require.main === module) {
 function startComputeMetrics(json) {
     if (json["projectDBUrl"])
         projectDBUrl = json["projectDBUrl"];
-    if (json["projectApiUrl"])
-        projectApiUrl = json["projectApiUrl"];
     if (json["output_directory"])
         DATA_PATH = json["output_directory"];
     if (json["projectName"])

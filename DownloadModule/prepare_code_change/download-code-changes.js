@@ -7,6 +7,7 @@ const Crawling = require('../models/crawling');
 const Database = require('../config/databaseConfig');
 const ApiEndPoints = require('../config/apiEndpoints');
 const Utils = require("../config/utils");
+const PathLibrary = require('path');
 
 const axios = RateLimit(Axios.create(), {maxRPS: 80})
 const TIMEOUT = 20 * 60 * 1000;
@@ -105,7 +106,6 @@ function hasToDownloadMoreChange(json, changesUrl) {
         }
 
     let bool = false;
-
     if (lastJson) {
         if (lastJson.created) {
             let lastChangeYear = Moment(lastJson.created).toDate().getFullYear();
@@ -113,11 +113,8 @@ function hasToDownloadMoreChange(json, changesUrl) {
                 if (lastJson._more_changes)
                     if (lastJson._more_changes === true)
                         bool = true;
-
-
         }
     }
-
     return bool;
 }
 
@@ -141,7 +138,6 @@ function getChanges(changesUrl) {
 
 /**
  * @param {String} apiEndpoint The url of the code changes
- * @param {function} functionToExecute The date
  */
 function fetchFromApi(apiEndpoint) {
     return axios.get(apiEndpoint, {timeout: TIMEOUT})
@@ -173,28 +169,20 @@ function getLastJson(json) {
  * @param {json} json The date
  */
 async function saveFiles(changeUrlString, json) {
-    //console.log('saveFiles : ' + changeUrl);
     if (Object.keys(json).length === 0)
         return Promise.resolve(json);
-
-    //todo use path
     let changeUrl = new URL(changeUrlString)
     let type = changeUrl.searchParams.get('q');
     let start = new Number(changeUrl.getStartValue());
     let subDirname = (type.split(":"))[1] + "-changes";
-    let dirname = get_directory_name(DIRECTORY_NAME);
-    let fileName = dirname + "/" + subDirname + "/" + start + "-" + (start + NUMBER_OF_CHANGES_REQUESTED) + ".json";
+    let dirname = PathLibrary.join(OUTPUT_DATA_PATH, DIRECTORY_NAME, subDirname)
+    let filename = (start + "-" + (start + NUMBER_OF_CHANGES_REQUESTED) + ".json")
+    let filePath = PathLibrary.join(dirname, filename)
     let data = JSON.stringify(json, null, 2);
-
-    await fsExtra.ensureDirSync(dirname + "/" + subDirname);
-    return fsExtra.outputFile(fileName, data).then(() => {
+    await fsExtra.ensureDirSync(dirname);
+    return fsExtra.outputFile(filePath, data).then(() => {
         return Promise.resolve(json)
     });
-}
-
-function get_directory_name(directory_name) {
-    //let dirname = OUTPUT_DATA_PATH + (changeUrl.hostname.split("."))[1];
-    return OUTPUT_DATA_PATH + directory_name;
 }
 
 /**

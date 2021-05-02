@@ -9,7 +9,7 @@ const Metrics = require('../models/metrics');
 const MetricsUtils = require('../compute_metrics/metrics-utils');
 const Utils = require('../config/utils');
 const ApiEndPoints = require('../config/apiEndpoints');
-const Path = require('path');
+const PathLibrary = require('path');
 
 const progressBar = new cliProgress.SingleBar({
     barCompleteChar: '#',

@@ -38,7 +38,7 @@ function mainFunction(json) {
 
     return Database.dbConnection(projectDBUrl)
         .then(() => { // Counts the number of change
-            return Change.estimatedDocumentCount({});;
+            return Change.estimatedDocumentCount({});
         })
         .then((count) => {
             NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);

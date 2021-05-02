@@ -5,6 +5,7 @@ const ApiEndPoints = require('../config/apiEndpoints');
 const Config = require('../config.json');
 const os = require('os');
 const PathLibrary = require('path');
+const CliProgress = require('cli-progress');
 let programming_languages_extension = require("../res/Programming_Languages_Extensions.json");
 
 function saveJSONInFile(directory = "data/", name, data) {
@@ -133,6 +134,52 @@ function getProjectParameters(projectName) {
     return json;
 }
 
+class Project {
+    constructor(name) {
+        this._dbUrl = DatabaseConfig.getProjectDBUrl(name);
+        this._apiUrl = ApiEndPoints.getProjectApi(name);
+        this._db_name = Config.project[name]["db_name"];
+        this._output_directory = PathLibrary.join(Config.output_data_path, name);
+        this._name = name;
+    }
+
+    get getName() {
+        return this._name;
+    }
+
+    get getDBUrl() {
+        return this._dbUrl;
+    }
+
+    get getAPIUrl() {
+        return this._apiUrl;
+    }
+
+    get getDBName() {
+        return this._db_name;
+    }
+
+    get getOutputDirectory() {
+        return this._output_directory;
+    }
+}
+
+class Metrics {
+
+    constructor(type) {
+        this._type = type;
+        this._metrics = {};
+    }
+
+    get getType() {
+        return this._type;
+    }
+
+    get getMetricsJSON() {
+        return this._metrics;
+    }
+}
+
 function getCPUCount() {
     return os.cpus().length;
 }
@@ -155,5 +202,7 @@ module.exports = {
     getProjectName: getProjectName,
     getProjectParameters: getProjectParameters,
     getCPUCount: getCPUCount,
-    getSetStr : getSetStr
+    getSetStr: getSetStr,
+    Project: Project,
+    Metrics: Metrics
 };

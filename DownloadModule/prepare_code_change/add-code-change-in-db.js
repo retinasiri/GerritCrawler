@@ -125,7 +125,6 @@ async function addInformationToDB(path, filename) {
     try {
         json = JSON.parse(fs.readFileSync(getFilePath(path, filename), 'utf8'));
     } catch (e) {
-
     }
 
     if (Object.keys(json).length === 0)

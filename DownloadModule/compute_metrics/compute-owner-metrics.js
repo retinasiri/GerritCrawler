@@ -7,7 +7,10 @@ const Change = require('../models/change');
 const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
 const MetricsUtils = require("./metrics-utils");
-const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+const progressBar = new cliProgress.SingleBar({
+    barCompleteChar: '#',
+    barIncompleteChar: '-',
+}, cliProgress.Presets.shades_classic);
 const PathLibrary = require('path');
 
 
@@ -32,8 +35,6 @@ if (typeof require !== 'undefined' && require.main === module) {
 function startComputeMetrics(json) {
     if (json["projectDBUrl"])
         projectDBUrl = json["projectDBUrl"];
-    if (json["projectApiUrl"])
-        projectApiUrl = json["projectApiUrl"];
     if (json["output_directory"])
         DATA_PATH = json["output_directory"];
     if (json["projectName"])
@@ -92,9 +93,6 @@ function getChanges(skip) {
                 return Promise.resolve(false)
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
         })
-        .then(result => {
-            return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
-        })
         .catch(err => {
             console.log(err)
         });
@@ -134,26 +132,20 @@ async function updateProgress() {
 async function collectMetrics(json) {
     return getChangesInfo(json).then((values) => {
         let metric = {};
-
         metric["number"] = json._number;
         metric["id"] = json.id;
-
         Object.keys(values).forEach(function (key) {
             metric[key] = values[key];
         })
-
         let changesTimeInfo = getChangesTimeInfo(json, values.priorMergedChangesCount, values.priorAbandonedChangesCount)
         let task = Promise.resolve(metric);
         return Promise.all([changesTimeInfo, task]);
     }).then((results) => {
-
         let values = results[0];
         let metric = results[1];
-
         Object.keys(values).forEach(function (key) {
             metric[key] = values[key];
         })
-
         return Promise.resolve(metric);
     });
 }
@@ -452,6 +444,15 @@ async function getChangesTimeInfo(json, mergedCount, abandonedCount) {
     let fileTimeAndCountForReviewersMerged = getFileTimeAndCountForReviewers(json, "MERGED");
     let fileTimeAndCountForReviewersAbandoned = getFileTimeAndCountForReviewers(json, "ABANDONED");
 
+    let ownerNumberOfRevisionMerged = getOwnerNumberOfRevision(json, "MERGED");
+    let ownerNumberOfRevisionAbandoned = getOwnerNumberOfRevision(json, "ABANDONED");
+
+    let ownerNumberOfReview = getOwnerNumberOfReview(json, "ABANDONED");
+
+    let fileDeveloperNumber = getFileDeveloperNumber(json, "ABANDONED");
+
+    let ownerPreviousMessageCount = getOwnerPreviousMessageCount(json);
+
     return Promise.all([
         priorChangeMeanTimeMerged, //0
         priorChangeMeanTimeAbandoned, //1
@@ -470,6 +471,16 @@ async function getChangesTimeInfo(json, mergedCount, abandonedCount) {
 
         fileTimeAndCountForReviewersMerged, //10
         fileTimeAndCountForReviewersAbandoned, //11
+
+        ownerNumberOfRevisionMerged, //12
+        ownerNumberOfRevisionAbandoned, //13
+
+        ownerNumberOfReview, //14
+
+        fileDeveloperNumber, //15
+
+        ownerPreviousMessageCount, //16
+
     ]).then((results) => {
         //console.log(results);
         return {
@@ -511,6 +522,18 @@ async function getChangesTimeInfo(json, mergedCount, abandonedCount) {
             reviewersMergedFileTimeAvg: results[10].time_avg,
             reviewersAbandonedFileCountAvg: results[11].count_avg,
             reviewersAbandonedFileTimeAvg: results[11].time_avg,
+
+            ownerNumberOfRevisionMergedAvg: results[12].revision_avg,
+            ownerNumberOfRevisionMergedMax: results[12].revision_max,
+            ownerNumberOfRevisionMergedMin: results[12].revision_min,
+
+            ownerNumberOfRevisionAbandonedAvg: results[13].revision_avg,
+            ownerNumberOfRevisionAbandonedMax: results[13].revision_max,
+            ownerNumberOfRevisionAbandonedMin: results[13].revision_min,
+
+            ownerNumberOfReview: results[14].count,
+            fileDeveloperNumber: results[15].count,
+            ownerPreviousMessageCount: results[16].count,
 
         };
     })
@@ -732,10 +755,9 @@ function getFileTimeAndCountForReviewers(json, TYPE) {
     return genericDBRequest(pipeline);
 }
 
-//todo file developper num
-//todo owner num of revision mean
-//todo owner number of review
-//todo multiprocess graph
+//file developper num
+//owner num of revision mean
+//owner number of review
 //test
 //refactoring et config file
 //install server
@@ -804,7 +826,48 @@ function getFileDeveloperNumber(json, TYPE) {
         {$unwind: "$files_list"},
         {$match: {files_list: {$in: files_list}}},
         {$group: {_id: "$files_list", dev: {$addToSet: '$owner._account_id'}}},
-        {$group: {_id: 1, count_avg: {$avg: {$size: "$dev"}}}}
+        {$group: {_id: 1, count: {$avg: {$size: "$dev"}}}}
+    ]
+    return genericDBRequest(pipeline);
+}
+
+function getOwnerPreviousMessageCount(json){
+    let created_date = Moment(json.created).toDate().toISOString();
+    let number = json._number;
+    let owner_id = json.owner._account_id;
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    }
+    let pipeline = [
+        match,
+        {$unwind: "$messages"},
+        {$group: {_id: "$messages.author.name", count:{$sum:1}}},
+        {$match: {_id: owner_id}},
+    ]
+    return genericDBRequest(pipeline);
+}
+
+//todo reviewers total messsages
+
+function getReviewersTotalPreviousMessagesCount(json){
+    let created_date = Moment(json.created).toDate().toISOString();
+    let number = json._number;
+    let reviewersIdArray = MetricsUtils.getHumanReviewersID(json, projectName);
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    }
+    let pipeline = [
+        match,
+        {$unwind: "$messages"},
+        {$group: {_id: "$messages.author.name", count:{$sum:1}}},
+        {$match: {_id: {$in: reviewersIdArray}}},
+        //todo count message
     ]
     return genericDBRequest(pipeline);
 }

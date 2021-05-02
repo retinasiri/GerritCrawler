@@ -35,12 +35,14 @@ if (typeof require !== 'undefined' && require.main === module) {
 function startComputeMetrics(json) {
     if (json["projectDBUrl"])
         projectDBUrl = json["projectDBUrl"];
-    if (json["projectApiUrl"])
-        projectApiUrl = json["projectApiUrl"];
     if (json["output_directory"])
         DATA_PATH = json["output_directory"];
     if (json["projectName"])
         projectName = json["projectName"];
+
+    /*return MetricsUtils.startComputeMetrics(projectName, "owner", function(json){
+        return collectMetrics(json)
+    });*/
 
     return Database.dbConnection(projectDBUrl)
         .then(() => { // Counts the number of change
@@ -50,12 +52,10 @@ function startComputeMetrics(json) {
             NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUM_CONCURRENCY);
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, STARTING_POINT);
-
             let tasks = []
             for (let i = 0; i < NUM_CONCURRENCY; i++) {
                 tasks.push(getChanges(NUM_OF_CHANGES_LIMIT * i))
             }
-
             return Promise.all(tasks);
         })
         .then(() => {
@@ -95,9 +95,6 @@ function getChanges(skip) {
             if (!docs)
                 return Promise.resolve(false)
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
-        })
-        .then(result => {
-            return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
         })
         .catch(err => {
             console.log(err)
@@ -140,25 +137,9 @@ async function collectMetrics(json) {
         let metric = {};
         metric["number"] = json._number;
         metric["id"] = json.id;
-
-        metric["recent_num_change"] = recentChange.recent_num_change;
-        metric["recent_total_num_merged"] = recentChange.recent_total_num_merged;
-        metric["recent_total_num_abandoned"] = recentChange.recent_total_num_abandoned;
-        metric["recent_total_num_non_close_change"] = recentChange.recent_total_num_non_close_change;
-
-        metric["recent_owner_num_change"] = recentChange.recent_owner_num_change;
-        metric["recent_owner_num_merged"] = recentChange.recent_owner_num_merged;
-        metric["recent_owner_num_abandoned"] = recentChange.recent_owner_num_abandoned;
-        metric["recent_owner_num_non_close_change"] = recentChange.recent_owner_num_non_close_change;
-
-        metric["recent_total_merged_ratio"] = recentChange.recent_total_merged_ratio;
-        metric["recent_owner_merged_ratio"] = recentChange.recent_owner_merged_ratio;
-        metric["recent_owner_percentage_of_merged"] = recentChange.recent_owner_percentage_of_merged;
-
-        metric["recent_review_num_mean"] = recentChange.recent_review_num_mean;
-        metric["recent_reviews_non_close_mean"] = recentChange.recent_reviews_non_close_mean;
-        metric["recent_review_num_max"] = recentChange.recent_review_num_max;
-        metric["recent_reviews_non_close_max"] = recentChange.recent_reviews_non_close_max;
+        Object.keys(recentChange).forEach(function (key) {
+            metric[key] = recentChange[key];
+        })
         return Promise.resolve(metric)
     });
 }
@@ -190,9 +171,7 @@ function getPreviousRecentChanges(json) {
 }
 
 function computePreviousChange(json, previousRecentChanges) {
-
     let reviewers = {}
-
     let ownerId = json.owner._account_id;
     let recent_total_num_merged = 0;
     let recent_owner_num_merged = 0;
@@ -219,10 +198,7 @@ function computePreviousChange(json, previousRecentChanges) {
         }
 
         let updateDate = Moment(rChange.updated).toDate().getTime();
-        //console.log("updateDate : " + updateDate);
-        //console.log("date1 " +  date1);
         if (date1 >= updateDate) {
-            //console.log("date1 > updateDate");
             if (rChange.status === "MERGED") {
                 recent_total_num_merged++;
                 if (rChange.owner._account_id === ownerId) {
@@ -242,7 +218,6 @@ function computePreviousChange(json, previousRecentChanges) {
         }
 
         reviewers = collectReviewersMetrics(rChange, reviewers, date1, oNumber);
-
     }
 
     let humanReviewersID = MetricsUtils.getHumanReviewersID(json, projectName);
