@@ -2,6 +2,7 @@ import json
 import re
 import os
 import utils
+import dbutils
 import urllib.parse as urlparse
 from pathlib import Path as pathlib
 from utils import SlowBar as SlowBar
@@ -50,6 +51,7 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
         metric = get_code_metrics(json_data[i], repo_root_path)
         mid = metric["id"]
         code_metrics[mid] = metric
+        #Database.save_metrics(metrics)
         #save_metrics(metric)
         bar.next()
     save_metrics_file(code_metrics, data_dir_path)
