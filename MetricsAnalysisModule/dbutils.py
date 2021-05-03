@@ -63,7 +63,7 @@ class Database:
         else :
             return "mongodb://" + hostname
 
-@staticmethod
+
 def getDatabaseFromJson(json):
     hostname = json["database_hostname"]
     port = json["database_port"]

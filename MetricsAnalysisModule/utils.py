@@ -29,6 +29,4 @@ def get_changes_list_and_commit(projectName, output_dir):
     filename = projectName + "-changes-commit-and-fetch.json"
     return os.path.join(output_dir, projectName, filename)
 
-def get_code_metrics_output_file(projectName):
-    return projectName + "-code-metrics.json"
 
