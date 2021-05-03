@@ -1,5 +1,6 @@
 import pymongo
-import urllib
+import urllib.parse as urlparse
+
 
 DB_URL = "mongodb://localhost:27017/"
 
@@ -57,7 +58,7 @@ class Database:
             real_port = port
         
         if (username) :
-            return "mongodb://" + username + ":" + str(urllib.quote(password.encode("utf-8"))) + "@" + hostname + ":" + str(real_port) + "/";
+            return "mongodb://" + username + ":" + str(urlparse.quote(password.encode("utf-8"))) + "@" + hostname + ":" + str(real_port) + "/";
         elif (hostname):
             return "mongodb://" + hostname + ":" + str(real_port) + "/"
         else :
