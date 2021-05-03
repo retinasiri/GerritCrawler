@@ -77,8 +77,8 @@ def get_code_metrics(data, repo_root_path):
     fetch_url = data["fetch_url"]
     commit_hash = data["commit"]
     repo_path = os.path.join(repo_root_path, *urlparse.urlsplit(fetch_url).path.split("/"))
-    print("repo_root_path : " + repo_root_path)
-    print("repo_path : " + repo_path)
+    #print("repo_root_path : " + repo_root_path)
+    #print("repo_path : " + repo_path)
     metrics = None
 
     try:
