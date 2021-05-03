@@ -44,9 +44,10 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
     bar.max = len(json_data)
     for i in json_data:
         metric = get_code_metrics(json_data[i], repo_root_path)
-        mid = metric["id"]
-        code_metrics[mid] = metric
-        Database.save_metrics(metric)
+        if(mid is not None):
+            mid = metric["id"]
+            code_metrics[mid] = metric
+            Database.save_metrics(metric)
         bar.next()
     save_metrics_file(code_metrics, data_dir_path)
     bar.finish()
@@ -79,11 +80,13 @@ def get_code_metrics(data, repo_root_path):
 
     try:
         metrics = compute_code_metrics(data["id"], repo_path, commit_hash)
-    except:
+    except Exception as e:
         print("An exception occurred")
+        print("data[\"id\"] : " + data["id"])
         print("fetch_url : " + fetch_url)
         print("commit_hash : " + commit_hash)
         print("repo_path : " + repo_path)
+        print(e)
 
     return metrics
 
