@@ -9,15 +9,12 @@ from utils import SlowBar as SlowBar
 from pydriller import RepositoryMining, ModificationType
 
 
-
 LIST_OF_COMMIT = "/Volumes/SEAGATE-II/Data/libreoffice/libreoffice-changes-commit-and-fetch.json"
 REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 DATA_DIR_PATH = "data/"
 PROJET_NAME = "libreoffice"
-CODE_METRICS_OUTPUT_FILE = PROJET_NAME + "-code-metrics.json"
-
+Database = None;
 code_metrics = {}
-bar = SlowBar('')
 
 def start(json):
     
@@ -33,26 +30,23 @@ def start(json):
     global REPOSITORIES_PATH
     REPOSITORIES_PATH = utils.get_repositories_path(PROJET_NAME, DATA_DIR_PATH)
 
-    global CODE_METRICS_OUTPUT_FILE
-    CODE_METRICS_OUTPUT_FILE = utils.get_code_metrics_output_file(PROJET_NAME, DATA_DIR_PATH)
+    global Database
+    Database = dbutils.getDatabaseFromJson(json)
 
-    global bar
-    bar = SlowBar('Downloading code fetch ... ')
-    
-    processData(LIST_OF_COMMIT, REPOSITORIES_PATH, DATA_DIR_PATH)
-    
-    return 0
+    return processData(LIST_OF_COMMIT, REPOSITORIES_PATH, DATA_DIR_PATH)
 
 
 def processData(list_of_commit, repo_root_path, data_dir_path):
+    
+    bar = SlowBar('Computing code metrics ... ')
+
     json_data = load_json(list_of_commit)
     bar.max = len(json_data)
     for i in json_data:
         metric = get_code_metrics(json_data[i], repo_root_path)
         mid = metric["id"]
         code_metrics[mid] = metric
-        #Database.save_metrics(metrics)
-        #save_metrics(metric)
+        Database.save_metrics(metric)
         bar.next()
     save_metrics_file(code_metrics, data_dir_path)
     bar.finish()
@@ -67,7 +61,8 @@ def load_json(path):
 
 
 def save_metrics_file(metrics, data_path):
-    full_path = os.path.join(data_path, CODE_METRICS_OUTPUT_FILE)
+    output_file_name = PROJET_NAME + "-code-metrics.json"
+    full_path = os.path.join(data_path, output_file_name)
     dir_path = pathlib(data_path)
     dir_path.parent.mkdir(parents=True, exist_ok=True)
     with open(full_path, "wb") as f:

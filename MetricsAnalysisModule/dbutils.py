@@ -15,7 +15,7 @@ NUM_OF_CHANGES_LIMIT = 20000
 
 class Database:
     def __init__(self, database_name, hostname = "localhost", port=27017, username ="", password=""):
-        db_url = getMainDatabaseUrl(hostname, port, username, password)
+        db_url = self.getMainDatabaseUrl(hostname, port, username, password)
         self.dbClient = pymongo.MongoClient(db_url)
         self.databaseName = database_name
 
@@ -45,18 +45,30 @@ class Database:
         x = self.get_metrics_collection().update_one(query, new_values, upsert=True)
         return x
 
+    @staticmethod
     def get_db_name(projectDBName):
         return projectDBName + "DB";
 
 
-def getMainDatabaseUrl(hostname, port, username, password) :
-    real_port = 27017
-    if(port) :
-        real_port = port
+    @staticmethod
+    def getMainDatabaseUrl(hostname, port, username, password) :
+        real_port = 27017
+        if(port) :
+            real_port = port
+        
+        if (username) :
+            return "mongodb://" + username + ":" + str(urllib.quote(password.encode("utf-8"))) + "@" + hostname + ":" + str(real_port) + "/";
+        elif (hostname):
+            return "mongodb://" + hostname + ":" + str(real_port) + "/"
+        else :
+            return "mongodb://" + hostname
+
+@staticmethod
+def getDatabaseFromJson(json):
+    hostname = json["database_hostname"]
+    port = json["database_port"]
+    username = json["database_username"]
+    password = json["database_password"]
+    database_name = Database.get_db_name(json["db_name"])
+    return Database(database_name, hostname, port, username, password)
     
-    if (username) :
-        return "mongodb://" + username + ":" + str(urllib.quote(password.encode("utf-8"))) + "@" + hostname + ":" + str(real_port) + "/";
-    elif (hostname):
-        return "mongodb://" + hostname + ":" + str(real_port) + "/"
-    else :
-        return "mongodb://" + hostname
