@@ -3,7 +3,8 @@ import subprocess
 import json
 import urllib.parse as urlparse
 import time
-from pathlib import Path as pathlib
+#from arguments import Arguments
+#from pathlib import Path as pathlib
 
 
 
@@ -15,16 +16,28 @@ CLONE_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 if __name__ == '__main__':
     #print('Number of CPUs available: ', mp.cpu_count())
     #collect_fetch(REFSPEC, CLONE_PATH)
-    path = "/Volumes/SEAGATE-II/Data/Repositories/core/"
-    git_url = "https://git.libreoffice.org/core"
-    fetch_refs = "refs/changes/12/12/1"
     #command = ['cd', path, '&&', 'git', 'fetch', git_url, fetch_refs]
     #procs = subprocess.run(['git', 'fetch', git_url, fetch_refs], capture_output=True, text=True, cwd=path)
     #print(procs.stdout)
     #print(procs.stderr)
     #print(procs.args)
 
-    path = pathlib('/Users/jeefer/Desktop/test/filename.txt')
-    path.parent.mkdir(parents=True, exist_ok=True) 
+    #path = "/Volumes/SEAGATE-II/Data/Repositories/core/"
+    #git_url = "https://git.libreoffice.org/core"
+    #fetch_refs = "refs/changes/12/12/1"
+    #path = pathlib('/Users/jeefer/Desktop/test/filename.txt')
+    #path.parent.mkdir(parents=True, exist_ok=True)
 
+    #arg = Arguments()
+    #print(arg)
+
+    """
+    f = argument.Arguments()
+    f.require("fetch", help="Fetch code commit from repositories to local")
+    f.option("project",
+        25,
+        help="The project to work with.",
+        abbr="p"
+        )
+    """
             
