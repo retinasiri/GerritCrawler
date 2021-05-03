@@ -25,7 +25,7 @@ def start(json):
     DATA_DIR_PATH = json["output_data_path"]
 
     global LIST_OF_COMMIT
-    LIST_OF_COMMIT = utils.get_refspec(PROJET_NAME, DATA_DIR_PATH)
+    LIST_OF_COMMIT = utils.get_changes_list_and_commit(PROJET_NAME, DATA_DIR_PATH)
 
     global REPOSITORIES_PATH
     REPOSITORIES_PATH = utils.get_repositories_path(PROJET_NAME, DATA_DIR_PATH)
