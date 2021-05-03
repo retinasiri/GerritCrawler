@@ -29,6 +29,7 @@ def start(json):
 
     global REPOSITORIES_PATH
     REPOSITORIES_PATH = utils.get_repositories_path(PROJET_NAME, DATA_DIR_PATH)
+    print("REPOSITORIES_PATH : " + REPOSITORIES_PATH)
 
     global Database
     Database = dbutils.getDatabaseFromJson(json)
