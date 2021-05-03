@@ -74,8 +74,17 @@ def save_metrics_file(metrics, data_path):
 def get_code_metrics(data, repo_root_path):
     fetch_url = data["fetch_url"]
     commit_hash = data["commit"]
-    repo_path = repo_root_path + urlparse.urlsplit(fetch_url).path
-    metrics = compute_code_metrics(data["id"], repo_path, commit_hash)
+    repo_path = os.path.join(repo_root_path, urlparse.urlsplit(fetch_url).path)
+    metrics = None
+
+    try:
+        metrics = compute_code_metrics(data["id"], repo_path, commit_hash)
+    except:
+        print("An exception occurred")
+        print("fetch_url : " + fetch_url)
+        print("commit_hash : " + commit_hash)
+        print("repo_path : " + repo_path)
+
     return metrics
 
 
