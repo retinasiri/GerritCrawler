@@ -44,7 +44,7 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
     bar.max = len(json_data)
     for i in json_data:
         metric = get_code_metrics(json_data[i], repo_root_path)
-        if(mid is not None):
+        if(metric is not None):
             mid = metric["id"]
             code_metrics[mid] = metric
             Database.save_metrics(metric)
