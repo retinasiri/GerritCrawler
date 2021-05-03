@@ -2,6 +2,7 @@ from sys import path
 import time
 import subprocess
 import os
+import utils
 from utils import SlowBar as SlowBar
 import urllib.parse as urlparse
 
@@ -10,12 +11,14 @@ LIST_OF_REPOSITORIES = "/Volumes/SEAGATE-II/Data/libreoffice/libreoffice-reposit
 REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 #bar = SlowBar('Cloning ')
 
+"""
 def get_repositories_path(data_dir, projectName):
     return os.path.join(data_dir, projectName, "Repositories")
 
 def get_repo_clone_list_name(projectName, output_dir):
     filename = projectName + "-repositories-to-clone.txt"
     return os.path.join(output_dir,projectName, filename)
+"""
 
 
 def start(json):
@@ -27,16 +30,17 @@ def start(json):
     DATA_DIR_NAME = json["output_data_path"]
 
     global LIST_OF_REPOSITORIES
-    LIST_OF_REPOSITORIES = get_repo_clone_list_name(project_name, DATA_DIR_NAME)
+    LIST_OF_REPOSITORIES = utils.get_repo_clone_list_name(project_name, DATA_DIR_NAME)
 
     global REPOSITORIES_PATH
-    REPOSITORIES_PATH = get_repositories_path(project_name, DATA_DIR_NAME)
+    REPOSITORIES_PATH = utils.get_repositories_path(project_name, DATA_DIR_NAME)
     
     clone_repo(LIST_OF_REPOSITORIES, REPOSITORIES_PATH)
 
     return 0
 
 
+#limit the number of repositories clone like code fetch
 def clone_repo(repo_list_path, clone_path):
     repo_to_download = read_list_of_repo(repo_list_path)
     running_procs = []

@@ -11,7 +11,7 @@ class SlowBar(Bar):
         return format_timespan(self.eta)
 
 
-def get_repositories_path(data_dir, projectName):
+def get_repositories_path(projectName, data_dir):
     return os.path.join(data_dir, projectName, "Repositories")
 
 

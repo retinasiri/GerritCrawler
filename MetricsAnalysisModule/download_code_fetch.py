@@ -31,7 +31,7 @@ def start(json):
     REFSPEC = utils.get_refspec(PROJET_NAME, DATA_DIR_NAME)
 
     global REPOSITORIES_PATH
-    REPOSITORIES_PATH = utils.get_repositories_path(DATA_DIR_NAME, PROJET_NAME)
+    REPOSITORIES_PATH = utils.get_repositories_path(PROJET_NAME, DATA_DIR_NAME)
 
     global bar
     bar = SlowBar('Downloading code fetch ... ')
