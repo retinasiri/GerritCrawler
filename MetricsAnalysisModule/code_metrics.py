@@ -16,7 +16,7 @@ import collect_code_metrics as metrics
 
 
 CONFIG_JSON_PATH = "../DownloadModule/config.json"
-projectName = "libreoffice"
+#projectName = "libreoffice"
 
 def process(projectName):
     projectJson = get_project_json(projectName)
@@ -52,8 +52,10 @@ if __name__ == '__main__':
 
     if(argument):
         projectName = argument[0]
+        process(projectName)
+    else:
+        print ("Please provide an argument")
 
-    process(projectName)
     #list_repo.start(projectName)
     #clone.clone_repo(LIST_OF_REPOSITORIES, REPOSITORIES_PATH)
     #fetch.collect_fetch(REFSPEC, REPOSITORIES_PATH)
