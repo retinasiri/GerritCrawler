@@ -50,7 +50,7 @@ def collect_fetch(list_of_refspec, clone_path):
     for i in refspecs_data:
         git_url = refspecs_data[i]["fetch_url"]
         fetch_refs = refspecs_data[i]["fetch_refs"]
-        path = os.path.join(*clone_path.split("/") , *urlparse.urlsplit(git_url).path.split("/"))
+        path = os.path.join(clone_path, *urlparse.urlsplit(git_url).path.split("/"))
         #print("path " + path)
         n = NUMBER_OF_FETCH_PER_REQUEST
         bar.max += len(fetch_refs)
