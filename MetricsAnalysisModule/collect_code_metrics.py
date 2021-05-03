@@ -64,7 +64,7 @@ def load_json(path):
 
 def save_metrics_file(metrics, data_path):
     output_file_name = PROJET_NAME + "-code-metrics.json"
-    full_path = os.path.join(data_path, output_file_name)
+    full_path = os.path.join(*data_path.split("/"), *output_file_name.split("/"))
     dir_path = pathlib(data_path)
     dir_path.parent.mkdir(parents=True, exist_ok=True)
     with open(full_path, "wb") as f:
@@ -76,7 +76,7 @@ def save_metrics_file(metrics, data_path):
 def get_code_metrics(data, repo_root_path):
     fetch_url = data["fetch_url"]
     commit_hash = data["commit"]
-    repo_path = os.path.join(repo_root_path, urlparse.urlsplit(fetch_url).path)
+    repo_path = os.path.join(*repo_root_path.split("/"), *urlparse.urlsplit(fetch_url).path.split("/"))
     print("repo_root_path : " + repo_root_path)
     print("repo_path : " + repo_path)
     metrics = None

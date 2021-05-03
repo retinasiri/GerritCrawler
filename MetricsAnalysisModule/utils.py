@@ -12,21 +12,21 @@ class SlowBar(Bar):
 
 
 def get_repositories_path(projectName, data_dir):
-    return os.path.join(data_dir, projectName, "Repositories")
+    return os.path.join(*data_dir.split("/"), projectName, "Repositories")
 
 
 def get_refspec(projectName, output_dir):
     filename = projectName + "-refspec.json"
-    return os.path.join(output_dir,projectName, filename)
+    return os.path.join(*output_dir.split("/"),projectName, filename)
 
 
 def get_repo_clone_list_name(projectName, output_dir):
     filename = projectName + "-repositories-to-clone.txt"
-    return os.path.join(output_dir,projectName, filename)
+    return os.path.join(*output_dir.split("/"),projectName, filename)
 
 
 def get_changes_list_and_commit(projectName, output_dir):
     filename = projectName + "-changes-commit-and-fetch.json"
-    return os.path.join(output_dir, projectName, filename)
+    return os.path.join(*output_dir.split("/"), projectName, filename)
 
 
