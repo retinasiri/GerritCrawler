@@ -1,9 +1,9 @@
-from progress.bar import ChargingBar
+from progress.bar import Bar
 import os
 from humanfriendly import format_timespan
 
 
-class SlowBar(ChargingBar):
+class SlowBar(Bar):
     suffix = '%(percent).1f%% | %(index)d / %(max)d | %(remaining_hours)s remaining'
 
     @property

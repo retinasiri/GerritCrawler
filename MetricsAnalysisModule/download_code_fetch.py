@@ -17,7 +17,7 @@ REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 refspec = {}
 NUMBER_OF_FETCH_PER_REQUEST = 300;
 NUMBER_OF_REQUEST = multiprocessing.cpu_count() * 2;
-bar = SlowBar('', fill='#',)
+bar = SlowBar('')
 
 def start(json):
     
