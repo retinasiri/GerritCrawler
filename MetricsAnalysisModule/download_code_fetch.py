@@ -74,15 +74,15 @@ def load_json(path):
 
 def check_process(running_procs):
     i=0
-    lenght = len(running_procs)
+    #lenght = len(running_procs)
     running = False;
     while running_procs:
         for proc in running_procs:
             retcode = proc.poll()
             if retcode is not None: # Process finished.
                 if retcode == 0:
-                    i+= 1
-                    text = " ".join(proc.args[0:4]) + " ... " + proc.args[-1] + " FINISHED!!!"
+                    #i+= 1
+                    #text = " ".join(proc.args[0:4]) + " ... " + proc.args[-1] + " FINISHED!!!"
                     #print("{}/{} : {}".format(i, lenght, text))
                     #print(proc.communicate())
                     #d = len(proc.args[4:])

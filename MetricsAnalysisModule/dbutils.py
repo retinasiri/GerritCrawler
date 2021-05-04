@@ -14,14 +14,23 @@ METRICS_COLLECTION_NAMES = 'metrics'
 NUM_OF_CHANGES_LIMIT = 20000
 
 
+
+
 class Database:
-    def __init__(self, database_name, hostname = "localhost", port=27017, username ="", password=""):
-        db_url = self.getMainDatabaseUrl(hostname, port, username, password)
-        self.dbClient = pymongo.MongoClient(db_url)
+    def __init__(self, database_name, url = None):
+        self.db_url = url
+        self.dbClient = pymongo.MongoClient(self.db_url)
         self.databaseName = database_name
+        #return self.dbClient;
 
     def get_db(self):
         return self.dbClient[self.databaseName]
+
+    def get_db_url(self):
+        return self.db_url
+
+    def get_database_name(self):
+        return self.databaseName
 
     def get_changes_collection(self):
         return self.get_db()[CHANGES_COLLECTION_NAMES]
@@ -51,18 +60,17 @@ class Database:
         return projectDBName + "DB";
 
 
-    @staticmethod
-    def getMainDatabaseUrl(hostname, port, username, password) :
-        real_port = 27017
-        if(port) :
-            real_port = port
-        
-        if (username) :
-            return "mongodb://" + username + ":" + str(urlparse.quote(password.encode("utf-8"))) + "@" + hostname + ":" + str(real_port) + "/";
-        elif (hostname):
-            return "mongodb://" + hostname + ":" + str(real_port) + "/"
-        else :
-            return "mongodb://" + hostname
+def getMainDatabaseUrl(hostname, port, username, password) :
+    real_port = 27017
+    if(port) :
+        real_port = port
+    
+    if (username) :
+        return "mongodb://" + username + ":" + str(urlparse.quote(password.encode("utf-8"))) + "@" + hostname + ":" + str(real_port) + "/";
+    elif (hostname):
+        return "mongodb://" + hostname + ":" + str(real_port) + "/"
+    else :
+        return "mongodb://" + hostname
 
 
 def getDatabaseFromJson(json):
@@ -71,5 +79,11 @@ def getDatabaseFromJson(json):
     username = json["database_username"]
     password = json["database_password"]
     database_name = Database.get_db_name(json["db_name"])
-    return Database(database_name, hostname, port, username, password)
+    url = getMainDatabaseUrl(hostname, port, username, password)
+    return Database(database_name, url)
+
+
+def get_database_from_info(db_info):
+    return Database(db_info["database_name"], db_info["url"])
+
     

@@ -39,15 +39,9 @@ def start(json):
     
     global REFSPEC
     REFSPEC = utils.get_refspec(PROJET_NAME, DATA_DIR_NAME)
-    
-    hostname = json["database_hostname"]
-    port = json["database_port"]
-    username = json["database_username"]
-    password = json["database_password"]
-    database_name = dbutils.Database.get_db_name(json["db_name"])
 
     global Database
-    Database = dbutils.Database(database_name, hostname, port, username, password)
+    Database = dbutils.getDatabaseFromJson(json)
     
     global count
     count = Database.get_changes_count()

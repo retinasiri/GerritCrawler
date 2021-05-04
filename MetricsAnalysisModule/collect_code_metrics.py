@@ -7,13 +7,19 @@ import urllib.parse as urlparse
 from pathlib import Path as pathlib
 from utils import SlowBar as SlowBar
 from pydriller import RepositoryMining, ModificationType
+import itertools
+import time
+import multiprocessing
+import copy
+from multiprocessing import Process, Pool, Queue
+
 
 
 LIST_OF_COMMIT = "/Volumes/SEAGATE-II/Data/libreoffice/libreoffice-changes-commit-and-fetch.json"
 REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 DATA_DIR_PATH = "data/"
 PROJET_NAME = "libreoffice"
-Database = None;
+Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
 code_metrics = {}
 
 def start(json):
@@ -43,6 +49,10 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
 
     json_data = load_json(list_of_commit)
     bar.max = len(json_data)
+    #split_data(json_data, 24)
+    #process(json_data)
+    pool_handler(json_data, repo_root_path, Database)
+    """
     for i in json_data:
         metric = get_code_metrics(json_data[i], repo_root_path)
         if(metric is not None):
@@ -52,8 +62,75 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
         bar.next()
     save_metrics_file(code_metrics, data_dir_path)
     bar.finish()
+    """
     print("Finished with code metrics !!!!!")
     pass
+
+
+def process (json_data):
+    number_of_processes = multiprocessing.cpu_count() * 2
+    tasks_to_accomplish = Queue()
+    tasks_that_are_done = Queue()
+    processes = []
+    print (number_of_processes)
+    data = split_data(json_data, number_of_processes)
+    #list(map(tasks_to_accomplish.put, data))
+    time.sleep(1)
+    for i in range(len(data)):
+        tasks_to_accomplish.put(data[i])
+        time.sleep(0.1)
+    
+    cnt=1
+    while not tasks_to_accomplish.empty():
+        print('item no: ', cnt, ' ', len(tasks_to_accomplish.get()))
+        cnt += 1
+
+    tasks_to_accomplish.close()
+    tasks_to_accomplish.join_thread()
+    
+
+    pass
+
+
+def pool_handler(json_data, repo_root_path, Database):
+    number_of_processes = multiprocessing.cpu_count()
+    data = split_data(json_data, number_of_processes)
+    lock = multiprocessing.Lock()
+    procs = []
+    db_info = {"url": Database.get_db_url(), "database_name" : Database.get_database_name()}
+
+    for dt in data:
+        proc = Process(target=worker, args=(lock, dt, repo_root_path, db_info))
+        procs.append(proc)
+        proc.start()
+
+    for proc in procs:
+        proc.join()
+
+
+def worker(lock, data, repo_root_path, db_info):
+    metrics = {}
+    DB = dbutils.get_database_from_info(db_info)
+    for i in data:
+        lock.acquire()
+        metric = get_code_metrics(data[i], repo_root_path)
+        lock.release()
+        if(metric is not None):
+            print(metric)
+            DB.save_metrics(metric)
+            mid = metric.get("id")
+            print(mid)
+            metrics[mid] = metric
+    pass
+
+
+#https://stackoverflow.com/questions/29056525/how-do-i-split-a-dictionary-into-specific-number-of-smaller-dictionaries-using-p
+def split_data(data, chunk_size):
+    i = itertools.cycle(range(chunk_size))       
+    split = [dict() for _ in range(chunk_size)]
+    for k, v in data.items():
+        split[next(i)][k] = v
+    return split
 
 
 def load_json(path):
@@ -114,10 +191,9 @@ def init_data(cid):
 
 def compute_code_metrics(cid, repo_path, commit_hash):
     data = init_data(cid)
-
+    n = 0
     for commit in RepositoryMining(repo_path, single=commit_hash).traverse_commits():
         for modification in commit.modifications:
-
             data["sum_changed_methods_count"] += len(modification.changed_methods)
             data["sum_added_lines"] += modification.added
             data["sum_removed_lines"] += modification.removed
@@ -140,6 +216,11 @@ def compute_code_metrics(cid, repo_path, commit_hash):
                 data["num_rename_modification"] += 1
             if modification.change_type == ModificationType.UNKNOWN:
                 data["num_unknown_modification"] += 1
+
+            n+=1
+
+    data["moy_loc"] = data["sum_loc"]/n
+    data["moy_complexity"] = data["sum_complexity"]/n
 
     code_segment = count_code_segment(data["diff"])
     data["num_segs_added"] = code_segment["added"]
