@@ -7,11 +7,11 @@ import urllib.parse as urlparse
 from pathlib import Path as pathlib
 from utils import SlowBar as SlowBar
 from pydriller import RepositoryMining, ModificationType
-import itertools
-import time
-import multiprocessing
-import copy
-from multiprocessing import Process, Pool, Queue
+#import itertools
+#import time
+#import multiprocessing
+#import copy
+#from multiprocessing import Process, Pool, Queue
 
 
 
@@ -51,9 +51,13 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
     bar.max = len(json_data)
     #split_data(json_data, 24)
     #process(json_data)
-    pool_handler(json_data, repo_root_path, Database)
-    """
+    #pool_handler(json_data, repo_root_path, Database)
+    n = 1
     for i in json_data:
+        if(n<100000):
+            n+=1
+            bar.next()
+            continue
         metric = get_code_metrics(json_data[i], repo_root_path)
         if(metric is not None):
             mid = metric["id"]
@@ -62,11 +66,10 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
         bar.next()
     save_metrics_file(code_metrics, data_dir_path)
     bar.finish()
-    """
     print("Finished with code metrics !!!!!")
     pass
 
-
+""""
 def process (json_data):
     number_of_processes = multiprocessing.cpu_count() * 2
     tasks_to_accomplish = Queue()
@@ -131,7 +134,7 @@ def split_data(data, chunk_size):
     for k, v in data.items():
         split[next(i)][k] = v
     return split
-
+"""
 
 def load_json(path):
     with open(path) as f:
