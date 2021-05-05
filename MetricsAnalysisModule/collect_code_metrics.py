@@ -155,6 +155,7 @@ def save_metrics_file(metrics, data_path):
 
 def get_code_metrics(data, repo_root_path):
     fetch_url = data["fetch_url"]
+    fetch_ref = data["fetch_ref"]
     commit_hash = data["commit"]
     repo_path = os.path.join(repo_root_path, *urlparse.urlsplit(fetch_url).path.split("/"))
     #print("repo_root_path : " + repo_root_path)
@@ -167,6 +168,7 @@ def get_code_metrics(data, repo_root_path):
         print("An exception occurred")
         print("data[\"id\"] : " + data["id"])
         print("fetch_url : " + fetch_url)
+        print("fetch_ref : " + fetch_ref)
         print("commit_hash : " + commit_hash)
         print("repo_path : " + repo_path)
         print(e)
@@ -222,8 +224,12 @@ def compute_code_metrics(cid, repo_path, commit_hash):
 
             n+=1
 
-    data["moy_loc"] = data["sum_loc"]/n
-    data["moy_complexity"] = data["sum_complexity"]/n
+    if (n != 0):
+        data["moy_loc"] = data["sum_loc"]/n
+        data["moy_complexity"] = data["sum_complexity"]/n
+    else:
+        data["moy_loc"] = 0
+        data["moy_complexity"] = 0
 
     code_segment = count_code_segment(data["diff"])
     data["num_segs_added"] = code_segment["added"]
