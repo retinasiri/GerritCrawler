@@ -20,17 +20,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/csv-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/csv-plugin.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compute_metrics/compute-graph-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-graph-metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_metrics/compute-recent-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-recent-metrics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compute_metrics/compute-simple-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-simple-metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_metrics/metrics-utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/metrics-utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prepare_code_change/add-code-change-in-db.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/add-code-change-in-db.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prepare_code_change/collect-graph.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/collect-graph.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prepare_code_change/download-code-changes.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/download-code-changes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +96,9 @@
       <workItem from="1619879320362" duration="314000" />
       <workItem from="1619880648193" duration="14302000" />
       <workItem from="1619960757695" duration="202000" />
-      <workItem from="1619973612746" duration="1422000" />
+      <workItem from="1619973612746" duration="8117000" />
+      <workItem from="1620155137189" duration="15569000" />
+      <workItem from="1620242312897" duration="369000" />
     </task>
     <servers />
   </component>
@@ -151,6 +146,10 @@
       <screen x="0" y="23" width="1280" height="777" />
     </state>
     <state x="328" y="154" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.23.1280.777@0.23.1280.777" timestamp="1619960794262" />
+    <state x="100" y="123" width="1080" height="577" key="DiffContextDialog" timestamp="1619979749894">
+      <screen x="0" y="23" width="1280" height="777" />
+    </state>
+    <state x="100" y="123" width="1080" height="577" key="DiffContextDialog/0.23.1280.777@0.23.1280.777" timestamp="1619979749894" />
     <state x="149" y="16" key="SettingsEditor" timestamp="1618548499532">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
