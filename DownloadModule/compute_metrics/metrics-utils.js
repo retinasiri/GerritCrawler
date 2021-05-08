@@ -117,13 +117,13 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
             for (let i = 0; i < NUM_CONCURRENCY; i++) {
                 //let skip = NUM_OF_CHANGES_LIMIT * i;
                 skip = 17000;
-                NUM_OF_CHANGES_LIMIT = 20000;
-                console.log("Processing metrics from " + skip + " to " + NUM_OF_CHANGES_LIMIT);
+                NUM_OF_CHANGES_LIMIT = 3000;
+                console.log("Processing metrics from " + skip + " to " + (skip + NUM_OF_CHANGES_LIMIT));
                 let t = getChanges(skip, NUM_OF_CHANGES_LIMIT,
                     Project, MetricsJson, progressBar, collectMetrics);
                 tasks.push(t);
             }
-            progressBar.start((NUM_OF_CHANGES_LIMIT - skip), 0);
+            progressBar.start((skip + NUM_OF_CHANGES_LIMIT), 0);
             //return getChanges(0, 1000, Project, MetricsJson, progressBar, collectMetrics)
             return Promise.all(tasks);
         })
