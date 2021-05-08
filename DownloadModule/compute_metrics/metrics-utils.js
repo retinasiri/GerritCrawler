@@ -107,8 +107,9 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
         })
         .then((count) => {
             //let NUM_CONCURRENCY = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
-            let NUM_CONCURRENCY = 5;
-            let NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUM_CONCURRENCY);
+            let NUM_CONCURRENCY = 1;
+            //let NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUM_CONCURRENCY);
+            let NUM_OF_CHANGES_LIMIT = count;
             //let STEP = 100
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
@@ -145,12 +146,12 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
 }
 
 //get changes id
-function getChanges(skip, NUM_OF_CHANGES, Project, MetricsJson, progressBar, collectMetrics) {
+function getChanges(skip, NUM_OF_CHANGES_LIMIT, Project, MetricsJson, progressBar, collectMetrics) {
     return Change
         .aggregate([
             {$sort: {_number: 1, created: 1}},
             {$skip: skip},
-            {$limit: NUM_OF_CHANGES}
+            {$limit: NUM_OF_CHANGES_LIMIT}
         ])
         .allowDiskUse(true)
         .exec()
@@ -161,6 +162,9 @@ function getChanges(skip, NUM_OF_CHANGES, Project, MetricsJson, progressBar, col
                 return collectDocs(docs, Project, MetricsJson, progressBar, collectMetrics);
             else
                 return Promise.resolve(true);
+        })
+        .then(result => {
+            return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
         })
         .catch(err => {
             console.log(err)
@@ -204,24 +208,23 @@ function getChanges(skip, NUM_OF_CHANGES, Project, MetricsJson, progressBar, col
 }*/
 
 async function collectDocs(docs, Project, MetricsJson, progressBar, collectMetrics) {
-    //let NUMBER_OF_CONCURRENT_OPERATIONS = Utils.getCPUCount();
+    let NUMBER_OF_CONCURRENT_OPERATIONS = Utils.getCPUCount();
     //let NUMBER_OF_CONCURRENT_OPERATIONS = 1;
-    //let tasks = [];
+    let tasks = [];
     if (!docs)
         return Promise.resolve(true);
     for (let key in docs) {
-        //let t =
-        await collectMetrics(docs[key])
+        let t = collectMetrics(docs[key])
             .then((json) => {
                 return saveMetrics(json, Project, MetricsJson, progressBar);
             })
 
-        /*tasks.push(t);
+        tasks.push(t);
         if (tasks.length >= NUMBER_OF_CONCURRENT_OPERATIONS) {
             await Promise.all(tasks).then(()=>{
                 tasks = []
             });
-        }*/
+        }
     }
     return Promise.resolve(true);
 }
