@@ -114,7 +114,9 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
             progressBar.start(count, 0);
             let tasks = []
             for (let i = 0; i < NUM_CONCURRENCY; i++) {
-                let t = getChanges(NUM_OF_CHANGES_LIMIT * i, STEP, NUM_OF_CHANGES_LIMIT,
+                //let skip = NUM_OF_CHANGES_LIMIT * i;
+                let skip = 17700;
+                let t = getChanges(skip, STEP, NUM_OF_CHANGES_LIMIT,
                         Project, MetricsJson, progressBar, collectMetrics);
                 tasks.push(t);
             }
