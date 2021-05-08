@@ -116,7 +116,7 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
             let tasks = []
             for (let i = 0; i < NUM_CONCURRENCY; i++) {
                 //let skip = NUM_OF_CHANGES_LIMIT * i;
-                skip = 70000;
+                skip = 75000;
                 NUM_OF_CHANGES_LIMIT = 5000;
                 console.log("Processing metrics from " + skip + " to " + (skip + NUM_OF_CHANGES_LIMIT));
                 let t = getChanges(skip, NUM_OF_CHANGES_LIMIT,
