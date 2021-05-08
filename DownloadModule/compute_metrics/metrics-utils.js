@@ -112,7 +112,6 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
             let NUM_OF_CHANGES_LIMIT = 1000;
             //let STEP = 100
             //console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
-            progressBar.start(count, 0);
             let tasks = []
             for (let i = 0; i < NUM_CONCURRENCY; i++) {
                 //let skip = NUM_OF_CHANGES_LIMIT * i;
@@ -123,6 +122,7 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
                     Project, MetricsJson, progressBar, collectMetrics);
                 tasks.push(t);
             }
+            progressBar.start(count, 0);
             //return getChanges(0, 1000, Project, MetricsJson, progressBar, collectMetrics)
             return Promise.all(tasks);
         })
