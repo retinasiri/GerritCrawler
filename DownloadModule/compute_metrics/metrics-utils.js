@@ -109,7 +109,7 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
             //let NUM_CONCURRENCY = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
             let NUM_CONCURRENCY = 1;
             //let NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUM_CONCURRENCY);
-            let NUM_OF_CHANGES_LIMIT = 10000;
+            let NUM_OF_CHANGES_LIMIT = count;
             //let STEP = 100
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
