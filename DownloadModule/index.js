@@ -105,13 +105,21 @@ function buildGraph(argv) {
 function computeMetrics(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
-        return ComputeSimpleMetrics.start(projectJson)
+        /*return ComputeSimpleMetrics.start(projectJson)
             .then(() => {
                 return ComputeRecentMetrics.start(projectJson)
             })
-            /*.then(() => {
+            .then(() => {
                 return ComputeOwnerMetrics.start(projectJson)
-            })*/
+            })
+            .catch(err => {
+                console.log(err)
+            });*/
+
+        return ComputeRecentMetrics.start(projectJson)
+            .then(() => {
+                return ComputeOwnerMetrics.start(projectJson)
+            })
             .catch(err => {
                 console.log(err)
             });

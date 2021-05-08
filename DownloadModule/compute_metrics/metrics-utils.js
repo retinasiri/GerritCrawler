@@ -58,16 +58,18 @@ function isABot(accountId, projectName) {
     return bot;
 }*/
 
-function getBotAccountFromConfig(projectName) {
+function getBotAccount(projectName) {
     let filename = projectName + "-bot-account.json";
-    let filePath = PathLibrary.join(Config.output_data_path, Config.project[projectName]["db_name"], filename)
+    let filePath = PathLibrary.join("..", "res", projectName, filename);
+    //return require(filePath);
+    //let filePath = PathLibrary.join(Config.output_data_path, Config.project[projectName]["db_name"], filename)
     //let botAccount = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     try {
         if (fs.existsSync(filePath)) {
             return require(filePath)
         }
     } catch (err) {
-        console.error(err)
+        console.error("Bot account" + err)
     }
     return {};
 }
@@ -76,7 +78,7 @@ function loadAllBotAccounts() {
     let project = Config.project;
     let allBotAccountJson = {};
     Object.keys(project).forEach(function (key) {
-        allBotAccountJson[key] = getBotAccountFromConfig(key);
+        allBotAccountJson[key] = getBotAccount(key);
     })
     return allBotAccountJson;
 }
@@ -107,7 +109,7 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
             //let NUM_CONCURRENCY = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
             let NUM_CONCURRENCY = 1;
             let NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUM_CONCURRENCY);
-            let STEP = 2000
+            let STEP = 5000
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
             let tasks = []

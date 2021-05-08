@@ -12,7 +12,9 @@ if (typeof require !== 'undefined' && require.main === module) {
     });
 }
 
-function startComputeMetrics(projectName) {
+function startComputeMetrics(projectJson) {
+    if (projectJson["projectName"])
+        projectName = projectJson["projectName"];
     return MetricsUtils.startComputeMetrics(projectName, "recent", function(json){
         return collectMetrics(json)
         //return Promise.resolve(true)

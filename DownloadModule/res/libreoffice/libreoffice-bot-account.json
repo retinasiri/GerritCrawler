@@ -1,0 +1,58 @@
+{
+  "1000239": {
+    "_account_id": 1000239,
+    "name": "Gerrit Buildbot for LibreOffice",
+    "username": "libreoffice-gerrit-buildbot"
+  },
+  "1000855": {
+    "_account_id": 1000855,
+    "name": "Jenkins",
+    "username": "ci"
+  },
+  "1001371": {
+    "_account_id": 1001371,
+    "name": "Pootle bot",
+    "username": "pootlebot"
+  },
+  "1001867": {
+    "_account_id": 1001867,
+    "name": "redacted",
+    "username": "AmbientLighter",
+    "inactive": true
+  },
+  "1001945": {
+    "_account_id": 1001945,
+    "name": "mrprobot",
+    "username": "mrprobot"
+  },
+  "1000811": {
+    "_account_id": 1000811,
+    "name": "test_jenkins_mac",
+    "email": "test_jenkins_mac@libreoffice.org",
+    "username": "test_jenkins_mac"
+  },
+  "1001944": {
+    "_account_id": 1001944,
+    "name": "libreoffice lhm",
+    "email": "libreoffice.lhm@gmail.com",
+    "username": "libreoffice.lhm"
+  },
+  "1000018": {
+    "_account_id": 1000018,
+    "name": "libreoffice buildbot2",
+    "email": "libreoffice@lists.freedesktop.org",
+    "username": "lobuildbot2"
+  },
+  "1000047": {
+    "_account_id": 1000047,
+    "name": "LibreOffice gerrit bot",
+    "email": "gerrit@libreoffice.org",
+    "username": "logerritbot"
+  },
+  "1002181": {
+    "_account_id": 1002181,
+    "name": "Jenkins CollaboraOffice",
+    "email": "jenkinscollaboraoffice@gmail.com",
+    "username": "JenkinsCollabora"
+  }
+}

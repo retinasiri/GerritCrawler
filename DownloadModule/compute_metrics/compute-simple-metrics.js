@@ -150,7 +150,7 @@ async function collectMetrics(json) {
  * @param {JSON} metric Output Json
  */
 function collectIdentityMetrics(json, metric) {
-    metric["n"] = i;
+    metric["n"] = i++;
     metric["number"] = json._number;
     metric["id"] = json.id;
     metric["change_id"] = json.change_id;

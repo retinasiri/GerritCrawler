@@ -1,0 +1,97 @@
+{
+  "1000060": {
+    "_account_id": 1000060,
+    "name": "Qt Continuous Integration System",
+    "username": "qtintegration"
+  },
+  "1001930": {
+    "_account_id": 1001930,
+    "name": "Qt Build Bot",
+    "username": "build_bot"
+  },
+  "1004502": {
+    "_account_id": 1004502,
+    "name": "Qt Bot",
+    "username": "torarnv-bot"
+  },
+  "1005281": {
+    "_account_id": 1005281,
+    "name": "Qt Sanity Bot",
+    "username": "qt_sanity_bot_actor"
+  },
+  "1006935": {
+    "_account_id": 1006935,
+    "name": "Qt CMake Build Bot",
+    "username": "qtcmakebuildbot"
+  },
+  "1006849": {
+    "_account_id": 1006849,
+    "name": "Qt CI Test Bot",
+    "username": "qt_citest_bot"
+  },
+  "1000049": {
+    "_account_id": 1000049,
+    "name": "Qt Sanity Bot",
+    "email": "qt_sanitybot@qt-project.org",
+    "username": "qt_sanity_bot"
+  },
+  "1000191": {
+    "_account_id": 1000191,
+    "name": "Qt Submodule Update Bot",
+    "email": "qt_submodule_update_bot@qt-project.org",
+    "username": "qt_submodule_update_bot"
+  },
+  "1002169": {
+    "_account_id": 1002169,
+    "name": "Qt Doc Bot",
+    "email": "qt_docbot@qt-project.org",
+    "username": "qt_docbot"
+  },
+  "1002965": {
+    "_account_id": 1002965,
+    "name": "Qt Cleanup Bot",
+    "email": "qt_cleanupbot@qt-project.org",
+    "username": "qt_cleanup_bot"
+  },
+  "1003699": {
+    "_account_id": 1003699,
+    "name": "Qt CI Bot",
+    "email": "qt_ci_bot@qt-project.org",
+    "username": "qt_ci_bot"
+  },
+  "1004685": {
+    "_account_id": 1004685,
+    "name": "Qt LanceBot",
+    "email": "qt_lancebot@qt.io",
+    "username": "qt_lancebot"
+  },
+  "1005999": {
+    "_account_id": 1005999,
+    "name": "Qt Forward Merge Bot",
+    "email": "qt_forward_merge_bot@qt-project.org",
+    "username": "qt_forward_merge_bot"
+  },
+  "1006315": {
+    "_account_id": 1006315,
+    "name": "Qt3dStudioBot",
+    "email": "qt3dstudiogerritwatcher@gmail.com",
+    "username": "qt3dstudiotestbot"
+  },
+  "1006897": {
+    "_account_id": 1006897,
+    "name": "Qbs CI Bot",
+    "email": "travis-bot@weickelt.de",
+    "username": "travis-bot"
+  },
+  "1007413": {
+    "_account_id": 1007413,
+    "name": "Qt Cherry-pick Bot",
+    "email": "cherrypick_bot@qt-project.org",
+    "username": "cherrypickbot"
+  },
+  "1006162": {
+    "_account_id": 1006162,
+    "name": "Qt Wayland Headless Tests Bot",
+    "username": "qtwaylandtest"
+  }
+}
