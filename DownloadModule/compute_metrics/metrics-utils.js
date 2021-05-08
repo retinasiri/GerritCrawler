@@ -109,14 +109,16 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
             //let NUM_CONCURRENCY = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
             let NUM_CONCURRENCY = 1;
             //let NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUM_CONCURRENCY);
-            let NUM_OF_CHANGES_LIMIT = count;
+            let NUM_OF_CHANGES_LIMIT = 1000;
             //let STEP = 100
-            console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
+            //console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
             let tasks = []
             for (let i = 0; i < NUM_CONCURRENCY; i++) {
-                let skip = NUM_OF_CHANGES_LIMIT * i;
-                //let skip = 17700;
+                //let skip = NUM_OF_CHANGES_LIMIT * i;
+                let skip = 25000;
+                NUM_OF_CHANGES_LIMIT = 50000;
+                console.log("Processing metrics from " + skip + " to " + NUM_OF_CHANGES_LIMIT);
                 let t = getChanges(skip, NUM_OF_CHANGES_LIMIT,
                     Project, MetricsJson, progressBar, collectMetrics);
                 tasks.push(t);
@@ -163,9 +165,9 @@ function getChanges(skip, NUM_OF_CHANGES_LIMIT, Project, MetricsJson, progressBa
             else
                 return Promise.resolve(true);
         })
-        .then(result => {
+        /*.then(result => {
             return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
-        })
+        })*/
         .catch(err => {
             console.log(err)
         });
