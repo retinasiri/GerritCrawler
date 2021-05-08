@@ -77,7 +77,7 @@ function startComputeMetrics(json) {
 function getChanges(skip) {
     return Change
         .aggregate([
-            {$sort: {_number: 1, created: 1}},
+            {$sort: {updated: 1, _number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
         ])

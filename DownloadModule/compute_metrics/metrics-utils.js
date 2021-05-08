@@ -115,8 +115,8 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
             let tasks = []
             for (let i = 0; i < NUM_CONCURRENCY; i++) {
                 //let skip = NUM_OF_CHANGES_LIMIT * i;
-                let skip = 20000;
-                NUM_OF_CHANGES_LIMIT = 25000;
+                let skip = 17000;
+                NUM_OF_CHANGES_LIMIT = 20000;
                 console.log("Processing metrics from " + skip + " to " + NUM_OF_CHANGES_LIMIT);
                 let t = getChanges(skip, NUM_OF_CHANGES_LIMIT,
                     Project, MetricsJson, progressBar, collectMetrics);
@@ -148,12 +148,12 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
 }
 
 //get changes id
-function getChanges(skip, NUM_OF_CHANGES_LIMIT, Project, MetricsJson, progressBar, collectMetrics) {
+function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetrics) {
     return Change
         .aggregate([
-            {$sort: {_number: 1, created: 1}},
+            {$sort: {updated: 1, _number: 1}},
             {$skip: skip},
-            {$limit: NUM_OF_CHANGES_LIMIT}
+            {$limit: step}
         ])
         .allowDiskUse(true)
         .exec()
@@ -166,7 +166,16 @@ function getChanges(skip, NUM_OF_CHANGES_LIMIT, Project, MetricsJson, progressBa
                 return Promise.resolve(true);
         })
         /*.then(result => {
-            return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
+            /*if (result)
+                if ((skip + step) < max) {
+                    return getChanges(skip + step, step, max, Project, MetricsJson, progressBar, collectMetrics)
+                } else {
+                    return getChanges(skip + step, max, max, Project, MetricsJson, progressBar, collectMetrics)
+                    //return Promise.resolve(false)
+                }
+            else
+                return Promise.resolve(false)*//*
+            return result ? getChanges(skip + step) : Promise.resolve(false);
         })*/
         .catch(err => {
             console.log(err)
