@@ -109,7 +109,7 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
             //let NUM_CONCURRENCY = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
             let NUM_CONCURRENCY = 1;
             //let NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUM_CONCURRENCY);
-            let NUM_OF_CHANGES_LIMIT = count;
+            let NUM_OF_CHANGES_LIMIT = 10000;
             //let STEP = 100
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
@@ -149,7 +149,7 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
 function getChanges(skip, NUM_OF_CHANGES_LIMIT, Project, MetricsJson, progressBar, collectMetrics) {
     return Change
         .aggregate([
-            {$sort: {_number: 1, created: 1}},
+            {$sort: {_number: -1, created: -1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
         ])
@@ -207,7 +207,7 @@ function getChanges(skip, NUM_OF_CHANGES_LIMIT, Project, MetricsJson, progressBa
         });
 }*/
 
-async function collectDocs(docs, Project, MetricsJson, progressBar, collectMetrics) {
+/*async function collectDocs(docs, Project, MetricsJson, progressBar, collectMetrics) {
     let NUMBER_OF_CONCURRENT_OPERATIONS = Utils.getCPUCount();
     //let NUMBER_OF_CONCURRENT_OPERATIONS = 1;
     let tasks = [];
@@ -227,7 +227,20 @@ async function collectDocs(docs, Project, MetricsJson, progressBar, collectMetri
         }
     }
     return Promise.resolve(true);
+}*/
+
+async function collectDocs(docs, Project, MetricsJson, progressBar, collectMetrics) {
+    if (!docs)
+        return Promise.resolve(true);
+    for (let key in docs) {
+        await collectMetrics(docs[key])
+            .then((json) => {
+                return saveMetrics(json, Project, MetricsJson, progressBar);
+            })
+    }
+    return Promise.resolve(true);
 }
+
 
 function saveMetrics(json, Project, MetricsJson, progressBar) {
     return Metrics.updateOne({id: json.id}, json, {upsert: true}).then(() => {
