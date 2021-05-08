@@ -123,7 +123,7 @@ function startComputeMetrics(projectName, metricsType, collectMetrics) {
                     Project, MetricsJson, progressBar, collectMetrics);
                 tasks.push(t);
             }
-            progressBar.start((skip + NUM_OF_CHANGES_LIMIT), 0);
+            progressBar.start((MathJs.abs(skip - NUM_OF_CHANGES_LIMIT)), 0);
             //return getChanges(0, 1000, Project, MetricsJson, progressBar, collectMetrics)
             return Promise.all(tasks);
         })
