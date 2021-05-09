@@ -119,7 +119,7 @@ function startComputeMetrics(projectName, start, end, metricsType, collectMetric
                 NUM_OF_CHANGES_LIMIT = end - start;
             }
             console.log("Processing changes from " + skip + " to " + last);
-            progressBar.start(skip, last);
+            progressBar.start(last, skip);
             return getChanges(skip, NUM_OF_CHANGES_LIMIT, Project, MetricsJson, progressBar, collectMetrics);
         })
         .then(() => {
