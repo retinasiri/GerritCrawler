@@ -63,7 +63,7 @@ function startComputeMetrics(json) {
             metricsJson = null;
             progressBar.stop();
             console.log("Finished !!!!");
-            return Database.freeMemory();
+            //return Database.freeMemory();
         })
         .then(() => {
             return Database.closeConnection();

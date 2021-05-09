@@ -5,6 +5,8 @@ const MetricsUtils = require('./metrics-utils');
 
 let NUM_DAYS_FOR_RECENT = 120;
 let projectName = "libreoffice";
+let start = 0;
+let end = 10000;
 
 if (typeof require !== 'undefined' && require.main === module) {
     startComputeMetrics(projectName).catch(err => {
@@ -15,7 +17,12 @@ if (typeof require !== 'undefined' && require.main === module) {
 function startComputeMetrics(projectJson) {
     if (projectJson["projectName"])
         projectName = projectJson["projectName"];
-    return MetricsUtils.startComputeMetrics(projectName, "recent", function(json){
+    if (projectJson["start"])
+        start = projectJson["start"];
+    if (projectJson["end"])
+        end = projectJson["end"];
+
+    return MetricsUtils.startComputeMetrics(projectName, start, end, "recent", function (json) {
         return collectMetrics(json)
         //return Promise.resolve(true)
     });

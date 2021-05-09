@@ -55,6 +55,16 @@ function main() {
         }, function (argv) {
             buildGraph(argv)
         })
+        .option('start', {
+            alias: 's',
+            type: 'number',
+            description: 'start of code changes processing'
+        })
+        .option('end', {
+            alias: 'e',
+            type: 'number',
+            description: 'end of of code changes processing'
+        })
         .help()
         .alias('help', 'h')
         .demandCommand()
@@ -63,10 +73,27 @@ function main() {
 }
 
 function prepareCommand(argv) {
+
+    //console.log(argv)
+
     let projectName = argv.project;
+    let start = argv.start;
+    let end = argv.end;
     let json = {}
     if (Config.project[projectName])
-        json = Utils.getProjectParameters(projectName);
+        if(start !== undefined && end !== undefined ){
+            if(start < end){
+                json = Utils.getProjectParameters(projectName);
+                json["start"] = start;
+                json["end"] = end;
+                //console.log("good");
+            } else{
+                console.log("the end should be greater than the start");
+            }
+        } else{
+            json = Utils.getProjectParameters(projectName);
+            //console.log("not so good");
+        }
     else {
         console.log("The project you request hasn't been found on the config file. You can edit the Config.json file and add information about this project")
         return
