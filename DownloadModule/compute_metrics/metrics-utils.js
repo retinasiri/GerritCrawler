@@ -112,14 +112,12 @@ function startComputeMetrics(projectName, start, end, metricsType, collectMetric
             //let NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUM_CONCURRENCY);
             let skip = 0;
             let NUM_OF_CHANGES_LIMIT = 1000;
-            let last = 1000;
             if (start !== undefined && end !== undefined) {
                 skip = start;
-                last = end;
                 NUM_OF_CHANGES_LIMIT = end - start;
             }
-            console.log("Processing changes from " + skip + " to " + last);
-            progressBar.start(last, skip);
+            console.log("Processing changes from " + skip + " to " + (NUM_OF_CHANGES_LIMIT + start));
+            progressBar.start(NUM_OF_CHANGES_LIMIT, 0);
             return getChanges(skip, NUM_OF_CHANGES_LIMIT, Project, MetricsJson, progressBar, collectMetrics);
         })
         .then(() => {
