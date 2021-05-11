@@ -5,7 +5,7 @@ var MetricsSchema = new Schema({
 
     //identification
     n: String,
-    number: String,
+    number: String,//number
     id: String,
     change_id: String,
     status: String,

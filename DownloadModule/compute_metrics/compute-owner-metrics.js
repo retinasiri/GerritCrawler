@@ -985,11 +985,10 @@ function getOwnerAndReviewerCommonsChangesAndMessages(json) {
             $group: {
                 _id: "$reviewers.REVIEWER._account_id",
                 id: {$addToSet: "$id"},
-                messages: {$push: "$messages"},
-                count: {$sum: 1}
+                messages: {$sum: 1},
             }
         },
-        {$project: {_id: "$_id", changes_count: {$size: "$id"}, messages_count: {$size: "$messages"}, count: 1}},
+        {$project: {_id: "$_id", changes_count: {$size: "$id"}, messages_count:  "$messages"}},
         {
             $group: {
                 _id: 1,
@@ -1031,11 +1030,10 @@ function getOwnerChangesCountAndMessagesCountWithSameReviewers(json) {
             $group: {
                 _id: "$reviewers.REVIEWER._account_id",
                 id: {$addToSet: "$id"},
-                messages: {$push: "$messages"},
-                count: {$sum: 1}
+                messages: {$sum: 1},
             }
         },
-        {$project: {_id: "$_id", changes_count: {$size: "$id"}, messages_count: {$size: "$messages"}, count: 1}},
+        {$project: {_id: "$_id", changes_count: {$size: "$id"}, messages_count: "$messages"}},
         {
             $group: {
                 _id: 1,
