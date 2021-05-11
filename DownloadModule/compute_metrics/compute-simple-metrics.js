@@ -45,7 +45,8 @@ function startComputeMetrics(json) {
             return Change.estimatedDocumentCount({});
         })
         .then((count) => {
-            NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
+            //NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
+            NUM_OF_CHANGES_LIMIT = 10000;
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
             return getChanges(STARTING_POINT);
