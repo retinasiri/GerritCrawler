@@ -31,7 +31,11 @@ async function collectMetrics(json) {
         metric["number"] = json._number;
         metric["id"] = json.id;
         Object.keys(values).forEach(function (key) {
-            metric[key] = values[key];
+            if (values[key] === null) {
+                metric[key] = 0;
+            } else {
+                metric[key] = values[key];
+            }
         })
         let changesTimeInfo = getChangesTimeInfo(json, values.priorMergedChangesCount, values.priorAbandonedChangesCount)
         let task = Promise.resolve(metric);
@@ -41,7 +45,11 @@ async function collectMetrics(json) {
         let values = results[0];
         let metric = results[1];
         Object.keys(values).forEach(function (key) {
-            metric[key] = values[key];
+            if (values[key] === null) {
+                metric[key] = 0;
+            } else {
+                metric[key] = values[key];
+            }
         })
         return Promise.resolve(metric);
     });
