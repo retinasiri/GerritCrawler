@@ -4,8 +4,8 @@ var Schema = mongoose.Schema;
 var MetricsSchema = new Schema({
 
     //identification
-    n: String,
-    number: String,//number
+    n: Number,
+    number: Number,//number
     id: String,
     change_id: String,
     status: String,
