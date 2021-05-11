@@ -143,10 +143,7 @@ function computeMetrics(argv) {
                 console.log(err)
             });*/
 
-        return ComputeRecentMetrics.start(projectJson)
-            .then(() => {
-                return ComputeOwnerMetrics.start(projectJson)
-            })
+        return ComputeOwnerMetrics.start(projectJson)
             .catch(err => {
                 console.log(err)
             });
