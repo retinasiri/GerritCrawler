@@ -174,7 +174,7 @@ async function collectDocs(docs, Project, MetricsJson, progressBar, collectMetri
     if (!docs)
         return Promise.resolve(true);
     for (let key in docs) {
-        console.log("docs._number : " + docs[key]._number);
+        //console.log("docs._number : " + docs[key]._number);
         await collectMetrics(docs[key])
             .then((json) => {
                 return saveMetrics(json, Project, MetricsJson, progressBar);
