@@ -146,7 +146,8 @@ function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetric
     return Change
         .aggregate([
             //{$match: {priorChangesCount : {$exists : false}}},
-            {$sort: {updated: 1, _number: 1}},
+            //{$sort: {updated: 1, _number: 1}},
+            {$sort: {_number: 1}},
             {$skip: skip},
             {$limit: step}
         ])
