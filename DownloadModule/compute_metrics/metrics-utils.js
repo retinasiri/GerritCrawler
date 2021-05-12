@@ -155,8 +155,10 @@ function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetric
         .then(docs => {
             if (!docs)
                 return Promise.resolve(false)
-            if (docs.length)
+            if (docs.length){
+                console.log("docs._number : " + docs._number);
                 return collectDocs(docs, Project, MetricsJson, progressBar, collectMetrics);
+            }
             else
                 return Promise.resolve(true);
         })
