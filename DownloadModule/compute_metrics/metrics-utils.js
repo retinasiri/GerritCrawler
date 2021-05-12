@@ -145,9 +145,10 @@ function startComputeMetrics(projectName, start, end, metricsType, collectMetric
 function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetrics) {
     return Change
         .aggregate([
-            {$sort: {updated: 1, _number: 1}},
-            {$skip: skip},
-            {$limit: step}
+            {$match: {priorChangesCount : {$exists : false}}},
+            //{$sort: {updated: 1, _number: 1}},
+            //{$skip: skip},
+            //{$limit: step}
         ])
         .allowDiskUse(true)
         .exec()
