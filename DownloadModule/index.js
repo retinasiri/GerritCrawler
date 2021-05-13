@@ -6,6 +6,7 @@ const AddChangesInDB = require('./prepare_code_change/add-code-change-in-db');
 const ComputeSimpleMetrics = require('./compute_metrics/compute-simple-metrics');
 const ComputeOwnerMetrics = require('./compute_metrics/compute-owner-metrics');
 const ComputeRecentMetrics = require('./compute_metrics/compute-recent-metrics');
+const ExtractMetrics = require('./compute_metrics/extract-metrics');
 const CollectGraph = require('./prepare_code_change/collect-graph');
 const Config = require('./config');
 const Yargs = require('yargs');
@@ -45,6 +46,15 @@ function main() {
             }
         }, function (argv) {
             computeMetrics(argv)
+        })
+        .command('extract [project]', 'Extract the metrics of a project.', {
+            project: {
+                description: 'The project from which metrics of codes changes are computed',
+                alias: 'p',
+                type: 'string',
+            }
+        }, function (argv) {
+            extractMetrics(argv)
         })
         .command('buildGraph [project]', 'Build the graph of accounts in the project.', {
             project: {
@@ -129,6 +139,15 @@ function buildGraph(argv) {
             });
 }
 
+function extractMetrics(argv) {
+    let projectJson = prepareCommand(argv);
+    if (projectJson)
+        return ExtractMetrics.start(projectJson)
+            .catch(err => {
+                console.log(err)
+            });
+}
+
 function computeMetrics(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
@@ -143,7 +162,7 @@ function computeMetrics(argv) {
                 console.log(err)
             });*/
 
-        return ComputeOwnerMetrics.start(projectJson)
+        return ComputeSimpleMetrics.start(projectJson)
             .catch(err => {
                 console.log(err)
             });

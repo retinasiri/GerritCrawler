@@ -8,6 +8,7 @@ const Utils = require('../config/utils');
 const Extension = require('../res/extension.json');
 const Keywords = require('../res/keywords.json');
 const MetricsUtils = require('./metrics-utils');
+
 const progressBar = new cliProgress.SingleBar({
     barCompleteChar: '#',
     barIncompleteChar: '-',
@@ -211,6 +212,9 @@ function collectFileMetrics(json, metric) {
     metric["num_data_language"] = fileInfo.num_data_language;
     metric["num_prose_language"] = fileInfo.num_prose_language;
     metric["num_markup_language"] = fileInfo.num_markup_language;
+    metric["first_revision_insertions"] = fileInfo.first_revision_insertions;
+    metric["first_revision_deletions"] = fileInfo.first_revision_deletions;
+    metric["first_revision"] = fileInfo.first_revision;
 }
 
 /**
@@ -462,42 +466,53 @@ function get_changes_files_modified(json) {
     }
 }
 
+function initFileInfoData() {
+    return {
+        num_files: 0,
+        num_files_type: 0,
+        num_file_added: 0,
+        num_file_deleted: 0,
+        num_binary_file: 0,
+        num_directory: 0,
+        num_programming_language: 0,
+        first_revision_insertions: 0,
+        first_revision_deletions: 0,
+        modify_entropy: 0,
+        num_markup_language: 0,
+        num_data_language: 0,
+        num_prose_language: 0,
+        first_revision: 0,
+    }
+}
+
 
 function get_files_info(json) {
 
     let revisions = json.revisions
-    let fileInfo = {};
+    let fileInfo = initFileInfoData();
     let filesJson = {};
     let filesExtJson = {};
     let directoryJson = {};
     let addFiles = [];
     let removeFiles = [];
-
-    fileInfo.num_files = 0;
-    fileInfo.num_files_type = 0;
-    fileInfo.num_file_added = 0;
-    fileInfo.num_file_deleted = 0;
-    fileInfo.num_binary_file = 0;
-    fileInfo.num_programming_language = 0;
-
-    //let insertions = json.insertions;
-    //let deletions = json.deletions;
-    //let som = insertions + deletions
     let modificationArray = [];
     let entropyArray = [];
-
-    fileInfo.modify_entropy = 0;
+    fileInfo.first_revision = 1000000000000;
 
     for (let key in revisions) {
 
         //Get only the first revision
         let revision_number = revisions[key]._number;
+
+        if(fileInfo.first_revision > revision_number){
+            fileInfo.first_revision = revision_number;
+        }
+
         if (revision_number !== 1)
             continue;
 
         let files = revisions[key].files;
-        let num_lines_added_for_all_files = 0;
-        let num_lines_deleted_for_all_files = 0;
+
         for (let index in files) {
             let status = files[index].status;
             let filename = files[index];
@@ -512,35 +527,23 @@ function get_files_info(json) {
                     }
                 }
             }
+
             if (files[index].binary)
                 if (files[index].binary === true)
                     fileInfo.num_binary_file++;
 
             let ext = index.substr(index.lastIndexOf('.') + 1);
-            if (filesExtJson[ext]) {
-                filesExtJson[ext] = filesExtJson[ext] + 1;
-            } else {
-                filesExtJson[ext] = 1;
-            }
+            filesExtJson[ext] ? filesExtJson[ext] = filesExtJson[ext] + 1 : filesExtJson[ext] = 1;
 
             //count dir
             let dir = index.substr(0, index.lastIndexOf('/') + 1);
-            //console.log("dir : " + dir);
-            if (directoryJson[dir]) {
-                directoryJson[dir] = directoryJson[dir] + 1;
-            } else {
-                directoryJson[dir] = 1;
-            }
+            directoryJson[dir] ? directoryJson[dir] = directoryJson[dir] + 1 : directoryJson[dir] = 1;
 
             //count files
-            if (filesJson[index]) {
-                filesJson[index] = filesJson[index] + 1;
-            } else {
-                filesJson[index] = 1;
-            }
-
+            filesJson[index] ? filesJson[index] = filesJson[index] + 1 : filesJson[index] = 1;
+            fileInfo.first_revision_insertions += files[index].lines_inserted ? files[index].lines_inserted : 0;
+            fileInfo.first_revision_deletions += files[index].lines_deleted ? files[index].lines_deleted : 0;
             let number = plusFn(files[index].lines_inserted, files[index].lines_deleted);
-            //console.log("number" + number);
             modificationArray.push(number);
         }
 
@@ -556,7 +559,8 @@ function get_files_info(json) {
     fileInfo.num_file_deleted = Object.keys(removeFiles).length;
     fileInfo.num_directory = Object.keys(directoryJson).length;
     fileInfo.modify_entropy = average(entropyArray);
-
+    //fileInfo.insertions = insertions;
+    //fileInfo.deletions = deletions;
     fileInfo.num_programming_language = get_num_of_language(filesExtJson);
     fileInfo.num_markup_language = get_num_of_markup_type(filesExtJson);
     fileInfo.num_data_language = get_num_of_data_type(filesExtJson);

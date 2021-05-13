@@ -24,7 +24,7 @@ let DATA_PATH = "data/";
 
 let STARTING_POINT = 0;
 let NUM_DAYS_FOR_RECENT = 365;
-let NUM_OF_CHANGES_LIMIT = 100;
+let NUM_OF_CHANGES_LIMIT = 10000;
 let NUMBER_DATABASE_REQUEST = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
 let overAllGraphJson = {};
 let overAllFullConnectedGraphJson = {};
@@ -80,7 +80,7 @@ function start(json) {
 function getChanges(skip) {
     return Change
         .aggregate([
-            {$sort: {_number: 1}},
+            {$sort: {updated: 1, _number: 1}},
             {$project: {id: 1, created: 1, updated: 1, _number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
