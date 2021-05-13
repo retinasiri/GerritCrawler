@@ -185,12 +185,17 @@ def init_data(cid):
         "diff": "",
         "sum_loc": 0,
         "sum_complexity": 0,
+        "moy_loc": 0,
+        "moy_complexity": 0,
         "num_modify_modification": 0,
         "num_add_modification": 0,
         "num_copy_modification": 0,
         "num_delete_modification": 0,
         "num_rename_modification": 0,
         "num_unknown_modification": 0,
+        "num_segs_added": 0,
+        "num_segs_deleted": 0,
+        "num_segs_modify": 0,
     }
 
 

@@ -1,6 +1,8 @@
 from utils import SlowBar as SlowBar
 import networkx as nx
 import json
+import utils
+import dbutils
 
 # todo multithread the collection of graph metrics
 # todo save the graph then compute
@@ -11,15 +13,34 @@ STARTING_POINT = 0
 DATA_DIR_PATH = "data/"
 PROJET_NAME = "libreoffice"
 OUTPUT_FILE = PROJET_NAME + "-graph-metrics.json"
-GRAPH_LIST = "/Volumes/SEAGATE-II/Data/libreoffice/libreoffice-changes-commit-and-fetch.json"
+GRAPH_LIST_PATH = "/Volumes/SEAGATE-II/Data/libreoffice/libreoffice-graph.json"
 
-
-bar = SlowBar('Processing Graph Metrics')
 #G = nx.Graph()
 graph_metrics = {};
 
+def start(json):
+    
+    global PROJET_NAME
+    PROJET_NAME = json["project_name"]
+
+    global DATA_DIR_PATH
+    DATA_DIR_PATH = json["output_data_path"]
+
+    global GRAPH_LIST_PATH
+    GRAPH_LIST_PATH = utils.get_graph_list(PROJET_NAME, DATA_DIR_PATH)
+
+    global OUTPUT_FILE
+    OUTPUT_FILE = PROJET_NAME + "-graph-metrics.json"
+
+    global Database
+    Database = dbutils.getDatabaseFromJson(json)
+
+    return processChanges(GRAPH_LIST_PATH, DATA_DIR_PATH)
+
+
 
 def processChanges(graph_list_path, data_dir_path):
+    bar = SlowBar('Processing Graph Metrics')
     graphList = load_json(graph_list_path)
     bar.max = len(graphList)
     for i in graphList:

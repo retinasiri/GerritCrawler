@@ -29,4 +29,11 @@ def get_changes_list_and_commit(projectName, output_dir):
     filename = projectName + "-changes-commit-and-fetch.json"
     return os.path.join(output_dir, projectName, filename)
 
+def get_graph_list(projectName, output_dir):
+    filename = projectName + "-graph.json"
+    return os.path.join(output_dir, projectName, filename)
+
+def get_full_graph_list(projectName, output_dir):
+    filename = projectName + "-full-connected-graph.json"
+    return os.path.join(output_dir, projectName, filename)
 
