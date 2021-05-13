@@ -81,7 +81,7 @@ function getChanges(skip) {
     return Change
         .aggregate([
             {$sort: {updated: 1, _number: 1}},
-            {$project: {id: 1, created: 1, updated: 1, _number: 1}},
+            {$project: {id: 1, created: 1, updated: 1, _number: 1, owner:1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
         ])
