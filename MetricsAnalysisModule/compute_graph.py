@@ -14,6 +14,7 @@ DATA_DIR_PATH = "data/"
 PROJET_NAME = "libreoffice"
 OUTPUT_FILE = PROJET_NAME + "-graph-metrics.json"
 GRAPH_LIST_PATH = "/Volumes/SEAGATE-II/Data/libreoffice/libreoffice-graph.json"
+Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
 
 #G = nx.Graph()
 graph_metrics = {};
@@ -38,15 +39,16 @@ def start(json):
     return processChanges(GRAPH_LIST_PATH, DATA_DIR_PATH)
 
 
-
 def processChanges(graph_list_path, data_dir_path):
     bar = SlowBar('Processing Graph Metrics')
     graphList = load_json(graph_list_path)
     bar.max = len(graphList)
     for i in graphList:
         metric = get_graph_metrics(graphList[i])
-        mid = metric["id"]
-        graph_metrics[mid] = metric
+        if(metric is not None):
+            mid = metric["id"]
+            graph_metrics[mid] = metric
+            Database.save_metrics(metric)
         bar.next()
 
     save_metrics_file(graph_metrics, data_dir_path)
@@ -73,7 +75,7 @@ def get_graph_metrics(graph):
     nxgraph = build_nx_graph(graph)
     metrics = get_owner_graph_metrics(nxgraph, graph["id"], graph["owner_id"])
     #Database.save_metrics(metrics)
-    bar.next()
+    #bar.next()
     return metrics
 
 
@@ -111,4 +113,4 @@ def get_owner_graph_metrics(G, id, owner_id):
 
 
 if __name__ == '__main__':
-    processChanges(GRAPH_LIST, DATA_DIR_PATH)
+    processChanges(GRAPH_LIST_PATH, DATA_DIR_PATH)
