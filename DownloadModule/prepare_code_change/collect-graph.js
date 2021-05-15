@@ -54,7 +54,7 @@ function start(json) {
             return Change.estimatedDocumentCount({});
         })
         .then((count) => {
-            NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
+            //NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
             return getChanges(STARTING_POINT);
@@ -81,7 +81,7 @@ function getChanges(skip) {
     return Change
         .aggregate([
             {$sort: {updated: 1, _number: 1}},
-            {$project: {id: 1, created: 1, updated: 1, _number: 1, owner:1}},
+            {$project: {id: 1, created: 1, updated: 1, _number: 1, owner: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
         ])
@@ -115,21 +115,27 @@ function updateProgress() {
 }
 
 async function collectGraph(json) {
-    return getPriorChanges(json).then((result) => {
-        let graph = result[0];
-        let fullConnectedGraph = result[1];
-        let id = json.id;
-        overAllGraphJson[id] = graph;
-        overAllFullConnectedGraphJson[id] = fullConnectedGraph;
-        return Promise.resolve(true)
-    });
+    return getPriorChanges(json)
+        .then((result) => {
+            let graph = result[0];
+            let fullConnectedGraph = result[1];
+            let id = json.id;
+            overAllGraphJson[id] = graph;
+            overAllFullConnectedGraphJson[id] = fullConnectedGraph;
+            return Promise.resolve(true)
+        });
 }
 
 function getPriorChanges(json) {
+    return getPriorChangesFromDB(0, json);
+}
+
+function getPriorChangesFromDB(skip, json){
     let id = json.id
     let owner = json.owner._account_id;
     let endDate = Moment(json.created).toDate().toISOString();
     let startDate = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').toDate().toISOString();
+
     let number = json._number;
     let pipeline = [
         {
@@ -141,11 +147,13 @@ function getPriorChanges(json) {
             }
         },
         {$project: {id: 1, owner_id: "$owner._account_id", reviewers_id: "$reviewers.REVIEWER._account_id"}},
+        {$skip: skip},
+        {$limit: 1000}
     ];
-    return dbRequest(pipeline, id, owner);
+    return dbRequest(pipeline, id, owner, skip);
 }
 
-function dbRequest(pipeline, id, owner) {
+function dbRequest(pipeline, id, owner, skip) {
     return Change
         .aggregate(pipeline)
         .allowDiskUse(true)
@@ -156,6 +164,9 @@ function dbRequest(pipeline, id, owner) {
             let t1 = buildGraph(docs, id, owner);
             let t2 = buildFullConnectedGraph(docs, id, owner);
             return Promise.all([t1, t2]);
+        })
+        .then(result => {
+            return result ? getPriorChangesFromDB(skip + 1000) : Promise.resolve(result);
         })
         .catch(err => {
             console.log(err)

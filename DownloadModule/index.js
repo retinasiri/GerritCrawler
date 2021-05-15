@@ -162,7 +162,7 @@ function computeMetrics(argv) {
                 console.log(err)
             });*/
 
-        return ComputeSimpleMetrics.start(projectJson)
+        return ComputeRecentMetrics.start(projectJson)
             .catch(err => {
                 console.log(err)
             });
