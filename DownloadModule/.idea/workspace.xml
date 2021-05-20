@@ -62,6 +62,23 @@
       <recent name="$PROJECT_DIR$/res" />
     </key>
   </component>
+  <component name="RunManager" selected="Node.js.index.js">
+    <configuration name="Unnamed" type="NodeJSConfigurationType" nameIsGenerated="true" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
+    <configuration name="index.js" type="NodeJSConfigurationType" temporary="true" application-parameters="buildGraph libreoffice" nameIsGenerated="true" path-to-js-file="index.js" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Node.js.Unnamed" />
+      <item itemvalue="Node.js.index.js" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Node.js.index.js" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -113,7 +130,7 @@
       <workItem from="1621174447076" duration="4218000" />
       <workItem from="1621295435156" duration="19345000" />
       <workItem from="1621357480963" duration="3910000" />
-      <workItem from="1621475499307" duration="2083000" />
+      <workItem from="1621475499307" duration="7288000" />
     </task>
     <task id="LOCAL-00001" summary="quick fix">
       <created>1620486385609</created>
@@ -161,6 +178,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="quick fix" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="104" y="62" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1621483481477">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="104" y="62" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1621483481477" />
     <state x="358" y="209" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1618506855491">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
@@ -178,6 +199,26 @@
       <screen x="0" y="23" width="1280" height="777" />
     </state>
     <state x="100" y="123" width="1080" height="577" key="DiffContextDialog/0.23.1280.777@0.23.1280.777" timestamp="1619979749894" />
+    <state width="1259" height="212" key="GridCell.Tab.0.bottom" timestamp="1621483667442">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state width="1259" height="212" key="GridCell.Tab.0.bottom/0.0.1280.800/0.-1057.1920.1057@0.0.1280.800" timestamp="1621483580482" />
+    <state width="1259" height="212" key="GridCell.Tab.0.bottom/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1621483667442" />
+    <state width="1259" height="212" key="GridCell.Tab.0.center" timestamp="1621483667440">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state width="1259" height="212" key="GridCell.Tab.0.center/0.0.1280.800/0.-1057.1920.1057@0.0.1280.800" timestamp="1621483580480" />
+    <state width="1259" height="212" key="GridCell.Tab.0.center/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1621483667440" />
+    <state width="1259" height="212" key="GridCell.Tab.0.left" timestamp="1621483667439">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state width="1259" height="212" key="GridCell.Tab.0.left/0.0.1280.800/0.-1057.1920.1057@0.0.1280.800" timestamp="1621483580479" />
+    <state width="1259" height="212" key="GridCell.Tab.0.left/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1621483667439" />
+    <state width="1259" height="212" key="GridCell.Tab.0.right" timestamp="1621483667441">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state width="1259" height="212" key="GridCell.Tab.0.right/0.0.1280.800/0.-1057.1920.1057@0.0.1280.800" timestamp="1621483580481" />
+    <state width="1259" height="212" key="GridCell.Tab.0.right/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1621483667441" />
     <state x="149" y="16" key="SettingsEditor" timestamp="1618548499532">
       <screen x="0" y="0" width="1280" height="800" />
     </state>

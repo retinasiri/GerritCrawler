@@ -119,12 +119,16 @@ async function collectDocs(docs) {
     if (!docs)
         return Promise.resolve(true);
     let previousJson = {};
+    let graph_list = {};
     for (let key in docs) {
-        await collectGraph(docs[key], previousJson)
-            .then(() => {
+        let previousGraph = await collectGraph(docs[key], previousJson, graph_list)
+            .then((result) => {
                 updateProgress();
+                //console.log(result)
+                return Promise.resolve(result);
             });
         previousJson = docs[key];
+        graph_list = previousGraph;
         //console.log("echo")
     }
     return Promise.resolve(true);
@@ -134,46 +138,65 @@ function updateProgress() {
     progressBar.increment(1);
 }
 
-let graph_list = {}
+//let graph_list = {}
+//let previous_graph_list = {}
 
-async function collectGraph(json, previousJson) {
+function buildChangeAccountInfoJson(json) {
+    let id = json.id
+    let owner_id = json.owner_id;
+    let number = json._number;
+    let reviewers_id = json.reviewers_id;
+    return {id: id, number: number, owner_id: owner_id, reviewers_id: reviewers_id}
+}
 
+async function collectGraph(json, previousJson, graph_list) {
+    return getIntermediaryUpdatedChanges(json, previousJson)
+        .then((hasChanged) => {
+            if (hasChanged) {
+                return getPriorChangesGraph(json, previousJson, graph_list);
+            } else {
+                let id = json.id
+                let changeAccountInfoJson = buildChangeAccountInfoJson(json);
+                //let path = PathLibrary.join(DATA_PATH, projectName, "changes-account");
+                //let t1 = Utils.saveJSONInFile(path, id, changeAccountInfoJson);
+                if (graph_list["changes"])
+                    graph_list["changes"][id] = changeAccountInfoJson;
+                //let t2 = Promise.resolve(graph_list);
+                return Promise.resolve(graph_list);
+                /*return Promise.all([t1, t2])
+                    .then((results) => {
+                        return Promise.resolve(results[1])
+                    });*/
+            }
+        })
+}
+function getPriorChangesGraph(json, previousJson, graph_list){
     return getPriorChanges(json)
         .then((results) => {
             let id = json.id
             let owner_id = json.owner_id;
-            let number = json._number;
+            let changeAccountInfoJson = buildChangeAccountInfoJson(json);
+            let path = PathLibrary.join(DATA_PATH, projectName, "changes-account");
             let t1 = buildGraph(results, id, owner_id);
             let t2 = buildFullConnectedGraph(results, id, owner_id);
             let t3 = getIntermediaryUpdatedChanges(json, previousJson)
-
-            let reviewers_id = json.reviewers_id;
-            if (reviewers_id)
-                reviewers_id = reviewers_id.filter(bot_filter);
-            else
-                reviewers_id = []
-
-            let changeAccountInfoJson = {id: id, number: number, owner_id: owner_id, reviewers_id: reviewers_id};
-            //overAllChangesAccountInfo[id] = changeAccountInfoJson;
             let t4 = Promise.resolve(changeAccountInfoJson);
-            let path = PathLibrary.join(DATA_PATH, projectName, "changes-account");
-            let t5 = Utils.saveJSONInFile(path, id, changeAccountInfoJson);
-
-            //delete results;
-            return Promise.all([t1, t2, t3, t4, t5]);
+            //let t5 = Utils.saveJSONInFile(path, id, changeAccountInfoJson);
+            //return Promise.all([t1, t2, t3, t4, t5]);
+            return Promise.all([t1, t2, t3, t4]);
         })
         .then((results) => {
+            let id = json.id;
             let graph = results[0];
             let fullConnectedGraph = results[1];
             let hasChanged = results[2];
             let changeAccountInfoJson = results[3];
             let suffix = "-" + NUM_DAYS_FOR_RECENT + "-days";
-            let path1 = PathLibrary.join(DATA_PATH, projectName, "changes-graph" + suffix);
-            let path2 = PathLibrary.join(DATA_PATH, projectName, "changes-full-connected-graph" + suffix);
+            //let path1 = PathLibrary.join(DATA_PATH, projectName, "changes-graph" + suffix);
+            //let path2 = PathLibrary.join(DATA_PATH, projectName, "changes-full-connected-graph" + suffix);
 
-            let id = json.id;
-            let t1 = Utils.saveJSONInFile(path1, id, graph);
-            let t2 = Utils.saveJSONInFile(path2, id, fullConnectedGraph);
+            //let t1 = Utils.saveJSONInFile(path1, id, graph);
+            //let t2 = Utils.saveJSONInFile(path2, id, fullConnectedGraph);
             //overAllGraphJson[id] = graph;
             //overAllFullConnectedGraphJson[id] = fullConnectedGraph;
 
@@ -181,34 +204,35 @@ async function collectGraph(json, previousJson) {
             let path3 = PathLibrary.join(DATA_PATH, projectName, "graph-list" + suffix);
             let t3 = Promise.resolve(true);
             if (hasChanged) {
-                //console.log(hasChanged)
-                graph_list[i] = {};
-                graph_list[i]["graph"] = graph;
-                graph_list[i]["full_connected_graph"] = fullConnectedGraph;
-                graph_list[i]["changes"] = {};
-                graph_list[i]["changes"][id] = changeAccountInfoJson;
+
                 if (i > 0) {
-                    let name = String(i - 1);
-                    t3 = Utils.saveJSONInFile(path3, name, graph_list[i - 1]);
+                    t3 = Utils.saveJSONInFile(path3, String(i - 1), graph_list);
                 }
                 i++;
-            } else {
-                if (i > 0) {
-                    let num = i - 1;
-                    //console.log(hasChanged + " : " + num)
-                    graph_list[num]["changes"][id] = changeAccountInfoJson;
-                }
-            }
 
-            //delete results
-            return Promise.all([t1, t2, t3]);
+                graph_list = {};
+                graph_list["graph"] = graph;
+                graph_list["full_connected_graph"] = fullConnectedGraph;
+                graph_list["changes"] = {};
+                graph_list["changes"][id] = changeAccountInfoJson;
+
+            } else {
+                if (graph_list["changes"])
+                    graph_list["changes"][id] = changeAccountInfoJson;
+            }
+            let t4 = Promise.resolve(graph_list)
+            //return Promise.all([t1, t2, t3, t4]);
+            return Promise.all([t3, t4]);
+        })
+        .then((results) => {
+            return Promise.resolve(results[1])
         })
         .catch(err => {
             console.log(err)
         });
 }
 
-function getIntermediaryUpdatedChanges(json, previousJson) {
+async function getIntermediaryUpdatedChanges(json, previousJson) {
     if (!previousJson)
         return true;
 
@@ -271,7 +295,7 @@ function getPriorChangesFromDB(skip, json, priorResults) {
         },
         {$project: {id: 1, owner_id: "$owner._account_id", reviewers_id: "$reviewers.REVIEWER._account_id"}},
         {$skip: skip},
-        {$limit: 3000}
+        {$limit: 2000}
     ];
     //console.log("startDate : " + startDate);
     //console.log("endDate : " + endDate);
