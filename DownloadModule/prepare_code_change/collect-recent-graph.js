@@ -77,7 +77,7 @@ function start(json) {
             let t3 = Utils.saveJSONInFile(path, name3, overAllChangesAccountInfo);
             return Promise.all([t1, t2, t3]);*/
 
-            let name = projectName + "-changes-graph-list";
+            let name = projectName + "-changes-graph-list-" + NUM_DAYS_FOR_RECENT + "-days";
             let path = PathLibrary.join(DATA_PATH, projectName);
             return Utils.saveJSONInFile(path, name, changes_graph_list);
         })
@@ -163,7 +163,7 @@ async function collectGraph(json, previousJson, graph_list) {
                 return getPriorChangesGraph(json, previousJson, graph_list);
             } else {
                 let id = json.id
-                let changeAccountInfoJson = buildChangeAccountInfoJson(json);
+                //let changeAccountInfoJson = buildChangeAccountInfoJson(json);
                 //let path = PathLibrary.join(DATA_PATH, projectName, "changes-account");
                 //let t1 = Utils.saveJSONInFile(path, id, changeAccountInfoJson);
                 /*if (graph_list["changes"])
@@ -186,19 +186,20 @@ function getPriorChangesGraph(json, previousJson, graph_list){
             //let changeAccountInfoJson = buildChangeAccountInfoJson(json);
             //let path = PathLibrary.join(DATA_PATH, projectName, "changes-account");
             let t1 = buildGraph(results, id, owner_id);
-            let t2 = buildFullConnectedGraph(results, id, owner_id);
+            //let t2 = buildFullConnectedGraph(results, id, owner_id);
             let t3 = getIntermediaryUpdatedChanges(json, previousJson)
             //let t4 = Promise.resolve(changeAccountInfoJson);
             //let t5 = Utils.saveJSONInFile(path, id, changeAccountInfoJson);
             //return Promise.all([t1, t2, t3, t4, t5]);
             //return Promise.all([t1, t2, t3, t4]);
-            return Promise.all([t1, t2, t3]);
+            //return Promise.all([t1, t2, t3]);
+            return Promise.all([t1, t3]);
         })
         .then((results) => {
             let id = json.id;
             let graph = results[0];
-            let fullConnectedGraph = results[1];
-            let hasChanged = results[2];
+            //let fullConnectedGraph = results[1];
+            let hasChanged = results[1];
             //let changeAccountInfoJson = results[3];
             let suffix = "-" + NUM_DAYS_FOR_RECENT + "-days";
             //let path1 = PathLibrary.join(DATA_PATH, projectName, "changes-graph" + suffix);
@@ -221,7 +222,7 @@ function getPriorChangesGraph(json, previousJson, graph_list){
 
                 graph_list = {};
                 graph_list["graph"] = graph;
-                graph_list["full_connected_graph"] = fullConnectedGraph;
+                //graph_list["full_connected_graph"] = fullConnectedGraph;
                 changes_graph_list[id] = i;
                 //graph_list["changes"] = {};
                 //graph_list["changes"][id] = changeAccountInfoJson;
