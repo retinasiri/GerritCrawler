@@ -26,9 +26,9 @@ let STARTING_POINT = 0;
 let NUM_DAYS_FOR_RECENT = 90;
 let NUM_OF_CHANGES_LIMIT = 10000;
 let NUMBER_DATABASE_REQUEST = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
-let overAllGraphJson = {};
-let overAllFullConnectedGraphJson = {};
-let overAllChangesAccountInfo = {};
+//let overAllGraphJson = {};
+//let overAllFullConnectedGraphJson = {};
+//let overAllChangesAccountInfo = {};
 let i = 0;
 
 //do reduce graph
@@ -65,7 +65,7 @@ function start(json) {
             progressBar.start(count, 0);
             return getChanges(STARTING_POINT);
         })
-        .then(() => {
+        /*.then(() => {
             let name1 = projectName + "-graph";
             let name2 = projectName + "-full-connected-graph";
             let name3 = projectName + "-changes-account-info";
@@ -74,7 +74,7 @@ function start(json) {
             let t2 = Utils.saveJSONInFile(path, name2, overAllFullConnectedGraphJson);
             let t3 = Utils.saveJSONInFile(path, name3, overAllChangesAccountInfo);
             return Promise.all([t1, t2, t3]);
-        })
+        })*/
         .then(() => {
             progressBar.stop();
             console.log("Finished!!!!");
@@ -121,10 +121,11 @@ async function collectDocs(docs) {
     let previousJson = {};
     for (let key in docs) {
         await collectGraph(docs[key], previousJson)
-            .then((result) => {
+            .then(() => {
                 updateProgress();
             });
         previousJson = docs[key];
+        console.log("echo")
     }
     return Promise.resolve(true);
 }
@@ -136,6 +137,7 @@ function updateProgress() {
 let graph_list = {}
 
 async function collectGraph(json, previousJson) {
+
     return getPriorChanges(json)
         .then((results) => {
             let id = json.id
@@ -152,11 +154,12 @@ async function collectGraph(json, previousJson) {
                 reviewers_id = []
 
             let changeAccountInfoJson = {id: id, number: number, owner_id: owner_id, reviewers_id: reviewers_id};
-            overAllChangesAccountInfo[id] = changeAccountInfoJson;
+            //overAllChangesAccountInfo[id] = changeAccountInfoJson;
             let t4 = Promise.resolve(changeAccountInfoJson);
             let path = PathLibrary.join(DATA_PATH, projectName, "changes-account");
             let t5 = Utils.saveJSONInFile(path, id, changeAccountInfoJson);
 
+            //delete results;
             return Promise.all([t1, t2, t3, t4, t5]);
         })
         .then((results) => {
@@ -171,8 +174,8 @@ async function collectGraph(json, previousJson) {
             let id = json.id;
             let t1 = Utils.saveJSONInFile(path1, id, graph);
             let t2 = Utils.saveJSONInFile(path2, id, fullConnectedGraph);
-            overAllGraphJson[id] = graph;
-            overAllFullConnectedGraphJson[id] = fullConnectedGraph;
+            //overAllGraphJson[id] = graph;
+            //overAllFullConnectedGraphJson[id] = fullConnectedGraph;
 
             //compare to the previous graph
             let path3 = PathLibrary.join(DATA_PATH, projectName, "graph-list" + suffix);
@@ -197,6 +200,7 @@ async function collectGraph(json, previousJson) {
                 }
             }
 
+            //delete results
             return Promise.all([t1, t2, t3]);
         })
         .catch(err => {
@@ -267,7 +271,7 @@ function getPriorChangesFromDB(skip, json, priorResults) {
         },
         {$project: {id: 1, owner_id: "$owner._account_id", reviewers_id: "$reviewers.REVIEWER._account_id"}},
         {$skip: skip},
-        {$limit: 1000}
+        {$limit: 3000}
     ];
     //console.log("startDate : " + startDate);
     //console.log("endDate : " + endDate);
