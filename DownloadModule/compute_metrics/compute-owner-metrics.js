@@ -181,7 +181,7 @@ function dbRequest(pipeline) {
 }
 
 function getPriorTypeChangesCount(json, TYPE) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let pipeline = [
         {$match: {status: TYPE, _number: {$lt: number}, updated: {$lte: created_date}}},
@@ -210,7 +210,7 @@ function getOwnerPriorChangesCount(json) {
 }
 
 function getOwnerPriorTypeChangesCount(json, TYPE) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let ownerId = json.owner._account_id;
     let pipeline = [{
@@ -242,7 +242,7 @@ function getPriorSubsystemChangesCount(json) {
 }
 
 function getPriorSubsystemTypeChangesCount(json, TYPE) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let project = json.project;
     let pipeline = [{
@@ -275,7 +275,7 @@ function getPriorSubsystemOwnerChangesCount(json) {
 }
 
 function getPriorSubsystemOwnerTypeChangesCount(json, TYPE) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let project = json.project;
     let ownerId = json.owner._account_id;
@@ -546,7 +546,7 @@ function getProject() {
 }
 
 function getPriorChangeMeanTimeType(json, TYPE) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let match = {
         $match: {
@@ -573,7 +573,7 @@ function getPriorChangeMeanTimeType(json, TYPE) {
 }
 
 function getPriorOwnerChangesMeanTimeType(json, TYPE) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let ownerId = json.owner._account_id;
     let number = json._number;
     let project = getProject();
@@ -603,7 +603,7 @@ function getPriorOwnerChangesMeanTimeType(json, TYPE) {
 
 //exclude bot in reviewersIdArray
 function getReviewersChangesMeanNumType(json, TYPE, count) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let reviewersIdArray = MetricsUtils.getHumanReviewersID(json, projectName) ? MetricsUtils.getHumanReviewersID(json, projectName) : [];
     let match = {
@@ -730,7 +730,7 @@ function get_file_pipeline(match, files_list) {
 }
 
 function getFileTimeAndCount(json, TYPE) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let files_list = json.files_list ? json.files_list : [];
     let match = {
@@ -746,7 +746,7 @@ function getFileTimeAndCount(json, TYPE) {
 }
 
 function getFileTimeAndCountForOwner(json, TYPE) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let ownerId = json.owner._account_id;
     let number = json._number;
     let files_list = json.files_list ? json.files_list : [];
@@ -765,7 +765,7 @@ function getFileTimeAndCountForOwner(json, TYPE) {
 
 //reviewer
 function getFileTimeAndCountForReviewers(json, TYPE) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let files_list = json.files_list;
     let reviewersIdArray = MetricsUtils.getHumanReviewersID(json, projectName) ? MetricsUtils.getHumanReviewersID(json, projectName) : [];
@@ -819,7 +819,7 @@ function getFileTimeAndCountForReviewers(json, TYPE) {
 //install server
 
 function getOwnerNumberOfRevision(json, TYPE) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let ownerId = json.owner._account_id;
     let match = {
@@ -847,7 +847,7 @@ function getOwnerNumberOfRevision(json, TYPE) {
 }
 
 function getOwnerNumberOfReview(json, TYPE) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let ownerId = json.owner._account_id;
     let match = {
@@ -868,7 +868,7 @@ function getOwnerNumberOfReview(json, TYPE) {
 }
 
 function getFileDeveloperNumber(json, TYPE) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let files_list = json.files_list ? json.files_list : [];
     let match = {
@@ -894,7 +894,7 @@ function getFileDeveloperNumber(json, TYPE) {
 }
 
 function getOwnerPreviousMessageCount(json) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let owner_id = json.owner._account_id;
     let match = {
@@ -913,7 +913,7 @@ function getOwnerPreviousMessageCount(json) {
 }
 
 function getReviewersTotalPreviousMessagesCount(json) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let reviewersIdArray = MetricsUtils.getHumanReviewersID(json, projectName) ? MetricsUtils.getHumanReviewersID(json, projectName) : [];
     let match = {
@@ -933,7 +933,7 @@ function getReviewersTotalPreviousMessagesCount(json) {
 }
 
 function getOwnerChangesMessagesCountAndAvgPerChanges(json) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let ownerId = json.owner._account_id;
     let match = {
@@ -964,7 +964,7 @@ function getOwnerChangesMessagesCountAndAvgPerChanges(json) {
 }
 
 function getOwnerAndReviewerCommonsChangesAndMessages(json) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let ownerId = json.owner._account_id;
     let accountIdArray = MetricsUtils.getHumanReviewersID(json, projectName) ? MetricsUtils.getHumanReviewersID(json, projectName) : [];
@@ -1009,7 +1009,7 @@ function getOwnerAndReviewerCommonsChangesAndMessages(json) {
 }
 
 function getOwnerChangesCountAndMessagesCountWithSameReviewers(json) {
-    let created_date = Moment(json.created).toDate().toISOString();
+    let created_date = json.created;
     let number = json._number;
     let ownerId = json.owner._account_id;
     let accountIdArray = MetricsUtils.getHumanReviewersID(json, projectName) ? MetricsUtils.getHumanReviewersID(json, projectName) : [];

@@ -49,8 +49,8 @@ function getRecentMetrics(json) {
 }
 
 function getPreviousRecentChanges(json) {
-    let endDate = Moment(json.created).toDate().toISOString();
-    let startDate = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').toDate().toISOString();
+    let endDate = json.created;
+    let startDate = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
     let number = json._number
     return Change
         .find({

@@ -75,6 +75,11 @@ function main() {
             type: 'number',
             description: 'end of of code changes processing'
         })
+        .option('days', {
+            alias: 'd',
+            type: 'number',
+            description: 'days limit for collecting recent metrics'
+        })
         .help()
         .alias('help', 'h')
         .demandCommand()
@@ -89,8 +94,9 @@ function prepareCommand(argv) {
     let projectName = argv.project;
     let start = argv.start;
     let end = argv.end;
+    let days = argv.days;
     let json = {}
-    if (Config.project[projectName])
+    if (Config.project[projectName]){
         if(start !== undefined && end !== undefined ){
             if(start < end){
                 json = Utils.getProjectParameters(projectName);
@@ -104,6 +110,9 @@ function prepareCommand(argv) {
             json = Utils.getProjectParameters(projectName);
             //console.log("not so good");
         }
+        if(days !== undefined)
+            json["numberOfDays"] = days
+    }
     else {
         console.log("The project you request hasn't been found on the config file. You can edit the Config.json file and add information about this project")
         return

@@ -23,12 +23,16 @@ let projectName = projectJson["projectName"];
 let DATA_PATH = "data/";
 
 let STARTING_POINT = 0;
-let NUM_DAYS_FOR_RECENT = 365;
+let NUM_DAYS_FOR_RECENT = 90;
 let NUM_OF_CHANGES_LIMIT = 10000;
 let NUMBER_DATABASE_REQUEST = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
 let overAllGraphJson = {};
 let overAllFullConnectedGraphJson = {};
+let overAllChangesAccountInfo = {};
+let i = 0;
 
+//do reduce graph
+//collect change in graph folder by number an compare to the previous
 
 if (typeof require !== 'undefined' && require.main === module) {
     start(projectJson)
@@ -46,6 +50,8 @@ function start(json) {
         DATA_PATH = json["output_directory"];
     if (json["projectName"])
         projectName = json["projectName"];
+    if (json["numberOfDays"])
+        NUM_DAYS_FOR_RECENT = json["numberOfDays"];
 
     console.log("Collecting account graph !!!!");
 
@@ -62,10 +68,12 @@ function start(json) {
         .then(() => {
             let name1 = projectName + "-graph";
             let name2 = projectName + "-full-connected-graph";
+            let name3 = projectName + "-changes-account-info";
             let path = PathLibrary.join(DATA_PATH, projectName);
             let t1 = Utils.saveJSONInFile(path, name1, overAllGraphJson);
             let t2 = Utils.saveJSONInFile(path, name2, overAllFullConnectedGraphJson);
-            return Promise.all([t1, t2]);
+            let t3 = Utils.saveJSONInFile(path, name3, overAllChangesAccountInfo);
+            return Promise.all([t1, t2, t3]);
         })
         .then(() => {
             progressBar.stop();
@@ -80,8 +88,17 @@ function start(json) {
 function getChanges(skip) {
     return Change
         .aggregate([
-            {$sort: {updated: 1, _number: 1}},
-            {$project: {id: 1, created: 1, updated: 1, _number: 1, owner: 1}},
+            {$sort: {_number: 1}},
+            {
+                $project: {
+                    id: 1,
+                    created: 1,
+                    updated: 1,
+                    _number: 1,
+                    owner_id: "$owner._account_id",
+                    reviewers_id: "$reviewers.REVIEWER._account_id"
+                }
+            },
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
         ])
@@ -101,11 +118,13 @@ function getChanges(skip) {
 async function collectDocs(docs) {
     if (!docs)
         return Promise.resolve(true);
+    let previousJson = {};
     for (let key in docs) {
-        await collectGraph(docs[key])
+        await collectGraph(docs[key], previousJson)
             .then((result) => {
                 updateProgress();
             });
+        previousJson = docs[key];
     }
     return Promise.resolve(true);
 }
@@ -114,59 +133,164 @@ function updateProgress() {
     progressBar.increment(1);
 }
 
-async function collectGraph(json) {
+let graph_list = {}
+
+async function collectGraph(json, previousJson) {
     return getPriorChanges(json)
-        .then((result) => {
-            let graph = result[0];
-            let fullConnectedGraph = result[1];
+        .then((results) => {
+            let id = json.id
+            let owner_id = json.owner_id;
+            let number = json._number;
+            let t1 = buildGraph(results, id, owner_id);
+            let t2 = buildFullConnectedGraph(results, id, owner_id);
+            let t3 = getIntermediaryUpdatedChanges(json, previousJson)
+
+            let reviewers_id = json.reviewers_id;
+            if (reviewers_id)
+                reviewers_id = reviewers_id.filter(bot_filter);
+            else
+                reviewers_id = []
+
+            let changeAccountInfoJson = {id: id, number: number, owner_id: owner_id, reviewers_id: reviewers_id};
+            overAllChangesAccountInfo[id] = changeAccountInfoJson;
+            let t4 = Promise.resolve(changeAccountInfoJson);
+            let path = PathLibrary.join(DATA_PATH, projectName, "changes-account");
+            let t5 = Utils.saveJSONInFile(path, id, changeAccountInfoJson);
+
+            return Promise.all([t1, t2, t3, t4, t5]);
+        })
+        .then((results) => {
+            let graph = results[0];
+            let fullConnectedGraph = results[1];
+            let hasChanged = results[2];
+            let changeAccountInfoJson = results[3];
+            let suffix = "-" + NUM_DAYS_FOR_RECENT + "-days";
+            let path1 = PathLibrary.join(DATA_PATH, projectName, "changes-graph" + suffix);
+            let path2 = PathLibrary.join(DATA_PATH, projectName, "changes-full-connected-graph" + suffix);
+
             let id = json.id;
+            let t1 = Utils.saveJSONInFile(path1, id, graph);
+            let t2 = Utils.saveJSONInFile(path2, id, fullConnectedGraph);
             overAllGraphJson[id] = graph;
             overAllFullConnectedGraphJson[id] = fullConnectedGraph;
-            return Promise.resolve(true)
+
+            //compare to the previous graph
+            let path3 = PathLibrary.join(DATA_PATH, projectName, "graph-list" + suffix);
+            let t3 = Promise.resolve(true);
+            if (hasChanged) {
+                //console.log(hasChanged)
+                graph_list[i] = {};
+                graph_list[i]["graph"] = graph;
+                graph_list[i]["full_connected_graph"] = fullConnectedGraph;
+                graph_list[i]["changes"] = {};
+                graph_list[i]["changes"][id] = changeAccountInfoJson;
+                if (i > 0) {
+                    let name = String(i - 1);
+                    t3 = Utils.saveJSONInFile(path3, name, graph_list[i - 1]);
+                }
+                i++;
+            } else {
+                if (i > 0) {
+                    let num = i - 1;
+                    //console.log(hasChanged + " : " + num)
+                    graph_list[num]["changes"][id] = changeAccountInfoJson;
+                }
+            }
+
+            return Promise.all([t1, t2, t3]);
+        })
+        .catch(err => {
+            console.log(err)
         });
 }
 
-function getPriorChanges(json) {
-    return getPriorChangesFromDB(0, json);
-}
+function getIntermediaryUpdatedChanges(json, previousJson) {
+    if (!previousJson)
+        return true;
 
-function getPriorChangesFromDB(skip, json){
-    let id = json.id
-    let owner = json.owner._account_id;
-    let endDate = Moment(json.created).toDate().toISOString();
-    let startDate = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').toDate().toISOString();
+    if (!previousJson.created)
+        return true;
 
-    let number = json._number;
+    let created = json.created;
+    let previous_created = previousJson.created;
+    let created_minus_recent_days = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+    let previous_created_minus_recent_days = Moment(previousJson.created).subtract(NUM_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
     let pipeline = [
         {
             $match: {
                 status: {$in: ['MERGED', 'ABANDONED']},
-                _number: {$lt: number},
+                $or: [
+                    {updated: {$lte: created, $gte: previous_created}},
+                    {updated: {$lte: created_minus_recent_days, $gte: previous_created_minus_recent_days}},
+                ]
+            }
+        },
+        {$count: "count"},
+    ];
+    return Change
+        .aggregate(pipeline)
+        .allowDiskUse(true)
+        .exec()
+        .then(docs => {
+            //hasChanged?
+            if (!docs)
+                return false;
+            if (docs.length > 0) {
+                return docs[0].count > 0;
+            } else {
+                return false;
+            }
+            //return docs.length > 0 ? (docs[0].count > 0) : false;
+        })
+        .catch(err => {
+            console.log(err)
+        });
+}
+
+function getPriorChanges(json) {
+    let priorResults = [[], []];
+    return getPriorChangesFromDB(0, json, priorResults);
+}
+
+function getPriorChangesFromDB(skip, json, priorResults) {
+    let number = json._number;
+    let endDate = json.created;
+    let startDate = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+    let pipeline = [
+        {
+            $match: {
+                status: {$in: ['MERGED', 'ABANDONED']},
                 updated: {$lte: endDate},
-                created: {$lte: endDate, $gte: startDate}
+                created: {$lte: endDate, $gte: startDate},
+                _number: {$lt: number},
             }
         },
         {$project: {id: 1, owner_id: "$owner._account_id", reviewers_id: "$reviewers.REVIEWER._account_id"}},
         {$skip: skip},
         {$limit: 1000}
     ];
-    return dbRequest(pipeline, id, owner, skip);
+    //console.log("startDate : " + startDate);
+    //console.log("endDate : " + endDate);
+    return dbRequest(skip, json, pipeline, priorResults);
 }
 
-function dbRequest(pipeline, id, owner, skip) {
+function dbRequest(skip, json, pipeline, previousResults) {
     return Change
         .aggregate(pipeline)
         .allowDiskUse(true)
         .exec()
         .then(docs => {
             if (!docs)
-                return 0;
-            let t1 = buildGraph(docs, id, owner);
-            let t2 = buildFullConnectedGraph(docs, id, owner);
-            return Promise.all([t1, t2]);
+                return Promise.resolve([]);
+            return docs.length > 0 ? Promise.resolve(docs) : Promise.resolve(true);
         })
         .then(result => {
-            return result ? getPriorChangesFromDB(skip + 1000) : Promise.resolve(result);
+            if (typeof result === "boolean") {
+                return Promise.resolve(previousResults)
+            } else {
+                previousResults.push(...result)
+                return getPriorChangesFromDB(skip + 1000, json, previousResults)
+            }
         })
         .catch(err => {
             console.log(err)
@@ -207,6 +331,17 @@ async function buildGraph(docs, id, owner) {
     });
 };*/
 
+let bot_filter = function (account_id) {
+    return !MetricsUtils.isABot(account_id, projectName);
+};
+
+function excludeBot(array) {
+    return array.filter(function (account_id) {
+        return !MetricsUtils.isABot(account_id, projectName);
+    });
+}
+
+
 function buildFullConnectedGraph(docs, id, owner) {
     let nodes = new Set();
     let edges = [];
@@ -240,6 +375,30 @@ function buildFullConnectedGraph(docs, id, owner) {
     graph["nodes"] = [...nodes];
     graph["edges"] = [...edges];
     return graph;
+}
+
+/*let sortedArrayFunction = function(a, b) {
+    if (a[0] == b[0]) {
+        return a[1] - b[1];
+    }
+    return a[0] - b[0];
+};*/
+
+let sortedArrayFunction = ([a, b], [c, d]) => a - c || d - b;
+
+function compareGraph(first, second) {
+    if (!first.nodes && !second.nodes && !first.edges && !second.edges)
+        return false;
+
+    let firstNodes = first.nodes.sort();
+    let secondNodes = second.nodes.sort();
+    let firstEdges = first.edges.sort(sortedArrayFunction);
+    let secondEdges = second.edges.sort(sortedArrayFunction);
+    let areNodesEqual = firstNodes.length === secondNodes.length && firstNodes.every((value, index) => value === secondNodes[index])
+    let areEdgesEqual = firstEdges.length === secondEdges.length && firstEdges.every(
+        (value, index) => JSON.stringify(value) === JSON.stringify(secondEdges[index]))
+
+    return areNodesEqual && areEdgesEqual;
 }
 
 module.exports = {

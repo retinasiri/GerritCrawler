@@ -14,8 +14,6 @@ METRICS_COLLECTION_NAMES = 'metrics'
 NUM_OF_CHANGES_LIMIT = 20000
 
 
-
-
 class Database:
     def __init__(self, database_name, url = None):
         self.db_url = url
@@ -43,7 +41,7 @@ class Database:
 
     def get_changes_list(self, skip):
         changes_collection = self.get_changes_collection()
-        aggregation_string = [{"$sort": {"created": 1}}, {"$skip": skip}, {"$limit": NUM_OF_CHANGES_LIMIT}]
+        aggregation_string = [{"$sort": {"created" : 1}}, {"$skip": skip}, {"$limit": NUM_OF_CHANGES_LIMIT}]
         return list(changes_collection.aggregate(aggregation_string, allowDiskUse=True))
 
     def save_metrics(self, metric):
