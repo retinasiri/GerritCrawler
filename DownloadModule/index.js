@@ -7,7 +7,7 @@ const ComputeSimpleMetrics = require('./compute_metrics/compute-simple-metrics')
 const ComputeOwnerMetrics = require('./compute_metrics/compute-owner-metrics');
 const ComputeRecentMetrics = require('./compute_metrics/compute-recent-metrics');
 const ExtractMetrics = require('./compute_metrics/extract-metrics');
-const CollectGraph = require('./prepare_code_change/collect-graph');
+const CollectRecentGraph = require('./prepare_code_change/collect-recent-graph');
 const Config = require('./config');
 const Yargs = require('yargs');
 const Utils = require("./config/utils");
@@ -142,7 +142,7 @@ function prepareCodeChanges(argv) {
 function buildGraph(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
-        return CollectGraph.start(projectJson)
+        return CollectRecentGraph.start(projectJson)
             .catch(err => {
                 console.log(err)
             });

@@ -23,7 +23,14 @@ let projectName = projectJson["projectName"];
 let DATA_PATH = "data/";
 
 let STARTING_POINT = 0;
+let NUM_DAYS_FOR_RECENT = 90;
 let NUM_OF_CHANGES_LIMIT = 10000;
+let NUMBER_DATABASE_REQUEST = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
+//let overAllGraphJson = {};
+//let overAllFullConnectedGraphJson = {};
+//let overAllChangesAccountInfo = {};
+let changes_graph_list = {}
+
 let i = 0;
 
 //do reduce graph
@@ -45,6 +52,8 @@ function start(json) {
         DATA_PATH = json["output_directory"];
     if (json["projectName"])
         projectName = json["projectName"];
+    if (json["numberOfDays"])
+        NUM_DAYS_FOR_RECENT = json["numberOfDays"];
 
     console.log("Collecting account graph !!!!");
 
@@ -53,9 +62,24 @@ function start(json) {
             return Change.estimatedDocumentCount({});
         })
         .then((count) => {
+            //NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
             return getChanges(STARTING_POINT);
+        })
+        .then(() => {
+            /*let name1 = projectName + "-graph";
+            let name2 = projectName + "-full-connected-graph";
+            let name3 = projectName + "-changes-account-info";
+            let path = PathLibrary.join(DATA_PATH, projectName);
+            let t1 = Utils.saveJSONInFile(path, name1, overAllGraphJson);
+            let t2 = Utils.saveJSONInFile(path, name2, overAllFullConnectedGraphJson);
+            let t3 = Utils.saveJSONInFile(path, name3, overAllChangesAccountInfo);
+            return Promise.all([t1, t2, t3]);*/
+
+            let name = projectName + "-changes-graph-list";
+            let path = PathLibrary.join(DATA_PATH, projectName);
+            return Utils.saveJSONInFile(path, name, changes_graph_list);
         })
         .then(() => {
             progressBar.stop();
@@ -106,10 +130,12 @@ async function collectDocs(docs) {
         let previousGraph = await collectGraph(docs[key], previousJson, graph_list)
             .then((result) => {
                 updateProgress();
+                //console.log(result)
                 return Promise.resolve(result);
             });
         previousJson = docs[key];
         graph_list = previousGraph;
+        //console.log("echo")
     }
     return Promise.resolve(true);
 }
@@ -117,6 +143,9 @@ async function collectDocs(docs) {
 function updateProgress() {
     progressBar.increment(1);
 }
+
+//let graph_list = {}
+//let previous_graph_list = {}
 
 function buildChangeAccountInfoJson(json) {
     let id = json.id
@@ -126,42 +155,92 @@ function buildChangeAccountInfoJson(json) {
     return {id: id, number: number, owner_id: owner_id, reviewers_id: reviewers_id}
 }
 
+
 async function collectGraph(json, previousJson, graph_list) {
     return getIntermediaryUpdatedChanges(json, previousJson)
-        .then((docs) => {
-            if (docs.length > 0) {
-                return addUpdatedChangesGraph(json, previousJson, docs, graph_list);
+        .then((hasChanged) => {
+            if (hasChanged) {
+                return getPriorChangesGraph(json, previousJson, graph_list);
             } else {
                 let id = json.id
                 let changeAccountInfoJson = buildChangeAccountInfoJson(json);
-                if (graph_list["changes"])
-                    graph_list["changes"][id] = changeAccountInfoJson;
+                //let path = PathLibrary.join(DATA_PATH, projectName, "changes-account");
+                //let t1 = Utils.saveJSONInFile(path, id, changeAccountInfoJson);
+                /*if (graph_list["changes"])
+                    graph_list["changes"][id] = changeAccountInfoJson;*/
+                changes_graph_list[id] = i;
+                //let t2 = Promise.resolve(graph_list);
                 return Promise.resolve(graph_list);
+                /*return Promise.all([t1, t2])
+                    .then((results) => {
+                        return Promise.resolve(results[1])
+                    });*/
             }
         })
 }
+function getPriorChangesGraph(json, previousJson, graph_list){
+    return getPriorChanges(json)
+        .then((results) => {
+            let id = json.id
+            let owner_id = json.owner_id;
+            //let changeAccountInfoJson = buildChangeAccountInfoJson(json);
+            //let path = PathLibrary.join(DATA_PATH, projectName, "changes-account");
+            let t1 = buildGraph(results, id, owner_id);
+            let t2 = buildFullConnectedGraph(results, id, owner_id);
+            let t3 = getIntermediaryUpdatedChanges(json, previousJson)
+            //let t4 = Promise.resolve(changeAccountInfoJson);
+            //let t5 = Utils.saveJSONInFile(path, id, changeAccountInfoJson);
+            //return Promise.all([t1, t2, t3, t4, t5]);
+            //return Promise.all([t1, t2, t3, t4]);
+            return Promise.all([t1, t2, t3]);
+        })
+        .then((results) => {
+            let id = json.id;
+            let graph = results[0];
+            let fullConnectedGraph = results[1];
+            let hasChanged = results[2];
+            //let changeAccountInfoJson = results[3];
+            let suffix = "-" + NUM_DAYS_FOR_RECENT + "-days";
+            //let path1 = PathLibrary.join(DATA_PATH, projectName, "changes-graph" + suffix);
+            //let path2 = PathLibrary.join(DATA_PATH, projectName, "changes-full-connected-graph" + suffix);
 
-function addUpdatedChangesGraph(json, previousJson, updatedChanges, graph_list) {
-    let id = json.id
-    let owner_id = json.owner_id;
-    let t1 = Promise.resolve(true);
-    if (i > 0) {
-        let path = PathLibrary.join(DATA_PATH, projectName, "graph-list");
-        t1 = Utils.saveJSONInFile(path, String(i - 1), graph_list);
-    }
-    i++;
+            //let t1 = Utils.saveJSONInFile(path1, id, graph);
+            //let t2 = Utils.saveJSONInFile(path2, id, fullConnectedGraph);
+            //overAllGraphJson[id] = graph;
+            //overAllFullConnectedGraphJson[id] = fullConnectedGraph;
 
-    if (!graph_list)
-        graph_list = {};
-    graph_list["graph"] = updateGraph(updatedChanges, id, owner_id, graph_list);
-    graph_list["full_connected_graph"] = updateFullConnectedGraph(updatedChanges, id, owner_id, graph_list);
-    if (!graph_list["changes"])
-        graph_list["changes"] = {};
-    graph_list["changes"][id] = buildChangeAccountInfoJson(json);
+            //compare to the previous graph
+            let path3 = PathLibrary.join(DATA_PATH, projectName, "graph-list" + suffix);
+            let t3 = Promise.resolve(true);
+            if (hasChanged) {
 
-    return t1.then(() => {
-        return Promise.resolve(graph_list)
-    })
+                if (i > 0) {
+                    t3 = Utils.saveJSONInFile(path3, String(i - 1), graph_list);
+                }
+                i++;
+
+                graph_list = {};
+                graph_list["graph"] = graph;
+                graph_list["full_connected_graph"] = fullConnectedGraph;
+                changes_graph_list[id] = i;
+                //graph_list["changes"] = {};
+                //graph_list["changes"][id] = changeAccountInfoJson;
+
+            } else {
+                //if (graph_list["changes"])
+                //    graph_list["changes"][id] = changeAccountInfoJson;
+                changes_graph_list[id] = i;
+            }
+            let t4 = Promise.resolve(graph_list)
+            //return Promise.all([t1, t2, t3, t4]);
+            return Promise.all([t3, t4]);
+        })
+        .then((results) => {
+            return Promise.resolve(results[1])
+        })
+        .catch(err => {
+            console.log(err)
+        });
 }
 
 async function getIntermediaryUpdatedChanges(json, previousJson) {
@@ -173,51 +252,88 @@ async function getIntermediaryUpdatedChanges(json, previousJson) {
 
     let created = json.created;
     let previous_created = previousJson.created;
+    let created_minus_recent_days = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+    let previous_created_minus_recent_days = Moment(previousJson.created).subtract(NUM_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
     let pipeline = [
         {
             $match: {
                 status: {$in: ['MERGED', 'ABANDONED']},
-                updated: {$lte: created, $gte: previous_created}
+                $or: [
+                    {updated: {$lte: created, $gte: previous_created}},
+                    {updated: {$lte: created_minus_recent_days, $gte: previous_created_minus_recent_days}},
+                ]
             }
         },
-        {$project: {id: 1, owner_id: "$owner._account_id", reviewers_id: "$reviewers.REVIEWER._account_id"}},
+        {$count: "count"},
     ];
     return Change
         .aggregate(pipeline)
         .allowDiskUse(true)
         .exec()
         .then(docs => {
+            //hasChanged?
             if (!docs)
                 return false;
             if (docs.length > 0) {
-                return docs;
+                return docs[0].count > 0;
             } else {
                 return false;
             }
+            //return docs.length > 0 ? (docs[0].count > 0) : false;
         })
         .catch(err => {
             console.log(err)
         });
 }
 
-async function updateGraph(docs, id, owner, previousGraph) {
-    let graph = buildGraph(docs, id, owner);
-    return mergeGraph(graph, previousGraph, id, owner);
+function getPriorChanges(json) {
+    let priorResults = [[], []];
+    return getPriorChangesFromDB(0, json, priorResults);
 }
 
-async function updateFullConnectedGraph(docs, id, owner, previousGraph) {
-    let graph = buildFullConnectedGraph(docs, id, owner);
-    return mergeGraph(graph, previousGraph, id, owner);
+function getPriorChangesFromDB(skip, json, priorResults) {
+    let number = json._number;
+    let endDate = json.created;
+    let startDate = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+    let pipeline = [
+        {
+            $match: {
+                status: {$in: ['MERGED', 'ABANDONED']},
+                updated: {$lte: endDate},
+                created: {$lte: endDate, $gte: startDate},
+                _number: {$lt: number},
+            }
+        },
+        {$project: {id: 1, owner_id: "$owner._account_id", reviewers_id: "$reviewers.REVIEWER._account_id"}},
+        {$skip: skip},
+        {$limit: 2000}
+    ];
+    //console.log("startDate : " + startDate);
+    //console.log("endDate : " + endDate);
+    return dbRequest(skip, json, pipeline, priorResults);
 }
 
-function mergeGraph(graph, previousGraph, id, owner) {
-    graph["id"] = id;
-    graph["owner_id"] = owner;
-    if (previousGraph["nodes"])
-        graph["nodes"] = [...previousGraph["nodes"]];
-    if (previousGraph["edges"])
-        graph["edges"] = [...previousGraph["edges"]];
-    return graph;
+function dbRequest(skip, json, pipeline, previousResults) {
+    return Change
+        .aggregate(pipeline)
+        .allowDiskUse(true)
+        .exec()
+        .then(docs => {
+            if (!docs)
+                return Promise.resolve([]);
+            return docs.length > 0 ? Promise.resolve(docs) : Promise.resolve(true);
+        })
+        .then(result => {
+            if (typeof result === "boolean") {
+                return Promise.resolve(previousResults)
+            } else {
+                previousResults.push(...result)
+                return getPriorChangesFromDB(skip + 1000, json, previousResults)
+            }
+        })
+        .catch(err => {
+            console.log(err)
+        });
 }
 
 async function buildGraph(docs, id, owner) {
@@ -241,8 +357,8 @@ async function buildGraph(docs, id, owner) {
             }
     }
     let graph = {};
-    graph["id"] = id;
-    graph["owner_id"] = owner;
+    //graph["id"] = id;
+    //graph["owner_id"] = owner;
     graph["nodes"] = [...nodes];
     graph["edges"] = [...edges];
     return graph;
@@ -293,12 +409,19 @@ function buildFullConnectedGraph(docs, id, owner) {
             }
     }
     let graph = {};
-    graph["id"] = id;
-    graph["owner_id"] = owner;
+    //graph["id"] = id;
+    //graph["owner_id"] = owner;
     graph["nodes"] = [...nodes];
     graph["edges"] = [...edges];
     return graph;
 }
+
+/*let sortedArrayFunction = function(a, b) {
+    if (a[0] == b[0]) {
+        return a[1] - b[1];
+    }
+    return a[0] - b[0];
+};*/
 
 let sortedArrayFunction = ([a, b], [c, d]) => a - c || d - b;
 

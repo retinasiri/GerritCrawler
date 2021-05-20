@@ -20,8 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/prepare_code_change/collect-recent-graph.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/prepare_code_change/collect-graph.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/collect-graph.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +133,7 @@
       <workItem from="1621174447076" duration="4218000" />
       <workItem from="1621295435156" duration="19345000" />
       <workItem from="1621357480963" duration="3910000" />
-      <workItem from="1621475499307" duration="7288000" />
+      <workItem from="1621475499307" duration="13709000" />
     </task>
     <task id="LOCAL-00001" summary="quick fix">
       <created>1620486385609</created>
