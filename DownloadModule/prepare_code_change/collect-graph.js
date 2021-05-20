@@ -125,7 +125,7 @@ async function collectDocs(docs) {
                 updateProgress();
             });
         previousJson = docs[key];
-        console.log("echo")
+        //console.log("echo")
     }
     return Promise.resolve(true);
 }
