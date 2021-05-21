@@ -60,7 +60,7 @@ function startComputeMetrics(json) {
 function getMetrics(skip) {
     return Metrics
         .aggregate([
-            {$sort: {updated: 1, _number: 1}},
+            {$sort: {number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
         ])
@@ -85,25 +85,26 @@ async function collectDocs(docs) {
     for (let key in docs) {
         let doc = docs[key];
 
-        if (doc["status"].includes("NEW"))
-            continue;
+        if (doc["status"])
+            if (doc["status"].includes("NEW"))
+                continue;
 
         await collectMetrics(docs[key])
             .then((json) => {
                 return saveMetrics(json);
+            })
+            .then(() => {
+                return updateProgress();
             })
 
     }
     return Promise.resolve(true);
 }
 
-function saveMetrics(json) {
+async function saveMetrics(json) {
     let filename = projectName + "-metrics.csv";
     let path = PathLibrary.join(DATA_PATH, projectName);
     return Utils.add_line_to_file(json, filename, path)
-        .then(() => {
-            return updateProgress();
-        });
 }
 
 async function updateProgress() {
@@ -112,24 +113,38 @@ async function updateProgress() {
 }
 
 function copy(result, json, key) {
+
     if (json[key] !== null) {
         result[key] = json[key];
     } else {
         result[key] = 0;
     }
+
+    if (!json.hasOwnProperty(key))
+        result[key] = 0;
+
+    if (!(key in json))
+        result[key] = 0;
+
+    /*if(json[key] === undefined){
+        result[key] = 0;
+    }*/
+
     return result;
 }
 
+let i = 1;
 
 async function collectMetrics(metric) {
     let result = {};
     //todo skip NEW code changes
 
     //identification
-    result = copy(result, metric, "n");
+    result["n"] = i++
+    //result = copy(result, metric, "n");
+    result = copy(result, metric, "number");
     //result = copy(result, metric, "id");
     result = copy(result, metric, "change_id");
-    result = copy(result, metric, "number");
     //result = copy(result, metric, "status");
 
     //time
@@ -373,6 +388,10 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "diff_created_updated_in_days");
     //result = copy(result, metric, "status");
     //result = copy(result, metric, "diff_created_updated_in_days_ceil")
+
+    /*if (result["n"] === 7107) {
+        console.log(metric["date_created"])
+    }*/
 
     return result;
 }
