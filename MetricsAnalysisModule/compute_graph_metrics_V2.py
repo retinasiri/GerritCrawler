@@ -22,42 +22,7 @@ class SlowBar(Bar):
 GRAPHS_METRICS_RESULTS = {} 
 GRAPHS_PATH = '../DownloadModule/data/libreoffice/graph-list-30-days'
 GRAPHS_METRICS_RESULTS_PATH = '../DownloadModule/data/libreoffice/graph-metrics-30-days'
-#LOCK = mp.Lock()
-#UPDATE_LOCK = threading.Lock()
 COUNTER = 0
-
-
-def build_nx_graph(graph):
-    G = nx.Graph()
-    edges = graph["edges"]
-    nodes = graph["nodes"]
-    for nodeId in nodes:
-        G.add_node(nodeId)
-    for edge in edges:
-        if G.has_edge(edge[0], edge[1]):
-            G[edge[0]][edge[1]]['weight'] += 1
-        else:
-            G.add_edge(edge[0], edge[1], weight=1)
-    G.remove_edges_from(nx.selfloop_edges(G))
-    return G
-
-
-def get_nx_graph_from_file(name):
-    path = os.path.join(GRAPHS_PATH, name)
-    if os.path.isfile(path):
-        with open(path, "r") as f:
-            #print(path)
-            json_file = json.load(f)
-            graph = json_file["graph"]
-            #changes = json_file["changes"]
-            if(len(graph) == 0):
-                return None
-            nxgraph = build_nx_graph(graph)
-            f.close()
-            #return [nxgraph, changes]
-            return nxgraph
-    return None;
-
 
 def save_metric_in_file(filename, metric):
     full_path = os.path.join(GRAPHS_METRICS_RESULTS_PATH, filename)
@@ -89,13 +54,17 @@ def init_metric() :
     }
 
 
+def read_graph_from_path(filename) :
+    if os.path.isfile(os.path.join(GRAPHS_PATH,filename)) :
+        return nx.read_gpickle(os.path.join(GRAPHS_PATH,filename))
+    return None
+
+
 def process(files_list):
     #metrics = {}
     i = 0
     for filename in files_list:
-        G = get_nx_graph_from_file(filename)
-        #G = result[0]
-        #changes = result[1]
+        G = read_graph_from_path(filename)
         if not (G is None):
             if G.number_of_nodes() > 0:
                 metric = compute_graph_metrics(G)
@@ -105,19 +74,13 @@ def process(files_list):
             metric = init_metric()
         metric_info = {}
         metric_info['metrics'] = metric
-        #metric_info["changes"] = changes
-        #metrics[filename] = metric_info
         i+=1
         save_metric_in_file(filename, metric_info)
     return i      
 
 
 def update(results):
-    #print([len(x) for x in results])
-    #PROGRESS_BAR.next(len(results))
     PROGRESS_BAR.next(results)
-
-#todo put metrics in the DB
 
 #main
 if __name__ == '__main__':
@@ -126,14 +89,12 @@ if __name__ == '__main__':
     pathlib(GRAPHS_METRICS_RESULTS_PATH).mkdir(parents=True, exist_ok=True)
 
     count = len(list_files)
-    splitedSize = ceil(count/NB_PROCESS)
+    splitedSize = ceil(count/1000)
     list_files_splited = [list_files[x:x+splitedSize] for x in range(0, len(list_files), splitedSize)]
     PROGRESS_BAR = SlowBar('Processing Graph Metrics', max=count)
     
     pool = mp.Pool(processes=NB_PROCESS)
     processes = [pool.apply_async(process, (x,), callback=update) for x in list_files_splited]
-    #mp.Pool(processes=NB_PROCESS).map(process, list_files_splited)
-    #processes = [mp.Process(target=process, args=(x,)) for x in list_files_splited]
     
     pool.close()
     pool.join()
