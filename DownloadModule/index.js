@@ -45,7 +45,16 @@ function main() {
                 type: 'string',
             }
         }, function (argv) {
-            computeMetrics(argv)
+            computeSimpleMetrics(argv)
+        })
+        .command('changesMetrics [project]', 'Compute the changes metrics of a project.', {
+            project: {
+                description: 'The project from which metrics of codes changes are computed',
+                alias: 'p',
+                type: 'string',
+            }
+        }, function (argv) {
+            computeChangesMetrics(argv)
         })
         .command('extract [project]', 'Extract the metrics of a project.', {
             project: {
@@ -157,21 +166,19 @@ function extractMetrics(argv) {
             });
 }
 
-function computeMetrics(argv) {
+function computeSimpleMetrics(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
-        /*return ComputeSimpleMetrics.start(projectJson)
-            .then(() => {
-                return ComputeRecentMetrics.start(projectJson)
-            })
-            .then(() => {
-                return ComputeOwnerMetrics.start(projectJson)
-            })
+        return ComputeSimpleMetrics.start(projectJson)
             .catch(err => {
                 console.log(err)
-            });*/
+            });
+}
 
-        return ComputeRecentMetrics.start(projectJson)
+function computeChangesMetrics(argv) {
+    let projectJson = prepareCommand(argv);
+    if (projectJson)
+        return ComputeOwnerMetrics.start(projectJson)
             .catch(err => {
                 console.log(err)
             });

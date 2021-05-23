@@ -79,7 +79,8 @@ function startComputeMetrics(json) {
 function getChanges(skip) {
     return Change
         .aggregate([
-            {$sort: {updated: 1, _number: 1}},
+            //{$sort: {updated: 1, _number: 1}},
+            {$sort: {_number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
         ])
@@ -181,6 +182,8 @@ function collectTimeMetrics(json, metric) {
     metric["diff_created_updated"] = diffCreatedUpdatedTime(json);
     metric["diff_created_updated_in_days"] = diff_date_days(json);
     metric["diff_created_updated_in_days_ceil"] = MathJs.ceil(diff_date_days(json));
+    metric["diff_created_updated_in_hours"] = diff_date_hours(json);
+    metric["diff_created_updated_in_hours_ceil"] = MathJs.ceil(diff_date_hours(json));
     //metric["date_submitted"] = get_date_submitted(json);
 }
 
@@ -690,6 +693,13 @@ function diff_date_days(json) {
     let updatedTime = Moment(json.updated).toDate();
     let time = Math.abs(createdTime - updatedTime);
     return Moment.duration(time).asDays();
+}
+
+function diff_date_hours(json) {
+    let createdTime = Moment(json.created).toDate();
+    let updatedTime = Moment(json.updated).toDate();
+    let time = Math.abs(createdTime - updatedTime);
+    return Moment.duration(time).asHours();
 }
 
 function getReviewers(json) {
