@@ -5,7 +5,8 @@ const DownloadProjects = require('./prepare_code_change/download-project-info');
 const AddChangesInDB = require('./prepare_code_change/add-code-change-in-db');
 const ComputeSimpleMetrics = require('./compute_metrics/compute-simple-metrics');
 const ComputeOwnerMetrics = require('./compute_metrics/compute-owner-metrics');
-const ComputeRecentMetrics = require('./compute_metrics/compute-recent-metrics');
+const ComputeRecentMetrics = require('./compute_metrics/compute-owner-recent-metrics');
+//const ComputeRecentMetrics = require('./compute_metrics/compute-recent-metrics');
 const ExtractMetrics = require('./compute_metrics/extract-metrics');
 const CollectRecentGraph = require('./prepare_code_change/collect-recent-graph');
 const Config = require('./config');
@@ -55,6 +56,15 @@ function main() {
             }
         }, function (argv) {
             computeChangesMetrics(argv)
+        })
+        .command('recentMetrics [project]', 'Compute the changes metrics of a project.', {
+            project: {
+                description: 'The project from which metrics of codes changes are computed',
+                alias: 'p',
+                type: 'string',
+            }
+        }, function (argv) {
+            computeRecentMetrics(argv)
         })
         .command('extract [project]', 'Extract the metrics of a project.', {
             project: {
@@ -120,7 +130,7 @@ function prepareCommand(argv) {
             //console.log("not so good");
         }
         if(days !== undefined)
-            json["numberOfDays"] = days
+            json["NUM_DAYS_FOR_RECENT"] = days
     }
     else {
         console.log("The project you request hasn't been found on the config file. You can edit the Config.json file and add information about this project")
@@ -179,6 +189,15 @@ function computeChangesMetrics(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
         return ComputeOwnerMetrics.start(projectJson)
+            .catch(err => {
+                console.log(err)
+            });
+}
+
+function computeRecentMetrics(argv) {
+    let projectJson = prepareCommand(argv);
+    if (projectJson)
+        return ComputeRecentMetrics.start(projectJson)
             .catch(err => {
                 console.log(err)
             });

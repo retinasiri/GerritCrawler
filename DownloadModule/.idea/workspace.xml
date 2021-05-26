@@ -20,13 +20,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/compute_metrics/compute-owner-recent-metrics.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/bot-account.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compute_metrics/compute-simple-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-simple-metrics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compute_metrics/metrics-utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/metrics-utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prepare_code_change/collect-recent-graph.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/collect-recent-graph.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics_V2.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics_V2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/convert_graph_json_to_gpickle.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/convert_graph_json_to_gpickle.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/dbutils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/dbutils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,7 +144,10 @@
       <workItem from="1621600416060" duration="2445000" />
       <workItem from="1621650816331" duration="67000" />
       <workItem from="1621691855941" duration="4768000" />
-      <workItem from="1621777951922" duration="892000" />
+      <workItem from="1621777951922" duration="1701000" />
+      <workItem from="1621789594487" duration="273000" />
+      <workItem from="1621810036881" duration="110000" />
+      <workItem from="1621999840649" duration="6543000" />
     </task>
     <task id="LOCAL-00001" summary="quick fix">
       <created>1620486385609</created>

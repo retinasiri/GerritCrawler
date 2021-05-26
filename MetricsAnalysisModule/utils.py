@@ -1,6 +1,10 @@
 from progress.bar import Bar
 import os
+import json
 from humanfriendly import format_timespan
+
+
+CONFIG_JSON_PATH = "../DownloadModule/res/bot-account.json"
 
 
 class SlowBar(Bar):
@@ -37,3 +41,14 @@ def get_full_graph_list(projectName, output_dir):
     filename = projectName + "-full-connected-graph.json"
     return os.path.join(output_dir, projectName, filename)
 
+
+def load_json(path):
+    with open(path) as f:
+        json_file = json.load(f)
+        f.close()
+    return json_file
+
+
+def get_bot_accounts(projectName):
+    json = load_json(CONFIG_JSON_PATH)
+    return json[projectName]["bot_account"]

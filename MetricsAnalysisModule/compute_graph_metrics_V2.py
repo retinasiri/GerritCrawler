@@ -20,9 +20,11 @@ class SlowBar(Bar):
 
 
 GRAPHS_METRICS_RESULTS = {} 
-GRAPHS_PATH = '../DownloadModule/data/libreoffice/graph-list-30-days'
-GRAPHS_METRICS_RESULTS_PATH = '../DownloadModule/data/libreoffice/graph-metrics-30-days'
+GRAPHS_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-gpickle-30-days'
+GRAPHS_METRICS_RESULTS_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-metrics-30-days'
 COUNTER = 0
+LOCK = mp.Lock()
+
 
 def save_metric_in_file(filename, metric):
     full_path = os.path.join(GRAPHS_METRICS_RESULTS_PATH, filename)
@@ -75,7 +77,12 @@ def process(files_list):
         metric_info = {}
         metric_info['metrics'] = metric
         i+=1
-        save_metric_in_file(filename, metric_info)
+        save_metric_in_file(filename.replace('.gpickle', '.json'), metric_info)
+        '''
+        LOCK.acquire()
+        print(filename)
+        LOCK.release()
+        '''
     return i      
 
 
@@ -85,11 +92,13 @@ def update(results):
 #main
 if __name__ == '__main__':
     NB_PROCESS = mp.cpu_count();
-    list_files = [a for a in os.listdir(GRAPHS_PATH) if a.endswith('.json')]
+    list_files = [a for a in os.listdir(GRAPHS_PATH) if a.endswith('.gpickle')]
     pathlib(GRAPHS_METRICS_RESULTS_PATH).mkdir(parents=True, exist_ok=True)
-
+    list_files.sort()
+    
     count = len(list_files)
-    splitedSize = ceil(count/1000)
+    #splitedSize = ceil(count/1000)
+    splitedSize = 100
     list_files_splited = [list_files[x:x+splitedSize] for x in range(0, len(list_files), splitedSize)]
     PROGRESS_BAR = SlowBar('Processing Graph Metrics', max=count)
     

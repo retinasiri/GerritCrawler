@@ -12,9 +12,10 @@ from utils import SlowBar as SlowBar
 #FULL_GRAPHS_GPICKLE_PATH = '../DownloadModule/data/libreoffice/graph-full-gpickle-metrics-30-days'
 
 
-GRAPHS_JSON_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-list-30-days'
-GRAPHS_GPICKLE_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-gpickle-30-days'
-FULL_GRAPHS_GPICKLE_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-full-gpickle-metrics-30-days'
+GRAPHS_JSON_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-list-90-days'
+GRAPHS_GPICKLE_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-gpickle-90-days'
+FULL_GRAPHS_GPICKLE_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-full-gpickle-90-days'
+LOCK = mp.Lock()
 
 
 def build_nx_graph(graph):
@@ -72,7 +73,7 @@ def process(files_list):
         pathForSimple = os.path.join(GRAPHS_GPICKLE_PATH, new_filename)
         pathForFullSimple = os.path.join(FULL_GRAPHS_GPICKLE_PATH, new_filename)
         nx.write_gpickle(G, pathForSimple)
-        #nx.write_gpickle(FG, pathForFullSimple)
+        nx.write_gpickle(FG, pathForFullSimple)
         i+=1
     return i  
 
@@ -87,11 +88,13 @@ if __name__ == '__main__':
     pathlib(FULL_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
 
     count = len(list_files)
-    splitedSize = ceil(count/1000)
+    #splitedSize = ceil(count/1000)
+    splitedSize = 100
     list_files_splited = [list_files[x:x+splitedSize] for x in range(0, len(list_files), splitedSize)]
     PROGRESS_BAR = SlowBar('Processing Graph Metrics', max=count)
     
-    pool = mp.Pool(processes=NB_PROCESS)
+    #pool = mp.Pool(processes=NB_PROCESS)
+    pool = mp.Pool(processes=2)
     processes = [pool.apply_async(process, (x,), callback=update) for x in list_files_splited]
     #mp.Pool(processes=NB_PROCESS).map(process, list_files_splited)
     #processes = [mp.Process(target=process, args=(x,)) for x in list_files_splited]

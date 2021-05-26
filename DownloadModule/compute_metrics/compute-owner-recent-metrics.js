@@ -4,6 +4,7 @@ const Change = require('../models/change');
 const MetricsUtils = require("./metrics-utils");
 
 let projectName = "libreoffice";
+let NUM_DAYS_FOR_RECENT = 180;
 let start = 0;
 let end = 10000;
 
@@ -20,6 +21,9 @@ function startComputeMetrics(projectJson) {
         start = projectJson["start"];
     if (projectJson["end"])
         end = projectJson["end"];
+    if (projectJson["NUM_DAYS_FOR_RECENT"])
+        NUM_DAYS_FOR_RECENT = projectJson["NUM_DAYS_FOR_RECENT"];
+
     return MetricsUtils.startComputeMetrics(projectName, start, end, "owner", function (json) {
         return collectMetrics(json)
     });
@@ -31,10 +35,11 @@ async function collectMetrics(json) {
         metric["number"] = json._number;
         metric["id"] = json.id;
         Object.keys(values).forEach(function (key) {
+            let name = key + "-" + NUM_DAYS_FOR_RECENT + "days"
             if (values[key] === null || values[key] === undefined) {
-                metric[key] = 0;
+                metric[name] = 0;
             } else {
-                metric[key] = values[key];
+                metric[name] = values[key];
             }
         })
         let changesTimeInfo = getChangesTimeInfo(json, values.priorMergedChangesCount, values.priorAbandonedChangesCount)
@@ -45,12 +50,14 @@ async function collectMetrics(json) {
         let values = results[0];
         let metric = results[1];
         Object.keys(values).forEach(function (key) {
+            let name = key + "-" + NUM_DAYS_FOR_RECENT + "days"
             if (values[key] === null || values[key] === undefined) {
-                metric[key] = 0;
+                metric[name] = 0;
             } else {
-                metric[key] = values[key];
+                metric[name] = values[key];
             }
         })
+        //console.log(metric)
         return Promise.resolve(metric);
     });
 }
@@ -180,11 +187,17 @@ function dbRequest(pipeline) {
         });
 }
 
+function recentMatch(json) {
+    let startDate = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+    return {$match: {updated: {$gte: startDate}}}
+}
+
 function getPriorTypeChangesCount(json, TYPE) {
     let created_date = json.created;
     let number = json._number;
     let pipeline = [
         {$match: {status: TYPE, _number: {$lt: number}, updated: {$lte: created_date}}},
+        recentMatch(json),
         {$count: "count"}
     ];
     return dbRequest(pipeline);
@@ -194,6 +207,7 @@ function getPriorChangesCount(json) {
     let number = json._number;
     let pipeline = [
         {$match: {_number: {$lt: number}}},
+        recentMatch(json),
         {$count: "count"}
     ]
     return dbRequest(pipeline);
@@ -204,6 +218,7 @@ function getOwnerPriorChangesCount(json) {
     let ownerId = json.owner._account_id;
     let pipeline = [
         {$match: {'owner._account_id': ownerId, _number: {$lt: number}}},
+        recentMatch(json),
         {$count: "count"}
     ]
     return dbRequest(pipeline);
@@ -213,14 +228,16 @@ function getOwnerPriorTypeChangesCount(json, TYPE) {
     let created_date = json.created;
     let number = json._number;
     let ownerId = json.owner._account_id;
-    let pipeline = [{
-        $match: {
-            'owner._account_id': ownerId,
-            status: TYPE,
-            _number: {$lt: number},
-            updated: {$lte: created_date}
-        }
-    },
+    let pipeline = [
+        {
+            $match: {
+                'owner._account_id': ownerId,
+                status: TYPE,
+                _number: {$lt: number},
+                updated: {$lte: created_date}
+            }
+        },
+        recentMatch(json),
         {$count: "count"}
     ]
     return dbRequest(pipeline);
@@ -229,12 +246,14 @@ function getOwnerPriorTypeChangesCount(json, TYPE) {
 function getPriorSubsystemChangesCount(json) {
     let number = json._number;
     let project = json.project;
-    let pipeline = [{
-        $match: {
-            project: project,
-            _number: {$lt: number},
-        }
-    },
+    let pipeline = [
+        {
+            $match: {
+                project: project,
+                _number: {$lt: number},
+            }
+        },
+        recentMatch(json),
         {$count: "count"}
     ]
 
@@ -245,14 +264,16 @@ function getPriorSubsystemTypeChangesCount(json, TYPE) {
     let created_date = json.created;
     let number = json._number;
     let project = json.project;
-    let pipeline = [{
-        $match: {
-            project: project,
-            status: TYPE,
-            _number: {$lt: number},
-            updated: {$lte: created_date}
-        }
-    },
+    let pipeline = [
+        {
+            $match: {
+                project: project,
+                status: TYPE,
+                _number: {$lt: number},
+                updated: {$lte: created_date}
+            }
+        },
+        recentMatch(json),
         {$count: "count"}
     ]
     return dbRequest(pipeline);
@@ -262,13 +283,15 @@ function getPriorSubsystemOwnerChangesCount(json) {
     let number = json._number;
     let project = json.project;
     let ownerId = json.owner._account_id;
-    let pipeline = [{
-        $match: {
-            'owner._account_id': ownerId,
-            project: project,
-            _number: {$lt: number},
-        }
-    },
+    let pipeline = [
+        {
+            $match: {
+                'owner._account_id': ownerId,
+                project: project,
+                _number: {$lt: number},
+            }
+        },
+        recentMatch(json),
         {$count: "count"}
     ]
     return dbRequest(pipeline);
@@ -279,15 +302,17 @@ function getPriorSubsystemOwnerTypeChangesCount(json, TYPE) {
     let number = json._number;
     let project = json.project;
     let ownerId = json.owner._account_id;
-    let pipeline = [{
-        $match: {
-            'owner._account_id': ownerId,
-            project: project,
-            status: TYPE,
-            _number: {$lt: number},
-            updated: {$lte: created_date}
-        }
-    },
+    let pipeline = [
+        {
+            $match: {
+                'owner._account_id': ownerId,
+                project: project,
+                status: TYPE,
+                _number: {$lt: number},
+                updated: {$lte: created_date}
+            }
+        },
+        recentMatch(json),
         {$count: "count"}
     ]
     return dbRequest(pipeline);
@@ -558,6 +583,7 @@ function getPriorChangeMeanTimeType(json, TYPE) {
     let project = getProject();
     let pipeline = [
         match,
+        recentMatch(json),
         project,
         {
             $group: {
@@ -587,6 +613,7 @@ function getPriorOwnerChangesMeanTimeType(json, TYPE) {
     };
     let pipeline = [
         match,
+        recentMatch(json),
         project,
         {
             $group: {
@@ -616,6 +643,7 @@ function getReviewersChangesMeanNumType(json, TYPE, count) {
     if (TYPE == null) delete match.$match.status;
     let pipeline = [
         match,
+        recentMatch(json),
         {$unwind: "$reviewers.REVIEWER"},
         {
             $project: {
@@ -697,9 +725,10 @@ function getReviewersChangesMeanNumType(json, TYPE, count) {
 //mean file time per owner
 //mean file time per reviewer
 
-function get_file_pipeline(match, files_list) {
+function get_file_pipeline(json, match, files_list) {
     return [
         match,
+        recentMatch(json),
         {$unwind: "$files_list"},
         {
             $project: {
@@ -741,7 +770,7 @@ function getFileTimeAndCount(json, TYPE) {
         }
     };
     if (TYPE == null) delete match.$match.status;
-    let pipeline = get_file_pipeline(match, files_list);
+    let pipeline = get_file_pipeline(json, match, files_list);
     return genericDBRequest(pipeline);
 }
 
@@ -759,7 +788,7 @@ function getFileTimeAndCountForOwner(json, TYPE) {
         }
     };
     if (TYPE == null) delete match.$match.status;
-    let pipeline = get_file_pipeline(match, files_list);
+    let pipeline = get_file_pipeline(json, match, files_list);
     return genericDBRequest(pipeline);
 }
 
@@ -778,6 +807,7 @@ function getFileTimeAndCountForReviewers(json, TYPE) {
     }
     let pipeline = [
         match,
+        recentMatch(json),
         {$unwind: "$reviewers.REVIEWER"},
         {$unwind: "$files_list"},
         {
@@ -832,6 +862,7 @@ function getOwnerNumberOfRevision(json, TYPE) {
     }
     let pipeline = [
         match,
+        recentMatch(json),
         {$project: {id: 1, owner_id: "$owner._account_id", revisions_num: {"$size": {"$objectToArray": "$revisions"}}}},
         {
             $group: {
@@ -859,6 +890,7 @@ function getOwnerNumberOfReview(json, TYPE) {
     }
     let pipeline = [
         match,
+        recentMatch(json),
         {$unwind: "$reviewers.REVIEWER"},
         {$project: {id: 1, reviewers: "$reviewers.REVIEWER"}},
         {$match: {"reviewers._account_id": ownerId}},
@@ -880,6 +912,7 @@ function getFileDeveloperNumber(json, TYPE) {
     }
     let pipeline = [
         match,
+        recentMatch(json),
         {$unwind: "$files_list"},
         {$match: {files_list: {$in: files_list}}},
         {$group: {_id: "$files_list", dev: {$addToSet: '$owner._account_id'}}},
@@ -905,6 +938,7 @@ function getOwnerPreviousMessageCount(json) {
     }
     let pipeline = [
         match,
+        recentMatch(json),
         {$unwind: "$messages"},
         {$group: {_id: "$messages.author._account_id", count: {$sum: 1}}},
         {$match: {_id: owner_id}},
@@ -924,6 +958,7 @@ function getReviewersTotalPreviousMessagesCount(json) {
     }
     let pipeline = [
         match,
+        recentMatch(json),
         {$unwind: "$messages"},
         {$group: {_id: "$messages.author._account_id", count: {$sum: 1}}},
         {$match: {_id: {$in: reviewersIdArray}}},
@@ -945,6 +980,7 @@ function getOwnerChangesMessagesCountAndAvgPerChanges(json) {
     }
     let pipeline = [
         match,
+        recentMatch(json),
         //{$unwind: "$messages"},
         //{$group: {_id: "$id", count:{$sum:1}}},
         //{$group: {_id: 1, count:{$sum:"$count"}, avg:{$avg:"$count"}}},
@@ -977,6 +1013,7 @@ function getOwnerAndReviewerCommonsChangesAndMessages(json) {
     }
     let pipeline = [
         match,
+        recentMatch(json),
         {$unwind: "$messages"},
         {$unwind: "$reviewers.REVIEWER"},
         {$match: {"owner._account_id": {$in: accountIdArray}}},
@@ -988,7 +1025,7 @@ function getOwnerAndReviewerCommonsChangesAndMessages(json) {
                 messages: {$sum: 1},
             }
         },
-        {$project: {_id: "$_id", changes_count: {$size: "$id"}, messages_count:  "$messages"}},
+        {$project: {_id: "$_id", changes_count: {$size: "$id"}, messages_count: "$messages"}},
         {
             $group: {
                 _id: 1,
@@ -1023,6 +1060,7 @@ function getOwnerChangesCountAndMessagesCountWithSameReviewers(json) {
     }
     let pipeline = [
         match,
+        recentMatch(json),
         {$unwind: "$messages"},
         {$unwind: "$reviewers.REVIEWER"},
         {$match: {"reviewers.REVIEWER._account_id": {$in: accountIdArray}}},

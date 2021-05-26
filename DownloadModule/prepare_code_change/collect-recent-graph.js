@@ -52,8 +52,8 @@ function start(json) {
         DATA_PATH = json["output_directory"];
     if (json["projectName"])
         projectName = json["projectName"];
-    if (json["numberOfDays"])
-        NUM_DAYS_FOR_RECENT = json["numberOfDays"];
+    if (json["NUM_DAYS_FOR_RECENT"])
+        NUM_DAYS_FOR_RECENT = json["NUM_DAYS_FOR_RECENT"];
 
     console.log("Collecting account graph !!!!");
 
