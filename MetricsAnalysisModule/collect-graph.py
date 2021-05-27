@@ -16,10 +16,10 @@ DATA_DIR_NAME = "/Volumes/SEAGATE-II/Data/libreoffice/"
 GRAPHS_GPICKLE_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-gpickle'
 FULL_GRAPHS_GPICKLE_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-full-gpickle'
 CHANGES_GRAPH_LIST_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/changes-graph-list.json'
-
-#JSON_GRAPHS_GPICKLE_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-json'
-#JSON_FULL_GRAPHS_GPICKLE_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-full-json'
-
+'''
+JSON_GRAPHS_GPICKLE_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-json'
+JSON_FULL_GRAPHS_GPICKLE_PATH = '/Volumes/SEAGATE-II/server-data-sync/libreoffice/graph-full-json'
+'''
 PROJET_NAME = "libreoffice"
 BOT_ACCOUNT = utils.get_bot_accounts(PROJET_NAME)
 #NUM_DAYS_FOR_RECENT = 180
@@ -100,11 +100,12 @@ def collect_graph(json, previous_json, graph, full_connected_graph):
         id = json["id"]
         changes_graph_list[id] = i
         
+        '''
         if(i == 0):
             graph = nx.Graph()
             full_connected_graph = nx.Graph()
             save_graph(graph, full_connected_graph, str(i))
-            i+=1
+        '''
 
         return [graph, full_connected_graph]
     
@@ -135,9 +136,9 @@ def add_updated_changes_in_graph(json, updatedChanges, graph, full_connected_gra
     id = json["id"]
     owner_id = json["owner_id"]
     global i
+    i+=1
     if (i > 0):
         save_graph(graph, full_connected_graph, str(i-1))
-    i+=1
     changes_graph_list[id] = i
     graph = update_graph(updatedChanges, owner_id, graph);
     full_connected_graph = updateFullConnectedGraph(updatedChanges, owner_id, full_connected_graph);
@@ -149,6 +150,13 @@ def save_graph(G, FG, filename):
     pathForFullSimple = os.path.join(FULL_GRAPHS_GPICKLE_PATH, filename + ".gpickle")
     nx.write_gpickle(G, pathForSimple)
     nx.write_gpickle(FG, pathForFullSimple)
+    '''
+    pathForSimpleJson = os.path.join(JSON_GRAPHS_GPICKLE_PATH, filename)
+    pathForFullSimpleJson = os.path.join(JSON_FULL_GRAPHS_GPICKLE_PATH, filename)
+    save_graph_json(G, pathForSimpleJson)
+    save_graph_json(FG, pathForFullSimpleJson)
+    '''
+
     pass
 
 
@@ -181,7 +189,7 @@ def update_graph(updatedChanges, owner_id, graph):
                 graph[owner_id][rev_id]['weight'] += 1
             else:
                 graph.add_edge(owner_id, rev_id, weight=1)
-    graph.remove_edges_from(nx.selfloop_edges(graph))
+    #graph.remove_edges_from(nx.selfloop_edges(graph))
     return graph
 
 
@@ -209,7 +217,7 @@ def updateFullConnectedGraph(updatedChanges, owner_id, graph):
                     graph[rev_id][rev_id2]['weight'] += 1
                 else:
                     graph.add_edge(rev_id, rev_id2, weight=1)
-    graph.remove_edges_from(nx.selfloop_edges(graph))
+    #graph.remove_edges_from(nx.selfloop_edges(graph))
     return graph
 
 
@@ -223,7 +231,11 @@ if __name__ == '__main__':
     pathlib(FULL_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
     pathlib(JSON_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
     pathlib(JSON_FULL_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
-    #collect_changes(0)
+    collect_changes(0)
+    '''
+    '''
+    pathlib(JSON_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
+    pathlib(JSON_FULL_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
     '''
     
     argument = sys.argv[1:]
@@ -236,6 +248,7 @@ if __name__ == '__main__':
             print ("The project you request can't not be found in the Config.json file")
     else:
         print ("Please provide an argument")
+    
 
     
 
