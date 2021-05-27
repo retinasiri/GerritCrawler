@@ -84,7 +84,7 @@ def getMainDatabaseUrl(hostname, port, username, password) :
 
 
 def getDatabaseFromJson(json):
-    print(json)
+    #print(json)
     hostname = json["database_hostname"]
     port = json["database_port"]
     username = json["database_username"]

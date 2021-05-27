@@ -52,6 +52,7 @@ def start(json):
     pathlib(FULL_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
 
     global Database
+    print(json)
     Database = dbutils.getDatabaseFromJson(json)
     
     global count
