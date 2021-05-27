@@ -32,7 +32,6 @@ i = 0
 
 
 def start(json):
-    
     global PROJET_NAME
     PROJET_NAME = json["project_name"]
 
@@ -228,12 +227,14 @@ if __name__ == '__main__':
     pathlib(JSON_FULL_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
     #collect_changes(0)
     '''
+    
     argument = sys.argv[1:]
-
+    print (argument)
     if(argument):
         projectName = argument[0]
         projectJson = code_metrics.get_project_json(projectName)
         if(projectJson is not None):
+            print (projectJson)
             start(projectJson)
         else:
             print ("The project you request can't not be found in the Config.json file")
