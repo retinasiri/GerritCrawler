@@ -18,7 +18,7 @@ class Database:
     def __init__(self, database_name, url = None):
         self.db_url = url
         self.dbClient = pymongo.MongoClient(self.db_url, authSource='admin')
-        print(url)
+        #print(url)
         self.databaseName = database_name
         #return self.dbClient;
 
@@ -90,6 +90,7 @@ def getDatabaseFromJson(json):
     password = json["database_password"]
     database_name = Database.get_db_name(json["db_name"])
     url = getMainDatabaseUrl(hostname, port, username, password)
+    print(url)
     return Database(database_name, url)
 
 
