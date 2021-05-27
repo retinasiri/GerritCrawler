@@ -18,6 +18,7 @@ class Database:
     def __init__(self, database_name, url = None):
         self.db_url = url
         self.dbClient = pymongo.MongoClient(self.db_url, authSource='admin')
+        print(url)
         self.databaseName = database_name
         #return self.dbClient;
 
