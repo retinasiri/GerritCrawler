@@ -84,14 +84,13 @@ def getMainDatabaseUrl(hostname, port, username, password) :
 
 
 def getDatabaseFromJson(json):
+    print(json)
     hostname = json["database_hostname"]
     port = json["database_port"]
     username = json["database_username"]
     password = json["database_password"]
     database_name = Database.get_db_name(json["db_name"])
     url = getMainDatabaseUrl(hostname, port, username, password)
-    print(url)
-    print(url)
     return Database(database_name, url)
 
 
