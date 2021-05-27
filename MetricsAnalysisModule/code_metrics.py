@@ -29,6 +29,10 @@ def process(projectName):
 
 def get_project_json(projectName):
     Config = load_json(CONFIG_JSON_PATH);
+
+    if(projectName not in Config["project"]) :
+        return None
+
     json = {}
     json["project_name"] = projectName
     json["output_data_path"] = Config["output_data_path"]
