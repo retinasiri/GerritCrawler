@@ -24,9 +24,8 @@ PROJET_NAME = "libreoffice"
 BOT_ACCOUNT = utils.get_bot_accounts(PROJET_NAME)
 #NUM_DAYS_FOR_RECENT = 180
 
-Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
-count = Database.get_changes_count()
-bar = SlowBar('')
+Database = None
+bar = None
 changes_graph_list = {}
 i = 0
 
@@ -229,12 +228,10 @@ if __name__ == '__main__':
     '''
     
     argument = sys.argv[1:]
-    print (argument)
     if(argument):
         projectName = argument[0]
         projectJson = code_metrics.get_project_json(projectName)
         if(projectJson is not None):
-            print (projectJson)
             start(projectJson)
         else:
             print ("The project you request can't not be found in the Config.json file")
