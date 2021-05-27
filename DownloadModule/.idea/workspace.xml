@@ -21,8 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/collect-graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/collect-graph.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/collect-recent-graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/collect-recent-graph.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,7 +139,7 @@
       <workItem from="1621789594487" duration="273000" />
       <workItem from="1621810036881" duration="110000" />
       <workItem from="1621999840649" duration="6543000" />
-      <workItem from="1622051707989" duration="5349000" />
+      <workItem from="1622051707989" duration="5732000" />
     </task>
     <task id="LOCAL-00001" summary="quick fix">
       <created>1620486385609</created>
