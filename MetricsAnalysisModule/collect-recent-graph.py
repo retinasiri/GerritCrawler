@@ -24,6 +24,7 @@ Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
 count = Database.get_changes_count()
 bar = SlowBar('Collecting graph', max= count)
 changes_graph_list = {}
+changes = {}
 i = 0
 
 
@@ -38,39 +39,45 @@ def collect_changes(skip):
             previous_json = doc
             graph = result[0]
             full_connected_graph = result[1]
-            bar.next()
+            #bar.next()
         del changes
         return collect_changes(skip + dbutils.NUM_OF_CHANGES_LIMIT)
     print("\nFinish")
     bar.finish()
     return 0
-
     
 def collect_graph(json, previous_json, graph, full_connected_graph):
-    updated_changes = getIntermediaryUpdatedChanges(json, previous_json)    
-    if(len(updated_changes)>0):
-        return add_updated_changes_in_graph(json, updated_changes, graph, full_connected_graph)
+    added_changes = getAddedIntermediaryUpdatedChanges(json, previous_json)
+    removed_changes = getRemovedIntermediaryUpdatedChanges(json, previous_json)    
+    
+    if (len(added_changes)>0 or len(removed_changes)>0) :
+        return updated_changes_in_graph(json, added_changes, removed_changes, graph, full_connected_graph)
     else:
         global i
         id = json["id"]
         changes_graph_list[id] = i
-        
         if(i == 0):
             graph = nx.Graph()
             full_connected_graph = nx.Graph()
             save_graph(graph, full_connected_graph, str(i))
             i+=1
-
         return [graph, full_connected_graph]
-    
 
-def getIntermediaryUpdatedChanges(json, previous_json):
+'''
+def getIntermediaryUpdatedChanges(json, previous_json, pipeline):
     if(not previous_json):
         return []
-
     if (not "created" in previous_json):
         return []
+    changes_collection = Database.get_changes_collection()
+    return list(changes_collection.aggregate(pipeline, allowDiskUse=True))
+'''
 
+def getAddedIntermediaryUpdatedChanges(json, previous_json):
+    if(not previous_json):
+        return []
+    if (not "created" in previous_json):
+        return []
     created = json["created"]
     previous_created = previous_json["created"]
     pipeline = [
@@ -86,16 +93,13 @@ def getIntermediaryUpdatedChanges(json, previous_json):
     return list(changes_collection.aggregate(pipeline, allowDiskUse=True))
 
 
-def getRemoveIntermediaryUpdatedChanges(json, previous_json):
+def getRemovedIntermediaryUpdatedChanges(json, previous_json):
     if(not previous_json):
         return []
-
     if (not "created" in previous_json):
         return []
-
     created_minus_recent_days = moment.date(json["created"]).subtract(days=NUM_DAYS_FOR_RECENT).format('YYYY-MM-DD HH:mm:ss.000000000');
     previous_created_minus_recent_days = moment.date(previous_json["created"]).subtract(days=NUM_DAYS_FOR_RECENT).format('YYYY-MM-DD HH:mm:ss.000000000');
-    
     pipeline = [
         {
             "$match": {
@@ -109,7 +113,18 @@ def getRemoveIntermediaryUpdatedChanges(json, previous_json):
     return list(changes_collection.aggregate(pipeline, allowDiskUse=True))
 
 
-def add_updated_changes_in_graph(json, updatedChanges, graph, full_connected_graph):
+def update_changes(added_changes, removed_changes):
+    for change in added_changes:
+        id = change["id"]
+        changes[id] = change
+    
+    for change in removed_changes:
+        id = change["id"]
+        changes.pop(id)
+
+        
+def updated_changes_in_graph(json, added_changes, removed_changes, graph, full_connected_graph):
+    update_changes(added_changes, removed_changes)
     id = json["id"]
     owner_id = json["owner_id"]
     global i
@@ -117,17 +132,27 @@ def add_updated_changes_in_graph(json, updatedChanges, graph, full_connected_gra
         save_graph(graph, full_connected_graph, str(i-1))
     i+=1
     changes_graph_list[id] = i
-    graph = update_graph(updatedChanges, owner_id, graph);
-    full_connected_graph = updateFullConnectedGraph(updatedChanges, owner_id, full_connected_graph);
+    graph = build_graph(changes, owner_id);
+    full_connected_graph = build_full_connected_graph(changes, owner_id);
     return[graph, full_connected_graph]
 
 
 def save_graph(G, FG, filename):
-    pathForSimple = os.path.join(GRAPHS_GPICKLE_PATH, filename + ".gpickle")
-    pathForFullSimple = os.path.join(FULL_GRAPHS_GPICKLE_PATH, filename + ".gpickle")
+    graph_path = GRAPHS_GPICKLE_PATH + "-" + str(NUM_DAYS_FOR_RECENT) + "days"
+    full_graph_path = FULL_GRAPHS_GPICKLE_PATH + "-" + str(NUM_DAYS_FOR_RECENT) + "days"
+    pathForSimple = os.path.join(graph_path, filename + ".gpickle")
+    pathForFullSimple = os.path.join(full_graph_path, filename + ".gpickle")
     nx.write_gpickle(G, pathForSimple)
     nx.write_gpickle(FG, pathForFullSimple)
-    pass
+
+    '''
+    pathForSimpleJson = os.path.join(JSON_GRAPHS_GPICKLE_PATH + "-" + str(NUM_DAYS_FOR_RECENT) + "days", filename)
+    pathForFullSimpleJson = os.path.join(JSON_FULL_GRAPHS_GPICKLE_PATH + "-" + str(NUM_DAYS_FOR_RECENT) + "days", filename)
+    save_graph_json(G, pathForSimpleJson)
+    save_graph_json(FG, pathForFullSimpleJson)
+    '''
+    
+    return 0
 
 
 def save_graph_json(G, fname):
@@ -140,11 +165,18 @@ def save_graph_json(G, fname):
             graph["graph"]["edges"].append([u,v])
     json.dump(graph, open(fname + ".json", 'w'), indent=2)
 
+    '''
+    json.dump(dict(nodes=[[n, G.node[n]] for n in G.nodes()],
+                   edges=[[u, v, G.edge[u][v]] for u,v in G.edges()]),
+              open(fname + ".json", 'w'), indent=2)
+    '''
 
-def update_graph(updatedChanges, owner_id, graph):
-    if(graph is None):
-        graph = nx.Graph()
-    for doc in updatedChanges:
+
+def build_graph(changes, owner_id):
+    graph = nx.Graph()
+    for key in changes:
+        doc = changes[key]
+        #print(doc)
         owner_id = doc["owner_id"]
 
         if ("reviewers_id" in doc):
@@ -159,14 +191,14 @@ def update_graph(updatedChanges, owner_id, graph):
                 graph[owner_id][rev_id]['weight'] += 1
             else:
                 graph.add_edge(owner_id, rev_id, weight=1)
-    #graph.remove_edges_from(nx.selfloop_edges(graph))
+    graph.remove_edges_from(nx.selfloop_edges(graph))
     return graph
 
 
-def updateFullConnectedGraph(updatedChanges, owner_id, graph):
-    if(graph is None):
-        graph = nx.Graph()
-    for doc in updatedChanges:
+def build_full_connected_graph(changes, owner_id):
+    graph = nx.Graph()
+    for key in changes:
+        doc = changes[key]
         owner_id = doc["owner_id"]
         if ("reviewers_id" in doc):
             reviewers_id = exclude_bot(doc["reviewers_id"])
@@ -187,7 +219,7 @@ def updateFullConnectedGraph(updatedChanges, owner_id, graph):
                     graph[rev_id][rev_id2]['weight'] += 1
                 else:
                     graph.add_edge(rev_id, rev_id2, weight=1)
-    #graph.remove_edges_from(nx.selfloop_edges(graph))
+    graph.remove_edges_from(nx.selfloop_edges(graph))
     return graph
 
 
@@ -196,8 +228,8 @@ def exclude_bot(reviewers_id):
 
 
 if __name__ == '__main__':
-    pathlib(GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
-    pathlib(FULL_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
-    pathlib(JSON_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
-    pathlib(JSON_FULL_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
+    pathlib(GRAPHS_GPICKLE_PATH + "-" + str(NUM_DAYS_FOR_RECENT) + "days").mkdir(parents=True, exist_ok=True)
+    pathlib(FULL_GRAPHS_GPICKLE_PATH + "-" + str(NUM_DAYS_FOR_RECENT) + "days").mkdir(parents=True, exist_ok=True)
+    pathlib(JSON_GRAPHS_GPICKLE_PATH + "-" + str(NUM_DAYS_FOR_RECENT) + "days").mkdir(parents=True, exist_ok=True)
+    pathlib(JSON_FULL_GRAPHS_GPICKLE_PATH + "-" + str(NUM_DAYS_FOR_RECENT) + "days").mkdir(parents=True, exist_ok=True)
     collect_changes(0)
