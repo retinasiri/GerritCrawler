@@ -1,0 +1,171 @@
+
+n
+number
+id
+change\_id
+status
+\\&\texttt{is\_preventive}&Determines whether the code change contains the keywords describing a refactoring&\\
+\\&\texttt{is\_a\_bot}&&\\
+\\&\texttt{num\_human\_reviewer}&&\\
+\\&\texttt{first\_revision}&&\\
+\\&\texttt{moy\_loc}&&\\
+\\&\texttt{moy\_complexity}&&\\
+
+
+
+\hline
+\textbf{Feature dimension}&\textbf{Feature name} & \textbf{Definition} & \textbf{Rationale}
+
+\hline
+\multirow{6}{3cm}{Date metrics}&\texttt{date\_created}&The time when the change was created&
+\\&\texttt{days\_of\_the\_weeks\_of\_date\_created}&The day of the week the change was created&
+\\&\texttt{is\_created\_date\_a\_weekend}&True if the change was created the weekend. False if not&
+\\&\texttt{committer\_timezone}&The timezone of the committer of the change&
+\\&\texttt{author\_timezone}&The timezone of the author of the change&
+\\&\texttt{diff\_created\_updated\_in\_hours}&The difference between the date of creation and the update time of the change&
+
+\hline
+\multirow{6}{3cm}{Collaboration graph metrics}&\texttt{degree\_centrality}&Used to determine the importance of a node in the graph&
+\\&\texttt{closeness\_centrality}&Allows to detect nodes capable of disseminating information very effectively via a graph&
+\\&\texttt{betweenness\_centrality}&Measures the centrality of a vertex of a graph&
+\\&\texttt{eigenvector\_centrality}&Measures the influence of a node in a network&
+\\&\texttt{clustering\_coefficient}&Measures the clustering of nodes in a network&
+\\&\texttt{core\_number}&The core number or k-coreness of a node is the largest \texttt{k} value of a kernel \texttt{k} containing that node&
+
+\hline
+\multirow{26}{3cm}{Code metrics}&\texttt{lines\_added\_num}&Number of lines inserted in the first revision&
+\\&\texttt{lines\_deleted\_num}&Number of lines deleted in the first revision&
+\\&\texttt{diff\_lines\_added\_line\_deleted}&Number of lines inserted minus the number of lines deleted&
+\\&\texttt{num\_files}&Number of files changed in the first revision&
+\\&\texttt{num\_files\_type}&Number of file extension in the change&
+\\&\texttt{num\_directory}&Number of directory&
+\\&\texttt{num\_file\_added}&Number of file added&
+\\&\texttt{num\_file\_deleted}&Number of file deleted&
+\\&\texttt{num\_binary\_file}&Number of binary file&
+\\&\texttt{modify\_entropy}&Distribution of file modification through code change&
+\\&\texttt{num\_programming\_language}&Number of programming language&
+\\&\texttt{num\_data\_language}&Number of data language&
+\\&\texttt{num\_prose\_language}&Number of prose language&
+\\&\texttt{num\_markup\_language}&Number of markup language&
+\\&\texttt{sum\_changed\_methods\_count}&Total number of changed methods in the code change&
+\\&\texttt{sum\_loc}&Total number of line of code in the change&
+\\&\texttt{sum\_complexity}&Sum of the cyclomatic complexity of the file in the change&
+\\&\texttt{num\_modify\_modification}&Number of file modified&
+\\&\texttt{num\_add\_modification}&Number of file added&
+\\&\texttt{num\_copy\_modification}&Number of file copied&
+\\&\texttt{num\_delete\_modification}&Number of file deleted&
+\\&\texttt{num\_rename\_modification}&Number of file rename&
+\\&\texttt{num\_unknown\_modification}&Number of unknown modified&
+\\&\texttt{num\_segs\_added}&Number of code segments added&
+\\&\texttt{num\_segs\_deleted}&Number of code segments deleted&
+\\&\texttt{num\_segs\_modify}&Number of code segments modified&
+
+\hline
+\multirow{9}{3cm}{Text metrics}&\texttt{subject\_length}&Number of characters in the suject of the changes&
+\\&\texttt{subject\_word\_count}&Number of characters in the subject of the code changes&
+\\&\texttt{msg\_length}&Number of characters in the description of code changes&
+\\&\texttt{msg\_word\_count}&Number of words in the description of code changes&
+\\&\texttt{is\_corrective}&Determines whether the code change contains the keywords describing a fix&
+\\&\texttt{is\_merge}&Determines whether the code change contains the keywords describing a code merge&
+\\&\texttt{is\_non\_fonctional}&Determines whether the code change contains the keywords describing non-functional additions&
+\\&\texttt{is\_perfective}&Determines whether the code change contains the keywords describing a code refinement&
+\\&\texttt{is\_refactoring}&Determines whether the code change contains the keywords describing a refactoring&
+
+\hline
+\multirow{59}{3cm}{Owner experience metrics}&\texttt{prior\_changes\_count}&Number of prior changes&
+\\&\texttt{prior\_merged\_changes\_count}&Number of prior merged changes&
+\\&\texttt{prior\_abandoned\_changes\_count}&Number of prior abandoned changes&
+\\&\texttt{merged\_ratio}&Number of prior merged changes divided by the number of prior changes&
+\\&\texttt{abandoned\_ratio}&Number of prior abandoned changes divided by the number of prior changes&
+\\&\texttt{prior\_subsystem\_changes\_count}&Number of subsystem prior changes&
+\\&\texttt{prior\_subsystem\_merged\_changes\_count}&Number of subsystem prior merged changes&
+\\&\texttt{prior\_subsystem\_abandoned\_changes\_count}&Number of subsystem prior abandoned changes&
+\\&\texttt{prior\_subsystem\_percentage}&Number of subsystem prior changes divided by the number of prior changes&
+\\&\texttt{prior\_subsystem\_merged\_ratio}&Number of subsystem prior merged changes divided by number of subsystem prior changes&
+\\&\texttt{prior\_subsystem\_abandoned\_ratio}&Number of subsystem prior abandoned changes divided by number of subsystem prior changes&
+\\&\texttt{prior\_subsystem\_merged\_percentage\_in\_merged}&Number of subsystem prior merged changes divided by number of prior merged changes&
+\\&\texttt{prior\_subsystem\_abandoned\_percentage\_in\_abandoned}&Number of subsystem prior abandoned changes divided by number of prior merged changes&
+\\&\texttt{prior\_merged\_changes\_mean\_time}&Average of the difference between the created time and the updated time of the previous merged changes&
+\\&\texttt{prior\_merged\_changes\_max\_time}&Maximum value of the difference between the created time and the updated time of the previous merged changes&
+\\&\texttt{prior\_merged\_changes\_min\_time}&Minimum value of the difference between the created time and the updated time of the previous merged changes&
+\\&\texttt{prior\_merged\_changes\_std\_time}&Population Standard deviation of the difference between the created time and the updated time of the previous merged changes&
+\\&\texttt{prior\_abandoned\_changes\_mean\_time}&Average of the difference between the created time and the updated time of the previous abandoned changes&
+\\&\texttt{prior\_abandoned\_changes\_max_time}&Maximum value of the difference between the created time and the updated time of the previous abandoned changes&
+\\&\texttt{prior\_abandoned\_changes\_min_time}&Minimum value of the difference between the created time and the updated time of the previous abandoned changes&
+\\&\texttt{prior\_abandoned\_changes\_std_time}&Population Standard deviation of the difference between the created time and the updated time of the previous abandoned changes&
+\\&\texttt{owner\_prior\_changes\_count}&Number of prior changes done by the owner&
+\\&\texttt{owner\_prior\_merged\_changes\_count}&Number of prior merged changes done by the owner&
+\\&\texttt{owner\_prior\_abandoned\_changes\_count}&Number of prior abandoned changes done by the owner&
+\\&\texttt{owner\_merged\_ratio}&Number of prior merged changes done by the owner divided by th number of prior changes done by the owner&
+\\&\texttt{owner\_abandoned\_ratio}&Number of prior abandoned changes done by the owner divided by th number of prior changes done by the owner&
+\\&\texttt{owner\_percentage\_of\_merged}&Number of prior merged changes done by the owner divided by th number of prior merged changes&
+\\&\texttt{owner\_percentage\_of\_abandoned}&Number of prior abandoned changes done by the owner divided by th number of prior abandoned changes&
+\\&\texttt{prior\_owner\_subsystem\_changes\_count}&Number of prior subsystem changes done by the owner&
+\\&\texttt{prior\_owner\_subsystem\_merged\_changes\_count}&Number of prior subsystem merged changes done by the owner&
+\\&\texttt{prior\_owner\_subsystem\_abandoned\_changes\_count}&Number of prior subsystem abandoned changes done by the owner&
+\\&\texttt{prior\_owner\_subsystem\_changes\_ratio}&Number of prior subsystem changes done by the owner divided by the number of prior changes done by the owner&
+\\&\texttt{prior\_owner\_subsystem\_merged\_changes\_ratio}&Number of prior subsystem merged changes done by the owner divided by the number of prior subsystem changes done by the owner&
+\\&\texttt{prior\_owner\_subsystem\_abandoned\_changes\_ratio}&Number of prior subsystem abandoned changes done by the owner divided by the number of prior subsystem changes done by the owner&
+\\&\texttt{prior\_owner\_percentage\_of\_merged\_in\_subsystem}&Number of prior subsystem merged changes done by the owner divided by the number of prior subsystem merged changes&
+\\&\texttt{prior\_owner\_percentage\_of\_abandoned\_in\_subsystem}&Number of prior subsystem abandoned changes done by the owner divided by the number of prior subsystem abandoned changes&
+\\&\texttt{prior\_owner\_merged\_changes\_mean\_time}&Average of the difference between the created time and the updated time of the previous merged changes done by the owner&
+\\&\texttt{prior\_owner\_merged\_changes\_max\_time}&Maximum value of the difference between the created time and the updated time of the previous merged changes done by the owner&
+\\&\texttt{prior\_owner\_merged\_changes\_min\_time}&Minimum value of the difference between the created time and the updated time of the previous merged changes done by the owner&
+\\&\texttt{prior\_owner\_merged\_changes\_std\_time}&Population Standard deviation of the difference between the created time and the updated time of the previous merged changes done by the owner&
+\\&\texttt{prior\_owner\_abandoned\_changes\_mean\_time}&Average of the difference between the created time and the updated time of the previous abandoned changes done by the owner&&
+\\&\texttt{prior\_owner\_abandoned\_changes\_max\_time}&Maximum value of the difference between the created time and the updated time of the previous abandoned changes done by the owner&
+\\&\texttt{prior\_owner\_abandoned\_changes\_min\_time}&Minimum value of the difference between the created time and the updated time of the previous abandoned changes done by the owner&
+\\&\texttt{prior\_owner\_abandoned\_changes\_std\_time}&Population Standard deviation of the difference between the created time and the updated time of the previous abandoned changes done by the owner&
+\\&\texttt{owner\_number\_of\_review}&Number of time the owner as been listed as reviewer in previous merged or abandoned changes&
+\\&\texttt{owner\_number\_of\_revision\_merged\_avg}&Average number of revision of prior merged changes done by the owner&
+\\&\texttt{owner\_number\_of\_revision\_merged\_max}&Maximum value of the number of revision of prior merged changes done by the owner&
+\\&\texttt{owner\_number\_of\_revision\_merged\_min}&Minimum value of the number of revision of prior merged changes done by the owner&
+\\&\texttt{owner\_number\_of\_revision\_merged\_std}&Population standard deviation of the number of revision of prior merged changes done by the owner&
+\\&\texttt{owner\_number\_of\_revision\_abandoned\_avg}&Average number of revision of prior abandoned changes done by the owner&
+\\&\texttt{owner\_number\_of\_revision\_abandoned\_max}&Maximum value of the number of revision of prior abandoned changes done by the owner&
+\\&\texttt{owner\_number\_of\_revision\_abandoned\_min}&Minimum value of the number of revision of prior abandoned changes done by the owner&
+\\&\texttt{owner\_number\_of\_revision\_abandoned\_std}&Population standard deviation of the number of revision of prior abandoned changes done by the owner&
+\\&\texttt{owner\_previous\_message\_count}&Number of messages sent by the owner in previous changes&
+\\&\texttt{owner\_changes\_messages\_sum}&Total number of messages sent in owner previous changes by the owner and the reviewers of his changes&
+\\&\texttt{owner\_changes\_messages\_avg\_per\_changes}&Average number of messages sent in owner previous changes by the owner and the reviewers of his changes&
+\\&\texttt{owner\_changes\_messages\_max\_per\_changes}&Maximum value of the number of messages sent in owner previous changes by the owner and the reviewers of his changes&
+\\&\texttt{owner\_changes\_messages\_min\_per\_changes}&Maximum value of the number of messages sent in owner previous changes by the owner and the reviewers of his changes&
+\\&\texttt{owner\_changes\_messages\_std\_per\_changes}&Population standard deviation of the number of messages sent in owner previous changes by the owner and the reviewers of his changes&
+
+\hline
+\multirow{33}{3cm}{File history metrics}&\texttt{Avg\_number\_of\_developer\_who\_changes\_file\_in\_changes}&Average number of developper who changes each files in the code changes&
+\\&\texttt{merged\_file\_count\_avg}&Average number of time each files in the code change have been in a merged code change&
+\\&\texttt{merged\_file\_count\_max}&&
+\\&\texttt{merged\_file\_count\_min}&&
+\\&\texttt{merged\_file\_count\_std}&&
+\\&\texttt{merged\_file\_time\_avg}&&
+\\&\texttt{merged\_file\_time\_max}&&
+\\&\texttt{merged\_file\_time\_min}&&
+\\&\texttt{merged\_file\_time\_std}&&
+\\&\texttt{abandoned\_file\_count\_avg}&Average number of time each files in the code change have been in a abandoned code change&
+\\&\texttt{abandoned\_file\_count\_max}&&
+\\&\texttt{abandoned\_file\_count\_min}&&
+\\&\texttt{abandoned\_file\_count\_std}&&
+\\&\texttt{abandoned\_file\_time\_avg}&&
+\\&\texttt{abandoned\_file\_time\_max}&&
+\\&\texttt{abandoned\_file\_time\_min}&&
+\\&\texttt{abandoned\_file\_time\_std}&&
+\\&\texttt{owner\_merged\_File\_count\_avg}&&
+\\&\texttt{owner\_merged\_File\_count\_max}&&
+\\&\texttt{owner\_merged\_File\_count\_min}&&
+\\&\texttt{owner\_merged\_File\_count\_std}&&
+\\&\texttt{owner\_merged\_File\_time\_avg}&&
+\\&\texttt{owner\_merged\_File\_time\_max}&&
+\\&\texttt{owner\_merged\_File\_time\_min}&&
+\\&\texttt{owner\_merged\_File\_time\_std}&&
+\\&\texttt{owner\_abandoned\_file\_count\_avg}&&
+\\&\texttt{owner\_abandoned\_file\_count\_max}&&
+\\&\texttt{owner\_abandoned\_file\_count\_min}&&
+\\&\texttt{owner\_abandoned\_file\_count\_std}&&
+\\&\texttt{owner\_abandoned\_file\_time\_avg}&&
+\\&\texttt{owner\_abandoned\_file\_time\_max}&&
+\\&\texttt{owner\_abandoned\_file\_time\_min}&&
+\\&\texttt{owner\_abandoned\_file\_time\_std}&&
+\hline
+
+

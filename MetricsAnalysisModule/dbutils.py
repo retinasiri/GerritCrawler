@@ -10,7 +10,7 @@ OPENSTACK_DB_NAME = 'openstackDB'
 ANDROID_DB_NAME = 'androidDB'
 CHANGES_COLLECTION_NAMES = 'changes'
 METRICS_COLLECTION_NAMES = 'metrics'
-
+PREVIOUS_METRICS_COLLECTION_NAMES = 'metrics_20210623'
 NUM_OF_CHANGES_LIMIT = 20000
 
 
@@ -37,8 +37,22 @@ class Database:
     def get_metrics_collection(self):
         return self.get_db()[METRICS_COLLECTION_NAMES]
 
+    def get_previous_metrics_collection(self):
+        return self.get_db()[PREVIOUS_METRICS_COLLECTION_NAMES]
+
     def get_changes_count(self):
         return self.get_changes_collection().estimated_document_count()
+
+    def get_metrics_count(self):
+        return self.get_metrics_collection().estimated_document_count()
+
+    def get_previous_metrics_count(self):
+        return self.get_previous_metrics_collection().estimated_document_count()
+
+    def get_previous_metrics_list(self, skip):
+        metrics_collection = self.get_previous_metrics_collection()
+        aggregation_string = [{"$sort": {"number" : 1}}, {"$skip": skip}, {"$limit": NUM_OF_CHANGES_LIMIT}]
+        return list(metrics_collection.aggregate(aggregation_string, allowDiskUse=True))
 
     def get_changes_list(self, skip):
         changes_collection = self.get_changes_collection()
@@ -62,7 +76,10 @@ class Database:
         query["id"] = metric["id"]
         del metric["id"]
         new_values["$set"] = metric
-        x = self.get_metrics_collection().update_one(query, new_values, upsert=True)
+        if(new_values["$set"]):
+            x = self.get_metrics_collection().update_one(query, new_values, upsert=True)
+        else :
+            x = metric
         return x
 
     @staticmethod

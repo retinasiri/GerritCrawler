@@ -136,12 +136,16 @@ def add_updated_changes_in_graph(json, updatedChanges, graph, full_connected_gra
     id = json["id"]
     owner_id = json["owner_id"]
     global i
+    
+    #if (i > 0):
+    if (i == 0):
+        save_graph(graph, full_connected_graph, str(i))
     i+=1
-    if (i > 0):
-        save_graph(graph, full_connected_graph, str(i-1))
     changes_graph_list[id] = i
     graph = update_graph(updatedChanges, owner_id, graph);
     full_connected_graph = updateFullConnectedGraph(updatedChanges, owner_id, full_connected_graph);
+    #todo
+    save_graph(graph, full_connected_graph, str(i))
     return[graph, full_connected_graph]
 
 
@@ -189,7 +193,7 @@ def update_graph(updatedChanges, owner_id, graph):
                 graph[owner_id][rev_id]['weight'] += 1
             else:
                 graph.add_edge(owner_id, rev_id, weight=1)
-    #graph.remove_edges_from(nx.selfloop_edges(graph))
+    graph.remove_edges_from(nx.selfloop_edges(graph))
     return graph
 
 
@@ -217,7 +221,7 @@ def updateFullConnectedGraph(updatedChanges, owner_id, graph):
                     graph[rev_id][rev_id2]['weight'] += 1
                 else:
                     graph.add_edge(rev_id, rev_id2, weight=1)
-    #graph.remove_edges_from(nx.selfloop_edges(graph))
+    graph.remove_edges_from(nx.selfloop_edges(graph))
     return graph
 
 

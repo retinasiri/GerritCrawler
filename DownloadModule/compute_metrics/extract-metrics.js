@@ -181,6 +181,7 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "num_human_reviewer");
     result = copy(result, metric, "first_revision");
 
+    //
     result = copy(result, metric, "sum_changed_methods_count");
     result = copy(result, metric, "sum_added_lines");
     result = copy(result, metric, "sum_removed_lines");
@@ -283,6 +284,7 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "ownerNumberOfRevisionAbandonedMax");
     result = copy(result, metric, "ownerNumberOfRevisionAbandonedMin");
     result = copy(result, metric, "ownerNumberOfRevisionAbandonedStd");
+
     result = copy(result, metric, "ownerAndReviewerCommonsChangesSum");
     result = copy(result, metric, "ownerAndReviewerCommonsChangesAvg");
     result = copy(result, metric, "ownerAndReviewerCommonsChangesMax");
@@ -324,6 +326,7 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "ownerChangesMessagesMaxPerChanges");
     result = copy(result, metric, "ownerChangesMessagesMinPerChanges");
     result = copy(result, metric, "ownerChangesMessagesStdPerChanges");
+
     result = copy(result, metric, "ownerAndReviewerCommonsChangesMessagesSum");
     result = copy(result, metric, "ownerAndReviewerCommonsChangesMessagesAvg");
     result = copy(result, metric, "ownerAndReviewerCommonsChangesMessagesMax");
@@ -369,6 +372,7 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "ownerAbandonedFileTimeMax");
     result = copy(result, metric, "ownerAbandonedFileTimeMin");
     result = copy(result, metric, "ownerAbandonedFileTimeStd");
+
     result = copy(result, metric, "reviewersMergedFileCountAvg");
     result = copy(result, metric, "reviewersMergedFileTimeAvg");
     result = copy(result, metric, "reviewersAbandonedFileCountAvg");

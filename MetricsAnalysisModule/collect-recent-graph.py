@@ -168,13 +168,14 @@ def updated_changes_in_graph(json, added_changes, removed_changes, graph, full_c
     id = json["id"]
     owner_id = json["owner_id"]
     global i
+    #i+=1
+    if (i == 0):
+        save_graph(graph, full_connected_graph, str(i))
     i+=1
-    if (i > 0):
-        save_graph(graph, full_connected_graph, str(i-1))
-    
     changes_graph_list[id] = i
     graph = build_graph(changes, owner_id);
-    full_connected_graph = build_full_connected_graph(changes, owner_id);
+    full_connected_graph = build_full_connected_graph(changes, owner_id)
+    save_graph(graph, full_connected_graph, str(i))
     return[graph, full_connected_graph]
 
 
