@@ -21,11 +21,9 @@
   <component name="ChangeListManager">
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compute_metrics/extract-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/extract-metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/collect-graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/collect-graph.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/collect-recent-graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/collect-recent-graph.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/dbutils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/dbutils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/latex" beforeDir="false" afterPath="$PROJECT_DIR$/latex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prepare_code_change/download-code-changes.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/download-code-changes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,7 +148,7 @@
       <workItem from="1622253145335" duration="234000" />
       <workItem from="1622257093996" duration="7729000" />
       <workItem from="1622295340822" duration="455000" />
-      <workItem from="1622300774994" duration="3735000" />
+      <workItem from="1622300774994" duration="4871000" />
     </task>
     <task id="LOCAL-00001" summary="quick fix">
       <created>1620486385609</created>

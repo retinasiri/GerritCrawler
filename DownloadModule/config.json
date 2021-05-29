@@ -24,6 +24,11 @@
       "api_url": "https://android-review.googlesource.com/",
       "db_name": "android",
       "description": ""
+    },
+    "scilab": {
+      "api_url": "https://codereview.scilab.org/",
+      "db_name": "scilab",
+      "description": ""
     }
   }
 }

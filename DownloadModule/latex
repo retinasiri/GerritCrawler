@@ -135,17 +135,17 @@ status
 \hline
 \multirow{33}{3cm}{File history metrics}&\texttt{Avg\_number\_of\_developer\_who\_changes\_file\_in\_changes}&Average number of developper who changes each files in the code changes&
 \\&\texttt{merged\_file\_count\_avg}&Average number of time each files in the code change have been in a merged code change&
-\\&\texttt{merged\_file\_count\_max}&&
-\\&\texttt{merged\_file\_count\_min}&&
-\\&\texttt{merged\_file\_count\_std}&&
-\\&\texttt{merged\_file\_time\_avg}&&
+\\&\texttt{merged\_file\_count\_max}&Maximum value of the number of time each files in the code change have been in a merged code change&
+\\&\texttt{merged\_file\_count\_min}&Minimum value of the number of time each files in the code change have been in a merged code change&
+\\&\texttt{merged\_file\_count\_std}&Population standard deviation value of the number of time each files in the code change have been in a merged code change&
+\\&\texttt{merged\_file\_time\_avg}&Average value of the difference between the creation time and updated time of codes changes for each time files in the code change have been in a merged code change&
 \\&\texttt{merged\_file\_time\_max}&&
 \\&\texttt{merged\_file\_time\_min}&&
 \\&\texttt{merged\_file\_time\_std}&&
 \\&\texttt{abandoned\_file\_count\_avg}&Average number of time each files in the code change have been in a abandoned code change&
-\\&\texttt{abandoned\_file\_count\_max}&&
-\\&\texttt{abandoned\_file\_count\_min}&&
-\\&\texttt{abandoned\_file\_count\_std}&&
+\\&\texttt{abandoned\_file\_count\_max}&Maximum value of the number of time each files in the code change have been in a abandoned code change&
+\\&\texttt{abandoned\_file\_count\_min}&Minimum value of the number of time each files in the code change have been in a abandoned code change&
+\\&\texttt{abandoned\_file\_count\_std}&Population standard deviation value of the number of time each files in the code change have been in a abandoned code change&
 \\&\texttt{abandoned\_file\_time\_avg}&&
 \\&\texttt{abandoned\_file\_time\_max}&&
 \\&\texttt{abandoned\_file\_time\_min}&&

@@ -166,7 +166,7 @@ function getLastJson(json) {
 
 /**
  * @param {String} changeUrlString The date
- * @param {json} json The date
+ * @param {JSON} json The date
  */
 async function saveFiles(changeUrlString, json) {
     if (Object.keys(json).length === 0)
