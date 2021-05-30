@@ -16,7 +16,7 @@ class SlowBar(Bar):
 
 
 def get_repositories_path(projectName, data_dir):
-    return os.path.join(data_dir, projectName, "Repositories")
+    return os.path.join(data_dir, projectName, "Repositories-2")
 
 
 def get_refspec(projectName, output_dir):

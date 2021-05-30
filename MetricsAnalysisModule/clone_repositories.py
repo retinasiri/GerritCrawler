@@ -9,7 +9,9 @@ import urllib.parse as urlparse
 
 LIST_OF_REPOSITORIES = "/Volumes/SEAGATE-II/Data/libreoffice/libreoffice-repositories-to-clone.txt"
 REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
-#bar = SlowBar('Cloning ')
+bar = SlowBar('Cloning ')
+NUMBER_OF_CLONE_PER_REQUEST = 100;
+
 
 """
 def get_repositories_path(data_dir, projectName):
@@ -49,6 +51,8 @@ def clone_repo(repo_list_path, clone_path):
     for git_url in repo_to_download:
         path = clone_path + urlparse.urlsplit(git_url).path 
         running_procs.append(subprocess.Popen(['git', 'clone', git_url, path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True))
+        if(len(running_procs) == NUMBER_OF_CLONE_PER_REQUEST) :
+                check_process(running_procs)
 
     check_process(running_procs);
     #bar.finish()

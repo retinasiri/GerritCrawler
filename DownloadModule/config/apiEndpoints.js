@@ -28,10 +28,10 @@ let mergedChangeQuery = "status:merged" ;
 //&o=REVIEWER_UPDATES&o=COMMIT_FOOTERS
 
 let query = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS" +
-    "&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS&o=CHANGE_ACTIONS"
+    "&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS&o=CHANGE_ACTIONS&o=REVIEWER_UPDATES&o=COMMIT_FOOTERS"
 
-"&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS" +
-"&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS&o=CHANGE_ACTIONS"
+//"&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS" +
+//"&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS&o=CHANGE_ACTIONS"
 
 function getProjectApi(projectName){
     return Config.project[projectName]["api_url"];
@@ -45,9 +45,9 @@ function getProjectsUrlHref(url){
     return url + projectsEndpoint;
 }
 
-function getChangesUrl(url){
+/*function getChangesUrl(url){
     return url + changeEndpoint;
-}
+}*/
 
 function getChangesUrl(url, start){
     return url + changeEndpoint + paging + start;

@@ -1,5 +1,5 @@
 {
-  "output_data_path": "data/",
+  "output_data_path": "/Volumes/SEAGATE-II/Gerrit-Code-Changes",
   "database_hostname": "localhost",
   "database_port": 27017,
   "database_username": "",
@@ -28,6 +28,36 @@
     "scilab": {
       "api_url": "https://codereview.scilab.org/",
       "db_name": "scilab",
+      "description": ""
+    },
+    "asterisk": {
+      "api_url": "https://gerrit.asterisk.org/",
+      "db_name": "asterisk",
+      "description": ""
+    },
+    "eclipse": {
+      "api_url": "https://git.eclipse.org/r/",
+      "db_name": "eclipse",
+      "description": ""
+    },
+    "lineageos": {
+      "api_url": "https://review.lineageos.org/",
+      "db_name": "lineageos",
+      "description": ""
+    },
+    "gerrithub": {
+      "api_url": "https://review.gerrithub.io/",
+      "db_name": "gerrithub",
+      "description": ""
+    },
+    "onap": {
+      "api_url": "https://gerrit.onap.org/r/",
+      "db_name": "onap",
+      "description": ""
+    },
+    "wikimedia": {
+      "api_url": "https://gerrit.wikimedia.org/r/",
+      "db_name": "wikimedia",
       "description": ""
     }
   }

@@ -60,6 +60,7 @@ function startComputeMetrics(json) {
 function getMetrics(skip) {
     return Metrics
         .aggregate([
+            {$match:{status: {$in: ['MERGED','ABANDONED']}}},
             {$sort: {number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
