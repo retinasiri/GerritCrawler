@@ -37,7 +37,7 @@ async function collectMetrics(json) {
                 metric[key] = values[key];
             }
         })
-        let changesTimeInfo = getChangesTimeInfo(json, values.priorMergedChangesCount, values.priorAbandonedChangesCount, values.priorChangesCount)
+        let changesTimeInfo = getChangesTimeInfo(json, values.priorMergedChangesCount, values.priorAbandonedChangesCount)
         let task = Promise.resolve(metric);
         return Promise.all([changesTimeInfo, task]);
         //return Promise.resolve(metric);
@@ -334,96 +334,202 @@ function genericDBRequest(pipeline) {
         });
 }
 
-async function getChangesTimeInfo(json, mergedCount, abandonedCount, priorChangesCount) {
-    let priorChangeMeanTime = getPriorChangeMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
-    let priorOwnerChangesMeanTime = getPriorOwnerChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
-    let fileTimeAndCount = getFileTimeAndCount(json, {$in: ['MERGED', 'ABANDONED']});
-    let fileTimeAndCountForOwner = getFileTimeAndCountForOwner(json, {$in: ['MERGED', 'ABANDONED']});
-    let ownerNumberOfRevision = getOwnerNumberOfRevision(json, {$in: ['MERGED', 'ABANDONED']});
-    let ownerNumberOfReview = getOwnerNumberOfReview(json);
-    let fileDeveloperNumber = getFileDeveloperNumber(json);
+async function getChangesTimeInfo(json, mergedCount, abandonedCount) {
+    let priorChangeMeanTimeMerged = getPriorChangeMeanTimeType(json, "MERGED");
+    let priorChangeMeanTimeAbandoned = getPriorChangeMeanTimeType(json, "ABANDONED");
+
+    let priorOwnerChangesMeanTimeMerged = getPriorOwnerChangesMeanTimeType(json, "MERGED");
+    let priorOwnerChangesMeanTimeAbandoned = getPriorOwnerChangesMeanTimeType(json, "ABANDONED");
+
+    let reviewersChangesMeanNumMerged = getReviewersChangesMeanNumType(json, "MERGED", mergedCount);
+    let reviewersChangesMeanNumAbandoned = getReviewersChangesMeanNumType(json, "ABANDONED", abandonedCount);
+
+    let fileTimeAndCountMerged = getFileTimeAndCount(json, "MERGED");
+    let fileTimeAndCountAbandoned = getFileTimeAndCount(json, "ABANDONED");
+
+    let fileTimeAndCountForOwnerMerged = getFileTimeAndCountForOwner(json, "MERGED");
+    let fileTimeAndCountForOwnerAbandoned = getFileTimeAndCountForOwner(json, "ABANDONED");
+
+    let fileTimeAndCountForReviewersMerged = getFileTimeAndCountForReviewers(json, "MERGED");
+    let fileTimeAndCountForReviewersAbandoned = getFileTimeAndCountForReviewers(json, "ABANDONED");
+
+    let ownerNumberOfRevisionMerged = getOwnerNumberOfRevision(json, "MERGED");
+    let ownerNumberOfRevisionAbandoned = getOwnerNumberOfRevision(json, "ABANDONED");
+
+    let ownerNumberOfReview = getOwnerNumberOfReview(json, "ABANDONED");
+
+    let fileDeveloperNumber = getFileDeveloperNumber(json, "ABANDONED");
+
     let ownerPreviousMessageCount = getOwnerPreviousMessageCount(json);
+    let reviewersTotalPreviousMessagesCount = getReviewersTotalPreviousMessagesCount(json);
+
     let ownerChangesMessagesCountAndAvgPerChanges = getOwnerChangesMessagesCountAndAvgPerChanges(json);
-    let changesMessagesCountAndAvg = getChangesMessagesCountAndAvg(json);
-    let nonBotAccountPreviousMessageCount = getPreviousMessageCount(json);
+
+    let ownerAndReviewerCommonsChangesAndMessages = getOwnerAndReviewerCommonsChangesAndMessages(json);
+    let ownerChangesCountAndMessagesCountWithSameReviewers = getOwnerChangesCountAndMessagesCountWithSameReviewers(json);
+
     return Promise.all([
-        priorChangeMeanTime, //0
-        priorOwnerChangesMeanTime, //1
-        fileTimeAndCount, //2
-        fileTimeAndCountForOwner, //3
-        ownerNumberOfRevision, //4
-        ownerNumberOfReview, //5
-        fileDeveloperNumber, //6
-        ownerPreviousMessageCount, //7
-        ownerChangesMessagesCountAndAvgPerChanges, //8
-        changesMessagesCountAndAvg, //9
-        nonBotAccountPreviousMessageCount, //10
+        priorChangeMeanTimeMerged, //0
+        priorChangeMeanTimeAbandoned, //1
+
+        priorOwnerChangesMeanTimeMerged, //2
+        priorOwnerChangesMeanTimeAbandoned, //3
+
+        reviewersChangesMeanNumMerged, //4
+        reviewersChangesMeanNumAbandoned, //5
+
+        fileTimeAndCountMerged, //6
+        fileTimeAndCountAbandoned, //7
+
+        fileTimeAndCountForOwnerMerged, //8
+        fileTimeAndCountForOwnerAbandoned, //9
+
+        fileTimeAndCountForReviewersMerged, //10
+        fileTimeAndCountForReviewersAbandoned, //11
+
+        ownerNumberOfRevisionMerged, //12
+        ownerNumberOfRevisionAbandoned, //13
+
+        ownerNumberOfReview, //14
+
+        fileDeveloperNumber, //15
+
+        ownerPreviousMessageCount, //16
+        reviewersTotalPreviousMessagesCount, //17
+
+        ownerChangesMessagesCountAndAvgPerChanges, //18
+
+        ownerAndReviewerCommonsChangesAndMessages, //19
+        ownerChangesCountAndMessagesCountWithSameReviewers, //20
+
     ]).then((results) => {
         //console.log(results);
         return {
 
-            priorMergedChangeTimeMean: results[0].avg,
-            priorMergedChangeTimeMax: results[0].max,
-            priorMergedChangeTimeMin: results[0].min,
-            priorMergedChangeTimeStd: results[0].std,
+            ownerNumberOfReview: results[14].count,
+            //rename fileDeveloperNumber: results[15].count,
+            AvgNumberOfDeveloperWhoChangesFileInChanges: results[15].count,
+            ownerPreviousMessageCount: results[16].count,
+            reviewersTotalPreviousMessagesCount: results[17].count,
 
-            priorOwnerMergedChangesTimeMean: results[1].avg,
-            priorOwnerMergedChangesTimeMax: results[1].max,
-            priorOwnerMergedChangesTimeMin: results[1].min,
-            priorOwnerMergedChangesTimeStd: results[1].std,
+            priorMergedChangeMeanTime: results[0].avg,
+            priorMergedChangeMaxTime: results[0].max,
+            priorMergedChangeMinTime: results[0].min,
+            priorMergedChangeStdTime: results[0].std,
+            priorAbandonedChangeMeanTime: results[1].avg,
+            priorAbandonedChangeMaxTime: results[1].max,
+            priorAbandonedChangeMinTime: results[1].min,
+            priorAbandonedChangeStdTime: results[1].std,
 
-            fileCountAvg: results[2].count_avg,
-            fileCountMax: results[2].count_max,
-            fileCountMin: results[2].count_min,
-            fileCountStd: results[2].count_std,
-            fileTimeAvg: results[2].time_avg,
-            fileTimeMax: results[2].time_max,
-            fileTimeMin: results[2].time_min,
-            fileTimeStd: results[2].time_std,
+            priorOwnerMergedChangesMeanTime: results[2].avg,
+            priorOwnerMergedChangesMaxTime: results[2].max,
+            priorOwnerMergedChangesMinTime: results[2].min,
+            priorOwnerMergedChangesStdTime: results[2].std,
+            priorOwnerAbandonedChangesMeanTime: results[3].avg,
+            priorOwnerAbandonedChangesMaxTime: results[3].max,
+            priorOwnerAbandonedChangesMinTime: results[3].avg,
+            priorOwnerAbandonedChangesStdTime: results[3].std,
 
-            ownerFileCountAvg: results[3].count_avg,
-            ownerFileCountMax: results[3].count_max,
-            ownerFileCountMin: results[3].count_min,
-            ownerFileCountStd: results[3].count_std,
-            ownerFileTimeAvg: results[3].time_avg,
-            ownerFileTimeMax: results[3].time_max,
-            ownerFileTimeMin: results[3].time_min,
-            ownerFileTimeStd: results[3].time_std,
+            reviewersMergedChangesCountAvg: results[4].count_avg,
+            reviewersMergedChangesCountMax: results[4].count_max,
+            reviewersMergedChangesCountMin: results[4].count_min,
+            reviewersMergedChangesCountStd: results[4].count_std,
+            reviewersMergedChangesTimeAvg: results[4].time_avg,
+            reviewersMergedChangesTimeMax: results[4].time_max,
+            reviewersMergedChangesTimeMin: results[4].time_min,
+            reviewersMergedChangesTimeStd: results[4].time_std,
+            reviewersMergedChangesPercentageAvg: results[4].percentage_avg,
+            reviewersMergedChangesRatioAvg: results[4].ratio_avg,
+            reviewersAbandonedChangesCountAvg: results[5].count_avg,
+            reviewersAbandonedChangesCountMax: results[5].count_max,
+            reviewersAbandonedChangesCountMin: results[5].count_min,
+            reviewersAbandonedChangesCountStd: results[5].count_std,
+            reviewersAbandonedChangesTimeAvg: results[5].time_avg,
+            reviewersAbandonedChangesTimeMax: results[5].time_max,
+            reviewersAbandonedChangesTimeMin: results[5].time_min,
+            reviewersAbandonedChangesTimeStd: results[5].time_std,
+            reviewersAbandonedChangesPercentageAvg: results[5].percentage_avg,
+            reviewersAbandonedChangesRatioAvg: results[5].ratio_avg,
 
-            ownerNumberOfRevisionAvg: results[4].revision_avg,
-            ownerNumberOfRevisionMax: results[4].revision_max,
-            ownerNumberOfRevisionMin: results[4].revision_min,
-            ownerNumberOfRevisionStd: results[4].revision_std,
+            mergedFileCountAvg: results[6].count_avg,
+            mergedFileCountMax: results[6].count_max,
+            mergedFileCountMin: results[6].count_min,
+            mergedFileCountStd: results[6].count_std,
+            mergedFileTimeAvg: results[6].time_avg,
+            mergedFileTimeMax: results[6].time_max,
+            mergedFileTimeMin: results[6].time_min,
+            mergedFileTimeStd: results[6].time_std,
+            abandonedFileCountAvg: results[7].count_avg,
+            abandonedFileCountMax: results[7].count_max,
+            abandonedFileCountMin: results[7].count_min,
+            abandonedFileCountStd: results[7].count_std,
+            abandonedFileTimeAvg: results[7].time_avg,
+            abandonedFileTimeMax: results[7].time_max,
+            abandonedFileTimeMin: results[7].time_min,
+            abandonedFileTimeStd: results[7].time_std,
 
-            ownerNumberOfReview: results[5].count,
+            ownerMergedFileCountAvg: results[8].count_avg,
+            ownerMergedFileCountMax: results[8].count_max,
+            ownerMergedFileCountMin: results[8].count_min,
+            ownerMergedFileCountStd: results[8].count_std,
+            ownerMergedFileTimeAvg: results[8].time_avg,
+            ownerMergedFileTimeMax: results[8].time_max,
+            ownerMergedFileTimeMin: results[8].time_min,
+            ownerMergedFileTimeStd: results[8].time_std,
+            ownerAbandonedFileCountAvg: results[9].count_avg,
+            ownerAbandonedFileCountMax: results[9].count_max,
+            ownerAbandonedFileCountMin: results[9].count_min,
+            ownerAbandonedFileCountStd: results[9].count_std,
+            ownerAbandonedFileTimeAvg: results[9].time_avg,
+            ownerAbandonedFileTimeMax: results[9].time_max,
+            ownerAbandonedFileTimeMin: results[9].time_min,
+            ownerAbandonedFileTimeStd: results[9].time_std,
 
-            //rename fileDeveloperNumber: results[6].count,
-            AvgNumberOfDeveloperWhoModifiedFiles: results[6].count,
+            reviewersMergedFileCountAvg: results[10].count_avg,
+            reviewersMergedFileTimeAvg: results[10].time_avg,
+            reviewersAbandonedFileCountAvg: results[11].count_avg,
+            reviewersAbandonedFileTimeAvg: results[11].time_avg,
 
-            ownerPreviousMessageCount: results[7].count,
+            ownerNumberOfRevisionMergedAvg: results[12].revision_avg,
+            ownerNumberOfRevisionMergedMax: results[12].revision_max,
+            ownerNumberOfRevisionMergedMin: results[12].revision_min,
+            ownerNumberOfRevisionMergedStd: results[12].revision_std,
+            ownerNumberOfRevisionAbandonedAvg: results[13].revision_avg,
+            ownerNumberOfRevisionAbandonedMax: results[13].revision_max,
+            ownerNumberOfRevisionAbandonedMin: results[13].revision_min,
+            ownerNumberOfRevisionAbandonedStd: results[13].revision_std,
 
-            ownerChangesMessagesSum: results[8].count,
-            ownerChangesMessagesAvgPerChanges: results[8].avg,
-            ownerChangesMessagesMaxPerChanges: results[8].max,
-            ownerChangesMessagesMinPerChanges: results[8].min,
-            ownerChangesMessagesStdPerChanges: results[8].std,
+            ownerChangesMessagesSum: results[18].count,
+            ownerChangesMessagesAvgPerChanges: results[18].avg,
+            ownerChangesMessagesMaxPerChanges: results[18].max,
+            ownerChangesMessagesMinPerChanges: results[18].min,
+            ownerChangesMessagesStdPerChanges: results[18].std,
 
-            changesMessagesSum: results[9].count,
-            changesMessagesAvg: results[9].avg,
-            changesMessagesMax: results[9].max,
-            changesMessagesMin: results[9].min,
-            changesMessagesStd: results[9].std,
+            ownerAndReviewerCommonsChangesSum: results[19].changes_count_sum,
+            ownerAndReviewerCommonsChangesAvg: results[19].changes_count_avg,
+            ownerAndReviewerCommonsChangesMax: results[19].changes_count_max,
+            ownerAndReviewerCommonsChangesMin: results[19].changes_count_min,
+            ownerAndReviewerCommonsChangesStd: results[19].changes_count_std,
+            ownerAndReviewerCommonsChangesMessagesSum: results[19].messages_count_sum,
+            ownerAndReviewerCommonsChangesMessagesAvg: results[19].messages_count_avg,
+            ownerAndReviewerCommonsChangesMessagesMax: results[19].messages_count_max,
+            ownerAndReviewerCommonsChangesMessagesMin: results[19].messages_count_min,
+            ownerAndReviewerCommonsChangesMessagesStd: results[19].messages_count_std,
 
-            nonBotAccountPreviousMessageSum: results[10].count,
-            nonBotAccountPreviousMessageAvg: results[10].avg,
-            nonBotAccountPreviousMessageMax: results[10].max,
-            nonBotAccountPreviousMessageMin: results[10].min,
-            nonBotAccountPreviousMessageStd: results[10].std,
+            ownerChangesWithSameReviewersSum: results[20].changes_count_sum,
+            ownerChangesWithSameReviewersAvg: results[20].changes_count_avg,
+            ownerChangesWithSameReviewersMax: results[20].changes_count_max,
+            ownerChangesWithSameReviewersMin: results[20].changes_count_min,
+            ownerChangesWithSameReviewersStd: results[20].changes_count_std,
+            ownerChangesMessagesWithSameReviewersSum: results[20].messages_count_sum,
+            ownerChangesMessagesWithSameReviewersAvg: results[20].messages_count_avg,
+            ownerChangesMessagesWithSameReviewersMax: results[20].messages_count_max,
+            ownerChangesMessagesWithSameReviewersMin: results[20].messages_count_min,
+            ownerChangesMessagesWithSameReviewersStd: results[20].messages_count_std,
 
         };
     })
 }
-
 
 function getProject() {
     return {
@@ -740,12 +846,13 @@ function getOwnerNumberOfRevision(json, TYPE) {
     return genericDBRequest(pipeline);
 }
 
-function getOwnerNumberOfReview(json) {
+function getOwnerNumberOfReview(json, TYPE) {
     let created_date = json.created;
     let number = json._number;
     let ownerId = json.owner._account_id;
     let match = {
         $match: {
+            status: TYPE,
             _number: {$lt: number},
             updated: {$lte: created_date}
         }
@@ -760,12 +867,13 @@ function getOwnerNumberOfReview(json) {
     return genericDBRequest(pipeline);
 }
 
-function getFileDeveloperNumber(json) {
+function getFileDeveloperNumber(json, TYPE) {
     let created_date = json.created;
     let number = json._number;
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
+            status: TYPE,
             _number: {$lt: number},
             updated: {$lte: created_date}
         }
@@ -800,40 +908,6 @@ function getOwnerPreviousMessageCount(json) {
         {$unwind: "$messages"},
         {$group: {_id: "$messages.author._account_id", count: {$sum: 1}}},
         {$match: {_id: owner_id}},
-    ]
-    return genericDBRequest(pipeline);
-}
-
-
-function getPreviousMessageCount(json) {
-    let created_date = json.created;
-    let number = json._number;
-    let botArray = MetricsUtils.getBotArray(projectName)
-    let match = {
-        $match: {
-            _number: {$lt: number},
-            updated: {$lte: created_date}
-        }
-    }
-    let pipeline = [
-        match,
-        {$unwind: "$messages"},
-        {
-            $group: {
-                _id: "$messages.author._account_id",
-                count: {$sum: 1}
-            }
-        },
-        {$match: {_id: {$nin : botArray}}},
-        {
-            $group: {
-                _id: 1,
-                avg: {$avg: "$count"},
-                max: {$max: "$count"},
-                min: {$min: "$count"},
-                std: {$stdDevPop: "$count"},
-            }
-        }
     ]
     return genericDBRequest(pipeline);
 }
@@ -889,33 +963,6 @@ function getOwnerChangesMessagesCountAndAvgPerChanges(json) {
     return genericDBRequest(pipeline);
 }
 
-
-function getChangesMessagesCountAndAvg(json) {
-    let created_date = json.created;
-    let number = json._number;
-    let match = {
-        $match: {
-            _number: {$lt: number},
-            updated: {$lte: created_date}
-        }
-    }
-    let pipeline = [
-        match,
-        {$project: {id: 1, msg_count: {$size: "$messages"}}},
-        {
-            $group: {
-                _id: 1,
-                count: {$sum: "$msg_count"},
-                avg: {$avg: "$msg_count"},
-                max: {$max: "$msg_count"},
-                min: {$avg: "$msg_count"},
-                std: {$stdDevPop: "$msg_count"}
-            }
-        }
-    ]
-    return genericDBRequest(pipeline);
-}
-
 function getOwnerAndReviewerCommonsChangesAndMessages(json) {
     let created_date = json.created;
     let number = json._number;
@@ -941,7 +988,7 @@ function getOwnerAndReviewerCommonsChangesAndMessages(json) {
                 messages: {$sum: 1},
             }
         },
-        {$project: {_id: "$_id", changes_count: {$size: "$id"}, messages_count: "$messages"}},
+        {$project: {_id: "$_id", changes_count: {$size: "$id"}, messages_count:  "$messages"}},
         {
             $group: {
                 _id: 1,

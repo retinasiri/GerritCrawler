@@ -33,6 +33,15 @@ function getHumanReviewersID(json, projectName) {
     return reviewersIDArray;
 }
 
+function getBotArray(projectName){
+    let BotAccounts = AllBotAccountJson[projectName];
+    let botArray = [];
+    Object.keys(BotAccounts).forEach(function (key) {
+        botArray.push(BotAccounts[key]._account_id);
+    })
+    return botArray;
+}
+
 function getHumanReviewersCount(json, projectName) {
     return getHumanReviewersID(json, projectName) ? getHumanReviewersID(json, projectName).length : 0;
 }
@@ -204,5 +213,6 @@ module.exports = {
     getHumanReviewersID: getHumanReviewersID,
     getHumanReviewersCount: getHumanReviewersCount,
     isABot: isABot,
+    getBotArray: getBotArray,
     startComputeMetrics: startComputeMetrics
 };
