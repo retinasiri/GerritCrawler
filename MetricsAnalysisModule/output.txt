@@ -1,0 +1,2241 @@
+Cloning into 'Repositories-saved/r/capra/org.eclipse.capra'...pra
+remote: Counting objects: 7, done
+remote: Total 13266 (delta 0), reused 13266 (delta 0)
+Receiving objects: 100% (13266/13266), 14.59 MiB | 10.84 MiB/s, done.
+Resolving deltas: 100% (5356/5356), done.
+
+Cloning into 'Repositories-saved/r/mmt/org.eclipse.qvto'...vto
+remote: Counting objects: 82, done
+remote: Finding sources: 100% (28/28)
+remote: Total 94338 (delta 0), reused 94338 (delta 0)
+Receiving objects: 100% (94338/94338), 38.43 MiB | 5.46 MiB/s, done.
+Resolving deltas: 100% (49528/49528), done.
+
+Cloning into 'Repositories-saved/r/4diac/org.eclipse.4diac.ide'...ide
+remote: Counting objects: 21, done
+remote: Total 63865 (delta 0), reused 63865 (delta 0)
+Receiving objects: 100% (63865/63865), 55.85 MiB | 10.52 MiB/s, done.
+Resolving deltas: 100% (14777/14777), done.
+
+Cloning into 'Repositories-saved/r/jdt/eclipse.jdt.core'...ore
+remote: Counting objects: 1038, done
+remote: Finding sources: 100% (52/52)
+remote: Total 540822 (delta 5), reused 540821 (delta 5)
+Receiving objects: 100% (540822/540822), 237.41 MiB | 5.45 MiB/s, done.
+Resolving deltas: 100% (251813/251813), done.
+
+Cloning into 'Repositories-saved/r/servertools/webtools.servertools'...ols
+remote: Counting objects: 3730, done
+remote: Total 69371 (delta 0), reused 69371 (delta 0)
+Receiving objects: 100% (69371/69371), 15.19 MiB | 8.56 MiB/s, done.
+Resolving deltas: 100% (35206/35206), done.
+
+Cloning into 'Repositories-saved/r/jgit/jgit'...git
+remote: Counting objects: 202, done
+remote: Total 151298 (delta 0), reused 151298 (delta 0)
+Receiving objects: 100% (151298/151298), 76.78 MiB | 5.84 MiB/s, done.
+Resolving deltas: 100% (61337/61337), done.
+
+Cloning into 'Repositories-saved/r/egit/egit'...git
+remote: Counting objects: 144, done
+remote: Total 106719 (delta 0), reused 106719 (delta 0)
+Receiving objects: 100% (106719/106719), 85.68 MiB | 7.70 MiB/s, done.
+Resolving deltas: 100% (39341/39341), done.
+
+Cloning into 'Repositories-saved/r/jdt/eclipse.jdt.ui'....ui
+remote: Counting objects: 1160, done
+remote: Finding sources: 100% (20/20)
+remote: Total 533904 (delta 0), reused 533903 (delta 0)
+Receiving objects: 100% (533904/533904), 159.21 MiB | 8.68 MiB/s, done.
+Resolving deltas: 100% (259232/259232), done.
+
+Cloning into 'Repositories-saved/r/cdt/org.eclipse.cdt'...cdt
+remote: Counting objects: 2108, done
+remote: Total 829572 (delta 0), reused 829572 (delta 0)
+Receiving objects: 100% (829572/829572), 234.56 MiB | 7.00 MiB/s, done.
+Resolving deltas: 100% (439462/439462), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.team'...team
+remote: Counting objects: 630, done
+remote: Total 192713 (delta 0), reused 192713 (delta 0)
+Receiving objects: 100% (192713/192713), 46.23 MiB | 10.13 MiB/s, done.
+Resolving deltas: 100% (93216/93216), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/eclipse/news'...news
+remote: Counting objects: 21, done
+remote: Finding sources: 100% (17/17)
+remote: Total 11541 (delta 0), reused 11533 (delta 0)
+Receiving objects: 100% (11541/11541), 72.13 MiB | 17.77 MiB/s, done.
+Resolving deltas: 100% (3041/3041), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.ui'...m.ui
+remote: Counting objects: 22675, done
+remote: Total 573834 (delta 0), reused 573834 (delta 0)
+Receiving objects: 100% (573834/573834), 172.27 MiB | 12.08 MiB/s, done.
+Resolving deltas: 100% (297277/297277), done.
+
+Cloning into 'Repositories-saved/r/tracecompass/org.eclipse.tracecompass'...pass
+remote: Counting objects: 25, done
+remote: Total 224267 (delta 0), reused 224267 (delta 0)
+Receiving objects: 100% (224267/224267), 139.59 MiB | 11.65 MiB/s, done.
+Resolving deltas: 100% (80426/80426), done.
+
+Cloning into 'Repositories-saved/r/osee/org.eclipse.osee'...osee
+remote: Counting objects: 1302, done
+remote: Total 726007 (delta 0), reused 726007 (delta 0)
+Receiving objects: 100% (726007/726007), 555.29 MiB | 15.56 MiB/s, done.
+Resolving deltas: 100% (352974/352974), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus'...yrus
+remote: Counting objects: 165, done
+remote: Total 881792 (delta 0), reused 881792 (delta 0)
+Receiving objects: 100% (881792/881792), 608.22 MiB | 7.60 MiB/s, done.
+Resolving deltas: 100% (455940/455940), done.
+
+16/402 : cloning https://git.eclipse.org/r/tracecompass.incubator/org.eclipse.tracecompass.incubaCloning into 'Repositories-saved/r/tracecompass.incubator/org.eclipse.tracecompass.incubator'...
+remote: Total 19140 (delta 0), reused 19140 (delta 0)
+Receiving objects: 100% (19140/19140), 17.22 MiB | 7.87 MiB/s, done.
+Resolving deltas: 100% (5680/5680), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.common'...mmon
+remote: Counting objects: 565, done
+remote: Total 223739 (delta 0), reused 223739 (delta 0)
+Receiving objects: 100% (223739/223739), 246.83 MiB | 16.53 MiB/s, done.
+Resolving deltas: 100% (142050/142050), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/eclipseide'...eide
+remote: Total 463 (delta 0), reused 463 (delta 0)
+Receiving objects: 100% (463/463), 4.83 MiB | 11.32 MiB/s, done.
+Resolving deltas: 100% (109/109), done.
+
+Cloning into 'Repositories-saved/r/acceleo/org.eclipse.acceleo'...eleo
+remote: Counting objects: 60, done
+remote: Total 94466 (delta 0), reused 94466 (delta 0)
+Receiving objects: 100% (94466/94466), 126.61 MiB | 14.18 MiB/s, done.
+Resolving deltas: 100% (45660/45660), done.
+
+Cloning into 'Repositories-saved/r/scout/org.eclipse.scout.sdk'....sdk
+remote: Counting objects: 2007, done
+remote: Total 114672 (delta 0), reused 114672 (delta 0)
+Receiving objects: 100% (114672/114672), 64.60 MiB | 9.88 MiB/s, done.
+Resolving deltas: 100% (34017/34017), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.debug'...ebug
+remote: Counting objects: 2015, done
+remote: Total 157718 (delta 0), reused 157718 (delta 0)
+Receiving objects: 100% (157718/157718), 38.90 MiB | 9.43 MiB/s, done.
+Resolving deltas: 100% (78468/78468), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.text'...text
+remote: Counting objects: 404, done
+remote: Total 104596 (delta 0), reused 104596 (delta 0)
+Receiving objects: 100% (104596/104596), 24.82 MiB | 10.41 MiB/s, done.
+Resolving deltas: 100% (51161/51161), done.
+
+Cloning into 'Repositories-saved/r/scout/org.eclipse.scout.rt'...t.rt
+remote: Counting objects: 8405, done
+remote: Total 524697 (delta 0), reused 524697 (delta 0)
+Receiving objects: 100% (524697/524697), 326.15 MiB | 11.42 MiB/s, done.
+Resolving deltas: 100% (148104/148104), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-collaborativemodeling'...ling
+remote: Counting objects: 2, done
+remote: Total 7157 (delta 0), reused 7157 (delta 0)
+Receiving objects: 100% (7157/7157), 16.56 MiB | 8.24 MiB/s, done.
+Resolving deltas: 100% (2803/2803), done.
+
+Cloning into 'Repositories-saved/r/webtools/webtools.releng.aggregator'...ator
+remote: Counting objects: 21, done
+remote: Total 4228 (delta 0), reused 4228 (delta 0)
+Receiving objects: 100% (4228/4228), 8.87 MiB | 16.57 MiB/s, done.
+Resolving deltas: 100% (2132/2132), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/comma'...omma
+remote: Total 8 (delta 0), reused 8 (delta 0)
+Unpacking objects: 100% (8/8), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/eclipse.org-common'...mmon
+remote: Counting objects: 9, done
+remote: Total 13432 (delta 0), reused 13432 (delta 0)
+Receiving objects: 100% (13432/13432), 43.89 MiB | 15.07 MiB/s, done.
+Resolving deltas: 100% (4868/4868), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.swt'....swt
+remote: Counting objects: 2085, done
+remote: Total 489792 (delta 0), reused 489792 (delta 0)
+Receiving objects: 100% (489792/489792), 174.55 MiB | 10.80 MiB/s, done.
+Resolving deltas: 100% (236017/236017), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-sysml16'...ml16
+remote: Counting objects: 1, done
+remote: Total 2540 (delta 0), reused 2540 (delta 0)
+Receiving objects: 100% (2540/2540), 7.28 MiB | 10.86 MiB/s, done.
+Resolving deltas: 100% (1331/1331), done.
+
+Cloning into 'Repositories-saved/r/jdt/eclipse.jdt.debug'...ebug
+remote: Counting objects: 187, done
+remote: Total 138585 (delta 0), reused 138585 (delta 0)
+Receiving objects: 100% (138585/138585), 38.51 MiB | 12.14 MiB/s, done.
+Resolving deltas: 100% (65269/65269), done.
+
+Cloning into 'Repositories-saved/r/tcf/org.eclipse.tcf.agent'...gent
+remote: Counting objects: 5, done
+remote: Total 23754 (delta 0), reused 23754 (delta 0)
+Receiving objects: 100% (23754/23754), 6.26 MiB | 10.37 MiB/s, done.
+Resolving deltas: 100% (17847/17847), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.resources'...rces
+remote: Counting objects: 167, done
+remote: Total 69350 (delta 0), reused 69350 (delta 0)
+Receiving objects: 100% (69350/69350), 21.73 MiB | 10.03 MiB/s, done.
+Resolving deltas: 100% (31727/31727), done.
+
+Cloning into 'Repositories-saved/r/basyx/basyx'...asyx
+remote: Total 60582 (delta 0), reused 60582 (delta 0)
+Receiving objects: 100% (60582/60582), 311.60 MiB | 17.79 MiB/s, done.
+Resolving deltas: 100% (25543/25543), done.
+
+Cloning into 'Repositories-saved/r/ocl/org.eclipse.ocl'....ocl
+remote: Counting objects: 1530, done
+remote: Finding sources: 100% (364847/364847)
+remote: Total 364847 (delta 166605), reused 364755 (delta 166605)
+Receiving objects: 100% (364847/364847), 426.44 MiB | 9.02 MiB/s, done.
+Resolving deltas: 100% (166605/166605), done.
+
+Cloning into 'Repositories-saved/r/m2e/m2e-core'...core
+remote: Counting objects: 107, done
+remote: Total 35288 (delta 0), reused 35288 (delta 0)
+Receiving objects: 100% (35288/35288), 25.85 MiB | 15.02 MiB/s, done.
+Resolving deltas: 100% (15483/15483), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/tracecompass'...pass
+remote: Total 221 (delta 0), reused 221 (delta 0)
+Receiving objects: 100% (221/221), 4.53 MiB | 12.14 MiB/s, done.
+Resolving deltas: 100% (60/60), done.
+
+Cloning into 'Repositories-saved/r/tea/tea'.../tea
+remote: Counting objects: 4, done
+remote: Total 2117 (delta 0), reused 2117 (delta 0)
+Receiving objects: 100% (2117/2117), 959.46 KiB | 11.03 MiB/s, done.
+Resolving deltas: 100% (237/237), done.
+
+Cloning into 'Repositories-saved/r/etrice/org.eclipse.etrice'...rice
+remote: Counting objects: 48, done
+remote: Total 101528 (delta 0), reused 101528 (delta 0)
+Receiving objects: 100% (101528/101528), 725.20 MiB | 16.98 MiB/s, done.
+Resolving deltas: 100% (32573/32573), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-moka.incubation'...tion
+remote: Counting objects: 2, done
+remote: Total 2368 (delta 0), reused 2368 (delta 0)
+Receiving objects: 100% (2368/2368), 1.71 MiB | 7.56 MiB/s, done.
+Resolving deltas: 100% (798/798), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/ecoretools'...ools
+remote: Total 435 (delta 0), reused 435 (delta 0)
+Receiving objects: 100% (435/435), 3.04 MiB | 9.12 MiB/s, done.
+Resolving deltas: 100% (193/193), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.images'...ages
+remote: Counting objects: 3, done
+remote: Total 22749 (delta 0), reused 22749 (delta 0)
+Receiving objects: 100% (22749/22749), 21.36 MiB | 10.87 MiB/s, done.
+Resolving deltas: 100% (7739/7739), done.
+
+42/402 : cloning https://git.eclipse.org/r/openk-usermodules/org.eclipse.openk-usermodules.gridFaCloning into 'Repositories-saved/r/openk-usermodules/org.eclipse.openk-usermodules.gridFailureInformation.frontend'...
+remote: Total 14043 (delta 0), reused 14043 (delta 0)
+Receiving objects: 100% (14043/14043), 36.46 MiB | 16.30 MiB/s, done.
+Resolving deltas: 100% (9814/9814), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.ui.tools'...ools
+remote: Counting objects: 117, done
+remote: Total 21326 (delta 0), reused 21326 (delta 0)
+Receiving objects: 100% (21326/21326), 7.71 MiB | 9.47 MiB/s, done.
+Resolving deltas: 100% (7891/7891), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/concierge'...erge
+remote: Total 166 (delta 0), reused 166 (delta 0)
+Receiving objects: 100% (166/166), 1.29 MiB | 9.80 MiB/s, done.
+Resolving deltas: 100% (74/74), done.
+
+Cloning into 'Repositories-saved/r/jubula/org.eclipse.jubula.core'...core
+remote: Counting objects: 44, done
+remote: Total 124908 (delta 0), reused 124908 (delta 0)
+Receiving objects: 100% (124908/124908), 101.24 MiB | 14.30 MiB/s, done.
+Resolving deltas: 100% (62319/62319), done.
+
+Cloning into 'Repositories-saved/r/equinox/rt.equinox.p2'...x.p2
+remote: Counting objects: 3299, done
+remote: Total 180070 (delta 0), reused 180070 (delta 0)
+Receiving objects: 100% (180070/180070), 98.32 MiB | 12.92 MiB/s, done.
+Resolving deltas: 100% (75779/75779), done.
+
+Cloning into 'Repositories-saved/r/sirius/org.eclipse.sirius'...rius
+remote: Counting objects: 166, done
+remote: Total 240075 (delta 0), reused 240075 (delta 0)
+Receiving objects: 100% (240075/240075), 221.22 MiB | 9.36 MiB/s, done.
+Resolving deltas: 100% (93618/93618), done.
+
+Cloning into 'Repositories-saved/r/ecf/org.eclipse.ecf'....ecf
+remote: Counting objects: 817, done
+remote: Total 161432 (delta 0), reused 161432 (delta 0)
+Receiving objects: 100% (161432/161432), 52.27 MiB | 10.15 MiB/s, done.
+Resolving deltas: 100% (68366/68366), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.runtime'...time
+remote: Counting objects: 280, done
+remote: Total 76390 (delta 0), reused 76390 (delta 0)
+Receiving objects: 100% (76390/76390), 14.09 MiB | 11.50 MiB/s, done.
+Resolving deltas: 100% (33956/33956), done.
+
+Cloning into 'Repositories-saved/r/app4mc/org.eclipse.app4mc.addon.migration'...tion
+remote: Counting objects: 20, done
+remote: Total 14176 (delta 0), reused 14176 (delta 0)
+Receiving objects: 100% (14176/14176), 8.88 MiB | 15.18 MiB/s, done.
+Resolving deltas: 100% (6280/6280), done.
+
+Cloning into 'Repositories-saved/r/tigerstripe/org.eclipse.tigerstripe'...ripe
+remote: Counting objects: 273, done
+remote: Total 95477 (delta 0), reused 95477 (delta 0)
+Receiving objects: 100% (95477/95477), 74.35 MiB | 18.44 MiB/s, done.
+Resolving deltas: 100% (58328/58328), done.
+
+Cloning into 'Repositories-saved/r/4diac/org.eclipse.4diac.forte'...orte
+remote: Counting objects: 25, done
+remote: Total 17171 (delta 0), reused 17171 (delta 0)
+Receiving objects: 100% (17171/17171), 11.49 MiB | 11.86 MiB/s, done.
+Resolving deltas: 100% (8044/8044), done.
+
+Cloning into 'Repositories-saved/r/ease/org.eclipse.ease.core'...core
+remote: Counting objects: 3, done
+remote: Total 23437 (delta 0), reused 23437 (delta 0)
+Receiving objects: 100% (23437/23437), 11.81 MiB | 6.81 MiB/s, done.
+Resolving deltas: 100% (2991/2991), done.
+
+Cloning into 'Repositories-saved/r/permissions/capra-dev'...-dev
+warning: remote HEAD refers to nonexistent ref, unable to checkout.
+
+
+Cloning into 'Repositories-saved/r/app4mc/org.eclipse.app4mc.examples'...ples
+remote: Total 1713 (delta 0), reused 1713 (delta 0)
+Receiving objects: 100% (1713/1713), 76.11 MiB | 19.77 MiB/s, done.
+Resolving deltas: 100% (771/771), done.
+
+Cloning into 'Repositories-saved/r/pde/eclipse.pde.ui'...e.ui
+remote: Counting objects: 577, done
+remote: Total 288094 (delta 0), reused 288094 (delta 0)
+Receiving objects: 100% (288094/288094), 108.88 MiB | 14.63 MiB/s, done.
+Resolving deltas: 100% (144186/144186), done.
+
+Cloning into 'Repositories-saved/r/simrel/org.eclipse.simrel.build'...uild
+remote: Counting objects: 39, done
+remote: Total 23207 (delta 0), reused 23207 (delta 0)
+Receiving objects: 100% (23207/23207), 8.87 MiB | 12.90 MiB/s, done.
+Resolving deltas: 100% (12088/12088), done.
+
+Cloning into 'Repositories-saved/r/emfclient/org.eclipse.emf.ecp.core'...core
+remote: Counting objects: 125, done
+remote: Total 257075 (delta 0), reused 257075 (delta 0)
+Receiving objects: 100% (257075/257075), 76.17 MiB | 6.25 MiB/s, done.
+Resolving deltas: 100% (91700/91700), done.
+
+Cloning into 'Repositories-saved/r/app4mc/org.eclipse.app4mc.tools'...ools
+remote: Counting objects: 2, done
+remote: Total 7173 (delta 0), reused 7173 (delta 0)
+Receiving objects: 100% (7173/7173), 57.34 MiB | 17.44 MiB/s, done.
+Resolving deltas: 100% (3077/3077), done.
+
+Cloning into 'Repositories-saved/r/orbit/orbit-recipes'...ipes
+remote: Total 12482 (delta 0), reused 12482 (delta 0)
+Receiving objects: 100% (12482/12482), 2.69 MiB | 8.96 MiB/s, done.
+Resolving deltas: 100% (4407/4407), done.
+
+Cloning into 'Repositories-saved/r/rcptt/org.eclipse.rcptt'...cptt
+remote: Counting objects: 1, done
+remote: Total 88122 (delta 0), reused 88122 (delta 0)
+Receiving objects: 100% (88122/88122), 35.31 MiB | 11.34 MiB/s, done.
+Resolving deltas: 100% (47491/47491), done.
+
+Cloning into 'Repositories-saved/r/osee/org.eclipse.ote'....ote
+remote: Counting objects: 6, done
+remote: Total 15639 (delta 0), reused 15639 (delta 0)
+Receiving objects: 100% (15639/15639), 5.03 MiB | 8.32 MiB/s, done.
+Resolving deltas: 100% (7330/7330), done.
+
+Cloning into 'Repositories-saved/r/papyrus-rt/org.eclipse.papyrus-rt'...s-rt
+remote: Counting objects: 6, done
+remote: Total 60319 (delta 0), reused 60319 (delta 0)
+Receiving objects: 100% (60319/60319), 38.56 MiB | 7.64 MiB/s, done.
+Resolving deltas: 100% (14398/14398), done.
+
+Cloning into 'Repositories-saved/r/jdt/eclipse.jdt'....jdt
+remote: Counting objects: 154, done
+remote: Total 3357 (delta 0), reused 3357 (delta 0)
+Receiving objects: 100% (3357/3357), 670.42 KiB | 2.45 MiB/s, done.
+Resolving deltas: 100% (1866/1866), done.
+
+Cloning into 'Repositories-saved/r/viatra/org.eclipse.viatra'...atra
+remote: Counting objects: 66, done
+remote: Total 127456 (delta 0), reused 127456 (delta 0)
+Receiving objects: 100% (127456/127456), 65.60 MiB | 7.55 MiB/s, done.
+Resolving deltas: 100% (39150/39150), done.
+
+Cloning into 'Repositories-saved/r/cdo/cdo'.../cdo
+remote: Counting objects: 100, done
+remote: Total 471625 (delta 0), reused 471625 (delta 0)
+Receiving objects: 100% (471625/471625), 250.70 MiB | 10.21 MiB/s, done.
+Resolving deltas: 100% (258705/258705), done.
+
+Cloning into 'Repositories-saved/r/statet/org.eclipse.statet-r'...et-r
+remote: Counting objects: 1231, done
+remote: Total 27322 (delta 0), reused 27322 (delta 0)
+Receiving objects: 100% (27322/27322), 14.03 MiB | 10.04 MiB/s, done.
+Resolving deltas: 100% (11798/11798), done.
+
+Cloning into 'Repositories-saved/r/jeetools/webtools.javaee'...vaee
+remote: Counting objects: 7338, done
+remote: Total 193809 (delta 0), reused 193809 (delta 0)
+Receiving objects: 100% (193809/193809), 53.58 MiB | 10.75 MiB/s, done.
+Resolving deltas: 100% (98719/98719), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-designer'...gner
+remote: Counting objects: 8, done
+remote: Total 39849 (delta 0), reused 39849 (delta 0)
+Receiving objects: 100% (39849/39849), 47.50 MiB | 11.92 MiB/s, done.
+Resolving deltas: 100% (16191/16191), done.
+
+Cloning into 'Repositories-saved/r/diffmerge/org.eclipse.emf.diffmerge.core'...core
+remote: Counting objects: 2, done
+remote: Total 16708 (delta 0), reused 16708 (delta 0)
+Receiving objects: 100% (16708/16708), 10.81 MiB | 7.36 MiB/s, done.
+Resolving deltas: 100% (6180/6180), done.
+
+Cloning into 'Repositories-saved/r/virgo/org.eclipse.virgo.root'...root
+remote: Counting objects: 1, done
+remote: Total 74920 (delta 0), reused 74920 (delta 0)
+Receiving objects: 100% (74920/74920), 75.41 MiB | 13.04 MiB/s, done.
+Resolving deltas: 100% (39644/39644), done.
+
+Cloning into 'Repositories-saved/r/refactor/org.eclipse.emf.refactor.core'...core
+remote: Total 53 (delta 0), reused 53 (delta 0)
+Unpacking objects: 100% (53/53), done.
+
+Cloning into 'Repositories-saved/r/emfcompare/org.eclipse.emf.compare'...pare
+remote: Counting objects: 105, done
+remote: Total 121735 (delta 0), reused 121735 (delta 0)
+Receiving objects: 100% (121735/121735), 88.37 MiB | 12.31 MiB/s, done.
+Resolving deltas: 100% (61152/61152), done.
+
+Cloning into 'Repositories-saved/r/viatra/org.eclipse.viatra.examples'...ples
+remote: Counting objects: 3, done
+remote: Total 11723 (delta 0), reused 11723 (delta 0)
+Receiving objects: 100% (11723/11723), 5.27 MiB | 6.64 MiB/s, done.
+Resolving deltas: 100% (2903/2903), done.
+
+Cloning into 'Repositories-saved/r/lsp4e/lsp4e'...sp4e
+remote: Total 8205 (delta 0), reused 8205 (delta 0)
+Receiving objects: 100% (8205/8205), 4.00 MiB | 2.08 MiB/s, done.
+Resolving deltas: 100% (1788/1788), done.
+
+Cloning into 'Repositories-saved/r/henshin/org.eclipse.emft.henshin'...shin
+remote: Total 54089 (delta 0), reused 54089 (delta 0)
+Receiving objects: 100% (54089/54089), 103.90 MiB | 13.81 MiB/s, done.
+Resolving deltas: 100% (22761/22761), done.
+
+Cloning into 'Repositories-saved/r/swtbot/org.eclipse.swtbot'...tbot
+remote: Counting objects: 13, done
+remote: Total 24420 (delta 0), reused 24420 (delta 0)
+Receiving objects: 100% (24420/24420), 10.40 MiB | 10.16 MiB/s, done.
+Resolving deltas: 100% (10293/10293), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-sysml'...ysml
+remote: Counting objects: 11, done
+remote: Total 21533 (delta 0), reused 21533 (delta 0)
+Receiving objects: 100% (21533/21533), 19.25 MiB | 8.22 MiB/s, done.
+Resolving deltas: 100% (5895/5895), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/community'...nity
+remote: Counting objects: 3, done
+remote: Total 53441 (delta 0), reused 53441 (delta 0)
+Receiving objects: 100% (53441/53441), 758.78 MiB | 16.38 MiB/s, done.
+Resolving deltas: 100% (20312/20312), done.
+
+Cloning into 'Repositories-saved/r/gendoc/org.eclipse.gendoc'...ndoc
+remote: Counting objects: 6, done
+remote: Total 5110 (delta 0), reused 5110 (delta 0)
+Receiving objects: 100% (5110/5110), 2.52 MiB | 9.21 MiB/s, done.
+Resolving deltas: 100% (1084/1084), done.
+
+Cloning into 'Repositories-saved/r/emf/org.eclipse.emf'....emf
+remote: Counting objects: 24, done
+remote: Total 157207 (delta 0), reused 157207 (delta 0)
+Receiving objects: 100% (157207/157207), 74.00 MiB | 10.02 MiB/s, done.
+Resolving deltas: 100% (80627/80627), done.
+
+Cloning into 'Repositories-saved/r/eef/org.eclipse.eef'....eef
+remote: Counting objects: 38, done
+remote: Total 129357 (delta 0), reused 129357 (delta 0)
+Receiving objects: 100% (129357/129357), 65.35 MiB | 15.19 MiB/s, done.
+Resolving deltas: 100% (77240/77240), done.
+
+Cloning into 'Repositories-saved/r/rap/org.eclipse.rap'....rap
+remote: Counting objects: 226, done
+remote: Total 237571 (delta 0), reused 237571 (delta 0)
+Receiving objects: 100% (237571/237571), 92.29 MiB | 8.73 MiB/s, done.
+Resolving deltas: 100% (141614/141614), done.
+
+Cloning into 'Repositories-saved/r/oomph/org.eclipse.oomph'...omph
+remote: Counting objects: 33, done
+remote: Total 81382 (delta 0), reused 81382 (delta 0)
+Receiving objects: 100% (81382/81382), 69.20 MiB | 9.63 MiB/s, done.
+Resolving deltas: 100% (17837/17837), done.
+
+Cloning into 'Repositories-saved/r/gmf-tooling/org.eclipse.gmf-tooling'...ling
+remote: Counting objects: 1, done
+remote: Total 163606 (delta 0), reused 163606 (delta 0)
+Receiving objects: 100% (163606/163606), 39.43 MiB | 10.11 MiB/s, done.
+Resolving deltas: 100% (100501/100501), done.
+
+Cloning into 'Repositories-saved/r/nattable/org.eclipse.nebula.widgets.nattable'...able
+remote: Counting objects: 7, done
+remote: Total 39463 (delta 0), reused 39463 (delta 0)
+Receiving objects: 100% (39463/39463), 120.17 MiB | 15.05 MiB/s, done.
+Resolving deltas: 100% (12980/12980), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-moka'...moka
+remote: Counting objects: 8, done
+remote: Total 22094 (delta 0), reused 22094 (delta 0)
+Receiving objects: 100% (22094/22094), 122.85 MiB | 12.82 MiB/s, done.
+Resolving deltas: 100% (6604/6604), done.
+
+Cloning into 'Repositories-saved/r/emf-store/org.eclipse.emf.emfstore.core'...core
+remote: Counting objects: 21, done
+remote: Total 99834 (delta 0), reused 99834 (delta 0)
+Receiving objects: 100% (99834/99834), 84.24 MiB | 14.25 MiB/s, done.
+Resolving deltas: 100% (54718/54718), done.
+
+Cloning into 'Repositories-saved/r/ptp/org.eclipse.remote'...mote
+remote: Counting objects: 8, done
+remote: Total 6036 (delta 0), reused 6036 (delta 0)
+Receiving objects: 100% (6036/6036), 2.54 MiB | 9.31 MiB/s, done.
+Resolving deltas: 100% (919/919), done.
+
+Cloning into 'Repositories-saved/r/mdht/org.eclipse.mdht'...mdht
+remote: Total 29858 (delta 0), reused 29858 (delta 0)
+Receiving objects: 100% (29858/29858), 119.13 MiB | 11.41 MiB/s, done.
+Resolving deltas: 100% (22077/22077), done.
+
+Cloning into 'Repositories-saved/r/modisco/org.eclipse.modisco'...isco
+remote: Counting objects: 22, done
+remote: Total 74510 (delta 0), reused 74510 (delta 0)
+Receiving objects: 100% (74510/74510), 38.40 MiB | 10.93 MiB/s, done.
+Resolving deltas: 100% (40783/40783), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/unide'...nide
+remote: Total 3428 (delta 0), reused 3428 (delta 0)
+Receiving objects: 100% (3428/3428), 4.41 MiB | 14.96 MiB/s, done.
+Resolving deltas: 100% (1505/1505), done.
+
+Cloning into 'Repositories-saved/r/bpmn2-modeler/org.eclipse.bpmn2-modeler'...eler
+remote: Counting objects: 28, done
+remote: Total 57156 (delta 0), reused 57156 (delta 0)
+Receiving objects: 100% (57156/57156), 27.16 MiB | 9.57 MiB/s, done.
+Resolving deltas: 100% (31803/31803), done.
+
+Cloning into 'Repositories-saved/r/epp/org.eclipse.epp.logging'...ging
+remote: Counting objects: 2, done
+remote: Total 10862 (delta 0), reused 10862 (delta 0)
+Receiving objects: 100% (10862/10862), 3.47 MiB | 7.98 MiB/s, done.
+Resolving deltas: 100% (2648/2648), done.
+
+Cloning into 'Repositories-saved/r/egit/egit-github'...thub
+remote: Counting objects: 88, done
+remote: Total 17932 (delta 0), reused 17932 (delta 0)
+Receiving objects: 100% (17932/17932), 4.85 MiB | 10.17 MiB/s, done.
+Resolving deltas: 100% (6632/6632), done.
+
+Cloning into 'Repositories-saved/r/mat/org.eclipse.mat'....mat
+remote: Counting objects: 37, done
+remote: Total 37258 (delta 0), reused 37258 (delta 0)
+Receiving objects: 100% (37258/37258), 101.89 MiB | 11.63 MiB/s, done.
+Resolving deltas: 100% (16435/16435), done.
+
+Cloning into 'Repositories-saved/r/efxclipse/org.eclipse.efxclipse'...ipse
+remote: Counting objects: 12, done
+remote: Total 72516 (delta 0), reused 72516 (delta 0)
+Receiving objects: 100% (72516/72516), 86.36 MiB | 5.83 MiB/s, done.
+Resolving deltas: 100% (13877/13877), done.
+
+Cloning into 'Repositories-saved/r/emfcompare/org.eclipse.emf.compare-acceptance'...ance
+remote: Total 101 (delta 0), reused 101 (delta 0)
+Receiving objects: 100% (101/101), 1.64 MiB | 11.61 MiB/s, done.
+Resolving deltas: 100% (24/24), done.
+
+Cloning into 'Repositories-saved/r/ptp/org.eclipse.ptp'....ptp
+remote: Counting objects: 3402, done
+remote: Total 218816 (delta 0), reused 218816 (delta 0)
+Receiving objects: 100% (218816/218816), 129.19 MiB | 13.12 MiB/s, done.
+Resolving deltas: 100% (122239/122239), done.
+
+Cloning into 'Repositories-saved/r/tinydtls/org.eclipse.tinydtls'...ydtls
+remote: Total 584 (delta 0), reused 584 (delta 0)
+Receiving objects: 100% (584/584), 604.89 KiB | 6.57 MiB/s, done.
+Resolving deltas: 100% (259/259), done.
+
+Cloning into 'Repositories-saved/r/mylyn/org.eclipse.mylyn.context'...ntext
+remote: Counting objects: 179, done
+remote: Total 73019 (delta 0), reused 73019 (delta 0)
+Receiving objects: 100% (73019/73019), 7.91 MiB | 9.65 MiB/s, done.
+Resolving deltas: 100% (39313/39313), done.
+
+Cloning into 'Repositories-saved/r/jubula/org.eclipse.jubula.ci'...la.ci
+remote: Total 3 (delta 0), reused 3 (delta 0)
+Unpacking objects: 100% (3/3), done.
+
+Cloning into 'Repositories-saved/r/mylyn/org.eclipse.mylyn.builds'...uilds
+remote: Total 12020 (delta 0), reused 12020 (delta 0)
+Receiving objects: 100% (12020/12020), 2.43 MiB | 9.39 MiB/s, done.
+Resolving deltas: 100% (5488/5488), done.
+
+Cloning into 'Repositories-saved/r/rmf/org.eclipse.rmf.documentation'...ation
+remote: Total 844 (delta 0), reused 844 (delta 0)
+Receiving objects: 100% (844/844), 7.73 MiB | 10.98 MiB/s, done.
+Resolving deltas: 100% (344/344), done.
+
+Cloning into 'Repositories-saved/r/gemini.dbaccess/org.eclipse.gemini.dbaccess'...ccess
+remote: Counting objects: 6, done
+remote: Total 1574 (delta 0), reused 1574 (delta 0)
+Receiving objects: 100% (1574/1574), 6.16 MiB | 9.88 MiB/s, done.
+Resolving deltas: 100% (505/505), done.
+
+Cloning into 'Repositories-saved/r/mylyn/org.eclipse.mylyn.tasks'...tasks
+remote: Counting objects: 242, done
+remote: Total 188858 (delta 0), reused 188858 (delta 0)
+Receiving objects: 100% (188858/188858), 30.30 MiB | 12.16 MiB/s, done.
+Resolving deltas: 100% (96833/96833), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/egit'.../egit
+remote: Total 911 (delta 0), reused 911 (delta 0)
+Receiving objects: 100% (911/911), 1.17 MiB | 8.18 MiB/s, done.
+Resolving deltas: 100% (333/333), done.
+
+Cloning into 'Repositories-saved/r/ptp/org.eclipse.ptp.master'...aster
+remote: Total 1248 (delta 0), reused 1248 (delta 0)
+Receiving objects: 100% (1248/1248), 1.54 MiB | 7.50 MiB/s, done.
+Resolving deltas: 100% (495/495), done.
+
+Cloning into 'Repositories-saved/r/graphiti/org.eclipse.graphiti'...phiti
+remote: Counting objects: 21, done
+remote: Total 40973 (delta 0), reused 40973 (delta 0)
+Receiving objects: 100% (40973/40973), 12.77 MiB | 11.33 MiB/s, done.
+Resolving deltas: 100% (19714/19714), done.
+
+Cloning into 'Repositories-saved/r/e4/org.eclipse.e4.tools'...tools
+remote: Counting objects: 2, done
+remote: Total 20588 (delta 0), reused 20588 (delta 0)
+Receiving objects: 100% (20588/20588), 6.67 MiB | 8.73 MiB/s, done.
+Resolving deltas: 100% (8616/8616), done.
+
+Cloning into 'Repositories-saved/r/scout/scout.rt.incubator'...bator
+remote: Counting objects: 79, done
+remote: Total 968 (delta 0), reused 968 (delta 0)
+Receiving objects: 100% (968/968), 194.66 KiB | 4.42 MiB/s, done.
+Resolving deltas: 100% (358/358), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.ua'...rm.ua
+remote: Counting objects: 303, done
+remote: Total 90668 (delta 0), reused 90668 (delta 0)
+Receiving objects: 100% (90668/90668), 32.23 MiB | 10.16 MiB/s, done.
+Resolving deltas: 100% (44840/44840), done.
+
+Cloning into 'Repositories-saved/r/dali/webtools.dali'....dali
+remote: Counting objects: 4440, done
+remote: Total 267763 (delta 0), reused 267763 (delta 0)
+Receiving objects: 100% (267763/267763), 75.24 MiB | 8.82 MiB/s, done.
+Resolving deltas: 100% (179591/179591), done.
+
+Cloning into 'Repositories-saved/r/diffmerge/org.eclipse.emf.diffmerge.coevolution'...ution
+remote: Counting objects: 1, done
+remote: Total 5648 (delta 0), reused 5648 (delta 0)
+Receiving objects: 100% (5648/5648), 1.69 MiB | 8.72 MiB/s, done.
+Resolving deltas: 100% (1676/1676), done.
+
+Cloning into 'Repositories-saved/r/ecoretools/org.eclipse.ecoretools'...tools
+remote: Counting objects: 2, done
+remote: Total 12658 (delta 0), reused 12658 (delta 0)
+Receiving objects: 100% (12658/12658), 4.67 MiB | 10.70 MiB/s, done.
+Resolving deltas: 100% (6911/6911), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/specifications'...tions
+remote: Total 5 (delta 0), reused 5 (delta 0)
+Unpacking objects: 100% (5/5), done.
+warning: remote HEAD refers to nonexistent ref, unable to checkout.
+
+
+Cloning into 'Repositories-saved/r/epp/org.eclipse.epp.packages'...kages
+remote: Counting objects: 73, done
+remote: Total 37342 (delta 0), reused 37342 (delta 0)
+Receiving objects: 100% (37342/37342), 14.49 MiB | 11.48 MiB/s, done.
+Resolving deltas: 100% (27173/27173), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-model2doc'...l2doc
+remote: Counting objects: 2, done
+remote: Total 15675 (delta 0), reused 15675 (delta 0)
+Receiving objects: 100% (15675/15675), 30.65 MiB | 13.57 MiB/s, done.
+Resolving deltas: 100% (5594/5594), done.
+
+Cloning into 'Repositories-saved/r/rap/org.eclipse.rap.tools'...tools
+remote: Counting objects: 192, done
+remote: Total 14593 (delta 0), reused 14593 (delta 0)
+Receiving objects: 100% (14593/14593), 6.57 MiB | 10.83 MiB/s, done.
+Resolving deltas: 100% (7149/7149), done.
+
+Cloning into 'Repositories-saved/r/equinox/rt.equinox.framework'...ework
+remote: Counting objects: 3566, done
+remote: Total 103725 (delta 0), reused 103725 (delta 0)
+Receiving objects: 100% (103725/103725), 41.53 MiB | 9.85 MiB/s, done.
+Resolving deltas: 100% (47245/47245), done.
+
+121/402 : cloning https://git.eclipse.org/r/openk-coremodules/org.eclipse.openk-coremodules.authaCloning into 'Repositories-saved/r/openk-coremodules/org.eclipse.openk-coremodules.authandauth'...
+remote: Total 1140 (delta 0), reused 1140 (delta 0)
+Receiving objects: 100% (1140/1140), 1.56 MiB | 13.45 MiB/s, done.
+Resolving deltas: 100% (355/355), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.Libraries.CLL'...s.CLL
+remote: Counting objects: 96, done
+remote: Total 6765 (delta 0), reused 6765 (delta 0)
+Receiving objects: 100% (6765/6765), 54.89 MiB | 14.33 MiB/s, done.
+Resolving deltas: 100% (3805/3805), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/membership'...rship
+remote: Total 8580 (delta 0), reused 8580 (delta 0)
+Receiving objects: 100% (8580/8580), 506.60 MiB | 15.64 MiB/s, done.
+Resolving deltas: 100% (4667/4667), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.releng'...eleng
+remote: Counting objects: 395, done
+remote: Total 32699 (delta 0), reused 32699 (delta 0)
+Receiving objects: 100% (32699/32699), 9.79 MiB | 7.02 MiB/s, done.
+Resolving deltas: 100% (17738/17738), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/org'...g/org
+remote: Total 27467 (delta 0), reused 27467 (delta 0)
+Receiving objects: 100% (27467/27467), 441.55 MiB | 14.85 MiB/s, done.
+Resolving deltas: 100% (14723/14723), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.GTP_v13.5.0'...3.5.0
+remote: Counting objects: 1, done
+remote: Total 49 (delta 0), reused 49 (delta 0)
+Unpacking objects: 100% (49/49), done.
+
+Cloning into 'Repositories-saved/r/equinox/rt.equinox.bundles'...ndles
+remote: Counting objects: 168, done
+remote: Total 53191 (delta 0), reused 53191 (delta 0)
+Receiving objects: 100% (53191/53191), 15.14 MiB | 9.81 MiB/s, done.
+Resolving deltas: 100% (21641/21641), done.
+
+Cloning into 'Repositories-saved/r/statet/org.eclipse.statet-ltk'...t-ltk
+remote: Counting objects: 240, done
+remote: Total 5331 (delta 0), reused 5331 (delta 0)
+Receiving objects: 100% (5331/5331), 2.42 MiB | 6.89 MiB/s, done.
+Resolving deltas: 100% (2399/2399), done.
+
+Cloning into 'Repositories-saved/r/pde/eclipse.pde.build'...build
+remote: Counting objects: 172, done
+remote: Total 27449 (delta 0), reused 27449 (delta 0)
+Receiving objects: 100% (27449/27449), 6.01 MiB | 9.52 MiB/s, done.
+Resolving deltas: 100% (10824/10824), done.
+
+Cloning into 'Repositories-saved/r/permissions/scout-dev'...t-dev
+warning: remote HEAD refers to nonexistent ref, unable to checkout.
+
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-requirements'...ments
+remote: Counting objects: 2, done
+remote: Total 5507 (delta 0), reused 5507 (delta 0)
+Receiving objects: 100% (5507/5507), 4.24 MiB | 4.56 MiB/s, done.
+Resolving deltas: 100% (2097/2097), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform'...tform
+remote: Counting objects: 652, done
+remote: Total 130126 (delta 0), reused 130126 (delta 0)
+Receiving objects: 100% (130126/130126), 72.86 MiB | 15.58 MiB/s, done.
+Resolving deltas: 100% (63866/63866), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus.tools'...tools
+remote: Counting objects: 22, done
+remote: Total 4183 (delta 0), reused 4183 (delta 0)
+Receiving objects: 100% (4183/4183), 12.35 MiB | 14.24 MiB/s, done.
+Resolving deltas: 100% (889/889), done.
+
+Cloning into 'Repositories-saved/r/servertools/webtools.servertools.docs'....docs
+remote: Counting objects: 289, done
+remote: Total 2393 (delta 0), reused 2393 (delta 0)
+Receiving objects: 100% (2393/2393), 1.45 MiB | 7.54 MiB/s, done.
+Resolving deltas: 100% (1429/1429), done.
+
+Cloning into 'Repositories-saved/r/emf-parsley/org.eclipse.emf-parsley'...rsley
+remote: Counting objects: 14, done
+remote: Total 43471 (delta 0), reused 43471 (delta 0)
+Receiving objects: 100% (43471/43471), 26.60 MiB | 11.48 MiB/s, done.
+Resolving deltas: 100% (10404/10404), done.
+
+Cloning into 'Repositories-saved/r/ease/org.eclipse.ease.modules'...dules
+remote: Counting objects: 3, done
+remote: Total 5859 (delta 0), reused 5859 (delta 0)
+Receiving objects: 100% (5859/5859), 2.55 MiB | 10.92 MiB/s, done.
+Resolving deltas: 100% (503/503), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.releng.aggregator'...gator
+remote: Counting objects: 579, done
+remote: Total 51047 (delta 0), reused 51047 (delta 0)
+Receiving objects: 100% (51047/51047), 47.00 MiB | 10.33 MiB/s, done.
+Resolving deltas: 100% (23832/23832), done.
+
+Cloning into 'Repositories-saved/r/om2m/org.eclipse.om2m'....om2m
+remote: Counting objects: 3, done
+remote: Total 18742 (delta 0), reused 18742 (delta 0)
+Receiving objects: 100% (18742/18742), 22.30 MiB | 8.25 MiB/s, done.
+Resolving deltas: 100% (7755/7755), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/downloads'...loads
+remote: Total 12082 (delta 0), reused 12082 (delta 0)
+Receiving objects: 100% (12082/12082), 7.33 MiB | 7.95 MiB/s, done.
+Resolving deltas: 100% (6635/6635), done.
+
+Cloning into 'Repositories-saved/r/mdmbl/org.eclipse.mdm.mdfsorter'...orter
+remote: Counting objects: 6, done
+remote: Total 411 (delta 0), reused 411 (delta 0)
+Receiving objects: 100% (411/411), 358.34 KiB | 6.40 MiB/s, done.
+Resolving deltas: 100% (161/161), done.
+
+Cloning into 'Repositories-saved/r/e4/org.eclipse.e4.ui'...e4.ui
+remote: Counting objects: 72, done
+remote: Total 14041 (delta 0), reused 14041 (delta 0)
+Receiving objects: 100% (14041/14041), 6.52 MiB | 7.57 MiB/s, done.
+Resolving deltas: 100% (5954/5954), done.
+
+Cloning into 'Repositories-saved/r/webtools-common/webtools.common'...ommon
+remote: Counting objects: 4629, done
+remote: Total 72303 (delta 0), reused 72303 (delta 0)
+Receiving objects: 100% (72303/72303), 13.19 MiB | 11.54 MiB/s, done.
+Resolving deltas: 100% (36319/36319), done.
+
+Cloning into 'Repositories-saved/r/mdmbl/org.eclipse.mdm.api.base'....base
+remote: Counting objects: 21, done
+remote: Total 3519 (delta 0), reused 3519 (delta 0)
+Receiving objects: 100% (3519/3519), 1.52 MiB | 7.50 MiB/s, done.
+Resolving deltas: 100% (1086/1086), done.
+
+Cloning into 'Repositories-saved/r/mdmbl/org.eclipse.mdm.api.odsadapter'...apter
+remote: Counting objects: 22, done
+remote: Total 5024 (delta 0), reused 5024 (delta 0)
+Receiving objects: 100% (5024/5024), 2.36 MiB | 8.89 MiB/s, done.
+Resolving deltas: 100% (1657/1657), done.
+
+Cloning into 'Repositories-saved/r/egerrit/org.eclipse.egerrit'...errit
+remote: Counting objects: 3, done
+remote: Total 17961 (delta 0), reused 17961 (delta 0)
+Receiving objects: 100% (17961/17961), 14.32 MiB | 8.88 MiB/s, done.
+Resolving deltas: 100% (2228/2228), done.
+
+Cloning into 'Repositories-saved/r/amalgam/org.eclipse.amalgam'...algam
+remote: Counting objects: 10, done
+remote: Total 13360 (delta 0), reused 13360 (delta 0)
+Receiving objects: 100% (13360/13360), 4.22 MiB | 7.19 MiB/s, done.
+Resolving deltas: 100% (6546/6546), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus.incubation'...ation
+remote: Counting objects: 1, done
+remote: Total 6331 (delta 0), reused 6331 (delta 0)
+Receiving objects: 100% (6331/6331), 7.55 MiB | 10.80 MiB/s, done.
+Resolving deltas: 100% (3092/3092), done.
+
+Cloning into 'Repositories-saved/r/z_webmaster/testdir'...stdir
+remote: Total 21 (delta 0), reused 21 (delta 0)
+Unpacking objects: 100% (21/21), done.
+
+Cloning into 'Repositories-saved/r/jsdt/webtools.jsdt'....jsdt
+remote: Counting objects: 4, done
+remote: Total 93292 (delta 0), reused 93292 (delta 0)
+Receiving objects: 100% (93292/93292), 133.54 MiB | 15.96 MiB/s, done.
+Resolving deltas: 100% (58389/58389), done.
+
+Cloning into 'Repositories-saved/r/app4mc/org.eclipse.app4mc'...pp4mc
+remote: Counting objects: 20, done
+remote: Total 69372 (delta 0), reused 69372 (delta 0)
+Receiving objects: 100% (69372/69372), 134.07 MiB | 15.94 MiB/s, done.
+Resolving deltas: 100% (37838/37838), done.
+
+Cloning into 'Repositories-saved/r/linuxtools/org.eclipse.linuxtools'...tools
+remote: Counting objects: 57, done
+remote: Total 261154 (delta 0), reused 261154 (delta 0)
+Receiving objects: 100% (261154/261154), 152.87 MiB | 16.58 MiB/s, done.
+Resolving deltas: 100% (133247/133247), done.
+
+Cloning into 'Repositories-saved/r/websites/dev.eclipse.org'...e.org
+remote: Counting objects: 1370, done
+remote: Finding sources: 100% (1370/1370)
+remote: Total 4700 (delta 372), reused 4532 (delta 372)
+Receiving objects: 100% (4700/4700), 25.09 MiB | 15.60 MiB/s, done.
+Resolving deltas: 100% (1052/1052), done.
+
+Cloning into 'Repositories-saved/r/sourceediting/webtools.sourceediting'...iting
+remote: Counting objects: 9348, done
+remote: Total 260090 (delta 0), reused 260090 (delta 0)
+Receiving objects: 100% (260090/260090), 122.77 MiB | 16.18 MiB/s, done.
+Resolving deltas: 100% (146887/146887), done.
+
+Cloning into 'Repositories-saved/r/mylyn/org.eclipse.mylyn.docs'....docs
+remote: Counting objects: 45, done
+remote: Total 55345 (delta 0), reused 55345 (delta 0)
+Receiving objects: 100% (55345/55345), 17.69 MiB | 12.11 MiB/s, done.
+Resolving deltas: 100% (22042/22042), done.
+
+Cloning into 'Repositories-saved/r/lyo/org.eclipse.lyo.tools'...tools
+remote: Total 2471 (delta 0), reused 2471 (delta 0)
+Receiving objects: 100% (2471/2471), 1.92 MiB | 7.79 MiB/s, done.
+Resolving deltas: 100% (621/621), done.
+
+Cloning into 'Repositories-saved/r/efm/org.eclipse.efm-modeling'...eling
+remote: Total 11600 (delta 0), reused 11600 (delta 0)
+Receiving objects: 100% (11600/11600), 36.33 MiB | 9.44 MiB/s, done.
+Resolving deltas: 100% (2928/2928), done.
+
+Cloning into 'Repositories-saved/r/mylyn/org.eclipse.mylyn.reviews'...views
+remote: Counting objects: 1, done
+remote: Total 24654 (delta 0), reused 24654 (delta 0)
+Receiving objects: 100% (24654/24654), 6.87 MiB | 11.52 MiB/s, done.
+Resolving deltas: 100% (9690/9690), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/mylyn'...mylyn
+remote: Counting objects: 2, done
+remote: Total 19059 (delta 0), reused 19059 (delta 0)
+Receiving objects: 100% (19059/19059), 123.28 MiB | 12.84 MiB/s, done.
+Resolving deltas: 100% (11358/11358), done.
+
+Cloning into 'Repositories-saved/r/permissions/efm-dev'...m-dev
+warning: remote HEAD refers to nonexistent ref, unable to checkout.
+
+
+Cloning into 'Repositories-saved/r/mylyn/org.eclipse.mylyn.commons'...mmons
+remote: Counting objects: 108, done
+remote: Total 38147 (delta 0), reused 38147 (delta 0)
+Receiving objects: 100% (38147/38147), 6.12 MiB | 7.59 MiB/s, done.
+Resolving deltas: 100% (18353/18353), done.
+
+Cloning into 'Repositories-saved/r/dltk/org.eclipse.dltk.core'....core
+remote: Counting objects: 20, done
+remote: Total 121203 (delta 0), reused 121203 (delta 0)
+Receiving objects: 100% (121203/121203), 31.43 MiB | 11.30 MiB/s, done.
+Resolving deltas: 100% (51613/51613), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.swt.binaries'...aries
+remote: Counting objects: 1479, done
+remote: Total 107815 (delta 0), reused 107815 (delta 0)
+Receiving objects: 100% (107815/107815), 1.16 GiB | 11.71 MiB/s, done.
+Resolving deltas: 100% (69260/69260), done.
+
+Cloning into 'Repositories-saved/r/diffmerge/org.eclipse.emf.diffmerge.patch'...patch
+remote: Total 1781 (delta 0), reused 1781 (delta 0)
+Receiving objects: 100% (1781/1781), 925.82 KiB | 9.45 MiB/s, done.
+Resolving deltas: 100% (496/496), done.
+
+Cloning into 'Repositories-saved/r/scout/ci'...ut/ci
+remote: Total 8 (delta 0), reused 8 (delta 0)
+Unpacking objects: 100% (8/8), done.
+
+Cloning into 'Repositories-saved/r/tm/org.eclipse.tm'...se.tm
+remote: Counting objects: 3896, done
+remote: Total 163365 (delta 0), reused 163365 (delta 0)
+Receiving objects: 100% (163365/163365), 43.69 MiB | 6.17 MiB/s, done.
+Resolving deltas: 100% (87722/87722), done.
+
+Cloning into 'Repositories-saved/r/sandbox/egit-training'...ining
+remote: Counting objects: 1, done
+remote: Total 250 (delta 0), reused 250 (delta 0)
+Receiving objects: 100% (250/250), 34.26 KiB | 3.81 MiB/s, done.
+Resolving deltas: 100% (94/94), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/papyrus-rt'...us-rt
+remote: Total 841 (delta 0), reused 841 (delta 0)
+Receiving objects: 100% (841/841), 1.47 MiB | 8.93 MiB/s, done.
+Resolving deltas: 100% (311/311), done.
+
+Cloning into 'Repositories-saved/r/egf/org.eclipse.emf.egf'...f.egf
+remote: Counting objects: 14, done
+remote: Total 120247 (delta 0), reused 120247 (delta 0)
+Receiving objects: 100% (120247/120247), 35.95 MiB | 14.28 MiB/s, done.
+Resolving deltas: 100% (68617/68617), done.
+Checking out files: 100% (26509/26509), done.
+
+fatal: repository '?' does not exist
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/contribute'...ibute
+remote: Total 205 (delta 0), reused 205 (delta 0)
+Receiving objects: 100% (205/205), 527.93 KiB | 6.60 MiB/s, done.
+Resolving deltas: 100% (45/45), done.
+
+Cloning into 'Repositories-saved/r/tcf/org.eclipse.tcf'...e.tcf
+remote: Counting objects: 88, done
+remote: Total 124658 (delta 0), reused 124658 (delta 0)
+Receiving objects: 100% (124658/124658), 46.15 MiB | 13.71 MiB/s, done.
+Resolving deltas: 100% (53068/53068), done.
+
+Cloning into 'Repositories-saved/r/mylyn/org.eclipse.mylyn'...mylyn
+remote: Counting objects: 41, done
+remote: Total 13944 (delta 0), reused 13944 (delta 0)
+Receiving objects: 100% (13944/13944), 3.23 MiB | 9.00 MiB/s, done.
+Resolving deltas: 100% (7214/7214), done.
+
+Cloning into 'Repositories-saved/r/scout/org.eclipse.scout-aggregator'...gator
+remote: Counting objects: 122, done
+remote: Total 5277 (delta 0), reused 5277 (delta 0)
+Receiving objects: 100% (5277/5277), 26.58 MiB | 14.18 MiB/s, done.
+Resolving deltas: 100% (3092/3092), done.
+warning: remote HEAD refers to nonexistent ref, unable to checkout.
+
+
+Cloning into 'Repositories-saved/r/intent/org.eclipse.mylyn.docs.intent.main'....main
+remote: Counting objects: 36, done
+remote: Total 28812 (delta 0), reused 28812 (delta 0)
+Receiving objects: 100% (28812/28812), 27.66 MiB | 15.05 MiB/s, done.
+Resolving deltas: 100% (13076/13076), done.
+
+Cloning into 'Repositories-saved/r/mylyn/org.eclipse.mylyn.versions'...sions
+remote: Counting objects: 1, done
+remote: Total 4313 (delta 0), reused 4313 (delta 0)
+Receiving objects: 100% (4313/4313), 733.45 KiB | 7.80 MiB/s, done.
+Resolving deltas: 100% (2063/2063), done.
+
+Cloning into 'Repositories-saved/r/camf/org.eclipse.camf'....camf
+remote: Counting objects: 1, done
+remote: Total 2572 (delta 0), reused 2572 (delta 0)
+Receiving objects: 100% (2572/2572), 1.98 MiB | 8.93 MiB/s, done.
+Resolving deltas: 100% (782/782), done.
+
+Cloning into 'Repositories-saved/r/All-Projects'...jects
+warning: remote HEAD refers to nonexistent ref, unable to checkout.
+
+
+Cloning into 'Repositories-saved/r/ogee/org.eclipse.ogee'....ogee
+remote: Total 7087 (delta 0), reused 7087 (delta 0)
+Receiving objects: 100% (7087/7087), 7.63 MiB | 12.75 MiB/s, done.
+Resolving deltas: 100% (2081/2081), done.
+
+Cloning into 'Repositories-saved/r/mmt/org.eclipse.qvtd'....qvtd
+remote: Counting objects: 128, done
+remote: Total 195129 (delta 0), reused 195129 (delta 0)
+Receiving objects: 100% (195129/195129), 202.77 MiB | 9.90 MiB/s, done.
+Resolving deltas: 100% (75794/75794), done.
+
+Cloning into 'Repositories-saved/r/dltk/org.eclipse.dltk.ruby'....ruby
+remote: Counting objects: 16, done
+remote: Total 34717 (delta 0), reused 34717 (delta 0)
+Receiving objects: 100% (34717/34717), 9.15 MiB | 12.49 MiB/s, done.
+Resolving deltas: 100% (16236/16236), done.
+
+Cloning into 'Repositories-saved/r/emfcompare/org.eclipse.emf.compare-cli'...e-cli
+remote: Total 1683 (delta 0), reused 1683 (delta 0)
+Receiving objects: 100% (1683/1683), 554.53 KiB | 6.68 MiB/s, done.
+Resolving deltas: 100% (705/705), done.
+
+Cloning into 'Repositories-saved/r/rmf/org.eclipse.rmf'...e.rmf
+remote: Counting objects: 18, done
+remote: Total 38768 (delta 0), reused 38768 (delta 0)
+Receiving objects: 100% (38768/38768), 18.29 MiB | 6.64 MiB/s, done.
+Resolving deltas: 100% (19904/19904), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/home'.../home
+remote: Total 6990 (delta 0), reused 6990 (delta 0)
+Receiving objects: 100% (6990/6990), 24.50 MiB | 16.85 MiB/s, done.
+Resolving deltas: 100% (3911/3911), done.
+
+Cloning into 'Repositories-saved/r/statet/org.eclipse.statet-rj'...et-rj
+remote: Counting objects: 892, done
+remote: Total 10634 (delta 0), reused 10634 (delta 0)
+Receiving objects: 100% (10634/10634), 3.18 MiB | 9.67 MiB/s, done.
+Resolving deltas: 100% (4672/4672), done.
+
+Cloning into 'Repositories-saved/r/sisu/org.eclipse.sisu.mojos'...mojos
+remote: Counting objects: 12, done
+remote: Total 327 (delta 0), reused 327 (delta 0)
+Receiving objects: 100% (327/327), 55.35 KiB | 5.53 MiB/s, done.
+Resolving deltas: 100% (141/141), done.
+
+Cloning into 'Repositories-saved/r/sisu/org.eclipse.sisu.inject'...nject
+remote: Counting objects: 19, done
+remote: Total 7191 (delta 0), reused 7191 (delta 0)
+Receiving objects: 100% (7191/7191), 1.45 MiB | 9.31 MiB/s, done.
+Resolving deltas: 100% (4104/4104), done.
+
+Cloning into 'Repositories-saved/r/mylyn/org.eclipse.mylyn.incubator'...bator
+remote: Counting objects: 93, done
+remote: Total 25775 (delta 0), reused 25775 (delta 0)
+Receiving objects: 100% (25775/25775), 20.96 MiB | 11.40 MiB/s, done.
+Resolving deltas: 100% (13576/13576), done.
+
+Cloning into 'Repositories-saved/r/mylyn/org.eclipse.mylyn.docs.vex'...s.vex
+remote: Counting objects: 8, done
+remote: Total 29376 (delta 0), reused 29376 (delta 0)
+Receiving objects: 100% (29376/29376), 11.58 MiB | 10.69 MiB/s, done.
+Resolving deltas: 100% (12144/12144), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/swtbot'...wtbot
+remote: Total 421 (delta 0), reused 421 (delta 0)
+Receiving objects: 100% (421/421), 323.45 KiB | 10.11 MiB/s, done.
+Resolving deltas: 100% (228/228), done.
+
+Cloning into 'Repositories-saved/r/r4e/org.eclipse.mylyn.reviews.r4e'...s.r4e
+remote: Counting objects: 6, done
+remote: Total 23493 (delta 0), reused 23493 (delta 0)
+Receiving objects: 100% (23493/23493), 17.31 MiB | 11.77 MiB/s, done.
+Resolving deltas: 100% (13363/13363), done.
+
+Cloning into 'Repositories-saved/r/skalli/org.eclipse.skalli'...kalli
+remote: Total 30539 (delta 0), reused 30539 (delta 0)
+Receiving objects: 100% (30539/30539), 5.39 MiB | 7.03 MiB/s, done.
+Resolving deltas: 100% (15234/15234), done.
+
+Cloning into 'Repositories-saved/r/jetty/org.eclipse.jetty.wtp'...y.wtp
+remote: Total 1154 (delta 0), reused 1154 (delta 0)
+Receiving objects: 100% (1154/1154), 1.08 MiB | 6.43 MiB/s, done.
+Resolving deltas: 100% (628/628), done.
+
+Cloning into 'Repositories-saved/r/egit/egit-pde'...t-pde
+remote: Total 318 (delta 0), reused 318 (delta 0)
+Receiving objects: 100% (318/318), 98.08 KiB | 6.54 MiB/s, done.
+Resolving deltas: 100% (120/120), done.
+
+Cloning into 'Repositories-saved/r/jetty/org.eclipse.jetty.project'...oject
+remote: Counting objects: 743, done
+remote: Total 335632 (delta 0), reused 335632 (delta 0)
+Receiving objects: 100% (335632/335632), 81.01 MiB | 10.46 MiB/s, done.
+Resolving deltas: 100% (126432/126432), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-robotics'...otics
+remote: Counting objects: 1, done
+remote: Total 15472 (delta 0), reused 15472 (delta 0)
+Receiving objects: 100% (15472/15472), 9.10 MiB | 9.73 MiB/s, done.
+Resolving deltas: 100% (7681/7681), done.
+
+Cloning into 'Repositories-saved/r/edapt/org.eclipse.emf.edapt'...edapt
+remote: Total 13182 (delta 0), reused 13182 (delta 0)
+Receiving objects: 100% (13182/13182), 9.61 MiB | 5.10 MiB/s, done.
+Resolving deltas: 100% (6528/6528), done.
+
+Cloning into 'Repositories-saved/r/mdmbl/org.eclipse.mdm.nucleus'...cleus
+remote: Counting objects: 21, done
+remote: Total 17032 (delta 0), reused 17032 (delta 0)
+Receiving objects: 100% (17032/17032), 13.36 MiB | 11.38 MiB/s, done.
+Resolving deltas: 100% (5049/5049), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/artwork'...twork
+remote: Total 970 (delta 0), reused 970 (delta 0)
+Receiving objects: 100% (970/970), 208.68 MiB | 14.05 MiB/s, done.
+Resolving deltas: 100% (211/211), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-iotml'...iotml
+remote: Total 2679 (delta 0), reused 2679 (delta 0)
+Receiving objects: 100% (2679/2679), 4.99 MiB | 7.61 MiB/s, done.
+Resolving deltas: 100% (953/953), done.
+
+Cloning into 'Repositories-saved/r/jdt/eclipse.jdt.core.binaries'...aries
+remote: Counting objects: 129, done
+remote: Total 391 (delta 0), reused 391 (delta 0)
+Receiving objects: 100% (391/391), 33.37 MiB | 14.86 MiB/s, done.
+Resolving deltas: 100% (92/92), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/legal'...legal
+remote: Total 2183 (delta 0), reused 2183 (delta 0)
+Receiving objects: 100% (2183/2183), 13.11 MiB | 14.50 MiB/s, done.
+Resolving deltas: 100% (1047/1047), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/ide'...g/ide
+remote: Total 181 (delta 0), reused 181 (delta 0)
+Receiving objects: 100% (181/181), 465.64 KiB | 9.91 MiB/s, done.
+Resolving deltas: 100% (25/25), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/n4js'.../n4js
+remote: Total 795 (delta 0), reused 795 (delta 0)
+Receiving objects: 100% (795/795), 24.99 MiB | 15.53 MiB/s, done.
+Resolving deltas: 100% (338/338), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.Libraries.Web_GUI'...b_GUI
+remote: Counting objects: 83, done
+remote: Total 1323 (delta 0), reused 1323 (delta 0)
+Receiving objects: 100% (1323/1323), 4.48 MiB | 8.60 MiB/s, done.
+Resolving deltas: 100% (618/618), done.
+
+Cloning into 'Repositories-saved/r/mmt/org.eclipse.atl'...e.atl
+remote: Counting objects: 2, done
+remote: Total 59596 (delta 0), reused 59596 (delta 0)
+Receiving objects: 100% (59596/59596), 23.55 MiB | 12.50 MiB/s, done.
+Resolving deltas: 100% (31510/31510), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/aspectj'...pectj
+remote: Total 4368 (delta 0), reused 4368 (delta 0)
+Receiving objects: 100% (4368/4368), 5.07 MiB | 15.59 MiB/s, done.
+Resolving deltas: 100% (3204/3204), done.
+
+Cloning into 'Repositories-saved/r/statet/org.eclipse.statet'...tatet
+remote: Counting objects: 150, done
+remote: Total 2816 (delta 0), reused 2816 (delta 0)
+Receiving objects: 100% (2816/2816), 466.76 KiB | 4.86 MiB/s, done.
+Resolving deltas: 100% (1214/1214), done.
+
+Cloning into 'Repositories-saved/r/basyx/basyx.website'...bsite
+remote: Total 1408 (delta 0), reused 1408 (delta 0)
+Receiving objects: 100% (1408/1408), 98.12 MiB | 16.93 MiB/s, done.
+Resolving deltas: 100% (533/533), done.
+
+Cloning into 'Repositories-saved/r/sphinx/org.eclipse.sphinx'...phinx
+remote: Counting objects: 89, done
+remote: Total 46157 (delta 0), reused 46157 (delta 0)
+Receiving objects: 100% (46157/46157), 13.38 MiB | 8.49 MiB/s, done.
+Resolving deltas: 100% (23842/23842), done.
+
+fatal: destination path 'Repositories-saved/r/www.eclipse.org/eclipse' already exists and is not an empty directory.
+
+Cloning into 'Repositories-saved/r/jsf/webtools.jsf'...s.jsf
+remote: Counting objects: 1342, done
+remote: Total 67644 (delta 0), reused 67644 (delta 0)
+Receiving objects: 100% (67644/67644), 34.77 MiB | 11.95 MiB/s, done.
+Resolving deltas: 100% (42915/42915), done.
+
+Cloning into 'Repositories-saved/r/webservices/webtools.webservices'...vices
+remote: Counting objects: 6002, done
+remote: Total 112516 (delta 0), reused 112516 (delta 0)
+Receiving objects: 100% (112516/112516), 31.82 MiB | 12.12 MiB/s, done.
+Resolving deltas: 100% (58349/58349), done.
+
+Cloning into 'Repositories-saved/r/uml2/org.eclipse.uml2'....uml2
+remote: Counting objects: 53, done
+remote: Total 78765 (delta 0), reused 78765 (delta 0)
+Receiving objects: 100% (78765/78765), 56.10 MiB | 9.24 MiB/s, done.
+Resolving deltas: 100% (56890/56890), done.
+
+Cloning into 'Repositories-saved/r/All-Users'...Users
+remote: Finding sources: 100% (13/13)
+remote: Total 13 (delta 3), reused 13 (delta 3)
+Unpacking objects: 100% (13/13), done.
+Note: checking out '6c8e4afe38261edf746dbd7976ad3d332947caf2'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b <new-branch-name>
+
+
+Cloning into 'Repositories-saved/r/dltk/org.eclipse.dltk.releng'...eleng
+remote: Counting objects: 19, done
+remote: Total 11784 (delta 0), reused 11784 (delta 0)
+Receiving objects: 100% (11784/11784), 6.34 MiB | 11.84 MiB/s, done.
+Resolving deltas: 100% (7249/7249), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-designer-extra'...extra
+remote: Total 3151 (delta 0), reused 3151 (delta 0)
+Receiving objects: 100% (3151/3151), 2.62 MiB | 7.36 MiB/s, done.
+Resolving deltas: 100% (1454/1454), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-informationmodeling'...eling
+remote: Counting objects: 1, done
+remote: Total 1315 (delta 0), reused 1315 (delta 0)
+Receiving objects: 100% (1315/1315), 1.14 MiB | 8.31 MiB/s, done.
+Resolving deltas: 100% (595/595), done.
+
+Cloning into 'Repositories-saved/r/mdmbl/org.eclipse.mdm.api.default'...fault
+remote: Counting objects: 21, done
+remote: Total 1586 (delta 0), reused 1586 (delta 0)
+Receiving objects: 100% (1586/1586), 722.19 KiB | 8.60 MiB/s, done.
+Resolving deltas: 100% (330/330), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/projects'...jects
+remote: Total 32238 (delta 0), reused 32238 (delta 0)
+Receiving objects: 100% (32238/32238), 249.60 MiB | 13.49 MiB/s, done.
+Resolving deltas: 100% (18242/18242), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.Libraries.ServiceFramework'...ework
+remote: Total 434 (delta 0), reused 434 (delta 0)
+Receiving objects: 100% (434/434), 343.78 KiB | 7.81 MiB/s, done.
+Resolving deltas: 100% (193/193), done.
+
+Cloning into 'Repositories-saved/r/rap/incubator/org.eclipse.rap.incubator.e4'...or.e4
+remote: Counting objects: 1, done
+remote: Total 2221 (delta 0), reused 2221 (delta 0)
+Receiving objects: 100% (2221/2221), 1.16 MiB | 7.47 MiB/s, done.
+Resolving deltas: 100% (775/775), done.
+
+Cloning into 'Repositories-saved/r/uomo/org.eclipse.uomo'....uomo
+remote: Counting objects: 2, done
+remote: Total 10684 (delta 0), reused 10684 (delta 0)
+Receiving objects: 100% (10684/10684), 3.64 MiB | 9.85 MiB/s, done.
+Resolving deltas: 100% (4296/4296), done.
+
+Cloning into 'Repositories-saved/r/jeetools/webtools.ejb'...s.ejb
+remote: Counting objects: 2075, done
+remote: Total 24562 (delta 0), reused 24562 (delta 0)
+Receiving objects: 100% (24562/24562), 3.79 MiB | 10.87 MiB/s, done.
+Resolving deltas: 100% (10753/10753), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/security'...urity
+remote: Total 99 (delta 0), reused 99 (delta 0)
+Unpacking objects: 100% (99/99), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-privacydesigner'...igner
+remote: Total 1073 (delta 0), reused 1073 (delta 0)
+Receiving objects: 100% (1073/1073), 619.32 KiB | 6.01 MiB/s, done.
+Resolving deltas: 100% (280/280), done.
+
+Cloning into 'Repositories-saved/r/app4mc/org.eclipse.app4mc.addon.transformation'...ation
+remote: Total 6455 (delta 0), reused 6455 (delta 0)
+Receiving objects: 100% (6455/6455), 5.83 MiB | 10.00 MiB/s, done.
+Resolving deltas: 100% (2917/2917), done.
+
+Cloning into 'Repositories-saved/r/equinox/rt.equinox.binaries'...aries
+remote: Counting objects: 255, done
+remote: Total 9529 (delta 0), reused 9529 (delta 0)
+Receiving objects: 100% (9529/9529), 75.38 MiB | 11.88 MiB/s, done.
+Resolving deltas: 100% (2713/2713), done.
+
+Cloning into 'Repositories-saved/r/statet/org.eclipse.statet-docmlet'...cmlet
+remote: Counting objects: 502, done
+remote: Total 10605 (delta 0), reused 10605 (delta 0)
+Receiving objects: 100% (10605/10605), 3.61 MiB | 6.85 MiB/s, done.
+Resolving deltas: 100% (5099/5099), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/capella'...pella
+remote: Total 14068 (delta 0), reused 14068 (delta 0)
+Receiving objects: 100% (14068/14068), 319.68 MiB | 16.44 MiB/s, done.
+Resolving deltas: 100% (9261/9261), done.
+Checking out files: 100% (14702/14702), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/eef'...g/eef
+remote: Total 9742 (delta 0), reused 9742 (delta 0)
+Receiving objects: 100% (9742/9742), 67.67 MiB | 13.34 MiB/s, done.
+Resolving deltas: 100% (7694/7694), done.
+
+Cloning into 'Repositories-saved/r/secoblocks/secoblocks'...locks
+remote: Total 1510 (delta 0), reused 1510 (delta 0)
+Receiving objects: 100% (1510/1510), 87.10 MiB | 16.71 MiB/s, done.
+Resolving deltas: 100% (696/696), done.
+
+Cloning into 'Repositories-saved/r/linuxtools/org.eclipse.linuxtools.eclipse-build'...build
+remote: Counting objects: 1, done
+remote: Total 5740 (delta 0), reused 5740 (delta 0)
+Receiving objects: 100% (5740/5740), 6.23 MiB | 9.80 MiB/s, done.
+Resolving deltas: 100% (3547/3547), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/europe'...urope
+remote: Total 126 (delta 0), reused 126 (delta 0)
+Receiving objects: 100% (126/126), 6.95 MiB | 2.84 MiB/s, done.
+Resolving deltas: 100% (38/38), done.
+
+Cloning into 'Repositories-saved/r/egit/egit-pipelines'...lines
+remote: Counting objects: 6, done
+remote: Total 78 (delta 0), reused 78 (delta 0)
+Unpacking objects: 100% (78/78), done.
+
+Cloning into 'Repositories-saved/r/handly/org.eclipse.handly'...andly
+remote: Counting objects: 26, done
+remote: Total 17730 (delta 0), reused 17730 (delta 0)
+Receiving objects: 100% (17730/17730), 3.80 MiB | 4.10 MiB/s, done.
+Resolving deltas: 100% (8916/8916), done.
+
+Cloning into 'Repositories-saved/r/diffmerge/org.eclipse.emf.diffmerge.patterns'...terns
+remote: Counting objects: 1, done
+remote: Total 10477 (delta 0), reused 10477 (delta 0)
+Receiving objects: 100% (10477/10477), 9.08 MiB | 9.72 MiB/s, done.
+Resolving deltas: 100% (4094/4094), done.
+
+Cloning into 'Repositories-saved/r/mpc/org.eclipse.epp.mpc'...p.mpc
+remote: Counting objects: 27, done
+remote: Total 16029 (delta 0), reused 16029 (delta 0)
+Receiving objects: 100% (16029/16029), 7.98 MiB | 2.25 MiB/s, done.
+Resolving deltas: 100% (7490/7490), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/donate'...onate
+remote: Total 1905 (delta 0), reused 1905 (delta 0)
+Receiving objects: 100% (1905/1905), 1.02 MiB | 7.43 MiB/s, done.
+Resolving deltas: 100% (993/993), done.
+
+Cloning into 'Repositories-saved/r/dltk/org.eclipse.dltk.javascript'...cript
+remote: Counting objects: 16, done
+remote: Total 56823 (delta 0), reused 56823 (delta 0)
+Receiving objects: 100% (56823/56823), 9.78 MiB | 9.35 MiB/s, done.
+Resolving deltas: 100% (26988/26988), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/ecp'...g/ecp
+remote: Total 3329 (delta 0), reused 3329 (delta 0)
+Receiving objects: 100% (3329/3329), 13.86 MiB | 13.49 MiB/s, done.
+Resolving deltas: 100% (2079/2079), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/ecf'...g/ecf
+remote: Total 476251 (delta 0), reused 476251 (delta 0)
+Receiving objects: 100% (476251/476251), 140.42 MiB | 9.45 MiB/s, done.
+Resolving deltas: 100% (426102/426102), done.
+
+Cloning into 'Repositories-saved/r/bpmn2/org.eclipse.bpmn2'...bpmn2
+remote: Counting objects: 3, done
+remote: Total 10107 (delta 0), reused 10107 (delta 0)
+Receiving objects: 100% (10107/10107), 6.94 MiB | 8.61 MiB/s, done.
+Resolving deltas: 100% (6273/6273), done.
+
+Cloning into 'Repositories-saved/r/paho/org.eclipse.paho.mqtt.lua'...t.lua
+remote: Total 83 (delta 0), reused 83 (delta 0)
+Unpacking objects: 100% (83/83), done.
+
+Cloning into 'Repositories-saved/r/mylyn/org.eclipse.mylyn.all'...n.all
+remote: Total 4603 (delta 0), reused 4603 (delta 0)
+Receiving objects: 100% (4603/4603), 1.06 MiB | 7.56 MiB/s, done.
+Resolving deltas: 100% (2029/2029), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/documentation'...ation
+remote: Total 228 (delta 0), reused 228 (delta 0)
+Receiving objects: 100% (228/228), 42.62 KiB | 3.55 MiB/s, done.
+Resolving deltas: 100% (96/96), done.
+
+Cloning into 'Repositories-saved/r/scout/oomph'...oomph
+remote: Total 336 (delta 0), reused 336 (delta 0)
+Receiving objects: 100% (336/336), 297.07 KiB | 1.33 MiB/s, done.
+Resolving deltas: 100% (27/27), done.
+
+Cloning into 'Repositories-saved/r/app4mc/org.eclipse.app4mc.cloud'...cloud
+remote: Total 1400 (delta 0), reused 1400 (delta 0)
+Receiving objects: 100% (1400/1400), 4.56 MiB | 4.61 MiB/s, done.
+Resolving deltas: 100% (129/129), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/emf/compare'...mpare
+remote: Total 9392 (delta 0), reused 9392 (delta 0)
+Receiving objects: 100% (9392/9392), 50.62 MiB | 16.16 MiB/s, done.
+Resolving deltas: 100% (7354/7354), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ApplicationLibraries.LWM2M'...LWM2M
+remote: Counting objects: 2, done
+remote: Total 393 (delta 0), reused 393 (delta 0)
+Receiving objects: 100% (393/393), 1.13 MiB | 6.15 MiB/s, done.
+Resolving deltas: 100% (204/204), done.
+
+250/402 : cloning https://git.eclipse.org/r/openk-usermodules/org.eclipse.openk-usermodules.statementCloning into 'Repositories-saved/r/openk-usermodules/org.eclipse.openk-usermodules.statementPublicAffairs.frontend'...
+remote: Total 3632 (delta 0), reused 3632 (delta 0)
+Receiving objects: 100% (3632/3632), 5.67 MiB | 8.01 MiB/s, done.
+Resolving deltas: 100% (1956/1956), done.
+
+251/402 : cloning https://git.eclipse.org/r/openk-usermodules/org.eclipse.openk-usermodules.statementCloning into 'Repositories-saved/r/openk-usermodules/org.eclipse.openk-usermodules.statementPublicAffairs.backend'...
+remote: Total 1258 (delta 0), reused 1258 (delta 0)
+Receiving objects: 100% (1258/1258), 2.00 MiB | 12.41 MiB/s, done.
+Resolving deltas: 100% (618/618), done.
+
+Cloning into 'Repositories-saved/r/jsdt/webtools.jsdt.tests'...tests
+remote: Counting objects: 517, done
+remote: Total 13431 (delta 0), reused 13431 (delta 0)
+Receiving objects: 100% (13431/13431), 5.79 MiB | 10.17 MiB/s, done.
+Resolving deltas: 100% (6005/6005), done.
+
+Cloning into 'Repositories-saved/r/e4/org.eclipse.e4.databinding'...nding
+remote: Counting objects: 2357, done
+remote: Total 31458 (delta 0), reused 31458 (delta 0)
+Receiving objects: 100% (31458/31458), 6.34 MiB | 5.62 MiB/s, done.
+Resolving deltas: 100% (15398/15398), done.
+
+Cloning into 'Repositories-saved/r/mylyn/org.eclipse.mylyn.context.mft'...t.mft
+remote: Total 1070 (delta 0), reused 1070 (delta 0)
+Receiving objects: 100% (1070/1070), 218.79 KiB | 4.21 MiB/s, done.
+Resolving deltas: 100% (531/531), done.
+
+Cloning into 'Repositories-saved/r/pde/eclipse.pde'...e.pde
+remote: Counting objects: 29, done
+remote: Total 5498 (delta 0), reused 5498 (delta 0)
+Receiving objects: 100% (5498/5498), 745.98 KiB | 7.17 MiB/s, done.
+Resolving deltas: 100% (3066/3066), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/jgit'.../jgit
+remote: Total 600 (delta 0), reused 600 (delta 0)
+Receiving objects: 100% (600/600), 934.14 KiB | 8.42 MiB/s, done.
+Resolving deltas: 100% (180/180), done.
+
+Cloning into 'Repositories-saved/r/mdmbl/org.eclipse.mdm'...e.mdm
+remote: Counting objects: 51, done
+remote: Total 32189 (delta 0), reused 32189 (delta 0)
+Receiving objects: 100% (32189/32189), 23.42 MiB | 5.90 MiB/s, done.
+Resolving deltas: 100% (9550/9550), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.Applications.IoT_Functiontest_Framework'...ework
+remote: Counting objects: 2, done
+remote: Total 234 (delta 0), reused 234 (delta 0)
+Receiving objects: 100% (234/234), 110.88 KiB | 6.16 MiB/s, done.
+Resolving deltas: 100% (144/144), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ApplicationLibraries.CoAP'....CoAP
+remote: Counting objects: 2, done
+remote: Total 322 (delta 0), reused 322 (delta 0)
+Receiving objects: 100% (322/322), 1.31 MiB | 8.19 MiB/s, done.
+Resolving deltas: 100% (152/152), done.
+
+Cloning into 'Repositories-saved/r/bpel/org.eclipse.bpel'....bpel
+remote: Counting objects: 3, done
+remote: Total 24536 (delta 0), reused 24536 (delta 0)
+Receiving objects: 100% (24536/24536), 12.74 MiB | 6.26 MiB/s, done.
+Resolving deltas: 100% (15114/15114), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/errors'...rrors
+remote: Total 211 (delta 0), reused 211 (delta 0)
+Receiving objects: 100% (211/211), 5.78 MiB | 11.10 MiB/s, done.
+Resolving deltas: 100% (58/58), done.
+
+Cloning into 'Repositories-saved/r/stem/org.eclipse.stem'....stem
+remote: Counting objects: 17, done
+remote: Total 127985 (delta 0), reused 127985 (delta 0)
+Receiving objects: 100% (127985/127985), 975.22 MiB | 15.26 MiB/s, done.
+Resolving deltas: 100% (62881/62881), done.
+
+Cloning into 'Repositories-saved/r/justj/justj'...justj
+remote: Total 293 (delta 0), reused 293 (delta 0)
+Receiving objects: 100% (293/293), 241.13 KiB | 7.78 MiB/s, done.
+Resolving deltas: 100% (8/8), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/swt'...g/swt
+remote: Counting objects: 8, done
+remote: Total 5420 (delta 0), reused 5420 (delta 0)
+Receiving objects: 100% (5420/5420), 52.62 MiB | 10.41 MiB/s, done.
+Resolving deltas: 100% (3052/3052), done.
+
+Cloning into 'Repositories-saved/r/tracecompass/tracecompass-infra'...infra
+remote: Total 186 (delta 0), reused 186 (delta 0)
+Receiving objects: 100% (186/186), 67.25 KiB | 2.10 MiB/s, done.
+Resolving deltas: 100% (42/42), done.
+
+266/402 : cloning https://git.eclipse.org/r/openk-usermodules/org.eclipse.openk-usermodules.gridFailuCloning into 'Repositories-saved/r/openk-usermodules/org.eclipse.openk-usermodules.gridFailureInformation.documentation'...
+remote: Total 480 (delta 0), reused 480 (delta 0)
+Receiving objects: 100% (480/480), 12.91 MiB | 9.40 MiB/s, done.
+Resolving deltas: 100% (124/124), done.
+
+Cloning into 'Repositories-saved/r/statet/org.eclipse.statet-commons'...mmons
+remote: Counting objects: 691, done
+remote: Total 13386 (delta 0), reused 13386 (delta 0)
+Receiving objects: 100% (13386/13386), 4.50 MiB | 8.39 MiB/s, done.
+Resolving deltas: 100% (6222/6222), done.
+
+Cloning into 'Repositories-saved/r/platform/eclipse.platform.releng.buildtools'...tools
+remote: Counting objects: 130, done
+remote: Total 8904 (delta 0), reused 8904 (delta 0)
+Receiving objects: 100% (8904/8904), 20.11 MiB | 14.05 MiB/s, done.
+Resolving deltas: 100% (3556/3556), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/sirius'...irius
+remote: Total 4970 (delta 0), reused 4970 (delta 0)
+Receiving objects: 100% (4970/4970), 98.15 MiB | 14.36 MiB/s, done.
+Resolving deltas: 100% (1438/1438), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/chess'...chess
+remote: Total 339 (delta 0), reused 339 (delta 0)
+Receiving objects: 100% (339/339), 36.52 MiB | 19.42 MiB/s, done.
+Resolving deltas: 100% (77/77), done.
+
+271/402 : cloning https://git.eclipse.org/r/openk-usermodules/org.eclipse.openk-usermodules.gridFailuCloning into 'Repositories-saved/r/openk-usermodules/org.eclipse.openk-usermodules.gridFailureInformation.backend'...
+remote: Counting objects: 2329, done
+remote: Finding sources: 100% (2329/2329)
+remote: Total 15888 (delta 862), reused 15720 (delta 862)
+Receiving objects: 100% (15888/15888), 16.25 MiB | 11.07 MiB/s, done.
+Resolving deltas: 100% (6338/6338), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/jdt'...g/jdt
+remote: Counting objects: 12, done
+remote: Total 11590 (delta 0), reused 11590 (delta 0)
+Receiving objects: 100% (11590/11590), 15.60 MiB | 14.85 MiB/s, done.
+Resolving deltas: 100% (7160/7160), done.
+
+Cloning into 'Repositories-saved/r/mdmbl/org.eclipse.mdm.openatfx.mdf'...x.mdf
+remote: Counting objects: 6, done
+remote: Total 960 (delta 0), reused 960 (delta 0)
+Receiving objects: 100% (960/960), 1.71 MiB | 11.91 MiB/s, done.
+Resolving deltas: 100% (303/303), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/equinox'...uinox
+remote: Total 8965 (delta 0), reused 8965 (delta 0)
+Receiving objects: 100% (8965/8965), 70.50 MiB | 19.02 MiB/s, done.
+Resolving deltas: 100% (5734/5734), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/efbt'.../efbt
+remote: Total 382 (delta 0), reused 382 (delta 0)
+Receiving objects: 100% (382/382), 27.69 MiB | 12.38 MiB/s, done.
+Resolving deltas: 100% (73/73), done.
+
+Cloning into 'Repositories-saved/r/xwt/org.eclipse.xwt'...e.xwt
+remote: Total 8279 (delta 0), reused 8279 (delta 0)
+Receiving objects: 100% (8279/8279), 6.46 MiB | 11.85 MiB/s, done.
+Resolving deltas: 100% (4010/4010), done.
+
+Cloning into 'Repositories-saved/r/gmf-runtime/org.eclipse.gmf-runtime'...ntime
+remote: Counting objects: 1060, done
+remote: Total 69268 (delta 0), reused 69268 (delta 0)
+Receiving objects: 100% (69268/69268), 16.23 MiB | 13.28 MiB/s, done.
+Resolving deltas: 100% (35300/35300), done.
+
+Cloning into 'Repositories-saved/r/gmf-notation/org.eclipse.gmf.notation'...ation
+remote: Counting objects: 178, done
+remote: Total 4803 (delta 0), reused 4803 (delta 0)
+Receiving objects: 100% (4803/4803), 1.65 MiB | 8.15 MiB/s, done.
+Resolving deltas: 100% (3302/3302), done.
+
+279/402 : cloning https://git.eclipse.org/r/openk-coremodules/org.eclipse.openk-coremodules.contactBaCloning into 'Repositories-saved/r/openk-coremodules/org.eclipse.openk-coremodules.contactBaseData.frontend'...
+remote: Total 6295 (delta 0), reused 6295 (delta 0)
+Receiving objects: 100% (6295/6295), 8.65 MiB | 7.96 MiB/s, done.
+Resolving deltas: 100% (5108/5108), done.
+
+Cloning into 'Repositories-saved/r/dltk/org.eclipse.dltk.tcl'...k.tcl
+remote: Counting objects: 19, done
+remote: Total 51924 (delta 0), reused 51924 (delta 0)
+Receiving objects: 100% (51924/51924), 13.69 MiB | 8.33 MiB/s, done.
+Resolving deltas: 100% (23414/23414), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/etrice'...trice
+remote: Total 1838 (delta 0), reused 1838 (delta 0)
+Receiving objects: 100% (1838/1838), 28.39 MiB | 19.56 MiB/s, done.
+Resolving deltas: 100% (861/861), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/epp'...g/epp
+remote: Total 956 (delta 0), reused 956 (delta 0)
+Receiving objects: 100% (956/956), 255.91 KiB | 8.25 MiB/s, done.
+Resolving deltas: 100% (589/589), done.
+
+Cloning into 'Repositories-saved/r/simrel/org.eclipse.simrel.tools'...tools
+remote: Counting objects: 7, done
+remote: Total 3349 (delta 0), reused 3349 (delta 0)
+Receiving objects: 100% (3349/3349), 2.90 MiB | 6.39 MiB/s, done.
+Resolving deltas: 100% (1063/1063), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/ease'.../ease
+remote: Counting objects: 1, done
+remote: Total 798 (delta 0), reused 798 (delta 0)
+Receiving objects: 100% (798/798), 4.25 MiB | 14.04 MiB/s, done.
+Resolving deltas: 100% (334/334), done.
+
+Cloning into 'Repositories-saved/r/scout/maven-master'...aster
+remote: Counting objects: 100, done
+remote: Total 3279 (delta 0), reused 3279 (delta 0)
+Receiving objects: 100% (3279/3279), 2.35 MiB | 5.89 MiB/s, done.
+Resolving deltas: 100% (1713/1713), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/bpmn2-modeler'...deler
+remote: Total 521 (delta 0), reused 521 (delta 0)
+Receiving objects: 100% (521/521), 61.58 MiB | 14.82 MiB/s, done.
+Resolving deltas: 100% (298/298), done.
+
+Cloning into 'Repositories-saved/r/actf/org.eclipse.actf.examples'...mples
+remote: Counting objects: 38, done
+remote: Total 6122 (delta 0), reused 6122 (delta 0)
+Receiving objects: 100% (6122/6122), 23.39 MiB | 7.92 MiB/s, done.
+Resolving deltas: 100% (3522/3522), done.
+
+Cloning into 'Repositories-saved/r/actf/org.eclipse.actf.visualization'...ation
+remote: Counting objects: 13, done
+remote: Total 11097 (delta 0), reused 11097 (delta 0)
+Receiving objects: 100% (11097/11097), 3.83 MiB | 7.04 MiB/s, done.
+Resolving deltas: 100% (6350/6350), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/tycho'...tycho
+remote: Total 8611 (delta 0), reused 8611 (delta 0)
+Receiving objects: 100% (8611/8611), 3.60 MiB | 5.78 MiB/s, done.
+Resolving deltas: 100% (6388/6388), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/rap'...g/rap
+remote: Total 12700 (delta 0), reused 12700 (delta 0)
+Receiving objects: 100% (12700/12700), 21.10 MiB | 9.79 MiB/s, done.
+Resolving deltas: 100% (8504/8504), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/mat'...g/mat
+remote: Total 1014 (delta 0), reused 1014 (delta 0)
+Receiving objects: 100% (1014/1014), 4.12 MiB | 7.54 MiB/s, done.
+Resolving deltas: 100% (568/568), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/modeling'...eling
+remote: Counting objects: 12, done
+remote: Total 61465 (delta 0), reused 61465 (delta 0)
+Receiving objects: 100% (61465/61465), 367.40 MiB | 16.58 MiB/s, done.
+Resolving deltas: 100% (42874/42874), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/papyrus'...pyrus
+remote: Total 75885 (delta 0), reused 75885 (delta 0)
+Receiving objects: 100% (75885/75885), 229.77 MiB | 15.07 MiB/s, done.
+Resolving deltas: 100% (60002/60002), done.
+Checking out files: 100% (78600/78600), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/cdt'...g/cdt
+remote: Total 2055 (delta 0), reused 2055 (delta 0)
+Receiving objects: 100% (2055/2055), 30.50 MiB | 16.88 MiB/s, done.
+Resolving deltas: 100% (1102/1102), done.
+
+Cloning into 'Repositories-saved/r/m2e/m2e-discovery-catalog'...talog
+remote: Total 275 (delta 0), reused 275 (delta 0)
+Receiving objects: 100% (275/275), 52.36 KiB | 3.27 MiB/s, done.
+Resolving deltas: 100% (172/172), done.
+
+Cloning into 'Repositories-saved/r/usssdk/org.eclipse.usssdk'...sssdk
+remote: Counting objects: 3, done
+remote: Total 1193 (delta 0), reused 1193 (delta 0)
+Receiving objects: 100% (1193/1193), 433.05 KiB | 5.93 MiB/s, done.
+Resolving deltas: 100% (407/407), done.
+
+Cloning into 'Repositories-saved/r/objectteams/org.eclipse.objectteams'...teams
+remote: Counting objects: 186, done
+remote: Total 131790 (delta 0), reused 131790 (delta 0)
+Receiving objects: 100% (131790/131790), 140.59 MiB | 10.93 MiB/s, done.
+Resolving deltas: 100% (53034/53034), done.
+
+Cloning into 'Repositories-saved/r/babel/server'...erver
+remote: Counting objects: 157, done
+remote: Total 4436 (delta 0), reused 4436 (delta 0)
+Receiving objects: 100% (4436/4436), 1.53 MiB | 8.32 MiB/s, done.
+Resolving deltas: 100% (2704/2704), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/henshin'...nshin
+remote: Total 1708 (delta 0), reused 1708 (delta 0)
+Receiving objects: 100% (1708/1708), 9.06 MiB | 13.79 MiB/s, done.
+Resolving deltas: 100% (939/939), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.TestPorts.Serial'...erial
+remote: Counting objects: 1, done
+remote: Total 104 (delta 0), reused 104 (delta 0)
+Receiving objects: 100% (104/104), 37.42 KiB | 9.35 MiB/s, done.
+Resolving deltas: 100% (57/57), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/graphiti'...phiti
+remote: Total 1639 (delta 0), reused 1639 (delta 0)
+Receiving objects: 100% (1639/1639), 15.17 MiB | 14.18 MiB/s, done.
+Resolving deltas: 100% (929/929), done.
+
+Cloning into 'Repositories-saved/r/app4mc/org.eclipse.app4mc.web'...c.web
+remote: Total 2329 (delta 0), reused 2329 (delta 0)
+Receiving objects: 100% (2329/2329), 199.24 MiB | 17.98 MiB/s, done.
+Resolving deltas: 100% (628/628), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/getting_started'...arted
+remote: Total 486 (delta 0), reused 486 (delta 0)
+Receiving objects: 100% (486/486), 6.08 MiB | 13.05 MiB/s, done.
+Resolving deltas: 100% (232/232), done.
+
+Cloning into 'Repositories-saved/r/4diac/org.eclipse.4diac.examples'...mples
+remote: Total 1121 (delta 0), reused 1121 (delta 0)
+Receiving objects: 100% (1121/1121), 1.08 MiB | 6.36 MiB/s, done.
+Resolving deltas: 100% (764/764), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.Libraries.TLS'...s.TLS
+remote: Counting objects: 1, done
+remote: Total 49 (delta 0), reused 49 (delta 0)
+Unpacking objects: 100% (49/49), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/epf'...g/epf
+remote: Total 18362 (delta 0), reused 18362 (delta 0)
+Receiving objects: 100% (18362/18362), 256.27 MiB | 15.50 MiB/s, done.
+Resolving deltas: 100% (14621/14621), done.
+
+Cloning into 'Repositories-saved/r/datatools/org.eclipse.datatools'...tools
+remote: Counting objects: 636, done
+remote: Total 111434 (delta 0), reused 111434 (delta 0)
+Receiving objects: 100% (111434/111434), 22.83 MiB | 11.15 MiB/s, done.
+Resolving deltas: 100% (58642/58642), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/stem'.../stem
+remote: Total 2986 (delta 0), reused 2986 (delta 0)
+Receiving objects: 100% (2986/2986), 377.05 MiB | 14.07 MiB/s, done.
+Resolving deltas: 100% (1695/1695), done.
+
+Cloning into 'Repositories-saved/r/viatra/org.eclipse.viatra.modelobfuscator'...cator
+remote: Total 826 (delta 0), reused 826 (delta 0)
+Receiving objects: 100% (826/826), 257.75 KiB | 8.89 MiB/s, done.
+Resolving deltas: 100% (110/110), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.HTTP2'...HTTP2
+remote: Counting objects: 1, done
+remote: Total 46 (delta 0), reused 46 (delta 0)
+Unpacking objects: 100% (46/46), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/passage'...ssage
+remote: Total 73 (delta 0), reused 73 (delta 0)
+Unpacking objects: 100% (73/73), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-interoperability'...ility
+remote: Total 7235 (delta 0), reused 7235 (delta 0)
+Receiving objects: 100% (7235/7235), 6.03 MiB | 8.26 MiB/s, done.
+Resolving deltas: 100% (4329/4329), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.SGsAP_13.2.0'...3.2.0
+remote: Counting objects: 1, done
+remote: Total 32 (delta 0), reused 32 (delta 0)
+Unpacking objects: 100% (32/32), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.MQTT'....MQTT
+remote: Counting objects: 8, done
+remote: Total 125 (delta 0), reused 125 (delta 0)
+Receiving objects: 100% (125/125), 112.92 KiB | 4.70 MiB/s, done.
+Resolving deltas: 100% (69/69), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/4diac'...4diac
+remote: Total 4878 (delta 0), reused 4878 (delta 0)
+Receiving objects: 100% (4878/4878), 138.41 MiB | 12.73 MiB/s, done.
+Resolving deltas: 100% (2187/2187), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/uomo'.../uomo
+remote: Total 1077 (delta 0), reused 1077 (delta 0)
+Receiving objects: 100% (1077/1077), 9.00 MiB | 15.84 MiB/s, done.
+Resolving deltas: 100% (501/501), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/acceleo'...celeo
+remote: Total 1749 (delta 0), reused 1749 (delta 0)
+Receiving objects: 100% (1749/1749), 4.82 MiB | 17.33 MiB/s, done.
+Resolving deltas: 100% (952/952), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/nebula'...ebula
+remote: Counting objects: 3, done
+remote: Total 27350 (delta 0), reused 27350 (delta 0)
+Receiving objects: 100% (27350/27350), 65.04 MiB | 11.64 MiB/s, done.
+Resolving deltas: 100% (22996/22996), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.Applications.RIoT'....RIoT
+remote: Total 115 (delta 0), reused 115 (delta 0)
+Receiving objects: 100% (115/115), 1.65 MiB | 9.30 MiB/s, done.
+Resolving deltas: 100% (50/50), done.
+
+Cloning into 'Repositories-saved/r/systemfocus/systemfocus'...focus
+remote: Total 3387 (delta 0), reused 3387 (delta 0)
+Receiving objects: 100% (3387/3387), 1.72 MiB | 9.61 MiB/s, done.
+Resolving deltas: 100% (996/996), done.
+
+Cloning into 'Repositories-saved/r/mdmbl/org.eclipse.mdmbl'...mdmbl
+remote: Total 740 (delta 0), reused 740 (delta 0)
+Receiving objects: 100% (740/740), 372.96 MiB | 18.01 MiB/s, done.
+Resolving deltas: 100% (159/159), done.
+
+Cloning into 'Repositories-saved/r/apogy/apogy'...apogy
+remote: Counting objects: 1, done
+remote: Total 143549 (delta 0), reused 143549 (delta 0)
+Receiving objects: 100% (143549/143549), 97.71 MiB | 7.35 MiB/s, done.
+Resolving deltas: 100% (58586/58586), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/linuxtools'...tools
+remote: Total 8329 (delta 0), reused 8329 (delta 0)
+Receiving objects: 100% (8329/8329), 76.40 MiB | 14.43 MiB/s, done.
+Resolving deltas: 100% (5073/5073), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/photon'...hoton
+remote: Total 368 (delta 0), reused 368 (delta 0)
+Receiving objects: 100% (368/368), 38.84 MiB | 15.37 MiB/s, done.
+Resolving deltas: 100% (27/27), done.
+
+Cloning into 'Repositories-saved/r/ease/org.eclipse.ease.scripts'...ripts
+remote: Counting objects: 2, done
+remote: Total 406 (delta 0), reused 406 (delta 0)
+Receiving objects: 100% (406/406), 2.33 MiB | 9.52 MiB/s, done.
+Resolving deltas: 100% (38/38), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/jetty'...jetty
+remote: Total 629057 (delta 0), reused 629057 (delta 0)
+Receiving objects: 100% (629057/629057), 365.27 MiB | 13.89 MiB/s, done.
+Resolving deltas: 100% (584023/584023), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/vorto'...vorto
+remote: Total 4444 (delta 0), reused 4444 (delta 0)
+Receiving objects: 100% (4444/4444), 51.76 MiB | 15.44 MiB/s, done.
+Resolving deltas: 100% (2512/2512), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/ee4j'.../ee4j
+remote: Total 645 (delta 0), reused 645 (delta 0)
+Receiving objects: 100% (645/645), 329.69 KiB | 5.00 MiB/s, done.
+Resolving deltas: 100% (238/238), done.
+
+Cloning into 'Repositories-saved/r/efm/org.eclipse.efm-hibou'...hibou
+remote: Total 199 (delta 0), reused 199 (delta 0)
+Receiving objects: 100% (199/199), 1.62 MiB | 4.33 MiB/s, done.
+Resolving deltas: 100% (56/56), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.BSSGP_v13.0.0'...3.0.0
+remote: Counting objects: 1, done
+remote: Total 54 (delta 0), reused 54 (delta 0)
+Unpacking objects: 100% (54/54), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.Applications.IoT_Loadtest_Framework'...ework
+remote: Counting objects: 2, done
+remote: Total 196 (delta 0), reused 196 (delta 0)
+Receiving objects: 100% (196/196), 190.13 KiB | 6.34 MiB/s, done.
+Resolving deltas: 100% (89/89), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ApplicationLibraries.MQTT'....MQTT
+remote: Counting objects: 2, done
+remote: Total 219 (delta 0), reused 219 (delta 0)
+Receiving objects: 100% (219/219), 716.60 KiB | 7.09 MiB/s, done.
+Resolving deltas: 100% (88/88), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.EAP'...s.EAP
+remote: Counting objects: 1, done
+remote: Total 56 (delta 0), reused 56 (delta 0)
+Unpacking objects: 100% (56/56), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.GRE'...s.GRE
+remote: Counting objects: 1, done
+remote: Total 38 (delta 0), reused 38 (delta 0)
+Unpacking objects: 100% (38/38), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.GTPv2_v13.7.0'...3.7.0
+remote: Counting objects: 1, done
+remote: Total 37 (delta 0), reused 37 (delta 0)
+Unpacking objects: 100% (37/37), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.ISUP_Q.762'...Q.762
+remote: Counting objects: 1, done
+remote: Total 58 (delta 0), reused 58 (delta 0)
+Unpacking objects: 100% (58/58), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.LLC_v7.1.0'...7.1.0
+remote: Counting objects: 1, done
+remote: Total 56 (delta 0), reused 56 (delta 0)
+Unpacking objects: 100% (56/56), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.M2PA'....M2PA
+remote: Counting objects: 1, done
+remote: Total 49 (delta 0), reused 49 (delta 0)
+Unpacking objects: 100% (49/49), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.M2UA'....M2UA
+remote: Counting objects: 1, done
+remote: Total 42 (delta 0), reused 42 (delta 0)
+Unpacking objects: 100% (42/42), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.MobileL3_v13.4.0'...3.4.0
+remote: Counting objects: 1, done
+remote: Total 108 (delta 0), reused 108 (delta 0)
+Receiving objects: 100% (108/108), 418.96 KiB | 5.24 MiB/s, done.
+Resolving deltas: 100% (59/59), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.MongoDB'...ngoDB
+remote: Counting objects: 1, done
+remote: Total 44 (delta 0), reused 44 (delta 0)
+Unpacking objects: 100% (44/44), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.NDP'...s.NDP
+remote: Counting objects: 1, done
+remote: Total 48 (delta 0), reused 48 (delta 0)
+Unpacking objects: 100% (48/48), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.NS_v7.3.0'...7.3.0
+remote: Counting objects: 1, done
+remote: Total 46 (delta 0), reused 46 (delta 0)
+Unpacking objects: 100% (46/46), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.NTAF'....NTAF
+remote: Counting objects: 1, done
+remote: Total 54 (delta 0), reused 54 (delta 0)
+Unpacking objects: 100% (54/54), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.OPC_UA'...PC_UA
+remote: Total 101 (delta 0), reused 101 (delta 0)
+Receiving objects: 100% (101/101), 174.41 KiB | 4.71 MiB/s, done.
+Resolving deltas: 100% (52/52), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.ROSE'....ROSE
+remote: Counting objects: 1, done
+remote: Total 42 (delta 0), reused 42 (delta 0)
+Unpacking objects: 100% (42/42), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.SCTP'....SCTP
+remote: Counting objects: 1, done
+remote: Total 41 (delta 0), reused 41 (delta 0)
+Unpacking objects: 100% (41/41), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.SDP'...s.SDP
+remote: Counting objects: 1, done
+remote: Total 90 (delta 0), reused 90 (delta 0)
+Unpacking objects: 100% (90/90), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.SNDCP_v7.0.0'...7.0.0
+remote: Counting objects: 1, done
+remote: Total 38 (delta 0), reused 38 (delta 0)
+Unpacking objects: 100% (38/38), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.DSS1_ETSI'..._ETSI
+remote: Counting objects: 1, done
+remote: Total 189 (delta 0), reused 189 (delta 0)
+Receiving objects: 100% (189/189), 198.96 KiB | 4.63 MiB/s, done.
+Resolving deltas: 100% (129/129), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.STOMP'...STOMP
+remote: Counting objects: 2, done
+remote: Total 60 (delta 0), reused 60 (delta 0)
+Unpacking objects: 100% (60/60), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.STUN_RFC5389'...C5389
+remote: Counting objects: 1, done
+remote: Total 49 (delta 0), reused 49 (delta 0)
+Unpacking objects: 100% (49/49), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.SUA'...s.SUA
+remote: Counting objects: 1, done
+remote: Total 49 (delta 0), reused 49 (delta 0)
+Unpacking objects: 100% (49/49), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.TLS'...s.TLS
+remote: Counting objects: 1, done
+remote: Total 61 (delta 0), reused 61 (delta 0)
+Unpacking objects: 100% (61/61), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.WTP'...s.WTP
+remote: Counting objects: 1, done
+remote: Total 48 (delta 0), reused 48 (delta 0)
+Unpacking objects: 100% (48/48), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.TestPorts.GPIO'....GPIO
+remote: Counting objects: 2, done
+remote: Total 123 (delta 0), reused 123 (delta 0)
+Receiving objects: 100% (123/123), 31.82 KiB | 6.36 MiB/s, done.
+Resolving deltas: 100% (69/69), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.DUA'...s.DUA
+remote: Counting objects: 1, done
+remote: Total 46 (delta 0), reused 46 (delta 0)
+Unpacking objects: 100% (46/46), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.TestPorts.MTP3asp'...P3asp
+remote: Counting objects: 1, done
+remote: Total 74 (delta 0), reused 74 (delta 0)
+Unpacking objects: 100% (74/74), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.TestPorts.SocketCANasp'...ANasp
+remote: Counting objects: 12, done
+remote: Total 482 (delta 0), reused 482 (delta 0)
+Receiving objects: 100% (482/482), 11.59 MiB | 9.00 MiB/s, done.
+Resolving deltas: 100% (311/311), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.CoAP'....CoAP
+remote: Counting objects: 5, done
+remote: Total 106 (delta 0), reused 106 (delta 0)
+Receiving objects: 100% (106/106), 117.13 KiB | 6.89 MiB/s, done.
+Resolving deltas: 100% (30/30), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolModules.BSSMAP_v11.2.0'...1.2.0
+remote: Counting objects: 1, done
+remote: Total 54 (delta 0), reused 54 (delta 0)
+Unpacking objects: 100% (54/54), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolEmulations.SUA'...s.SUA
+remote: Counting objects: 1, done
+remote: Total 43 (delta 0), reused 43 (delta 0)
+Unpacking objects: 100% (43/43), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolEmulations.SCCP'....SCCP
+remote: Counting objects: 1, done
+remote: Total 104 (delta 0), reused 104 (delta 0)
+Receiving objects: 100% (104/104), 453.00 KiB | 4.82 MiB/s, done.
+Resolving deltas: 100% (52/52), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ProtocolEmulations.M3UA'....M3UA
+remote: Counting objects: 1, done
+remote: Total 69 (delta 0), reused 69 (delta 0)
+Unpacking objects: 100% (69/69), done.
+
+Cloning into 'Repositories-saved/r/sensinact/org.eclipse.sensinact.gateway'...teway
+remote: Counting objects: 8, done
+remote: Total 31319 (delta 0), reused 31319 (delta 0)
+Receiving objects: 100% (31319/31319), 7.36 MiB | 8.42 MiB/s, done.
+Resolving deltas: 100% (11662/11662), done.
+
+Cloning into 'Repositories-saved/r/glassfish-tools/glassfish-tools'...tools
+remote: Total 674 (delta 0), reused 674 (delta 0)
+Receiving objects: 100% (674/674), 10.64 MiB | 15.78 MiB/s, done.
+Resolving deltas: 100% (282/282), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/egf'...g/egf
+remote: Total 494 (delta 0), reused 494 (delta 0)
+Receiving objects: 100% (494/494), 736.44 KiB | 12.70 MiB/s, done.
+Resolving deltas: 100% (271/271), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/technology'...ology
+remote: Total 589 (delta 0), reused 589 (delta 0)
+Receiving objects: 100% (589/589), 203.15 KiB | 6.35 MiB/s, done.
+Resolving deltas: 100% (337/337), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/mars'.../mars
+remote: Total 265 (delta 0), reused 265 (delta 0)
+Receiving objects: 100% (265/265), 3.04 MiB | 8.65 MiB/s, done.
+Resolving deltas: 100% (24/24), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/luna'.../luna
+remote: Total 196 (delta 0), reused 196 (delta 0)
+Receiving objects: 100% (196/196), 218.62 KiB | 7.05 MiB/s, done.
+Resolving deltas: 100% (80/80), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/kepler'...epler
+remote: Total 415 (delta 0), reused 415 (delta 0)
+Receiving objects: 100% (415/415), 1.90 MiB | 7.86 MiB/s, done.
+Resolving deltas: 100% (240/240), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/juno'.../juno
+remote: Total 550 (delta 0), reused 550 (delta 0)
+Receiving objects: 100% (550/550), 22.73 MiB | 15.14 MiB/s, done.
+Resolving deltas: 100% (351/351), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/indigo'...ndigo
+remote: Total 367 (delta 0), reused 367 (delta 0)
+Receiving objects: 100% (367/367), 17.68 MiB | 13.51 MiB/s, done.
+Resolving deltas: 100% (200/200), done.
+
+Cloning into 'Repositories-saved/r/skills/org.eclipse.skills'...kills
+remote: Total 1995 (delta 0), reused 1995 (delta 0)
+Receiving objects: 100% (1995/1995), 2.46 MiB | 9.28 MiB/s, done.
+Resolving deltas: 100% (274/274), done.
+
+Cloning into 'Repositories-saved/r/titan/titan.ApplicationLibraries.MBT'...s.MBT
+remote: Counting objects: 1, done
+remote: Total 245 (delta 0), reused 245 (delta 0)
+Receiving objects: 100% (245/245), 3.91 MiB | 7.01 MiB/s, done.
+Resolving deltas: 100% (63/63), done.
+
+Cloning into 'Repositories-saved/r/emfcompare/org.eclipse.emf.compare-releng'...eleng
+remote: Total 264 (delta 0), reused 264 (delta 0)
+Receiving objects: 100% (264/264), 126.77 KiB | 5.51 MiB/s, done.
+Resolving deltas: 100% (120/120), done.
+
+Cloning into 'Repositories-saved/r/mdmbl/org.eclipse.mdm.realms'...ealms
+remote: Counting objects: 8, done
+remote: Total 192 (delta 0), reused 192 (delta 0)
+Receiving objects: 100% (192/192), 151.86 KiB | 6.90 MiB/s, done.
+Resolving deltas: 100% (42/42), done.
+
+Cloning into 'Repositories-saved/r/mdmbl/org.eclipse.mdm.api.uml'...i.uml
+remote: Counting objects: 2, done
+remote: Total 683 (delta 0), reused 683 (delta 0)
+Receiving objects: 100% (683/683), 2.96 MiB | 9.96 MiB/s, done.
+Resolving deltas: 100% (176/176), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-bpmn'...-bpmn
+remote: Counting objects: 2, done
+remote: Total 1484 (delta 0), reused 1484 (delta 0)
+Receiving objects: 100% (1484/1484), 889.15 KiB | 7.06 MiB/s, done.
+Resolving deltas: 100% (747/747), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-marte'...marte
+remote: Counting objects: 2, done
+remote: Total 4496 (delta 0), reused 4496 (delta 0)
+Receiving objects: 100% (4496/4496), 3.42 MiB | 10.27 MiB/s, done.
+Resolving deltas: 100% (3219/3219), done.
+
+Cloning into 'Repositories-saved/r/dash/org.eclipse.dash.handbook'...dbook
+remote: Counting objects: 4, done
+remote: Total 1480 (delta 0), reused 1480 (delta 0)
+Receiving objects: 100% (1480/1480), 3.74 MiB | 7.11 MiB/s, done.
+Resolving deltas: 100% (226/226), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/kitalpha'...alpha
+remote: Total 166 (delta 0), reused 166 (delta 0)
+Receiving objects: 100% (166/166), 942.59 KiB | 7.99 MiB/s, done.
+Resolving deltas: 100% (13/13), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/tea'...g/tea
+remote: Total 167 (delta 0), reused 167 (delta 0)
+Receiving objects: 100% (167/167), 2.08 MiB | 10.25 MiB/s, done.
+Resolving deltas: 100% (9/9), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/cbi'...g/cbi
+remote: Total 832 (delta 0), reused 832 (delta 0)
+Receiving objects: 100% (832/832), 4.02 MiB | 13.42 MiB/s, done.
+Resolving deltas: 100% (367/367), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/neon'.../neon
+remote: Total 379 (delta 0), reused 379 (delta 0)
+Receiving objects: 100% (379/379), 4.88 MiB | 12.43 MiB/s, done.
+Resolving deltas: 100% (49/49), done.
+
+Cloning into 'Repositories-saved/r/ptp/org.eclipse.photran'...otran
+remote: Counting objects: 183, done
+remote: Total 37565 (delta 0), reused 37565 (delta 0)
+Receiving objects: 100% (37565/37565), 30.46 MiB | 15.77 MiB/s, done.
+Resolving deltas: 100% (21493/21493), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/oxygen'...xygen
+remote: Total 402 (delta 0), reused 402 (delta 0)
+Receiving objects: 100% (402/402), 24.89 MiB | 12.92 MiB/s, done.
+Resolving deltas: 100% (54/54), done.
+
+Cloning into 'Repositories-saved/r/efm/org.eclipse.efm-symbex'...ymbex
+remote: Total 892 (delta 0), reused 892 (delta 0)
+Receiving objects: 100% (892/892), 1.74 MiB | 8.25 MiB/s, done.
+Resolving deltas: 100% (221/221), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/corporate_sponsors'...nsors
+remote: Total 156 (delta 0), reused 156 (delta 0)
+Receiving objects: 100% (156/156), 762.88 KiB | 8.03 MiB/s, done.
+Resolving deltas: 100% (66/66), done.
+
+Cloning into 'Repositories-saved/r/dltk/org.eclipse.dltk.sh'...tk.sh
+remote: Counting objects: 11, done
+remote: Total 1558 (delta 0), reused 1558 (delta 0)
+Receiving objects: 100% (1558/1558), 802.75 KiB | 6.42 MiB/s, done.
+Resolving deltas: 100% (365/365), done.
+
+Cloning into 'Repositories-saved/r/emf-validation/org.eclipse.emf.validation'...ation
+remote: Counting objects: 227, done
+remote: Total 9024 (delta 0), reused 9024 (delta 0)
+Receiving objects: 100% (9024/9024), 2.75 MiB | 9.57 MiB/s, done.
+Resolving deltas: 100% (5855/5855), done.
+
+Cloning into 'Repositories-saved/r/emf-transaction/org.eclipse.emf.transaction'...ction
+remote: Counting objects: 245, done
+remote: Total 9763 (delta 0), reused 9763 (delta 0)
+Receiving objects: 100% (9763/9763), 2.73 MiB | 11.43 MiB/s, done.
+Resolving deltas: 100% (6149/6149), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/ice'...g/ice
+remote: Total 227 (delta 0), reused 227 (delta 0)
+Receiving objects: 100% (227/227), 12.51 MiB | 15.67 MiB/s, done.
+Resolving deltas: 100% (5/5), done.
+
+Cloning into 'Repositories-saved/r/m2e-wtp/org.eclipse.m2e.wtp'...e.wtp
+remote: Counting objects: 2, done
+remote: Total 4904 (delta 0), reused 4904 (delta 0)
+Receiving objects: 100% (4904/4904), 1.26 MiB | 11.10 MiB/s, done.
+Resolving deltas: 100% (2611/2611), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/articles'...icles
+remote: Total 5108 (delta 0), reused 5108 (delta 0)
+Receiving objects: 100% (5108/5108), 62.45 MiB | 13.86 MiB/s, done.
+Resolving deltas: 100% (1908/1908), done.
+
+Cloning into 'Repositories-saved/r/rap/incubator/org.eclipse.rap.incubator.chart'...chart
+remote: Total 539 (delta 0), reused 539 (delta 0)
+Receiving objects: 100% (539/539), 190.19 KiB | 6.56 MiB/s, done.
+Resolving deltas: 100% (67/67), done.
+
+Cloning into 'Repositories-saved/r/dltk/org.eclipse.dltk.all'...k.all
+remote: Counting objects: 11, done
+remote: Total 73 (delta 0), reused 73 (delta 0)
+Unpacking objects: 100% (73/73), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/collections'...tions
+remote: Total 118442 (delta 0), reused 118442 (delta 0)
+Receiving objects: 100% (118442/118442), 144.19 MiB | 9.12 MiB/s, done.
+Resolving deltas: 100% (109891/109891), done.
+Checking out files: 100% (83385/83385), done.
+
+Cloning into 'Repositories-saved/r/papyrus/org.eclipse.papyrus-robotml'...botml
+remote: Counting objects: 2, done
+remote: Total 2317 (delta 0), reused 2317 (delta 0)
+Receiving objects: 100% (2317/2317), 14.81 MiB | 13.98 MiB/s, done.
+Resolving deltas: 100% (1193/1193), done.
+
+Cloning into 'Repositories-saved/r/openk-platform/org.eclipse.openk-platform.openk-repo'...-repo
+remote: Total 41608 (delta 0), reused 41608 (delta 0)
+Receiving objects: 100% (41608/41608), 21.93 MiB | 9.78 MiB/s, done.
+Resolving deltas: 100% (19543/19543), done.
+
+Cloning into 'Repositories-saved/r/rap/incubator/org.eclipse.rap.incubator.richtext'...htext
+remote: Total 754 (delta 0), reused 754 (delta 0)
+Receiving objects: 100% (754/754), 1.68 MiB | 9.59 MiB/s, done.
+Resolving deltas: 100% (158/158), done.
+
+Cloning into 'Repositories-saved/r/www.eclipse.org/windowbuilder'...ilder
+remote: Total 398 (delta 0), reused 398 (delta 0)
+Receiving objects: 100% (398/398), 18.14 MiB | 12.03 MiB/s, done.
+Resolving deltas: 100% (198/198), done.

@@ -138,27 +138,17 @@ let i = 1;
 
 async function collectMetrics(metric) {
     let result = {};
-    //todo skip NEW code changes
 
     //identification
     result["n"] = i++
     //result = copy(result, metric, "n");
     result = copy(result, metric, "number");
-    //result = copy(result, metric, "id");
     result = copy(result, metric, "change_id");
-    //result = copy(result, metric, "status");
 
     //time
     result = copy(result, metric, "date_created");
-    //result = copy(result, metric, "date_created_time");
-    //result = copy(result, metric, "date_updated");
-    //result = copy(result, metric, "date_updated_time");
-    //result = copy(result, metric, "date_commit");
-    //result = copy(result, metric, "date_commit_time");
     result = copy(result, metric, "days_of_the_weeks_of_date_created");
-    //result = copy(result, metric, "days_of_the_weeks_of_date_updated");
     result = copy(result, metric, "is_created_date_a_weekend");
-    //result = copy(result, metric, "is_updated_date_a_weekend");
     result = copy(result, metric, "committer_timezone");
     result = copy(result, metric, "author_timezone");
 
@@ -184,8 +174,8 @@ async function collectMetrics(metric) {
 
     //
     result = copy(result, metric, "sum_changed_methods_count");
-    result = copy(result, metric, "sum_added_lines");
-    result = copy(result, metric, "sum_removed_lines");
+    //result = copy(result, metric, "sum_added_lines");
+    //result = copy(result, metric, "sum_removed_lines");
     result = copy(result, metric, "sum_loc");
     result = copy(result, metric, "moy_loc");
     result = copy(result, metric, "sum_complexity");
@@ -200,7 +190,7 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "num_segs_deleted");
     result = copy(result, metric, "num_segs_modify");
 
-    //commit message and subject
+    //Text metrics
     result = copy(result, metric, "subject_length");
     result = copy(result, metric, "subject_word_count");
     result = copy(result, metric, "msg_length");
@@ -212,29 +202,14 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "is_preventive");
     result = copy(result, metric, "is_refactoring");
 
-    //recent
-    result = copy(result, metric, "recent_num_change");
-    result = copy(result, metric, "recent_total_num_merged");
-    result = copy(result, metric, "recent_total_num_abandoned");
-    result = copy(result, metric, "recent_total_num_non_close_change");
-    result = copy(result, metric, "recent_owner_num_change");
-    result = copy(result, metric, "recent_owner_num_merged");
-    result = copy(result, metric, "recent_owner_num_abandoned");
-    result = copy(result, metric, "recent_owner_num_non_close_change");
-    result = copy(result, metric, "recent_total_merged_ratio");
-    result = copy(result, metric, "recent_owner_merged_ratio");
-    result = copy(result, metric, "recent_owner_percentage_of_merged");
-    result = copy(result, metric, "recent_review_num_mean");
-    result = copy(result, metric, "recent_reviews_non_close_mean");
-    result = copy(result, metric, "recent_review_num_max");
-    result = copy(result, metric, "recent_reviews_non_close_max");
-
-    //changes
+    //Owner experience metrics
     result = copy(result, metric, "priorChangesCount");
     result = copy(result, metric, "priorMergedChangesCount");
     result = copy(result, metric, "priorAbandonedChangesCount");
+
     result = copy(result, metric, "mergedRatio");
     result = copy(result, metric, "abandonedRatio");
+
     result = copy(result, metric, "priorSubsystemChangesCount");
     result = copy(result, metric, "priorSubsystemMergedChangesCount");
     result = copy(result, metric, "priorSubsystemAbandonedChangesCount");
@@ -243,16 +218,7 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "priorSubsystemAbandonedRatio");
     result = copy(result, metric, "priorSubsystemMergedPercentageInMerged");
     result = copy(result, metric, "priorSubsystemAbandonedPercentageInAbandoned");
-    result = copy(result, metric, "priorMergedChangeMeanTime");
-    result = copy(result, metric, "priorMergedChangeMaxTime");
-    result = copy(result, metric, "priorMergedChangeMinTime");
-    result = copy(result, metric, "priorMergedChangeStdTime");
-    result = copy(result, metric, "priorAbandonedChangeMeanTime");
-    result = copy(result, metric, "priorAbandonedChangeMaxTime");
-    result = copy(result, metric, "priorAbandonedChangeMinTime");
-    result = copy(result, metric, "priorAbandonedChangeStdTime");
 
-    //owner
     result = copy(result, metric, "ownerPriorChangesCount");
     result = copy(result, metric, "ownerPriorMergedChangesCount");
     result = copy(result, metric, "ownerPriorAbandonedChangesCount");
@@ -260,6 +226,7 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "ownerAbandonedRatio");
     result = copy(result, metric, "ownerPercentageOfMerged");
     result = copy(result, metric, "ownerPercentageOfAbandoned");
+
     result = copy(result, metric, "priorOwnerSubsystemChangesCount");
     result = copy(result, metric, "priorOwnerSubsystemMergedChangesCount");
     result = copy(result, metric, "priorOwnerSubsystemAbandonedChangesCount");
@@ -268,118 +235,68 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "priorOwnerSubsystemAbandonedChangesRatio");
     result = copy(result, metric, "priorOwnerPercentageOfMergedInSubsystem");
     result = copy(result, metric, "priorOwnerPercentageOfAbandonedInSubsystem");
-    result = copy(result, metric, "priorOwnerMergedChangesMeanTime");
-    result = copy(result, metric, "priorOwnerMergedChangesMaxTime");
-    result = copy(result, metric, "priorOwnerMergedChangesMinTime");
-    result = copy(result, metric, "priorOwnerMergedChangesStdTime");
-    result = copy(result, metric, "priorOwnerAbandonedChangesMeanTime");
-    result = copy(result, metric, "priorOwnerAbandonedChangesMaxTime");
-    result = copy(result, metric, "priorOwnerAbandonedChangesMinTime");
-    result = copy(result, metric, "priorOwnerAbandonedChangesStdTime");
+
+    //
+    result = copy(result, metric, "priorChangeDurationMean");
+    result = copy(result, metric, "priorChangeDurationMax");
+    result = copy(result, metric, "priorChangeDurationMin");
+    result = copy(result, metric, "priorChangeDurationStd");
+
+    result = copy(result, metric, "priorOwnerChangesDurationMean");
+    result = copy(result, metric, "priorOwnerChangesDurationMax");
+    result = copy(result, metric, "priorOwnerChangesDurationMin");
+    result = copy(result, metric, "priorOwnerChangesDurationStd");
+
+    result = copy(result, metric, "ownerNumberOfRevisionAvg");
+    result = copy(result, metric, "ownerNumberOfRevisionMax");
+    result = copy(result, metric, "ownerNumberOfRevisionMin");
+    result = copy(result, metric, "ownerNumberOfRevisionStd");
+
     result = copy(result, metric, "ownerNumberOfReview");
-    result = copy(result, metric, "ownerNumberOfRevisionMergedAvg");
-    result = copy(result, metric, "ownerNumberOfRevisionMergedMax");
-    result = copy(result, metric, "ownerNumberOfRevisionMergedMin");
-    result = copy(result, metric, "ownerNumberOfRevisionMergedStd");
-    result = copy(result, metric, "ownerNumberOfRevisionAbandonedAvg");
-    result = copy(result, metric, "ownerNumberOfRevisionAbandonedMax");
-    result = copy(result, metric, "ownerNumberOfRevisionAbandonedMin");
-    result = copy(result, metric, "ownerNumberOfRevisionAbandonedStd");
 
-    result = copy(result, metric, "ownerAndReviewerCommonsChangesSum");
-    result = copy(result, metric, "ownerAndReviewerCommonsChangesAvg");
-    result = copy(result, metric, "ownerAndReviewerCommonsChangesMax");
-    result = copy(result, metric, "ownerAndReviewerCommonsChangesMin");
-    result = copy(result, metric, "ownerAndReviewerCommonsChangesStd");
-    result = copy(result, metric, "ownerChangesWithSameReviewersSum");
-    result = copy(result, metric, "ownerChangesWithSameReviewersAvg");
-    result = copy(result, metric, "ownerChangesWithSameReviewersMax");
-    result = copy(result, metric, "ownerChangesWithSameReviewersMin");
-    result = copy(result, metric, "ownerChangesWithSameReviewersStd");
+    //File
+    result = copy(result, metric, "fileCountAvg");
+    result = copy(result, metric, "fileCountMax");
+    result = copy(result, metric, "fileCountMin");
+    result = copy(result, metric, "fileCountStd");
+    result = copy(result, metric, "fileTimeAvg");
+    result = copy(result, metric, "fileTimeMax");
+    result = copy(result, metric, "fileTimeMin");
+    result = copy(result, metric, "fileTimeStd");
 
-    //reviewers
-    result = copy(result, metric, "reviewersMergedChangesCountAvg");
-    result = copy(result, metric, "reviewersMergedChangesCountMax");
-    result = copy(result, metric, "reviewersMergedChangesCountMin");
-    result = copy(result, metric, "reviewersMergedChangesCountStd");
-    result = copy(result, metric, "reviewersMergedChangesTimeAvg");
-    result = copy(result, metric, "reviewersMergedChangesTimeMax");
-    result = copy(result, metric, "reviewersMergedChangesTimeMin");
-    result = copy(result, metric, "reviewersMergedChangesTimeStd");
-    result = copy(result, metric, "reviewersMergedChangesPercentageAvg");
-    result = copy(result, metric, "reviewersMergedChangesRatioAvg");
-    result = copy(result, metric, "reviewersAbandonedChangesCountAvg");
-    result = copy(result, metric, "reviewersAbandonedChangesCountMax");
-    result = copy(result, metric, "reviewersAbandonedChangesCountMin");
-    result = copy(result, metric, "reviewersAbandonedChangesCountStd");
-    result = copy(result, metric, "reviewersAbandonedChangesTimeAvg");
-    result = copy(result, metric, "reviewersAbandonedChangesTimeMax");
-    result = copy(result, metric, "reviewersAbandonedChangesTimeMin");
-    result = copy(result, metric, "reviewersAbandonedChangesTimeStd");
-    result = copy(result, metric, "reviewersAbandonedChangesPercentageAvg");
-    result = copy(result, metric, "reviewersAbandonedChangesRatioAvg");
-    result = copy(result, metric, "reviewersTotalPreviousMessagesCount");
+    result = copy(result, metric, "ownerFileCountAvg");
+    result = copy(result, metric, "ownerFileCountMax");
+    result = copy(result, metric, "ownerFileCountMin");
+    result = copy(result, metric, "ownerFileCountStd");
+    result = copy(result, metric, "ownerFileTimeAvg");
+    result = copy(result, metric, "ownerFileTimeMax");
+    result = copy(result, metric, "ownerFileTimeMin");
+    result = copy(result, metric, "ownerFileTimeStd");
+
+    result = copy(result, metric, "AvgNumberOfDeveloperWhoModifiedFiles");
 
     //Messages
     result = copy(result, metric, "ownerPreviousMessageCount");
+
     result = copy(result, metric, "ownerChangesMessagesSum");
     result = copy(result, metric, "ownerChangesMessagesAvgPerChanges");
     result = copy(result, metric, "ownerChangesMessagesMaxPerChanges");
     result = copy(result, metric, "ownerChangesMessagesMinPerChanges");
     result = copy(result, metric, "ownerChangesMessagesStdPerChanges");
 
-    result = copy(result, metric, "ownerAndReviewerCommonsChangesMessagesSum");
-    result = copy(result, metric, "ownerAndReviewerCommonsChangesMessagesAvg");
-    result = copy(result, metric, "ownerAndReviewerCommonsChangesMessagesMax");
-    result = copy(result, metric, "ownerAndReviewerCommonsChangesMessagesMin");
-    result = copy(result, metric, "ownerAndReviewerCommonsChangesMessagesStd");
-    result = copy(result, metric, "ownerChangesMessagesWithSameReviewersSum");
-    result = copy(result, metric, "ownerChangesMessagesWithSameReviewersAvg");
-    result = copy(result, metric, "ownerChangesMessagesWithSameReviewersMax");
-    result = copy(result, metric, "ownerChangesMessagesWithSameReviewersMin");
-    result = copy(result, metric, "ownerChangesMessagesWithSameReviewersStd");
+    result = copy(result, metric, "changesMessagesSum");
+    result = copy(result, metric, "changesMessagesAvg");
+    result = copy(result, metric, "changesMessagesMax");
+    result = copy(result, metric, "changesMessagesMin");
+    result = copy(result, metric, "changesMessagesStd");
 
-    //file
-    result = copy(result, metric, "AvgNumberOfDeveloperWhoChangesFileInChanges");
-    result = copy(result, metric, "mergedFileCountAvg");
-    result = copy(result, metric, "mergedFileCountMax");
-    result = copy(result, metric, "mergedFileCountMin");
-    result = copy(result, metric, "mergedFileCountStd");
-    result = copy(result, metric, "mergedFileTimeAvg");
-    result = copy(result, metric, "mergedFileTimeMax");
-    result = copy(result, metric, "mergedFileTimeMin");
-    result = copy(result, metric, "mergedFileTimeStd");
-    result = copy(result, metric, "abandonedFileCountAvg");
-    result = copy(result, metric, "abandonedFileCountMax");
-    result = copy(result, metric, "abandonedFileCountMin");
-    result = copy(result, metric, "abandonedFileCountStd");
-    result = copy(result, metric, "abandonedFileTimeAvg");
-    result = copy(result, metric, "abandonedFileTimeMax");
-    result = copy(result, metric, "abandonedFileTimeMin");
-    result = copy(result, metric, "abandonedFileTimeStd");
-    result = copy(result, metric, "ownerMergedFileCountAvg");
-    result = copy(result, metric, "ownerMergedFileCountMax");
-    result = copy(result, metric, "ownerMergedFileCountMin");
-    result = copy(result, metric, "ownerMergedFileCountStd");
-    result = copy(result, metric, "ownerMergedFileTimeAvg");
-    result = copy(result, metric, "ownerMergedFileTimeMax");
-    result = copy(result, metric, "ownerMergedFileTimeMin");
-    result = copy(result, metric, "ownerMergedFileTimeStd");
-    result = copy(result, metric, "ownerAbandonedFileCountAvg");
-    result = copy(result, metric, "ownerAbandonedFileCountMax");
-    result = copy(result, metric, "ownerAbandonedFileCountMin");
-    result = copy(result, metric, "ownerAbandonedFileCountStd");
-    result = copy(result, metric, "ownerAbandonedFileTimeAvg");
-    result = copy(result, metric, "ownerAbandonedFileTimeMax");
-    result = copy(result, metric, "ownerAbandonedFileTimeMin");
-    result = copy(result, metric, "ownerAbandonedFileTimeStd");
+    result = copy(result, metric, "nonBotAccountPreviousMessageSum");
+    result = copy(result, metric, "nonBotAccountPreviousMessageAvg");
+    result = copy(result, metric, "nonBotAccountPreviousMessageMax");
+    result = copy(result, metric, "nonBotAccountPreviousMessageMin");
+    result = copy(result, metric, "nonBotAccountPreviousMessageStd");
 
-    result = copy(result, metric, "reviewersMergedFileCountAvg");
-    result = copy(result, metric, "reviewersMergedFileTimeAvg");
-    result = copy(result, metric, "reviewersAbandonedFileCountAvg");
-    result = copy(result, metric, "reviewersAbandonedFileTimeAvg");
-
-    //graph
+    //Collaboration Graph
     result = copy(result, metric, "degree_centrality");
     result = copy(result, metric, "closeness_centrality");
     result = copy(result, metric, "betweenness_centrality");
@@ -387,16 +304,8 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "clustering_coefficient");
     result = copy(result, metric, "core_number");
 
-    //result
-    //result = copy(result, metric, "diff_created_updated")
-    //result = copy(result, metric, "date_updated");
-    result = copy(result, metric, "diff_created_updated_in_days");
-    //result = copy(result, metric, "status");
-    //result = copy(result, metric, "diff_created_updated_in_days_ceil")
-
-    /*if (result["n"] === 7107) {
-        console.log(metric["date_created"])
-    }*/
+    //metrics to predict
+    result = copy(result, metric, "diff_created_updated_in_hours");
 
     return result;
 }

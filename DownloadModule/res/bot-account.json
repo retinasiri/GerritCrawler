@@ -9787,6 +9787,59 @@
         ]
       }
     }
+  },
+  "scilab": {
+    "bot_account":{
+      "78": {
+        "_account_id": 78,
+        "name": "Pootle Pootle",
+        "email": "pootle@scilab.org",
+        "username": "pootle"
+      },
+      "102": {
+        "_account_id": 102,
+        "name": "Jenkins Jenkins",
+        "email": "jenkins@scilab.org",
+        "username": "jenkins"
+      }
+    }
+  },
+  "asterisk": {
+    "bot_account":{
+      "1000019": {
+        "_account_id": 1000019,
+        "name": "zuul",
+        "username": "zuul",
+        "avatars": [],
+        "tags": [
+          "SERVICE_USER"
+        ]
+      },
+      "1000185": {
+        "_account_id": 1000185,
+        "name": "Friendly Automation",
+        "username": "jenkins2",
+        "avatars": [],
+        "tags": [
+          "SERVICE_USER"
+        ]
+      }
+    }
+  },
+  "eclipse": {
+    "bot_account":{}
+  },
+  "lineageos": {
+    "bot_account":{}
+  },
+  "gerrithub": {
+    "bot_account":{}
+  },
+  "onap": {
+    "bot_account":{}
+  },
+  "wikimedia": {
+    "bot_account":{}
   }
 
 }

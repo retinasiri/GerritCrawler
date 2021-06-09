@@ -51,5 +51,5 @@ def save_project_file(changes):
         f.close()
     return 0
 
-
-process_changes(STARTING_POINT)
+if __name__ == '__main__':
+    process_changes(STARTING_POINT)

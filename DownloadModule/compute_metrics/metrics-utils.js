@@ -10,6 +10,8 @@ const Database = require('../config/databaseConfig');
 const cliProgress = require('cli-progress');
 
 const AllBotAccountJson = loadAllBotAccounts();
+//console.log(AllBotAccountJson)
+//const AllBotAccountJson = require('../res/bot-account.json');
 
 function getHumanReviewers(json, projectName) {
     let reviewers = json.reviewers.REVIEWER;
@@ -84,10 +86,12 @@ function getBotAccount(projectName) {
 }
 
 function loadAllBotAccounts() {
-    let project = Config.project;
+    //let project = Config.project;
     let allBotAccountJson = {};
-    Object.keys(project).forEach(function (key) {
-        allBotAccountJson[key] = getBotAccount(key);
+    let bot = require('../res/bot-account.json');
+    Object.keys(bot).forEach(function (key) {
+        //allBotAccountJson[key] = getBotAccount(key);
+        allBotAccountJson[key] = bot[key]["bot_account"];
     })
     return allBotAccountJson;
 }

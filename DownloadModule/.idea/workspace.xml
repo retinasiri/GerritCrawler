@@ -20,11 +20,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics-V1.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_metrics/extract-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/extract-metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_metrics/metrics-utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/metrics-utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prepare_code_change/add-code-change-in-db.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/add-code-change-in-db.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prepare_code_change/download-code-changes.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/download-code-changes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/android/android-account.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/android/android-bot-account.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/android/android-human-account.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/bot-account.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/bot-account.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/libreoffice/libreoffice-account.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/libreoffice/libreoffice-bot-account.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/libreoffice/libreoffice-human-account.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/openstack/openstack-account.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/openstack/openstack-bot-account.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/openstack/openstack-human-account.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/qt/qt-account.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/qt/qt-bot-account.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/qt/qt-human-account.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/add-code-metrics-in-new-collections.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/add-graph-metrics-in-db.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/clone_repositories.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/clone_repositories.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/code_metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/code_metrics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/collect-graph.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/collect-recent-graph.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_code_metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_code_metrics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_participants.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_participants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics_V2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/download_code_fetch.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/download_code_fetch.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/graph/save_graph.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/list_project_repo.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/list_project_repo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/newgraph/compute_graph_metrics_v2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/newgraph/compute_graph_v1.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../parallel_graph_computation.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,7 +185,10 @@
       <workItem from="1622348421741" duration="1351000" />
       <workItem from="1622383727340" duration="1588000" />
       <workItem from="1622396032111" duration="509000" />
-      <workItem from="1623124377518" duration="4339000" />
+      <workItem from="1623124377518" duration="14002000" />
+      <workItem from="1623152298657" duration="145000" />
+      <workItem from="1623153005552" duration="17000" />
+      <workItem from="1623153142208" duration="3262000" />
     </task>
     <task id="LOCAL-00001" summary="quick fix">
       <created>1620486385609</created>
@@ -258,10 +292,10 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="241" y="17" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1618541985016" />
-    <state x="271" y="225" width="834" height="547" key="find.popup" timestamp="1621316027633">
+    <state x="271" y="225" width="834" height="547" key="find.popup" timestamp="1623144864582">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="271" y="225" width="834" height="547" key="find.popup/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1621316027633" />
+    <state x="271" y="225" width="834" height="547" key="find.popup/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1623144864582" />
     <state x="271" y="225" width="834" height="547" key="find.popup/0.0.1280.800@0.0.1280.800" timestamp="1619536430963" />
   </component>
 </project>

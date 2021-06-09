@@ -55,11 +55,12 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
     n = 1
     for i in json_data:
         '''
-        if(n<100000):
+        if(n<4050):
             n+=1
             bar.next()
             continue
         '''
+        
         metric = get_code_metrics(json_data[i], repo_root_path)
         if(metric is not None):
             mid = metric["id"]
@@ -281,4 +282,5 @@ def update_code_segment_count(code_segment, add_line, deleted_line):
 
 
 if __name__ == '__main__':  
-    processData(LIST_OF_COMMIT, REPOSITORIES_PATH, DATA_DIR_PATH)
+    #processData(LIST_OF_COMMIT, REPOSITORIES_PATH, DATA_DIR_PATH)
+    utils.launch(start)

@@ -262,6 +262,8 @@ def exclude_bot(reviewers_id):
 
 
 if __name__ == '__main__':
+    utils.launch(start)
+
     '''
     pathlib(GRAPHS_GPICKLE_PATH + "-" + str(NUM_DAYS_FOR_RECENT) + "days").mkdir(parents=True, exist_ok=True)
     pathlib(FULL_GRAPHS_GPICKLE_PATH + "-" + str(NUM_DAYS_FOR_RECENT) + "days").mkdir(parents=True, exist_ok=True)
@@ -269,8 +271,9 @@ if __name__ == '__main__':
     pathlib(JSON_FULL_GRAPHS_GPICKLE_PATH + "-" + str(NUM_DAYS_FOR_RECENT) + "days").mkdir(parents=True, exist_ok=True)
     collect_changes(0)
     '''
-    argument = sys.argv[1:]
 
+    '''
+    argument = sys.argv[1:]
     if(argument):
         projectName = argument[0]
         projectJson = code_metrics.get_project_json(projectName)
@@ -280,3 +283,4 @@ if __name__ == '__main__':
             print ("The project you request can't not be found in the Config.json file")
     else:
         print ("Please provide an argument")
+    '''

@@ -334,9 +334,9 @@ function genericDBRequest(pipeline) {
         });
 }
 
-async function getChangesTimeInfo(json, mergedCount, abandonedCount, priorChangesCount) {
-    let priorChangeMeanTime = getPriorChangeMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
-    let priorOwnerChangesMeanTime = getPriorOwnerChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
+async function getChangesTimeInfo(json) {
+    let priorChangesDuration = getPriorChangeMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
+    let priorOwnerChangesDuration = getPriorOwnerChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
     let fileTimeAndCount = getFileTimeAndCount(json, {$in: ['MERGED', 'ABANDONED']});
     let fileTimeAndCountForOwner = getFileTimeAndCountForOwner(json, {$in: ['MERGED', 'ABANDONED']});
     let ownerNumberOfRevision = getOwnerNumberOfRevision(json, {$in: ['MERGED', 'ABANDONED']});
@@ -347,8 +347,8 @@ async function getChangesTimeInfo(json, mergedCount, abandonedCount, priorChange
     let changesMessagesCountAndAvg = getChangesMessagesCountAndAvg(json);
     let nonBotAccountPreviousMessageCount = getPreviousMessageCount(json);
     return Promise.all([
-        priorChangeMeanTime, //0
-        priorOwnerChangesMeanTime, //1
+        priorChangesDuration, //0
+        priorOwnerChangesDuration, //1
         fileTimeAndCount, //2
         fileTimeAndCountForOwner, //3
         ownerNumberOfRevision, //4
@@ -362,15 +362,15 @@ async function getChangesTimeInfo(json, mergedCount, abandonedCount, priorChange
         //console.log(results);
         return {
 
-            priorMergedChangeTimeMean: results[0].avg,
-            priorMergedChangeTimeMax: results[0].max,
-            priorMergedChangeTimeMin: results[0].min,
-            priorMergedChangeTimeStd: results[0].std,
+            priorChangeDurationMean: results[0].avg,
+            priorChangeDurationMax: results[0].max,
+            priorChangeDurationMin: results[0].min,
+            priorChangeDurationStd: results[0].std,
 
-            priorOwnerMergedChangesTimeMean: results[1].avg,
-            priorOwnerMergedChangesTimeMax: results[1].max,
-            priorOwnerMergedChangesTimeMin: results[1].min,
-            priorOwnerMergedChangesTimeStd: results[1].std,
+            priorOwnerChangesDurationMean: results[1].avg,
+            priorOwnerChangesDurationMax: results[1].max,
+            priorOwnerChangesDurationMin: results[1].min,
+            priorOwnerChangesDurationStd: results[1].std,
 
             fileCountAvg: results[2].count_avg,
             fileCountMax: results[2].count_max,

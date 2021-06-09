@@ -6,7 +6,8 @@ import utils
 from utils import SlowBar as SlowBar
 import urllib.parse as urlparse
 
-
+PROJET_NAME = "libreoffice"
+DATA_DIR_NAME = "/Volumes/SEAGATE-II/Data/libreoffice/"
 LIST_OF_REPOSITORIES = "/Volumes/SEAGATE-II/Data/libreoffice/libreoffice-repositories-to-clone.txt"
 REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 bar = SlowBar('Cloning ')
@@ -25,17 +26,17 @@ def get_repo_clone_list_name(projectName, output_dir):
 
 def start(json):
     
-    global project_name
-    project_name = json["project_name"]
+    global PROJET_NAME
+    PROJET_NAME = json["project_name"]
 
     global DATA_DIR_NAME
     DATA_DIR_NAME = json["output_data_path"]
 
     global LIST_OF_REPOSITORIES
-    LIST_OF_REPOSITORIES = utils.get_repo_clone_list_name(project_name, DATA_DIR_NAME)
+    LIST_OF_REPOSITORIES = utils.get_repo_clone_list_name(PROJET_NAME, DATA_DIR_NAME)
 
     global REPOSITORIES_PATH
-    REPOSITORIES_PATH = utils.get_repositories_path(project_name, DATA_DIR_NAME)
+    REPOSITORIES_PATH = utils.get_repositories_path(PROJET_NAME, DATA_DIR_NAME)
     
     clone_repo(LIST_OF_REPOSITORIES, REPOSITORIES_PATH)
 
@@ -95,4 +96,5 @@ def read_list_of_repo(repo_list_path):
 
 
 if __name__ == '__main__':
-    clone_repo(LIST_OF_REPOSITORIES, REPOSITORIES_PATH)
+    utils.launch(start)
+    #clone_repo(LIST_OF_REPOSITORIES, REPOSITORIES_PATH)

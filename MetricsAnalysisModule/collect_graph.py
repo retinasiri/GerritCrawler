@@ -46,6 +46,9 @@ def start(json):
     global CHANGES_GRAPH_LIST_PATH
     CHANGES_GRAPH_LIST_PATH = os.path.join(DATA_DIR_NAME,PROJET_NAME, PROJET_NAME + "-changes-graph-list.json")
 
+    global BOT_ACCOUNT
+    BOT_ACCOUNT = utils.get_bot_accounts(PROJET_NAME)
+
     pathlib(GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
     pathlib(FULL_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
 
@@ -230,6 +233,8 @@ def exclude_bot(reviewers_id):
 
 
 if __name__ == '__main__':
+    utils.launch(start)
+    
     '''
     pathlib(GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
     pathlib(FULL_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
@@ -237,11 +242,13 @@ if __name__ == '__main__':
     pathlib(JSON_FULL_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
     collect_changes(0)
     '''
+
     '''
     pathlib(JSON_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
     pathlib(JSON_FULL_GRAPHS_GPICKLE_PATH).mkdir(parents=True, exist_ok=True)
     '''
-    
+
+    '''
     argument = sys.argv[1:]
     if(argument):
         projectName = argument[0]
@@ -252,6 +259,7 @@ if __name__ == '__main__':
             print ("The project you request can't not be found in the Config.json file")
     else:
         print ("Please provide an argument")
+    '''
     
 
     

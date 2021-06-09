@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import math
 import dbutils
 import utils
@@ -18,9 +19,12 @@ repositories_list = set()
 downloadedGitRepo = {}
 refspec = {}
 
-Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
-count = Database.get_changes_count()
-bar = SlowBar('')
+#Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
+#count = Database.get_changes_count()
+#bar = SlowBar('', max=count)
+Database = None
+count = 0
+bar = None
 
 
 def start(json):
@@ -47,7 +51,7 @@ def start(json):
     count = Database.get_changes_count()
     
     global bar
-    bar = SlowBar('Processing', max=count)
+    bar = SlowBar('Processing ', max=count)
 
     process_changes(STARTING_POINT)
     return 0
@@ -64,7 +68,7 @@ def process_changes(skip):
     else:
         save_dic_in_file(changes_commit_dic, CHANGES_COMMIT_AND_FETCH_LIST)
         save_dic_in_file(refspec, REFSPEC)
-        save_set_in_file(repositories_list, REPO_TO_CLONE_LIST)
+        save_set_in_file(sorted(repositories_list), REPO_TO_CLONE_LIST)
         print("\nFinish")
         bar.finish()
     return changes_commit_dic
@@ -85,7 +89,8 @@ def collect_repo(doc):
             if number <= prev_number_save:
                 fetch_url = revisions[revId]["fetch"]["anonymous http"]["url"]
                 fetch_refs = revisions[revId]["fetch"]["anonymous http"]["ref"]
-                commit = revisions[revId]["commit"]["parents"][0]["commit"]
+                #commit = revisions[revId]["commit"]["parents"][0]["commit"]
+                commit = revId
                 prev_number_save = number
 
     changes_commit_dic[pid]["id"] = pid
@@ -124,4 +129,7 @@ def save_set_in_file(clone_list, path):
 
 
 if __name__ == '__main__':
-    process_changes(STARTING_POINT)
+    #process_changes(STARTING_POINT)
+    #argument = sys.argv[1:]
+    utils.launch(start)
+

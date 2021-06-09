@@ -6,7 +6,6 @@ import os
 import urllib.parse as urlparse
 import time
 import utils
-import code_metrics
 from utils import SlowBar as SlowBar
 
 PROJET_NAME = "libreoffice"
@@ -15,8 +14,8 @@ REFSPEC = DATA_DIR_NAME + "libreoffice-refspec.json"
 REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 
 refspec = {}
-NUMBER_OF_FETCH_PER_REQUEST = 300;
-NUMBER_OF_REQUEST = multiprocessing.cpu_count() * 2;
+NUMBER_OF_FETCH_PER_REQUEST = 100;
+NUMBER_OF_REQUEST = multiprocessing.cpu_count();
 bar = SlowBar('')
 
 def start(json):
@@ -47,9 +46,9 @@ def collect_fetch(list_of_refspec, clone_path):
     running_procs = []
     #print(len(refspecs_data))
     bar.max = 0
-    for i in refspecs_data:
-        git_url = refspecs_data[i]["fetch_url"]
-        fetch_refs = refspecs_data[i]["fetch_refs"]
+    for k in refspecs_data:
+        git_url = refspecs_data[k]["fetch_url"]
+        fetch_refs = refspecs_data[k]["fetch_refs"]
         path = os.path.join(clone_path, *urlparse.urlsplit(git_url).path.split("/"))
         #print("path " + path)
         n = NUMBER_OF_FETCH_PER_REQUEST
@@ -57,11 +56,12 @@ def collect_fetch(list_of_refspec, clone_path):
         #print(bar.max)
         for i in range(0, len(fetch_refs), n):
             command = ['git', 'fetch', git_url] + fetch_refs[i:i+n]
-            running_procs.append(subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd= path))
+            running_procs.append(subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd= path))    
             if(len(running_procs) == NUMBER_OF_REQUEST) :
                 check_process(running_procs)
+    #bar.finish()
+    check_process(running_procs)
     bar.finish()
-    #check_process(running_procs)
     #print("hello")
     pass
 
@@ -108,7 +108,8 @@ def check_process(running_procs):
 if __name__ == '__main__':
     #print('Number of CPUs available: ', mp.cpu_count())
     #collect_fetch(REFSPEC, REPOSITORIES_PATH)
-    start(code_metrics.get_project_json("libreoffice"))
+    #start(code_metrics.get_project_json("libreoffice"))
+    utils.launch(start)
 
 
 

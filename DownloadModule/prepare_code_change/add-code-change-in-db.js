@@ -103,23 +103,33 @@ async function getFiles(path, b) {
         });
 }
 
+function getLastNumber(filenames){
+    filenames.sort((a, b) => a.localeCompare(b, undefined, {numeric: true, ignorePunctuation: true}))
+    let lastName = filenames[filenames.length - 1]
+    return parseInt(lastName.split("-")[0]);
+}
+
 async function info(path, filenames, b) {
-//async function info(path, filenames) {
-    //console.log("info : " + path + filenames)
-    let total = filenames.length;
+    //let total = filenames.length;
+    let total = getLastNumber(filenames);
     b.setTotal(total)
+
     for (let filename of filenames) {
-        await addInformationToDB(path, filename).then(() => {
-            b.increment(1, {name: filename});
-            //console.log(path + filename)
-        });
+        if (filename.includes(".DS_Store") || filename.includes("._.DS_Store"))
+            return Promise.resolve(true);
+
+        if (!filename.includes(".json"))
+            return Promise.resolve(true);
+
+        await addInformationToDB(path, filename, b)
+            /*.then(() => {
+                b.increment(1, {name: filename});
+            });
+             */
     }
 }
 
-async function addInformationToDB(path, filename) {
-    //console.log(path + filename);
-    if (filename.includes(".DS_Store") || filename.includes("._.DS_Store"))
-        return Promise.resolve(true);
+async function addInformationToDB(path, filename, b) {
 
     let json = {}
     try {
@@ -129,6 +139,12 @@ async function addInformationToDB(path, filename) {
 
     if (Object.keys(json).length === 0)
         return Promise.resolve(false);
+
+    let name = b.getTotal() + "-"
+    if(filename.includes(name)){
+        let total = b.getTotal() + Object.keys(json).length;
+        b.setTotal(total)
+    }
 
     for (let key in json) {
         if (json.hasOwnProperty(key)) {
@@ -140,24 +156,10 @@ async function addInformationToDB(path, filename) {
             task.push(addParticipantsInDB(participants));
             task.push(collectRepo(changeJson));
             task.push(saveChangeInDB(changeJson));
-            //task.push(saveMessagesAndChanges(changeJson));
-            /*let t = saveChangeInDB(changeJson)
-                .then(() => {
-                    if (changeJson.messages)
-                        return saveMessages(changeJson);
-                    else
-                        return Promise.resolve(true);
-                })
-            task.push(t);*/
             await Promise.all(task);
         }
+        b.increment(1, {name: filename})
     }
-
-    /*Object.keys(json).forEach(function (key) {
-        delete json[key];
-    })
-    json = null;*/
-
     return Promise.resolve(true);
 }
 
@@ -166,11 +168,6 @@ function getFilePath(path, filename) {
 }
 
 function saveChangeInDB(json) {
-    /*let newJson = {};
-    Object.keys(json).forEach(function (key) {
-        newJson[key] = json[key];
-    })*/
-    //delete newJson["messages"];
     return dbUtils.saveChange(json)
 }
 
@@ -193,26 +190,66 @@ function getParticipants(json) {
     let participant = [];
     let owner = json.owner;
     participant.push(owner);
-    let reviewers = json.reviewers.REVIEWER
-    for (let id in reviewers) {
-        participant.push(reviewers[id])
+    if (json.reviewers) {
+        let reviewers = json.reviewers.REVIEWER
+        for (let id in reviewers) {
+            participant.push(reviewers[id])
+        }
+    } else {
+        if(!!!json["labels"]){
+            json["reviewers"] = {};
+            json["reviewers"]["REVIEWER"] = [];
+            return []
+        }
+
+        if(!!!json["labels"]["Code-Review"]){
+            json["reviewers"] = {};
+            json["reviewers"]["REVIEWER"] = [];
+            return []
+        }
+
+        let codeReviews = json["labels"]["Code-Review"]["all"];
+
+        if(!!!codeReviews){
+            json["reviewers"] = {};
+            json["reviewers"]["REVIEWER"] = [];
+            return []
+        }
+
+        let accounts = []
+
+        Object.keys(codeReviews).forEach(function (key) {
+            let codeReview = codeReviews[key]
+            if (codeReview["_account_id"] !== owner._account_id) {
+                let account = {}
+                account["_account_id"] = codeReview["_account_id"];
+                account["name"] = codeReview["name"];
+                account["email"] = codeReview["email"];
+                account["username"] = codeReview["username"];
+                accounts.push(account);
+            }
+        })
+        json["reviewers"] = {};
+        json["reviewers"]["REVIEWER"] = accounts;
+
+        for (let id in accounts) {
+            participant.push(accounts[id])
+        }
     }
+
     return participant;
 }
 
 function getAbandonedPath() {
     return PathLibrary.join(DATA_PATH, projectName, "abandoned-changes");
-    //return DATA_PATH + projectName + "/abandoned-changes/";
 }
 
 function getMergedPath() {
     return PathLibrary.join(DATA_PATH, projectName, "merged-changes");
-    //return DATA_PATH + projectName + "/merged-changes/";
 }
 
 function getOpenPath() {
     return PathLibrary.join(DATA_PATH, projectName, "open-changes");
-    //return DATA_PATH + projectName + "/open-changes/";
 }
 
 function get_files_list(json) {
@@ -262,10 +299,12 @@ async function collectRepo(doc) {
                             fetch_url = revisions[key]["fetch"]["http"]["url"];
                             fetch_refs = revisions[key]["fetch"]["http"]["ref"];
                         }
-                    if (revisions[key]["commit"]["parents"][0])
+                    commit = key;
+                    /*if (revisions[key]["commit"]["parents"][0])
                         commit = revisions[key]["commit"]["parents"][0]["commit"];
                     else
                         commit = "parents = " + JSON.stringify(revisions[key]["commit"]["parents"]);
+                     */
                 }
             }
         }
@@ -284,43 +323,6 @@ async function collectRepo(doc) {
     refspec[fetch_url]["commits"].push(commit);
 
     return Promise.resolve(true);
-}
-
-function saveMessagesAndChanges(change) {
-    let messages = change.messages;
-    let change_id = change.id;
-    let number = change._number;
-    let created = change.created;
-    let updated = change.updated;
-    //let task = [];
-    for (let i = 0; i < messages.length; i++) {
-        let message = messages[i];
-        message["change_id"] = change_id;
-        message["_number"] = number;
-        message["created"] = created;
-        message["updated"] = updated;
-        //task.push(saveMessageInDB(message));
-    }
-
-    return dbUtils.saveChange(change);
-
-    /*return Promise.all(task)
-        .then((results) => {
-            delete change["messages"];
-            change["messages"] = [];
-            change.messages.push(...results);
-            return dbUtils.saveChange(change);
-        });*/
-}
-
-function saveMessageInDB(message) {
-    return dbUtils.saveMessage(message)
-        .then((savedMessage) => {
-            return Promise.resolve(savedMessage._id);
-        })
-        .catch(err => {
-            console.log("saveMessage : " + JSON.stringify(err))
-        });
 }
 
 module.exports = {
