@@ -34,10 +34,10 @@ def start(json):
     DATA_DIR_NAME = json["output_data_path"]
 
     global GRAPHS_GPICKLE_PATH
-    GRAPHS_GPICKLE_PATH = os.path.join(DATA_DIR_NAME,PROJET_NAME, "graph-gpickle")
+    GRAPHS_GPICKLE_PATH = os.path.join(DATA_DIR_NAME,PROJET_NAME, PROJET_NAME + "graph-gpickle")
     
     global FULL_GRAPHS_GPICKLE_PATH
-    FULL_GRAPHS_GPICKLE_PATH = os.path.join(DATA_DIR_NAME,PROJET_NAME, "graph-full-gpickle")
+    FULL_GRAPHS_GPICKLE_PATH = os.path.join(DATA_DIR_NAME,PROJET_NAME, PROJET_NAME + "graph-full-gpickle")
     
     global CHANGES_GRAPH_LIST_PATH
     CHANGES_GRAPH_LIST_PATH = os.path.join(DATA_DIR_NAME,PROJET_NAME, PROJET_NAME + "-changes-graph-list.json")

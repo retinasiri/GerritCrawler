@@ -9826,6 +9826,76 @@
       }
     }
   },
+  "onap": {
+    "bot_account":{
+      "5055": {
+        "_account_id": 5055,
+        "name": "obot",
+        "username": "obot"
+      },
+      "3": {
+        "_account_id": 3,
+        "name": "ecomp jobbuilder",
+        "email": "ecomp-jobbuilder@jenkins.openecomp.org",
+        "username": "ecomp-jobbuilder"
+      },
+      "459": {
+        "_account_id": 459,
+        "name": "ONAP Jobbuilder",
+        "email": "onap-jobbuilder@jenkins.onap.org",
+        "username": "onap-jobbuilder"
+      },
+      "4937": {
+        "_account_id": 4937,
+        "name": "LF Jenkins CI",
+        "email": "releng+lf-jobbuilder@linuxfoundation.org",
+        "username": "lf-jobbuilder"
+      },
+      "5992": {
+        "_account_id": 5992,
+        "name": "Onap Tester",
+        "email": "bertozzijulien@gmail.com",
+        "username": "OnapTesterBot",
+        "status": "testing hard"
+      },
+      "5170": {
+        "_account_id": 5170,
+        "name": "ONAP JobDeployer",
+        "email": "sylvain.desbureaux+lfn@gmail.com",
+        "username": "onapbot"
+      },
+      "7613": {
+        "_account_id": 7613,
+        "name": "Functest Bot",
+        "email": "ced.ollivier@gmail.com",
+        "username": "fbot"
+      },
+      "809": {
+        "_account_id": 809,
+        "name": "Jenkins Bell Canada",
+        "email": "alexis.de_talhouet@bell.ca",
+        "username": "jenkins-bell"
+      },
+      "2933": {
+        "_account_id": 2933,
+        "name": "onap-ci-windriver",
+        "email": "gary.wu+onap-ci-windriver@gmail.com",
+        "username": "onap-ci-windriver"
+      },
+      "3149": {
+        "_account_id": 3149,
+        "name": "onap-ci-tlab",
+        "email": "gary.wu+onap-ci-tlab@gmail.com",
+        "username": "onap-ci-tlab"
+      },
+      "5669": {
+        "_account_id": 5669,
+        "name": "onap-release onap-release",
+        "email": "collab-it+onap-release@linuxfoundation.org",
+        "username": "onap-release"
+      }
+    }
+  },
   "eclipse": {
     "bot_account":{}
   },
@@ -9833,9 +9903,6 @@
     "bot_account":{}
   },
   "gerrithub": {
-    "bot_account":{}
-  },
-  "onap": {
     "bot_account":{}
   },
   "wikimedia": {

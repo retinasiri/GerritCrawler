@@ -19,23 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/command" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prepare_code_change/download-code-changes.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/download-code-changes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/DownloadModule.textClipping" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/clone-repo.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/clone-repo.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/code_metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/code_metrics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_code_metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_code_metrics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_graph.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_recent_graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/collect_recent_graph.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/compute_graph_metrics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/convert_graph_json_to_gpickle.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/graph/convert_graph_json_to_gpickle.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/download_code_fetch.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/download_code_fetch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/list_project_repo.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/list_project_repo.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/output.txt" beforeDir="false" />
-    </list>
+    <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -169,7 +153,7 @@
       <workItem from="1623153005552" duration="17000" />
       <workItem from="1623153142208" duration="3262000" />
       <workItem from="1623246202698" duration="2865000" />
-      <workItem from="1623300569425" duration="323000" />
+      <workItem from="1623300569425" duration="482000" />
     </task>
     <task id="LOCAL-00001" summary="quick fix">
       <created>1620486385609</created>

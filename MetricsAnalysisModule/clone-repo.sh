@@ -1,4 +1,4 @@
-filename="libreoffice-repositories-to-clone.txt"
+filename="qt-repositories-to-clone.txt"
 repositories_directory_path="Repositories"
 
 while getopts f:o: flag
