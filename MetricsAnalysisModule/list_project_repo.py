@@ -19,9 +19,12 @@ repositories_list = set()
 downloadedGitRepo = {}
 refspec = {}
 
-#Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
-#count = Database.get_changes_count()
-#bar = SlowBar('', max=count)
+'''
+Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
+count = Database.get_changes_count()
+bar = SlowBar('', max=count)
+'''
+
 Database = None
 count = 0
 bar = None
@@ -129,7 +132,7 @@ def save_set_in_file(clone_list, path):
 
 
 if __name__ == '__main__':
+    utils.launch(start)
     #process_changes(STARTING_POINT)
     #argument = sys.argv[1:]
-    utils.launch(start)
 

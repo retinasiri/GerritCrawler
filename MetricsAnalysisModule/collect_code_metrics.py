@@ -14,13 +14,13 @@ from pydriller import RepositoryMining, ModificationType
 #from multiprocessing import Process, Pool, Queue
 
 
-
 LIST_OF_COMMIT = "/Volumes/SEAGATE-II/Data/libreoffice/libreoffice-changes-commit-and-fetch.json"
 REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 DATA_DIR_PATH = "data/"
 PROJET_NAME = "libreoffice"
 Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
 code_metrics = {}
+error_list = []
 
 def start(json):
     
@@ -67,10 +67,36 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
             code_metrics[mid] = metric
             Database.save_metrics(metric)
         bar.next()
-    save_metrics_file(code_metrics, data_dir_path)
+    #save_metrics_file(code_metrics, data_dir_path)
+    save_json_in_file(code_metrics, data_dir_path, "-code-metrics.json")
+    save_json_in_file(error_list, data_dir_path, "-code-metrics-error.json")
     bar.finish()
     print("Finished with code metrics !!!!!")
     pass
+
+
+def save_json_in_file(data, path, filename):
+    output_file_name = PROJET_NAME + filename
+    full_path = os.path.join(path, output_file_name)
+    dir_path = pathlib(path)
+    dir_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(full_path, "wb") as f:
+        f.write(json.dumps(data, indent=4).encode("utf-8"))
+        f.close()
+    return 0
+
+
+'''
+def save_metrics_file(metrics, data_path):
+    output_file_name = PROJET_NAME + "-code-metrics.json"
+    full_path = os.path.join(data_path, output_file_name)
+    dir_path = pathlib(data_path)
+    dir_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(full_path, "wb") as f:
+        f.write(json.dumps(metrics, indent=4).encode("utf-8"))
+        f.close()
+    return 0
+'''
 
 """"
 def process (json_data):
@@ -145,22 +171,13 @@ def load_json(path):
     return json_file
 
 
-def save_metrics_file(metrics, data_path):
-    output_file_name = PROJET_NAME + "-code-metrics.json"
-    full_path = os.path.join(data_path, output_file_name)
-    dir_path = pathlib(data_path)
-    dir_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(full_path, "wb") as f:
-        f.write(json.dumps(metrics, indent=4).encode("utf-8"))
-        f.close()
-    return 0
-
-
 def get_code_metrics(data, repo_root_path):
     fetch_url = data["fetch_url"]
     fetch_ref = data["fetch_ref"]
     commit_hash = data["commit"]
-    repo_path = os.path.join(repo_root_path, *urlparse.urlsplit(fetch_url).path.split("/"))
+    rel_path = "--".join(urlparse.urlsplit(fetch_url).path.split("/")[1:])
+    repo_path = os.path.join(repo_root_path, rel_path)    
+    #repo_path = os.path.join(repo_root_path, *urlparse.urlsplit(fetch_url).path.split("/"))
     #print("repo_root_path : " + repo_root_path)
     #print("repo_path : " + repo_path)
     metrics = None
@@ -168,6 +185,7 @@ def get_code_metrics(data, repo_root_path):
     try:
         metrics = compute_code_metrics(data["id"], repo_path, commit_hash)
     except Exception as e:
+        error_list.append(data)
         print("An exception occurred")
         print("data[\"id\"] : " + data["id"])
         print("fetch_url : " + fetch_url)

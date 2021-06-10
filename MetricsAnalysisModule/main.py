@@ -40,4 +40,13 @@ if __name__ == '__main__':
         abbr="p"
         )
     """
-            
+    git_url= "https://git.libreoffice.org/conferences/fosdem-2021-static/appropiate"
+    x = "--".join(urlparse.urlsplit(git_url).path.split("/")[1:])
+
+    print(x)
+
+    d = []
+    a = {'new key': 'new value'} 
+    d.append(a)
+    print(d)
+    

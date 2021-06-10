@@ -14,7 +14,7 @@ REFSPEC = DATA_DIR_NAME + "libreoffice-refspec.json"
 REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 
 refspec = {}
-NUMBER_OF_FETCH_PER_REQUEST = 100;
+NUMBER_OF_FETCH_PER_REQUEST = 300;
 NUMBER_OF_REQUEST = multiprocessing.cpu_count();
 bar = SlowBar('')
 
@@ -33,7 +33,7 @@ def start(json):
     REPOSITORIES_PATH = utils.get_repositories_path(PROJET_NAME, DATA_DIR_NAME)
 
     global bar
-    bar = SlowBar('Downloading code fetch ... ')
+    bar = SlowBar('Downloading code fetch ')
     #path = os.path.join(REPOSITORIES_PATH, PROJET_NAME)
     #print("path " + path)
     collect_fetch(REFSPEC, REPOSITORIES_PATH)
@@ -49,7 +49,9 @@ def collect_fetch(list_of_refspec, clone_path):
     for k in refspecs_data:
         git_url = refspecs_data[k]["fetch_url"]
         fetch_refs = refspecs_data[k]["fetch_refs"]
-        path = os.path.join(clone_path, *urlparse.urlsplit(git_url).path.split("/"))
+        rel_path = "--".join(urlparse.urlsplit(git_url).path.split("/")[1:])
+        path = os.path.join(clone_path, rel_path)
+        #path = os.path.join(clone_path, *urlparse.urlsplit(git_url).path.split("/"))
         #print("path " + path)
         n = NUMBER_OF_FETCH_PER_REQUEST
         bar.max += len(fetch_refs)
@@ -74,7 +76,7 @@ def load_json(path):
 
 def check_process(running_procs):
     i=0
-    #lenght = len(running_procs)
+    length = len(running_procs)
     running = False;
     while running_procs:
         for proc in running_procs:
@@ -83,14 +85,14 @@ def check_process(running_procs):
                 if retcode == 0:
                     #i+= 1
                     #text = " ".join(proc.args[0:4]) + " ... " + proc.args[-1] + " FINISHED!!!"
-                    #print("{}/{} : {}".format(i, lenght, text))
+                    #print("{}/{} : {}".format(i, length, text))
                     #print(proc.communicate())
                     #d = len(proc.args[4:])
                     bar.next(len(proc.args[4:]))
                     running_procs.remove(proc)
                     break
                 else:
-                    #print("Error : {} ".format(proc.communicate()[1]))
+                    print("Error : {} ".format(proc.communicate()[1]))
                     bar.max -= len(proc.args[4:])
                     running_procs.remove(proc)
             else: # No process is done, wait a bit and check again.
@@ -106,10 +108,13 @@ def check_process(running_procs):
 
 
 if __name__ == '__main__':
+    utils.launch(start)
     #print('Number of CPUs available: ', mp.cpu_count())
     #collect_fetch(REFSPEC, REPOSITORIES_PATH)
     #start(code_metrics.get_project_json("libreoffice"))
-    utils.launch(start)
+    
+
+
 
 
 

@@ -12,7 +12,7 @@ const PathLibrary = require('path');
 const axios = RateLimit(Axios.create(), {maxRPS: 80})
 const TIMEOUT = 20 * 60 * 1000;
 let LAST_YEAR_TO_COLLECT = 2000;
-let NUMBER_OF_CHANGES_REQUESTED = 250;
+let NUMBER_OF_CHANGES_REQUESTED = 100;
 
 let projectJson = Utils.getProjectParameters("libreoffice");
 let projectDBUrl = projectJson["projectDBUrl"];

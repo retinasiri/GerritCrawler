@@ -12,7 +12,7 @@ CONFIG_JSON_PATH = "../DownloadModule/config.json"
 
 def process(projectJson):
     list_repo.start(projectJson)
-    clone.start(projectJson)
+    #clone.start(projectJson)
     fetch.start(projectJson)
     metrics.start(projectJson)
     pass
