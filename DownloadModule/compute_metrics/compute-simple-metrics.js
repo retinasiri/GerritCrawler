@@ -257,11 +257,13 @@ function is_self_reviewed_note(json) {
 
     let code_review = []
     if (labels["Code-Review"])
-        code_review = labels["Code-Review"]["all"];
+        if (labels["Code-Review"]["all"])
+            code_review = labels["Code-Review"]["all"];
 
     let verified = []
     if (labels["Verified"])
-        verified = labels["Verified"]["all"];
+        if (labels["Verified"]["all"])
+            verified = labels["Verified"]["all"];
 
     let owner_id = json.owner._account_id;
 
@@ -273,12 +275,12 @@ function is_self_reviewed_note(json) {
     let count_verified_length = verified.length;
 
     return {
-        check_code_review : check_code_review,
-        check_code_review_human_length : check_code_review_human_length,
-        check_code_review_length : check_code_review_length,
-        check_verified : check_verified,
-        count_verified_human_length : count_verified_human_length,
-        count_verified_length : count_verified_length,
+        check_code_review: check_code_review,
+        check_code_review_human_length: check_code_review_human_length,
+        check_code_review_length: check_code_review_length,
+        check_verified: check_verified,
+        count_verified_human_length: count_verified_human_length,
+        count_verified_length: count_verified_length,
     }
 
 }
@@ -288,14 +290,14 @@ function count_human_review(json, code_review) {
     for (let i = 0; i < code_review.length; i++) {
         let review = code_review[i];
         let _account_id = review._account_id
-        if(!MetricsUtils.isABot(_account_id, projectName)){
+        if (!MetricsUtils.isABot(_account_id, projectName)) {
             count++;
         }
     }
     return count;
 }
 
-function check_review(code_review, owner_id){
+function check_review(code_review, owner_id) {
     let check = false;
     for (let i = 0; i < code_review.length; i++) {
         let review = code_review[i];
@@ -304,7 +306,7 @@ function check_review(code_review, owner_id){
             continue;
         }
         let value = review.value;
-        if(value === 2)
+        if (value === 2)
             check = true;
     }
     return check;
