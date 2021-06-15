@@ -77,7 +77,7 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
 
 def save_json_in_file(data, path, filename):
     output_file_name = PROJET_NAME + filename
-    full_path = os.path.join(path, output_file_name)
+    full_path = os.path.join(path, PROJET_NAME, output_file_name)
     dir_path = pathlib(path)
     dir_path.parent.mkdir(parents=True, exist_ok=True)
     with open(full_path, "wb") as f:

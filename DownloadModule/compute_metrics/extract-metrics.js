@@ -245,6 +245,7 @@ async function collectMetrics(metric) {
 
     //todo prior_changes_files
     //todo reviewed_changes_owner
+    //todo updated rate
     /*
     //identification
     //result["n"] = i++

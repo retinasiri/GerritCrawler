@@ -231,12 +231,12 @@ function collectOwnerMetrics(json, metric) {
     metric["is_self_reviewed"] = isSelfReviewed(json);
 
     let self_review = is_self_reviewed_note(json);
-    metric["check_code_review"] = self_review.check_code_review;
-    metric["check_code_review_human_length"] = self_review.check_code_review_human_length;
-    metric["check_code_review_length"] = self_review.check_code_review_length;
-    metric["check_verified"] = self_review.check_verified;
-    metric["count_verified_human_length"] = self_review.count_verified_human_length;
-    metric["count_verified_length"] = self_review.count_verified_length;
+    metric["labels_code_review"] = self_review.check_code_review;
+    metric["labels_code_review_human_length"] = self_review.check_code_review_human_length;
+    metric["labels_code_review_length"] = self_review.check_code_review_length;
+    metric["labels_verified"] = self_review.check_verified;
+    metric["labels_verified_human_length"] = self_review.count_verified_human_length;
+    metric["labels_verified_length"] = self_review.count_verified_length;
 }
 
 function isSelfReviewed(json) {
@@ -298,7 +298,7 @@ function count_human_review(json, code_review) {
 }
 
 function check_review(code_review, owner_id) {
-    let check = false;
+    let check = 0;
     for (let i = 0; i < code_review.length; i++) {
         let review = code_review[i];
         let _account_id = review._account_id
@@ -307,7 +307,7 @@ function check_review(code_review, owner_id) {
         }
         let value = review.value;
         if (value === 2)
-            check = true;
+            check = 1;
     }
     return check;
 }

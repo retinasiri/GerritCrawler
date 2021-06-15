@@ -346,6 +346,7 @@ async function getChangesTimeInfo(json) {
     let ownerChangesMessagesCountAndAvgPerChanges = getOwnerChangesMessagesCountAndAvgPerChanges(json);
     let changesMessagesCountAndAvg = getChangesMessagesCountAndAvg(json);
     let nonBotAccountPreviousMessageCount = getPreviousMessageCount(json);
+    let priorChangesFiles = getPriorChangesFiles(json);
     return Promise.all([
         priorChangesDuration, //0
         priorOwnerChangesDuration, //1
@@ -358,6 +359,7 @@ async function getChangesTimeInfo(json) {
         ownerChangesMessagesCountAndAvgPerChanges, //8
         changesMessagesCountAndAvg, //9
         nonBotAccountPreviousMessageCount, //10
+        priorChangesFiles, //11
     ]).then((results) => {
         //console.log(results);
         return {
@@ -419,6 +421,8 @@ async function getChangesTimeInfo(json) {
             nonBotAccountPreviousMessageMax: results[10].max,
             nonBotAccountPreviousMessageMin: results[10].min,
             nonBotAccountPreviousMessageStd: results[10].std,
+
+            priorChangesFiles: results[11].count,
 
         };
     })
@@ -781,6 +785,26 @@ function getFileDeveloperNumber(json) {
                 count: {$avg: {$size: "$dev"}}
             }
         }
+    ]
+    return genericDBRequest(pipeline);
+}
+
+function getPriorChangesFiles(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let files_list = json.files_list ? json.files_list : [];
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    }
+    let pipeline = [
+        match,
+        {$unwind: "$files_list"},
+        {$match: {files_list: {$in: files_list}}},
+        {$group: {_id: "$id"}},
+        {$count: "count"}
     ]
     return genericDBRequest(pipeline);
 }
