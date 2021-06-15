@@ -4,3 +4,8 @@ if [ ! -z "$1" ]
 then
    filename=$1
 fi
+
+python list_project_repo.py libreoffice
+python download_code_fetch.py libreoffice
+python collect_code_metrics.py libreoffice
+python collect_graph.py onap

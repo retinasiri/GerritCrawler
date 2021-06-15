@@ -1,4 +1,4 @@
-filename="qt-repositories-to-clone.txt"
+filename="eclipse-repositories-to-clone.txt"
 repositories_directory_path="Repositories"
 
 while getopts f:o: flag

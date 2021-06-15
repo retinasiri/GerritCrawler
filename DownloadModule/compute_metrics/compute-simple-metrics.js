@@ -227,6 +227,17 @@ function collectFileMetrics(json, metric) {
 function collectOwnerMetrics(json, metric) {
     metric["is_a_bot"] = MetricsUtils.isABot(json.owner, projectName);
     metric["num_human_reviewer"] = MetricsUtils.getHumanReviewersCount(json, projectName);
+    metric["is_self_reviewed"] = isSelfReviewed(json, metric);
+}
+
+function isSelfReviewed(json, metric){
+    let humanReviewersID = MetricsUtils.getHumanReviewersID(json, projectName);
+    let ownerId = json.owner._account_id;
+    if(humanReviewersID.length === 1){
+        if(ownerId === humanReviewersID[0])
+            return 1
+    }
+    return 0;
 }
 
 /**
@@ -244,6 +255,8 @@ function collectMsgMetrics(json, metric) {
     metric["is_perfective"] = msg_is_perfective(json);
     metric["is_preventive"] = msg_is_preventive(json);
     metric["is_refactoring"] = msg_is_refactoring(json);
+    metric["has_feature_addition"] = msg_has_feature_addition(json);
+    //metric["is_refactoring"] = msg_is_refactoring(json);
 }
 
 // date
@@ -814,7 +827,7 @@ function msg_has_words(json, wordArray) {
         }
     }
 
-    return num > 0;
+    return num > 0 ? 1 : 0;
 }
 
 function msg_has_bug(json) {
@@ -869,6 +882,11 @@ function msg_is_preventive(json) {
 
 function msg_is_refactoring(json) {
     let wordArray = Keywords.refactoring;
+    return msg_has_words(json, wordArray);
+}
+
+function msg_has_feature_addition(json) {
+    let wordArray = Keywords["feature-addition"];
     return msg_has_words(json, wordArray);
 }
 

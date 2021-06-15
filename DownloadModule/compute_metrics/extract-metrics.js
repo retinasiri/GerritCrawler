@@ -1,4 +1,5 @@
 const cliProgress = require('cli-progress');
+const Moment = require('moment');
 const Database = require('../config/databaseConfig');
 const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
@@ -60,7 +61,7 @@ function startComputeMetrics(json) {
 function getMetrics(skip) {
     return Metrics
         .aggregate([
-            {$match:{status: {$in: ['MERGED','ABANDONED']}}},
+            {$match: {status: {$in: ['MERGED', 'ABANDONED']}}},
             {$sort: {number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
@@ -86,11 +87,18 @@ async function collectDocs(docs) {
     for (let key in docs) {
         let doc = docs[key];
 
-        if (doc["status"])
+        if (doc["status"]) {
             if (doc["status"].includes("NEW"))
                 continue;
+        }
 
-        await collectMetrics(docs[key])
+        if(doc["first_revision"] !== 1)
+            continue;
+
+        if(doc["is_self_reviewed"] === 1)
+            continue;
+
+        await collectMetrics(doc)
             .then((json) => {
                 return saveMetrics(json);
             })
@@ -103,6 +111,7 @@ async function collectDocs(docs) {
 }
 
 async function saveMetrics(json) {
+    //todo erase the file content in the begining
     let filename = projectName + "-metrics.csv";
     let path = PathLibrary.join(DATA_PATH, projectName);
     return Utils.add_line_to_file(json, filename, path)
@@ -113,19 +122,33 @@ async function updateProgress() {
     return Promise.resolve(true);
 }
 
-function copy(result, json, key) {
+const NUMBER_OF_DECIMAL = 4
+const DEFAULT_VALUE = 0
+
+function copy(result, json, key, new_name = "", convert_to_hours=false) {
+    let k = key
+    if (new_name !== "") {
+        k = new_name
+    }
 
     if (json[key] !== null) {
-        result[key] = json[key];
+        result[k] = parseFloat(json[key]);
+        if(convert_to_hours){
+            result[k] = Moment.duration(result[k]).asHours()
+        }
+        //result[k] = parseFloat(json[key]).toFixed(NUMBER_OF_DECIMAL);
     } else {
-        result[key] = 0;
+        //result[k] = DEFAULT_VALUE.toFixed(NUMBER_OF_DECIMAL);
+        result[k] = DEFAULT_VALUE;
     }
 
     if (!json.hasOwnProperty(key))
-        result[key] = 0;
+        result[k] = DEFAULT_VALUE;
+        //result[k] = DEFAULT_VALUE.toFixed(NUMBER_OF_DECIMAL);
 
     if (!(key in json))
-        result[key] = 0;
+        result[k] = DEFAULT_VALUE;
+        //result[k] = DEFAULT_VALUE.toFixed(NUMBER_OF_DECIMAL);
 
     /*if(json[key] === undefined){
         result[key] = 0;
@@ -139,53 +162,31 @@ let i = 1;
 async function collectMetrics(metric) {
     let result = {};
 
-    //identification
-    result["n"] = i++
-    //result = copy(result, metric, "n");
-    result = copy(result, metric, "number");
-    result = copy(result, metric, "change_id");
-
-    //time
-    result = copy(result, metric, "date_created");
+    //Time metrics
+    //result["n"] = i++
+    result["id"] = metric["id"]
     result = copy(result, metric, "days_of_the_weeks_of_date_created");
     result = copy(result, metric, "is_created_date_a_weekend");
-    result = copy(result, metric, "committer_timezone");
     result = copy(result, metric, "author_timezone");
+
+    //Collaboration Graph
+    result = copy(result, metric, "fg_degree_centrality", "degree_centrality");
+    result = copy(result, metric, "fg_closeness_centrality", "closeness_centrality");
+    result = copy(result, metric, "fg_betweenness_centrality", "betweenness_centrality");
+    result = copy(result, metric, "fg_eigenvector_centrality", "eigenvector_centrality");
+    result = copy(result, metric, "fg_clustering_coefficient", "clustering_coefficient");
+    result = copy(result, metric, "fg_core_number", "core_number");
 
     //code
     result = copy(result, metric, "lines_added_num");
     result = copy(result, metric, "lines_deleted_num");
-    result = copy(result, metric, "diff_lines_added_line_deleted");
+    result = copy(result, metric, "diff_lines_added_line_deleted", "code_churn");
     result = copy(result, metric, "num_files");
     result = copy(result, metric, "num_files_type");
     result = copy(result, metric, "num_directory");
-    result = copy(result, metric, "num_file_added");
-    result = copy(result, metric, "num_file_deleted");
-    result = copy(result, metric, "num_binary_file");
-    result = copy(result, metric, "modify_entropy");
-    result = copy(result, metric, "num_subsystem");
-    result = copy(result, metric, "num_programming_language");
-    result = copy(result, metric, "num_data_language");
-    result = copy(result, metric, "num_prose_language");
-    result = copy(result, metric, "num_markup_language");
-    result = copy(result, metric, "is_a_bot");
-    result = copy(result, metric, "num_human_reviewer");
-    result = copy(result, metric, "first_revision");
-
-    //
-    result = copy(result, metric, "sum_changed_methods_count");
-    //result = copy(result, metric, "sum_added_lines");
-    //result = copy(result, metric, "sum_removed_lines");
+    result = copy(result, metric, "modify_entropy", "change_entropy");
     result = copy(result, metric, "sum_loc");
-    result = copy(result, metric, "moy_loc");
     result = copy(result, metric, "sum_complexity");
-    result = copy(result, metric, "moy_complexity");
-    result = copy(result, metric, "num_modify_modification");
-    result = copy(result, metric, "num_add_modification");
-    result = copy(result, metric, "num_copy_modification");
-    result = copy(result, metric, "num_delete_modification");
-    result = copy(result, metric, "num_rename_modification");
-    result = copy(result, metric, "num_unknown_modification");
     result = copy(result, metric, "num_segs_added");
     result = copy(result, metric, "num_segs_deleted");
     result = copy(result, metric, "num_segs_modify");
@@ -195,14 +196,99 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "subject_word_count");
     result = copy(result, metric, "msg_length");
     result = copy(result, metric, "msg_word_count");
-    result = copy(result, metric, "is_corrective");
-    result = copy(result, metric, "is_merge");
     result = copy(result, metric, "is_non_fonctional");
-    result = copy(result, metric, "is_perfective");
-    result = copy(result, metric, "is_preventive");
     result = copy(result, metric, "is_refactoring");
+    result = copy(result, metric, "is_corrective");
+    result = copy(result, metric, "is_preventive");
+    result = copy(result, metric, "is_merge");
+    result = copy(result, metric, "has_feature_addition");
+    //result = copy(result, metric, "is_perfective");
 
     //Owner experience metrics
+    result = copy(result, metric, "ownerPriorChangesCount", "num_owner_prior_changes");
+    result = copy(result, metric, "priorMergedChangesCount", "num_prior_merged_changes");
+    result = copy(result, metric, "priorAbandonedChangesCount", "num_prior_abandoned_changes");
+    result = copy(result, metric, "mergedRatio", "merge_ratio");
+    result = copy(result, metric, "priorSubsystemChangesCount", "num_prior_subsystem_changes");
+    result = copy(result, metric, "priorChangeDurationMean","prior_change_duration_mean", true);
+    result = copy(result, metric, "priorChangeDurationMax","prior_change_duration_max", true);
+    result = copy(result, metric, "priorChangeDurationMin","prior_change_duration_min", true);
+    result = copy(result, metric, "priorChangeDurationStd","prior_change_duration_std", true);
+    result = copy(result, metric, "ownerPriorChangesCount", "prior_owner_subsystem_changes_count");
+    result = copy(result, metric, "ownerMergedRatio", "owner_merge_ratio");
+    result = copy(result, metric, "priorOwnerSubsystemChangesRatio","prior_owner_subsystem_changes_ratio");
+    result = copy(result, metric, "ownerNumberOfReview", "reviewed_changes_owner");
+    result = copy(result, metric, "ownerPreviousMessageCount", "owner_previous_message");
+    result = copy(result, metric, "ownerChangesMessagesSum", "owner_exchanged_messages");
+    result = copy(result, metric, "ownerChangesMessagesAvgPerChanges", "owner_changes_messages_avg");
+    result = copy(result, metric, "ownerChangesMessagesMaxPerChanges", "owner_changes_messages_min");
+    result = copy(result, metric, "ownerChangesMessagesMinPerChanges", "owner_changes_messages_max");
+    result = copy(result, metric, "ownerChangesMessagesStdPerChanges", "owner_changes_messages_std");
+    result = copy(result, metric, "ownerNumberOfRevisionAvg", "owner_number_of_revision_avg");
+    result = copy(result, metric, "ownerNumberOfRevisionMax", "owner_number_of_revision_max");
+    result = copy(result, metric, "ownerNumberOfRevisionMin", "owner_number_of_revision_min");
+    result = copy(result, metric, "ownerNumberOfRevisionStd", "owner_number_of_revision_std");
+
+    //file metrics
+    result = copy(result, metric, "fileTimeAvg","file_changes_duration_avg", true);
+    result = copy(result, metric, "fileTimeMax","file_changes_duration_max", true);
+    result = copy(result, metric, "fileTimeMin","file_changes_duration_min", true);
+    result = copy(result, metric, "fileTimeStd","file_changes_duration_std", true);
+    result = copy(result, metric, "AvgNumberOfDeveloperWhoModifiedFiles", "developers_file");
+    result = copy(result, metric, "fileCountAvg","prior_changes_files_avg");
+    result = copy(result, metric, "fileCountMax","prior_changes_files_max");
+    result = copy(result, metric, "fileCountMin","prior_changes_files_min");
+    result = copy(result, metric, "fileCountStd","prior_changes_files_std");
+
+    //metrics to predict
+    result = copy(result, metric, "diff_created_updated_in_hours");
+
+    //todo prior_changes_files
+    //todo reviewed_changes_owner
+    /*
+    //identification
+    //result["n"] = i++
+    //result = copy(result, metric, "n");
+    //result = copy(result, metric, "number");
+    //result = copy(result, metric, "change_id");
+
+    //time
+    //result = copy(result, metric, "date_created");
+    //result = copy(result, metric, "committer_timezone");
+
+    //code metrics
+    //result = copy(result, metric, "num_file_added");
+    //result = copy(result, metric, "num_file_deleted");
+    //result = copy(result, metric, "num_binary_file");
+    //result = copy(result, metric, "num_subsystem");
+    //result = copy(result, metric, "num_programming_language");
+    //result = copy(result, metric, "num_data_language");
+    //result = copy(result, metric, "num_prose_language");
+    //result = copy(result, metric, "num_markup_language");
+    //result = copy(result, metric, "is_a_bot");
+    //result = copy(result, metric, "num_human_reviewer");
+    //result = copy(result, metric, "first_revision");
+
+    //
+    //result = copy(result, metric, "sum_changed_methods_count");
+    //result = copy(result, metric, "sum_added_lines");
+    //result = copy(result, metric, "sum_removed_lines");
+    //result = copy(result, metric, "moy_loc");
+    //result = copy(result, metric, "moy_complexity");
+    //result = copy(result, metric, "num_modify_modification");
+    //result = copy(result, metric, "num_add_modification");
+    //result = copy(result, metric, "num_copy_modification");
+    //result = copy(result, metric, "num_delete_modification");
+    //result = copy(result, metric, "num_rename_modification");
+    //result = copy(result, metric, "num_unknown_modification");
+
+    //Text metrics
+    //result = copy(result, metric, "is_corrective");
+    //result = copy(result, metric, "is_merge");
+    //result = copy(result, metric, "is_preventive");
+
+    //Owner experience metrics
+    result = copy(result, metric, "priorChangesCount");
     result = copy(result, metric, "priorChangesCount");
     result = copy(result, metric, "priorMergedChangesCount");
     result = copy(result, metric, "priorAbandonedChangesCount");
@@ -303,6 +389,8 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "eigenvector_centrality");
     result = copy(result, metric, "clustering_coefficient");
     result = copy(result, metric, "core_number");
+
+    */
 
     //metrics to predict
     result = copy(result, metric, "diff_created_updated_in_hours");

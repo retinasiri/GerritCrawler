@@ -45,7 +45,7 @@ def start(json):
 
 def processData(list_of_commit, repo_root_path, data_dir_path):
     
-    bar = SlowBar('Computing code metrics ... ')
+    bar = SlowBar('Computing code metrics ')
 
     json_data = load_json(list_of_commit)
     bar.max = len(json_data)
