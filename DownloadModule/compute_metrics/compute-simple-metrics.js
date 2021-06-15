@@ -217,7 +217,8 @@ function collectFileMetrics(json, metric) {
     metric["num_markup_language"] = fileInfo.num_markup_language;
     metric["first_revision_insertions"] = fileInfo.first_revision_insertions;
     metric["first_revision_deletions"] = fileInfo.first_revision_deletions;
-    metric["first_revision"] = fileInfo.first_revision;
+    metric["first_revision_number"] = get_first_revision_number(json);
+    metric["first_revision_kind"] = get_first_revision_kind(json);
 }
 
 /**
@@ -227,17 +228,86 @@ function collectFileMetrics(json, metric) {
 function collectOwnerMetrics(json, metric) {
     metric["is_a_bot"] = MetricsUtils.isABot(json.owner, projectName);
     metric["num_human_reviewer"] = MetricsUtils.getHumanReviewersCount(json, projectName);
-    metric["is_self_reviewed"] = isSelfReviewed(json, metric);
+    metric["is_self_reviewed"] = isSelfReviewed(json);
+
+    let self_review = is_self_reviewed_note(json);
+    metric["check_code_review"] = self_review.check_code_review;
+    metric["check_code_review_human_length"] = self_review.check_code_review_human_length;
+    metric["check_code_review_length"] = self_review.check_code_review_length;
+    metric["check_verified"] = self_review.check_verified;
+    metric["count_verified_human_length"] = self_review.count_verified_human_length;
+    metric["count_verified_length"] = self_review.count_verified_length;
 }
 
-function isSelfReviewed(json, metric){
+function isSelfReviewed(json) {
     let humanReviewersID = MetricsUtils.getHumanReviewersID(json, projectName);
     let ownerId = json.owner._account_id;
-    if(humanReviewersID.length === 1){
-        if(ownerId === humanReviewersID[0])
+    if (humanReviewersID.length === 1) {
+        if (ownerId === humanReviewersID[0])
             return 1
     }
     return 0;
+}
+
+function is_self_reviewed_note(json) {
+    let labels = json["labels"];
+
+    if (!!!labels)
+        return false;
+
+    let code_review = []
+    if (labels["Code-Review"])
+        code_review = labels["Code-Review"]["all"];
+
+    let verified = []
+    if (labels["Verified"])
+        verified = labels["Verified"]["all"];
+
+    let owner_id = json.owner._account_id;
+
+    let check_code_review = check_review(code_review, owner_id);
+    let check_code_review_human_length = count_human_review(json, code_review);
+    let check_code_review_length = code_review.length;
+    let check_verified = check_review(verified, owner_id);
+    let count_verified_human_length = count_human_review(json, verified);
+    let count_verified_length = verified.length;
+
+    return {
+        check_code_review : check_code_review,
+        check_code_review_human_length : check_code_review_human_length,
+        check_code_review_length : check_code_review_length,
+        check_verified : check_verified,
+        count_verified_human_length : count_verified_human_length,
+        count_verified_length : count_verified_length,
+    }
+
+}
+
+function count_human_review(json, code_review) {
+    let count = 0;
+    for (let i = 0; i < code_review.length; i++) {
+        let review = code_review[i];
+        let _account_id = review._account_id
+        if(!MetricsUtils.isABot(_account_id, projectName)){
+            count++;
+        }
+    }
+    return count;
+}
+
+function check_review(code_review, owner_id){
+    let check = false;
+    for (let i = 0; i < code_review.length; i++) {
+        let review = code_review[i];
+        let _account_id = review._account_id
+        if (_account_id !== owner_id) {
+            continue;
+        }
+        let value = review.value;
+        if(value === 2)
+            check = true;
+    }
+    return check;
 }
 
 /**
@@ -504,7 +574,6 @@ function initFileInfoData() {
 
 function get_files_info(json) {
 
-    let revisions = json.revisions
     let fileInfo = initFileInfoData();
     let filesJson = {};
     let filesExtJson = {};
@@ -513,61 +582,49 @@ function get_files_info(json) {
     let removeFiles = [];
     let modificationArray = [];
     let entropyArray = [];
-    fileInfo.first_revision = 1000000000000;
 
-    for (let key in revisions) {
+    let first_revision = get_first_revision(json);
+    let files = first_revision.files;
 
-        //Get only the first revision
-        let revision_number = revisions[key]._number;
-
-        if(fileInfo.first_revision > revision_number){
-            fileInfo.first_revision = revision_number;
-        }
-
-        if (revision_number !== 1)
-            continue;
-
-        let files = revisions[key].files;
-
-        for (let index in files) {
-            let status = files[index].status;
-            let filename = files[index];
-            if (status) {
-                if (status === "A") {
-                    if (addFiles.indexOf(index) === -1) {
-                        addFiles.push(index);
-                    }
-                } else if (status === "D") {
-                    if (removeFiles.indexOf(index) === -1) {
-                        removeFiles.push(index);
-                    }
+    for (let index in files) {
+        let status = files[index].status;
+        let filename = files[index];
+        if (status) {
+            if (status === "A") {
+                if (addFiles.indexOf(index) === -1) {
+                    addFiles.push(index);
+                }
+            } else if (status === "D") {
+                if (removeFiles.indexOf(index) === -1) {
+                    removeFiles.push(index);
                 }
             }
-
-            if (files[index].binary)
-                if (files[index].binary === true)
-                    fileInfo.num_binary_file++;
-
-            let ext = index.substr(index.lastIndexOf('.') + 1);
-            filesExtJson[ext] ? filesExtJson[ext] = filesExtJson[ext] + 1 : filesExtJson[ext] = 1;
-
-            //count dir
-            let dir = index.substr(0, index.lastIndexOf('/') + 1);
-            directoryJson[dir] ? directoryJson[dir] = directoryJson[dir] + 1 : directoryJson[dir] = 1;
-
-            //count files
-            filesJson[index] ? filesJson[index] = filesJson[index] + 1 : filesJson[index] = 1;
-            fileInfo.first_revision_insertions += files[index].lines_inserted ? files[index].lines_inserted : 0;
-            fileInfo.first_revision_deletions += files[index].lines_deleted ? files[index].lines_deleted : 0;
-            let number = plusFn(files[index].lines_inserted, files[index].lines_deleted);
-            modificationArray.push(number);
         }
 
-        //calculate the entropy
-        let entropy = calculate_entropy(modificationArray);
-        entropyArray.push(entropy);
+        if (files[index].binary)
+            if (files[index].binary === true)
+                fileInfo.num_binary_file++;
 
+        let ext = index.substr(index.lastIndexOf('.') + 1);
+        filesExtJson[ext] ? filesExtJson[ext] = filesExtJson[ext] + 1 : filesExtJson[ext] = 1;
+
+        //count dir
+        let dir = index.substr(0, index.lastIndexOf('/') + 1);
+        directoryJson[dir] ? directoryJson[dir] = directoryJson[dir] + 1 : directoryJson[dir] = 1;
+
+        //count files
+        filesJson[index] ? filesJson[index] = filesJson[index] + 1 : filesJson[index] = 1;
+        fileInfo.first_revision_insertions += files[index].lines_inserted ? files[index].lines_inserted : 0;
+        fileInfo.first_revision_deletions += files[index].lines_deleted ? files[index].lines_deleted : 0;
+        let number = plusFn(files[index].lines_inserted, files[index].lines_deleted);
+        modificationArray.push(number);
     }
+
+    //calculate the entropy
+    let entropy = calculate_entropy(modificationArray);
+    entropyArray.push(entropy);
+
+    //}
 
     fileInfo.num_files = Object.keys(filesJson).length;
     fileInfo.num_files_type = Object.keys(filesExtJson).length;
@@ -790,15 +847,52 @@ function countWord(phrase) {
         return 0;
 }
 
-function get_commit_msg(json) {
+function get_first_revision_id(json) {
     let revisions = json.revisions;
-    let messages = [];
+    let first_revision_number = null;
+    let revision_id = 0;
     for (let i in revisions) {
-        let revision = revisions[i];
-        if (revision.commit) {
-            let message = revision.commit.message;
-            messages.push(message);
+        let number = revisions[i]._number;
+        if (first_revision_number === null) {
+            first_revision_number = number;
+            revision_id = i;
         }
+
+        if (number <= first_revision_number) {
+            first_revision_number = number;
+            revision_id = i;
+        }
+    }
+    return revision_id;
+}
+
+function get_first_revision_number(json) {
+    let first_revision = get_first_revision(json)
+    return first_revision["_number"];
+}
+
+function get_first_revision(json) {
+    let revisions = json.revisions;
+    let first_revision_number = get_first_revision_id(json);
+    return revisions[first_revision_number];
+}
+
+function get_first_revision_kind(json) {
+    let first_revision = get_first_revision(json)
+    let kind = first_revision["kind"]
+    if (kind) {
+        return kind;
+    } else {
+        return "UNDEFINED";
+    }
+}
+
+function get_commit_msg(json) {
+    let first_revision = get_first_revision(json)
+    let messages = [];
+    if (first_revision.commit) {
+        let message = first_revision.commit.message;
+        messages.push(message);
     }
     return messages;
 }

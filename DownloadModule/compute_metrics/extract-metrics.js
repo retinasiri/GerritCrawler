@@ -92,7 +92,7 @@ async function collectDocs(docs) {
                 continue;
         }
 
-        if(doc["first_revision"] !== 1)
+        if(doc["first_revision_number"] !== 1)
             continue;
 
         if(doc["is_self_reviewed"] === 1)
