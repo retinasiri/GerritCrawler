@@ -55,12 +55,12 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
     #pool_handler(json_data, repo_root_path, Database)
     n = 1
     for i in json_data:
-        
+        '''
         if(n<NUMBER_TO_SKIP):
             n+=1
             bar.next()
             continue
-        
+        '''
         metric = get_code_metrics(json_data[i], repo_root_path)
         if(metric is not None):
             mid = metric["id"]
