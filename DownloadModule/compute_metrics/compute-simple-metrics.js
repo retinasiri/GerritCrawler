@@ -235,10 +235,19 @@ function collectOwnerMetrics(json, metric) {
     let self_review = is_self_reviewed_note(json);
     metric["labels_code_review_2_owner"] = self_review.check_code_review_2_owner;
     metric["labels_code_review_2_count"] = self_review.check_code_review_2_count;
+
+    metric["labels_code_review_minus_2_count"] = self_review.check_code_review_minus_2_owner;
+    metric["labels_code_review_minus_2_count"] = self_review.check_code_review_minus_2_count;
+
     metric["labels_code_review_human_length"] = self_review.check_code_review_human_length;
     metric["labels_code_review_length"] = self_review.check_code_review_length;
+
     metric["labels_verified_2_owner"] = self_review.check_verified_2_owner;
     metric["labels_verified_2_count"] = self_review.check_verified_2_count;
+
+    metric["labels_verified_minus_2_owner"] = self_review.check_verified_minus_2_owner;
+    metric["labels_verified_minus_2_count"] = self_review.check_verified_minus_2_count;
+
     metric["labels_verified_human_length"] = self_review.count_verified_human_length;
     metric["labels_verified_length"] = self_review.count_verified_length;
 }
@@ -271,22 +280,30 @@ function is_self_reviewed_note(json) {
 
     let owner_id = json.owner._account_id;
 
-    let check_code_review_2_owner = check_review_owner(code_review, owner_id);
-    let check_code_review_2_count = check_review_2_count(code_review);
+    let check_code_review_2_owner = check_review_owner(code_review, owner_id, 2);
+    let check_code_review_2_count = check_review_count(code_review, 2);
+    let check_code_review_minus_2_owner = check_review_owner(code_review, owner_id, -2);
+    let check_code_review_minus_2_count = check_review_count(code_review, -2);
     let check_code_review_human_length = count_human_review(json, code_review);
     let check_code_review_length = code_review.length;
-    let check_verified_2_owner = check_review_owner(verified, owner_id);
-    let check_verified_2_count = check_review_2_count(verified, owner_id);
+    let check_verified_2_owner = check_review_owner(verified, owner_id, 2);
+    let check_verified_2_count = check_review_count(verified, 2);
+    let check_verified_minus_2_owner = check_review_owner(verified, owner_id, -2);
+    let check_verified_minus_2_count = check_review_count(verified, -2);
     let count_verified_human_length = count_human_review(json, verified);
     let count_verified_length = verified.length;
 
     return {
         check_code_review_2_owner: check_code_review_2_owner,
         check_code_review_2_count: check_code_review_2_count,
+        check_code_review_minus_2_owner: check_code_review_minus_2_owner,
+        check_code_review_minus_2_count: check_code_review_minus_2_count,
         check_code_review_human_length: check_code_review_human_length,
         check_code_review_length: check_code_review_length,
         check_verified_2_owner: check_verified_2_owner,
         check_verified_2_count: check_verified_2_count,
+        check_verified_minus_2_owner: check_verified_minus_2_owner,
+        check_verified_minus_2_count: check_verified_minus_2_count,
         count_verified_human_length: count_verified_human_length,
         count_verified_length: count_verified_length,
     }
@@ -305,8 +322,8 @@ function count_human_review(json, code_review) {
     return count;
 }
 
-function check_review_owner(code_review, owner_id) {
-    let check = 0;
+function check_review_owner(code_review, owner_id, VALUE) {
+    let check = true;
     for (let i = 0; i < code_review.length; i++) {
         let review = code_review[i];
         let _account_id = review._account_id
@@ -314,18 +331,18 @@ function check_review_owner(code_review, owner_id) {
             continue;
         }
         let value = review.value;
-        if (value === 2)
-            check = 1;
+        if (value === VALUE)
+            check = false;
     }
     return check;
 }
 
-function check_review_2_count(code_review) {
+function check_review_count(code_review, VALUE) {
     let count = 0;
     for (let i = 0; i < code_review.length; i++) {
         let review = code_review[i];
         let value = review.value;
-        if (value === 2)
+        if (value === VALUE)
             count += 1;
     }
     return count;

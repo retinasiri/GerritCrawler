@@ -41,11 +41,6 @@ function startComputeMetrics(json) {
             progressBar.start(count, 0);
             return getMetrics(0);
         })
-        /*.then(() => {
-            let name = projectName + "-metrics";
-            let path = PathLibrary.join(DATA_PATH, projectName);
-            return Utils.saveJSONInFile(path, name, metricsJson);
-        })*/
         .then(() => {
             progressBar.stop();
             console.log("Finished !!!!");
@@ -87,15 +82,7 @@ async function collectDocs(docs) {
     for (let key in docs) {
         let doc = docs[key];
 
-        if (doc["status"]) {
-            if (doc["status"].includes("NEW"))
-                continue;
-        }
-
-        if(doc["first_revision_number"] !== 1)
-            continue;
-
-        if(doc["is_self_reviewed"] === 1)
+        if (check_value_to_ignore(doc))
             continue;
 
         await collectMetrics(doc)
@@ -108,6 +95,47 @@ async function collectDocs(docs) {
 
     }
     return Promise.resolve(true);
+}
+
+function check_value_to_ignore(metrics) {
+    let bool = false;
+    let keys = ['fg_degree_centrality', 'num_segs_added']
+
+    if (metrics["status"]) {
+        if (metrics["status"].includes("NEW"))
+            return true;
+    }
+
+    if (metrics["first_revision_number"] !== 1)
+        return true;
+
+    if (metrics["is_self_reviewed"] === 1)
+        return true;
+
+    if (metrics["first_revision_kind"].includes("TRIVIAL_REBASE"))
+        return true;
+
+    if(check_self_review(metrics))
+        return true;
+
+    for (let i = 0; i < keys.length; i++) {
+        let key = keys[i]
+        if (metrics[key] == null || !metrics.hasOwnProperty(key) || !(key in metrics)) {
+            bool = true;
+        }
+    }
+    return bool;
+}
+
+function check_self_review(metrics) {
+    let bool = false;
+    if (metrics["check_code_review_2_owner"] === 1 && metrics["check_code_review_length"] <= 1) {
+        bool = true;
+    }
+    if (metrics["check_code_review_minus_2_owner"] === 1 && metrics["check_code_review_human_length"] <= 1) {
+        bool = true;
+    }
+    return bool;
 }
 
 async function saveMetrics(json) {
@@ -125,7 +153,7 @@ async function updateProgress() {
 const NUMBER_OF_DECIMAL = 4
 const DEFAULT_VALUE = 0
 
-function copy(result, json, key, new_name = "", convert_to_hours=false) {
+function copy(result, json, key, new_name = "", convert_to_hours = false) {
     let k = key
     if (new_name !== "") {
         k = new_name
@@ -133,7 +161,7 @@ function copy(result, json, key, new_name = "", convert_to_hours=false) {
 
     if (json[key] !== null) {
         result[k] = parseFloat(json[key]);
-        if(convert_to_hours){
+        if (convert_to_hours) {
             result[k] = Moment.duration(result[k]).asHours()
         }
         //result[k] = parseFloat(json[key]).toFixed(NUMBER_OF_DECIMAL);
@@ -144,11 +172,11 @@ function copy(result, json, key, new_name = "", convert_to_hours=false) {
 
     if (!json.hasOwnProperty(key))
         result[k] = DEFAULT_VALUE;
-        //result[k] = DEFAULT_VALUE.toFixed(NUMBER_OF_DECIMAL);
+    //result[k] = DEFAULT_VALUE.toFixed(NUMBER_OF_DECIMAL);
 
     if (!(key in json))
         result[k] = DEFAULT_VALUE;
-        //result[k] = DEFAULT_VALUE.toFixed(NUMBER_OF_DECIMAL);
+    //result[k] = DEFAULT_VALUE.toFixed(NUMBER_OF_DECIMAL);
 
     /*if(json[key] === undefined){
         result[key] = 0;
@@ -157,11 +185,27 @@ function copy(result, json, key, new_name = "", convert_to_hours=false) {
     return result;
 }
 
+function match_review_kind_value(metric){
+    let value = 1;
+    if(metric.includes("REWORK")){
+        value = 1;
+    } else if(metric.includes("TRIVIAL_REBASE")){
+        value = 2;
+    } else if(metric.includes("MERGE_FIRST_PARENT_UPDATE")){
+        value = 3;
+    } else if(metric.includes("NO_CODE_CHANGE")){
+        value = 4;
+    }else if(metric.includes("NO_CHANGE")){
+        value = 5;
+    }
+    return value;
+}
+
 let i = 1;
 
 async function collectMetrics(metric) {
-    let result = {};
 
+    let result = {};
     //Time metrics
     //result["n"] = i++
     result["id"] = metric["id"]
@@ -191,6 +235,9 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "num_segs_deleted");
     result = copy(result, metric, "num_segs_modify");
 
+    result = copy(result, metric, "first_revision_kind", "type_of_revision");
+    metric["type_of_revision"] = match_review_kind_value(metric["type_of_revision"])
+
     //Text metrics
     result = copy(result, metric, "subject_length");
     result = copy(result, metric, "subject_word_count");
@@ -210,13 +257,13 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "priorAbandonedChangesCount", "num_prior_abandoned_changes");
     result = copy(result, metric, "mergedRatio", "merge_ratio");
     result = copy(result, metric, "priorSubsystemChangesCount", "num_prior_subsystem_changes");
-    result = copy(result, metric, "priorChangeDurationMean","prior_change_duration_mean", true);
-    result = copy(result, metric, "priorChangeDurationMax","prior_change_duration_max", true);
-    result = copy(result, metric, "priorChangeDurationMin","prior_change_duration_min", true);
-    result = copy(result, metric, "priorChangeDurationStd","prior_change_duration_std", true);
+    result = copy(result, metric, "priorChangeDurationMean", "prior_change_duration_mean", true);
+    result = copy(result, metric, "priorChangeDurationMax", "prior_change_duration_max", true);
+    result = copy(result, metric, "priorChangeDurationMin", "prior_change_duration_min", true);
+    result = copy(result, metric, "priorChangeDurationStd", "prior_change_duration_std", true);
     result = copy(result, metric, "ownerPriorChangesCount", "prior_owner_subsystem_changes_count");
     result = copy(result, metric, "ownerMergedRatio", "owner_merge_ratio");
-    result = copy(result, metric, "priorOwnerSubsystemChangesRatio","prior_owner_subsystem_changes_ratio");
+    result = copy(result, metric, "priorOwnerSubsystemChangesRatio", "prior_owner_subsystem_changes_ratio");
     result = copy(result, metric, "ownerNumberOfReview", "reviewed_changes_owner");
     result = copy(result, metric, "ownerPreviousMessageCount", "owner_previous_message");
     result = copy(result, metric, "ownerChangesMessagesSum", "owner_exchanged_messages");
@@ -230,20 +277,21 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "ownerNumberOfRevisionStd", "owner_number_of_revision_std");
 
     //file metrics
-    result = copy(result, metric, "fileTimeAvg","file_changes_duration_avg", true);
-    result = copy(result, metric, "fileTimeMax","file_changes_duration_max", true);
-    result = copy(result, metric, "fileTimeMin","file_changes_duration_min", true);
-    result = copy(result, metric, "fileTimeStd","file_changes_duration_std", true);
+    result = copy(result, metric, "fileTimeAvg", "file_changes_duration_avg", true);
+    result = copy(result, metric, "fileTimeMax", "file_changes_duration_max", true);
+    result = copy(result, metric, "fileTimeMin", "file_changes_duration_min", true);
+    result = copy(result, metric, "fileTimeStd", "file_changes_duration_std", true);
     result = copy(result, metric, "AvgNumberOfDeveloperWhoModifiedFiles", "developers_file");
-    result = copy(result, metric, "fileCountAvg","prior_changes_files_avg");
-    result = copy(result, metric, "fileCountMax","prior_changes_files_max");
-    result = copy(result, metric, "fileCountMin","prior_changes_files_min");
-    result = copy(result, metric, "fileCountStd","prior_changes_files_std");
+    result = copy(result, metric, "fileCountAvg", "prior_changes_files_avg");
+    result = copy(result, metric, "fileCountMax", "prior_changes_files_max");
+    result = copy(result, metric, "fileCountMin", "prior_changes_files_min");
+    result = copy(result, metric, "fileCountStd", "prior_changes_files_std");
 
     //metrics to predict
     result = copy(result, metric, "diff_created_updated_in_hours");
+    return Promise.resolve(result);
 
-    //todo prior_changes_files
+    //do prior_changes_files
     //todo reviewed_changes_owner
     //todo updated rate
     /*
@@ -393,10 +441,6 @@ async function collectMetrics(metric) {
 
     */
 
-    //metrics to predict
-    result = copy(result, metric, "diff_created_updated_in_hours");
-
-    return result;
 }
 
 
