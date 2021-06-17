@@ -9897,7 +9897,443 @@
     }
   },
   "eclipse": {
-    "bot_account":{}
+    "bot_account":{
+      "107": {
+        "_account_id": 107,
+        "name": "Hudson CI",
+        "email": "nobody@eclipse.org"
+      },
+      "442": {
+        "_account_id": 442,
+        "name": "CI Bot",
+        "username": "hudsonvoter"
+      },
+      "19856": {
+        "_account_id": 19856,
+        "name": "Eclipse Genie",
+        "email": "genie@eclipse.org",
+        "username": "egenie"
+      },
+      "23797": {
+        "_account_id": 23797,
+        "name": "Ian test Bull",
+        "email": "irbull@gmail.com",
+        "username": "ibull"
+      },
+      "59825": {
+        "_account_id": 59825,
+        "name": "Eclipse Foundation Webdev Team",
+        "email": "webdev@eclipse.org",
+        "username": "cguindon48q"
+      },
+      "186744": {
+        "_account_id": 186744,
+        "name": "Releng Bot",
+        "email": "releng-bot@eclipse.org",
+        "username": "genie.releng"
+      },
+      "201249": {
+        "_account_id": 201249,
+        "name": "Xtext Bot",
+        "email": "xtext-bot@eclipse.org",
+        "username": "genie.xtext"
+      },
+      "219993": {
+        "_account_id": 219993,
+        "name": "BaSyx Bot",
+        "email": "basyx-bot@eclipse.org",
+        "username": "genie.basyx"
+      },
+      "230435": {
+        "_account_id": 230435,
+        "name": "CBI Bot",
+        "email": "cbi-bot@eclipse.org",
+        "username": "genie.cbi"
+      },
+      "234461": {
+        "_account_id": 234461,
+        "name": "Linux Tools Bot",
+        "email": "linuxtools-bot@eclipse.org",
+        "username": "genie.linuxtools"
+      },
+      "235386": {
+        "_account_id": 235386,
+        "name": "EGit Bot",
+        "email": "egit-bot@eclipse.org",
+        "username": "genie.egit"
+      },
+      "235558": {
+        "_account_id": 235558,
+        "name": "OSEE Bot",
+        "email": "osee-bot@eclipse.org",
+        "username": "genie.osee"
+      },
+      "236914": {
+        "_account_id": 236914,
+        "name": "CDT Bot",
+        "email": "cdt-bot@eclipse.org",
+        "username": "genie.cdt"
+      },
+      "237019": {
+        "_account_id": 237019,
+        "name": "ECF Bot",
+        "email": "ecf-bot@eclipse.org",
+        "username": "genie.ecf"
+      },
+      "237359": {
+        "_account_id": 237359,
+        "name": "SWTBot Bot",
+        "email": "swtbot-bot@eclipse.org",
+        "username": "genie.swtbot"
+      },
+      "239654": {
+        "_account_id": 239654,
+        "name": "Equinox Bot",
+        "email": "equinox-bot@eclipse.org",
+        "username": "genie.equinox"
+      },
+      "239713": {
+        "_account_id": 239713,
+        "name": "eTrice Bot",
+        "email": "etrice-bot@eclipse.org",
+        "username": "genie.etrice"
+      },
+      "239718": {
+        "_account_id": 239718,
+        "name": "PTP Bot",
+        "email": "ptp-bot@eclipse.org",
+        "username": "genie.ptp"
+      },
+      "240186": {
+        "_account_id": 240186,
+        "name": "StatET Bot",
+        "email": "statet-bot@eclipse.org",
+        "username": "genie.statet"
+      },
+      "241953": {
+        "_account_id": 241953,
+        "name": "JGit Bot",
+        "email": "jgit-bot@eclipse.org",
+        "username": "genie.jgit"
+      },
+      "245225": {
+        "_account_id": 245225,
+        "name": "Sirius Bot",
+        "email": "sirius-bot@eclipse.org",
+        "username": "genie.sirius"
+      },
+      "245417": {
+        "_account_id": 245417,
+        "name": "M2E Bot",
+        "email": "m2e-bot@eclipse.org",
+        "username": "genie.m2e"
+      },
+      "245511": {
+        "_account_id": 245511,
+        "name": "Trace Compass Bot",
+        "email": "tracecompass-bot@eclipse.org",
+        "username": "genie.tracecompass"
+      },
+      "245931": {
+        "_account_id": 245931,
+        "name": "Amalgam Bot",
+        "email": "amalgam-bot@eclipse.org",
+        "username": "genie.amalgam"
+      },
+      "246060": {
+        "_account_id": 246060,
+        "name": "DLTK Bot",
+        "email": "dltk-bot@eclipse.org",
+        "username": "genie.dltk"
+      },
+      "246063": {
+        "_account_id": 246063,
+        "name": "EASE Bot",
+        "email": "ease-bot@eclipse.org",
+        "username": "genie.ease"
+      },
+      "246313": {
+        "_account_id": 246313,
+        "name": "EEF Bot",
+        "email": "eef-bot@eclipse.org",
+        "username": "genie.eef"
+      },
+      "246329": {
+        "_account_id": 246329,
+        "name": "EGF Bot",
+        "email": "egf-bot@eclipse.org",
+        "username": "genie.egf"
+      },
+      "246732": {
+        "_account_id": 246732,
+        "name": "Orbit Bot",
+        "email": "orbit-bot@eclipse.org",
+        "username": "genie.orbit"
+      },
+      "246745": {
+        "_account_id": 246745,
+        "name": "RCPTT Bot",
+        "email": "rcptt-bot@eclipse.org",
+        "username": "genie.rcptt"
+      },
+      "247034": {
+        "_account_id": 247034,
+        "name": "XWT Bot",
+        "email": "xwt-bot@eclipse.org",
+        "username": "genie.xwt"
+      },
+      "253337": {
+        "_account_id": 253337,
+        "name": "Diffmerge Bot",
+        "email": "diffmerge-bot@eclipse.org",
+        "username": "genie.diffmerge"
+      },
+      "253358": {
+        "_account_id": 253358,
+        "name": "EGerrit Bot",
+        "email": "egerrit-bot@eclipse.org",
+        "username": "genie.egerrit"
+      },
+      "253588": {
+        "_account_id": 253588,
+        "name": "Jubula Bot",
+        "email": "jubula-bot@eclipse.org",
+        "username": "genie.jubula"
+      },
+      "253624": {
+        "_account_id": 253624,
+        "name": "QVT-OML Bot",
+        "email": "qvt-oml-bot@eclipse.org",
+        "username": "genie.qvt-oml"
+      },
+      "255268": {
+        "_account_id": 255268,
+        "name": "PDE Bot",
+        "email": "pde-bot@eclipse.org",
+        "username": "genie.pde"
+      },
+      "255357": {
+        "_account_id": 255357,
+        "name": "Platform Bot",
+        "email": "platform-bot@eclipse.org",
+        "username": "genie.platform"
+      },
+      "258053": {
+        "_account_id": 258053,
+        "name": "ATL Bot",
+        "email": "atl-bot@eclipse.org",
+        "username": "genie.atl"
+      },
+      "258305": {
+        "_account_id": 258305,
+        "name": "TEA Bot",
+        "email": "tea-bot@eclipse.org",
+        "username": "genie.tea"
+      },
+      "258395": {
+        "_account_id": 258395,
+        "name": "Tigerstripe Bot",
+        "email": "tigerstripe-bot@eclipse.org",
+        "username": "genie.tigerstripe"
+      },
+      "260882": {
+        "_account_id": 260882,
+        "name": "JDT Bot",
+        "email": "jdt-bot@eclipse.org",
+        "username": "genie.jdt"
+      },
+      "266774": {
+        "_account_id": 266774,
+        "name": "MoDisco Bot",
+        "email": "modisco-bot@eclipse.org",
+        "username": "genie.modisco"
+      },
+      "269839": {
+        "_account_id": 269839,
+        "name": "Mylyn Bot",
+        "email": "mylyn-bot@eclipse.org",
+        "username": "genie.mylyn"
+      },
+      "273131": {
+        "_account_id": 273131,
+        "name": "Datatools Bot",
+        "email": "datatools-bot@eclipse.org",
+        "username": "genie.datatools"
+      },
+      "273284": {
+        "_account_id": 273284,
+        "name": "EcoreTools Bot",
+        "email": "ecoretools-bot@eclipse.org",
+        "username": "genie.ecoretools"
+      },
+      "273287": {
+        "_account_id": 273287,
+        "name": "EMFStore Bot",
+        "email": "emfstore-bot@eclipse.org",
+        "username": "genie.emfstore"
+      },
+      "273448": {
+        "_account_id": 273448,
+        "name": "MPC Bot",
+        "email": "mpc-bot@eclipse.org",
+        "username": "genie.mpc"
+      },
+      "273453": {
+        "_account_id": 273453,
+        "name": "Nebula Bot",
+        "email": "nebula-bot@eclipse.org",
+        "username": "genie.nebula"
+      },
+      "273466": {
+        "_account_id": 273466,
+        "name": "Scout Bot",
+        "email": "scout-bot@eclipse.org",
+        "username": "genie.scout"
+      },
+      "273578": {
+        "_account_id": 273578,
+        "name": "Virgo Bot",
+        "email": "virgo-bot@eclipse.org",
+        "username": "genie.virgo"
+      },
+      "273964": {
+        "_account_id": 273964,
+        "name": "Skills Bot",
+        "email": "skills-bot@eclipse.org",
+        "username": "genie.skills"
+      },
+      "282478": {
+        "_account_id": 282478,
+        "name": "OCL Bot",
+        "email": "ocl-bot@eclipse.org",
+        "username": "genie.ocl"
+      },
+      "285267": {
+        "_account_id": 285267,
+        "name": "ECP Bot",
+        "email": "ecp-bot@eclipse.org",
+        "username": "genie.ecp"
+      },
+      "285268": {
+        "_account_id": 285268,
+        "name": "Edapt Bot",
+        "email": "edapt-bot@eclipse.org",
+        "username": "genie.edapt"
+      },
+      "290803": {
+        "_account_id": 290803,
+        "name": "LSP4E Bot",
+        "email": "lsp4e-bot@eclipse.org",
+        "username": "genie.lsp4e"
+      },
+      "292951": {
+        "_account_id": 292951,
+        "name": "CI Bot",
+        "username": "HudsonVoter"
+      },
+      "301495": {
+        "_account_id": 301495,
+        "name": "Rap Bot",
+        "email": "rap-bot@eclipse.org",
+        "username": "genie.rap"
+      },
+      "301502": {
+        "_account_id": 301502,
+        "name": "4diac Bot",
+        "email": "4diac-bot@eclipse.org",
+        "username": "genie.4diac"
+      },
+      "301525": {
+        "_account_id": 301525,
+        "name": "Webtools Bot",
+        "email": "webtools-bot@eclipse.org",
+        "username": "genie.webtools"
+      },
+      "301551": {
+        "_account_id": 301551,
+        "name": "Papyrus Bot",
+        "email": "papyrus-bot@eclipse.org",
+        "username": "genie.papyrus"
+      },
+      "301875": {
+        "_account_id": 301875,
+        "name": "Simrel Bot",
+        "email": "simrel-bot@eclipse.org",
+        "username": "genie.simrel"
+      },
+      "303803": {
+        "_account_id": 303803,
+        "name": "Nattable Bot",
+        "email": "nattable-bot@eclipse.org",
+        "username": "genie.nattable"
+      },
+      "304249": {
+        "_account_id": 304249,
+        "name": "Emfcompare Bot",
+        "email": "emfcompare-bot@eclipse.org",
+        "username": "genie.emfcompare"
+      },
+      "304256": {
+        "_account_id": 304256,
+        "name": "Capra Bot",
+        "email": "capra-bot@eclipse.org",
+        "username": "genie.capra"
+      },
+      "304371": {
+        "_account_id": 304371,
+        "name": "Packaging Bot",
+        "email": "packaging-bot@eclipse.org",
+        "username": "genie.packaging"
+      },
+      "304380": {
+        "_account_id": 304380,
+        "name": "Graphiti Bot",
+        "email": "graphiti-bot@eclipse.org",
+        "username": "genie.graphiti"
+      },
+      "304417": {
+        "_account_id": 304417,
+        "name": "MDMBL Bot",
+        "email": "mdmbl-bot@eclipse.org",
+        "username": "genie.mdmbl"
+      },
+      "304432": {
+        "_account_id": 304432,
+        "name": "Acceleo Bot",
+        "email": "acceleo-bot@eclipse.org",
+        "username": "genie.acceleo"
+      },
+      "304459": {
+        "_account_id": 304459,
+        "name": "Usssdk Bot",
+        "email": "usssdk-bot@eclipse.org",
+        "username": "genie.usssdk"
+      },
+      "304461": {
+        "_account_id": 304461,
+        "name": "VIATRA Bot",
+        "email": "viatra-bot@eclipse.org",
+        "username": "genie.viatra"
+      },
+      "304488": {
+        "_account_id": 304488,
+        "name": "Comma Bot",
+        "email": "comma-bot@eclipse.org",
+        "username": "genie.comma"
+      },
+      "304504": {
+        "_account_id": 304504,
+        "name": "EMF Bot",
+        "email": "emf-bot@eclipse.org",
+        "username": "genie.emf"
+      },
+      "304542": {
+        "_account_id": 304542,
+        "name": "Sphinx Bot",
+        "email": "sphinx-bot@eclipse.org",
+        "username": "genie.sphinx"
+      }
+    }
   },
   "lineageos": {
     "bot_account":{}

@@ -12,7 +12,8 @@ var MessageSchema = new Schema({
     change_id: String,
     _number: Number
 }, {
-    versionKey: false
+    versionKey: false,
+    strict: false
 });
 
 module.exports = mongoose.model('Message', MessageSchema);

@@ -7,10 +7,11 @@ var LabelSchema = new Schema({
         all: {},
         values: {}
     },
-    Code_Review: {},
+    "Code-Review": {},
     Sanity_Review: {}
 }, {
-    versionKey: false
+    versionKey: false,
+    strict: false
 });
 
 module.exports = mongoose.model('Label', LabelSchema);

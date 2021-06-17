@@ -10,7 +10,8 @@ var AccountSchema = new Schema({
     status: String
     //display_name: String
 }, {
-    versionKey: false
+    versionKey: false,
+    strict: false
 });
 
 const Account = mongoose.model('Account', AccountSchema)

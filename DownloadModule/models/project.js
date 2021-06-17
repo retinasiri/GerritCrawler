@@ -11,7 +11,8 @@ var ProjectSchema = new Schema({
         target:String
     }]
 }, {
-    versionKey: false
+    versionKey: false,
+    strict: false
 });
 
 const Project = mongoose.model('Project', ProjectSchema);

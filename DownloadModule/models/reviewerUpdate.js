@@ -8,7 +8,8 @@ var ReviewerUpdateSchema = new Schema({
     updated_by: {type: Account},
     reviewer: {type: Account}
 }, {
-    versionKey: false
+    versionKey: false,
+    strict: false
 });
 
 module.exports = mongoose.model('ReviewerUpdate', ReviewerUpdateSchema);

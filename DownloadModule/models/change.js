@@ -60,7 +60,8 @@ var ChangeSchema = new Schema({
     _more_changes: Boolean,
     files_list: []
 }, {
-    versionKey: false
+    versionKey: false,
+    strict: false
 });
 const Change = mongoose.model('Change', ChangeSchema);
 //Change.createIndexes();

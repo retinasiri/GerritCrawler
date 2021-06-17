@@ -226,6 +226,38 @@ function getOwnerPriorTypeChangesCount(json, TYPE) {
     return dbRequest(pipeline);
 }
 
+function getPriorBranchChangesCount(json) {
+    let number = json._number;
+    let branch = json.branch;
+    let pipeline = [{
+        $match: {
+            branch: branch,
+            _number: {$lt: number},
+        }
+    },
+        {$count: "count"}
+    ]
+
+    return dbRequest(pipeline);
+}
+
+function getPriorBranchTypeChangesCount(json, TYPE) {
+    let created_date = json.created;
+    let number = json._number;
+    let branch = json.branch;
+    let pipeline = [{
+        $match: {
+            branch: branch,
+            status: TYPE,
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    },
+        {$count: "count"}
+    ]
+    return dbRequest(pipeline);
+}
+
 function getPriorSubsystemChangesCount(json) {
     let number = json._number;
     let project = json.project;

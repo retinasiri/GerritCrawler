@@ -8,7 +8,8 @@ var CrawlingSchema = new Schema({
     number_of_merged_changes_collected: {type : Number, default: 0},
     number_of_abandoned_changes_collected: {type : Number, default: 0}
 }, {
-    versionKey: false
+    versionKey: false,
+    strict: false
 });
 Crawling = mongoose.model('Crawling', CrawlingSchema);
 //Crawling.createIndexes();
