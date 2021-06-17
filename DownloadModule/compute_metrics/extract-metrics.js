@@ -3,6 +3,7 @@ const Moment = require('moment');
 const Database = require('../config/databaseConfig');
 const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
+const fs = require('fs');
 const MetricsUtils = require('./metrics-utils');
 
 const progressBar = new cliProgress.SingleBar({
@@ -38,6 +39,7 @@ function startComputeMetrics(json) {
         })
         .then((count) => {
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
+            delete_metrics_file();
             progressBar.start(count, 0);
             return getMetrics(0);
         })
@@ -99,7 +101,7 @@ async function collectDocs(docs) {
 
 function check_value_to_ignore(metrics) {
     let bool = false;
-    let keys = ['fg_degree_centrality', 'num_segs_added']
+    let keys = ['degree_centrality', 'num_segs_added']
 
     if (metrics["status"]) {
         if (metrics["status"].includes("NEW"))
@@ -115,15 +117,18 @@ function check_value_to_ignore(metrics) {
     if (metrics["first_revision_kind"].includes("TRIVIAL_REBASE"))
         return true;
 
-    if(check_self_review(metrics))
-        return true;
+    /*if(check_self_review(metrics))
+        return true;*/
 
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i]
         if (metrics[key] == null || !metrics.hasOwnProperty(key) || !(key in metrics)) {
             bool = true;
+
         }
     }
+    //console.log(bool);
+    //console.log(metrics);
     return bool;
 }
 
@@ -145,6 +150,16 @@ async function saveMetrics(json) {
     return Utils.add_line_to_file(json, filename, path)
 }
 
+function delete_metrics_file(){
+    try {
+        let filename = projectName + "-metrics.csv";
+        let filename_path = PathLibrary.join(DATA_PATH, projectName, filename);
+        fs.unlinkSync(filename_path);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 async function updateProgress() {
     progressBar.increment(1);
     return Promise.resolve(true);
@@ -154,33 +169,29 @@ const NUMBER_OF_DECIMAL = 4
 const DEFAULT_VALUE = 0
 
 function copy(result, json, key, new_name = "", convert_to_hours = false) {
-    let k = key
+    let name = key
     if (new_name !== "") {
-        k = new_name
+        name = new_name
     }
 
     if (json[key] !== null) {
-        result[k] = parseFloat(json[key]);
-        if (convert_to_hours) {
-            result[k] = Moment.duration(result[k]).asHours()
+        if(typeof(json[key]) === "number"){
+            result[name] = parseFloat(json[key]);
+            if (convert_to_hours) {
+                result[name] = Moment.duration(result[name]).asHours()
+            }
+        } else {
+            result[name] = json[key];
         }
-        //result[k] = parseFloat(json[key]).toFixed(NUMBER_OF_DECIMAL);
     } else {
-        //result[k] = DEFAULT_VALUE.toFixed(NUMBER_OF_DECIMAL);
-        result[k] = DEFAULT_VALUE;
+        result[name] = DEFAULT_VALUE;
     }
 
     if (!json.hasOwnProperty(key))
-        result[k] = DEFAULT_VALUE;
-    //result[k] = DEFAULT_VALUE.toFixed(NUMBER_OF_DECIMAL);
+        result[name] = DEFAULT_VALUE;
 
     if (!(key in json))
-        result[k] = DEFAULT_VALUE;
-    //result[k] = DEFAULT_VALUE.toFixed(NUMBER_OF_DECIMAL);
-
-    /*if(json[key] === undefined){
-        result[key] = 0;
-    }*/
+        result[name] = DEFAULT_VALUE;
 
     return result;
 }
@@ -214,12 +225,13 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "author_timezone");
 
     //Collaboration Graph
-    result = copy(result, metric, "fg_degree_centrality", "degree_centrality");
-    result = copy(result, metric, "fg_closeness_centrality", "closeness_centrality");
-    result = copy(result, metric, "fg_betweenness_centrality", "betweenness_centrality");
-    result = copy(result, metric, "fg_eigenvector_centrality", "eigenvector_centrality");
-    result = copy(result, metric, "fg_clustering_coefficient", "clustering_coefficient");
-    result = copy(result, metric, "fg_core_number", "core_number");
+    //todo put fg_
+    result = copy(result, metric, "degree_centrality", "degree_centrality");
+    result = copy(result, metric, "closeness_centrality", "closeness_centrality");
+    result = copy(result, metric, "betweenness_centrality", "betweenness_centrality");
+    result = copy(result, metric, "eigenvector_centrality", "eigenvector_centrality");
+    result = copy(result, metric, "clustering_coefficient", "clustering_coefficient");
+    result = copy(result, metric, "core_number", "core_number");
 
     //code
     result = copy(result, metric, "lines_added_num");
@@ -236,7 +248,7 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "num_segs_modify");
 
     result = copy(result, metric, "first_revision_kind", "type_of_revision");
-    metric["type_of_revision"] = match_review_kind_value(metric["type_of_revision"])
+    result["type_of_revision"] = match_review_kind_value(result["type_of_revision"])
 
     //Text metrics
     result = copy(result, metric, "subject_length");

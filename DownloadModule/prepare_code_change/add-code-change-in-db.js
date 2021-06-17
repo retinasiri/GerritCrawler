@@ -174,16 +174,29 @@ function saveChangeInDB(json) {
 async function addParticipantsInDB(participants) {
     for (let id in participants) {
         account[participants[id]._account_id] = participants[id];
-        if (participants[id].email)
-            humanAccount[participants[id]._account_id] = participants[id];
-        else
+        let name = participants[id].name;
+        if(is_probably_a_bot(name, projectName)){
             botAccount[participants[id]._account_id] = participants[id];
+        } else {
+            humanAccount[participants[id]._account_id] = participants[id];
+        }
         await dbUtils.saveAccount(participants[id])
     }
     return Promise.resolve(true)
         .catch(err => {
             console.log("saveChangeInDB : " + err)
         });
+}
+
+function is_probably_a_bot(name, projectName) {
+    let bool = false;
+    let ptpr = new RegExp(projectName, "gi");
+    let pat1 = /( -)|(bot|builder|test|jenkins|release|pebble|zuul|automation|pootle|build|job)|( -)/gi;
+    let pat2 = /( -)|(CI)|( -)/g;
+    if (pat1.test(name) || pat2.test(name) || ptpr.test(name)) {
+        bool = true;
+    }
+    return bool;
 }
 
 function getParticipants(json) {
