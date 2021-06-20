@@ -377,8 +377,8 @@ async function getChangesTimeInfo(json) {
     let ownerPreviousMessageCount = getOwnerPreviousMessageCount(json);
     let ownerChangesMessagesCountAndAvgPerChanges = getOwnerChangesMessagesCountAndAvgPerChanges(json);
     let changesMessagesCountAndAvg = getChangesMessagesCountAndAvg(json);
-    let nonBotAccountPreviousMessageCount = getPreviousMessageCount(json);
     let priorChangesFiles = getPriorChangesFiles(json);
+    let nonBotAccountPreviousMessageCount = getPreviousMessageCount(json);
     return Promise.all([
         priorChangesDuration, //0
         priorOwnerChangesDuration, //1
@@ -390,8 +390,8 @@ async function getChangesTimeInfo(json) {
         ownerPreviousMessageCount, //7
         ownerChangesMessagesCountAndAvgPerChanges, //8
         changesMessagesCountAndAvg, //9
-        nonBotAccountPreviousMessageCount, //10
-        priorChangesFiles, //11
+        priorChangesFiles, //10
+        nonBotAccountPreviousMessageCount, //11
     ]).then((results) => {
         //console.log(results);
         return {
@@ -448,13 +448,13 @@ async function getChangesTimeInfo(json) {
             changesMessagesMin: results[9].min,
             changesMessagesStd: results[9].std,
 
-            nonBotAccountPreviousMessageSum: results[10].count,
-            nonBotAccountPreviousMessageAvg: results[10].avg,
-            nonBotAccountPreviousMessageMax: results[10].max,
-            nonBotAccountPreviousMessageMin: results[10].min,
-            nonBotAccountPreviousMessageStd: results[10].std,
+            priorChangesFiles: results[10].count,
 
-            priorChangesFiles: results[11].count,
+            nonBotAccountPreviousMessageSum: results[11].count,
+            nonBotAccountPreviousMessageAvg: results[11].avg,
+            nonBotAccountPreviousMessageMax: results[11].max,
+            nonBotAccountPreviousMessageMin: results[11].min,
+            nonBotAccountPreviousMessageStd: results[11].std,
 
         };
     })
@@ -475,6 +475,7 @@ function getProject() {
     }
 }
 
+//check
 function getPriorChangeMeanTimeType(json, TYPE) {
     let created_date = json.created;
     let number = json._number;
@@ -502,6 +503,7 @@ function getPriorChangeMeanTimeType(json, TYPE) {
     return genericDBRequest(pipeline);
 }
 
+//check
 function getPriorOwnerChangesMeanTimeType(json, TYPE) {
     let created_date = json.created;
     let ownerId = json.owner._account_id;
@@ -667,7 +669,8 @@ function getFileTimeAndCount(json, TYPE) {
         $match: {
             status: TYPE,
             _number: {$lt: number},
-            updated: {$lte: created_date}
+            updated: {$lte: created_date},
+            files_list: {$in: files_list}
         }
     };
     if (TYPE == null) delete match.$match.status;
@@ -685,7 +688,8 @@ function getFileTimeAndCountForOwner(json, TYPE) {
             status: TYPE,
             'owner._account_id': ownerId,
             _number: {$lt: number},
-            updated: {$lte: created_date}
+            updated: {$lte: created_date},
+            files_list: {$in: files_list}
         }
     };
     if (TYPE == null) delete match.$match.status;
@@ -748,6 +752,7 @@ function getFileTimeAndCountForReviewers(json, TYPE) {
 //refactoring et config file
 //install server
 
+//check
 function getOwnerNumberOfRevision(json, TYPE) {
     let created_date = json.created;
     let number = json._number;
@@ -776,6 +781,7 @@ function getOwnerNumberOfRevision(json, TYPE) {
     return genericDBRequest(pipeline);
 }
 
+//done
 function getOwnerNumberOfReview(json) {
     let created_date = json.created;
     let number = json._number;
@@ -783,19 +789,21 @@ function getOwnerNumberOfReview(json) {
     let match = {
         $match: {
             _number: {$lt: number},
-            updated: {$lte: created_date}
+            updated: {$lte: created_date},
+            "reviewers._account_id": ownerId
         }
     }
     let pipeline = [
         match,
-        {$unwind: "$reviewers.REVIEWER"},
-        {$project: {id: 1, reviewers: "$reviewers.REVIEWER"}},
-        {$match: {"reviewers._account_id": ownerId}},
+        //{$unwind: "$reviewers.REVIEWER"},
+        //{$project: {id: 1, reviewers: "$reviewers.REVIEWER"}},
+        //{$match: {"reviewers._account_id": ownerId}},
         {$count: "count"}
     ]
     return genericDBRequest(pipeline);
 }
 
+//done
 function getFileDeveloperNumber(json) {
     let created_date = json.created;
     let number = json._number;
@@ -803,7 +811,8 @@ function getFileDeveloperNumber(json) {
     let match = {
         $match: {
             _number: {$lt: number},
-            updated: {$lte: created_date}
+            updated: {$lte: created_date},
+            files_list: {$in: files_list}
         }
     }
     let pipeline = [
@@ -821,6 +830,7 @@ function getFileDeveloperNumber(json) {
     return genericDBRequest(pipeline);
 }
 
+//done
 function getPriorChangesFiles(json) {
     let created_date = json.created;
     let number = json._number;
@@ -828,7 +838,8 @@ function getPriorChangesFiles(json) {
     let match = {
         $match: {
             _number: {$lt: number},
-            updated: {$lte: created_date}
+            updated: {$lte: created_date},
+            files_list: {$in: files_list}
         }
     }
     let pipeline = [
@@ -841,6 +852,7 @@ function getPriorChangesFiles(json) {
     return genericDBRequest(pipeline);
 }
 
+//done
 function getOwnerPreviousMessageCount(json) {
     let created_date = json.created;
     let number = json._number;
@@ -848,7 +860,8 @@ function getOwnerPreviousMessageCount(json) {
     let match = {
         $match: {
             _number: {$lt: number},
-            updated: {$lte: created_date}
+            updated: {$lte: created_date},
+            "messages.author._account_id": owner_id
         }
     }
     let pipeline = [
@@ -860,7 +873,7 @@ function getOwnerPreviousMessageCount(json) {
     return genericDBRequest(pipeline);
 }
 
-
+//bad
 function getPreviousMessageCount(json) {
     let created_date = json.created;
     let number = json._number;
@@ -914,6 +927,7 @@ function getReviewersTotalPreviousMessagesCount(json) {
     return genericDBRequest(pipeline);
 }
 
+//check
 function getOwnerChangesMessagesCountAndAvgPerChanges(json) {
     let created_date = json.created;
     let number = json._number;
@@ -945,7 +959,7 @@ function getOwnerChangesMessagesCountAndAvgPerChanges(json) {
     return genericDBRequest(pipeline);
 }
 
-
+//check
 function getChangesMessagesCountAndAvg(json) {
     let created_date = json.created;
     let number = json._number;
