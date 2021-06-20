@@ -378,7 +378,7 @@ async function getChangesTimeInfo(json) {
     let ownerChangesMessagesCountAndAvgPerChanges = getOwnerChangesMessagesCountAndAvgPerChanges(json);
     let changesMessagesCountAndAvg = getChangesMessagesCountAndAvg(json);
     let priorChangesFiles = getPriorChangesFiles(json);
-    let nonBotAccountPreviousMessageCount = getPreviousMessageCount(json);
+    //let nonBotAccountPreviousMessageCount = getPreviousMessageCount(json);
     return Promise.all([
         priorChangesDuration, //0
         priorOwnerChangesDuration, //1
@@ -391,7 +391,7 @@ async function getChangesTimeInfo(json) {
         ownerChangesMessagesCountAndAvgPerChanges, //8
         changesMessagesCountAndAvg, //9
         priorChangesFiles, //10
-        nonBotAccountPreviousMessageCount, //11
+        //nonBotAccountPreviousMessageCount, //11
     ]).then((results) => {
         //console.log(results);
         return {
@@ -450,11 +450,13 @@ async function getChangesTimeInfo(json) {
 
             priorChangesFiles: results[10].count,
 
+            /*
             nonBotAccountPreviousMessageSum: results[11].count,
             nonBotAccountPreviousMessageAvg: results[11].avg,
             nonBotAccountPreviousMessageMax: results[11].max,
             nonBotAccountPreviousMessageMin: results[11].min,
             nonBotAccountPreviousMessageStd: results[11].std,
+            */
 
         };
     })
