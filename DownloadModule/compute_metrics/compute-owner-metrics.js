@@ -184,7 +184,13 @@ function getPriorTypeChangesCount(json, TYPE) {
     let created_date = json.created;
     let number = json._number;
     let pipeline = [
-        {$match: {status: TYPE, _number: {$lt: number}, updated: {$lte: created_date}}},
+        {
+            $match: {
+                status: TYPE,
+                _number: {$lt: number},
+                updated: {$lte: created_date}
+            }
+        },
         {$count: "count"}
     ];
     return dbRequest(pipeline);
@@ -203,7 +209,12 @@ function getOwnerPriorChangesCount(json) {
     let number = json._number;
     let ownerId = json.owner._account_id;
     let pipeline = [
-        {$match: {'owner._account_id': ownerId, _number: {$lt: number}}},
+        {
+            $match: {
+                'owner._account_id': ownerId,
+                _number: {$lt: number}
+            }
+        },
         {$count: "count"}
     ]
     return dbRequest(pipeline);
@@ -895,7 +906,7 @@ function getPreviousMessageCount(json) {
                 count: {$sum: 1}
             }
         },
-        {$match: {_id: {$nin : botArray}}},
+        {$match: {_id: {$nin: botArray}}},
         {
             $group: {
                 _id: 1,

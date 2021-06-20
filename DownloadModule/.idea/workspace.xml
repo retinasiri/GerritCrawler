@@ -22,6 +22,7 @@
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_metrics/compute-simple-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-simple-metrics.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -170,7 +171,7 @@
       <workItem from="1624108700033" duration="128000" />
       <workItem from="1624131701508" duration="108000" />
       <workItem from="1624140385701" duration="1711000" />
-      <workItem from="1624195970093" duration="3044000" />
+      <workItem from="1624195970093" duration="5793000" />
     </task>
     <task id="LOCAL-00001" summary="quick fix">
       <created>1620486385609</created>

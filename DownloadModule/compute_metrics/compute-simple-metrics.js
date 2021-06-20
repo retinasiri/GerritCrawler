@@ -235,7 +235,6 @@ function collectOwnerMetrics(json, metric) {
     let self_review = is_self_reviewed_note(json);
     metric["labels_code_review_2_owner"] = self_review.check_code_review_2_owner;
     metric["labels_code_review_2_count"] = self_review.check_code_review_2_count;
-
     metric["labels_code_review_minus_2_count"] = self_review.check_code_review_minus_2_owner;
     metric["labels_code_review_minus_2_count"] = self_review.check_code_review_minus_2_count;
 
@@ -244,12 +243,21 @@ function collectOwnerMetrics(json, metric) {
 
     metric["labels_verified_2_owner"] = self_review.check_verified_2_owner;
     metric["labels_verified_2_count"] = self_review.check_verified_2_count;
-
     metric["labels_verified_minus_2_owner"] = self_review.check_verified_minus_2_owner;
     metric["labels_verified_minus_2_count"] = self_review.check_verified_minus_2_count;
 
     metric["labels_verified_human_length"] = self_review.count_verified_human_length;
     metric["labels_verified_length"] = self_review.count_verified_length;
+
+
+    metric["check_code_review_1_owner"] = self_review.check_code_review_1_owner;
+    metric["check_code_review_1_count"] = self_review.check_code_review_1_count;
+    metric["check_code_review_minus_1_owner"] = self_review.check_code_review_minus_1_owner;
+    metric["check_code_review_minus_1_count"] = self_review.check_code_review_minus_1_count;
+    metric["check_verified_1_owner"] = self_review.check_verified_1_owner;
+    metric["check_verified_1_count"] = self_review.check_verified_1_count;
+    metric["check_verified_minus_1_owner"] = self_review.check_verified_minus_1_owner;
+    metric["check_verified_minus_1_count"] = self_review.check_verified_minus_1_count;
 }
 
 function isSelfReviewed(json) {
@@ -293,6 +301,16 @@ function is_self_reviewed_note(json) {
     let count_verified_human_length = count_human_review(json, verified);
     let count_verified_length = verified.length;
 
+    let check_code_review_1_owner = check_review_owner(code_review, owner_id, 1);
+    let check_code_review_1_count = check_review_count(code_review, 1);
+    let check_code_review_minus_1_owner = check_review_owner(code_review, owner_id, -1);
+    let check_code_review_minus_1_count = check_review_count(code_review, -1);
+
+    let check_verified_1_owner = check_review_owner(verified, owner_id, 1);
+    let check_verified_1_count = check_review_count(verified, 1);
+    let check_verified_minus_1_owner = check_review_owner(verified, owner_id, -1);
+    let check_verified_minus_1_count = check_review_count(verified, -1);
+
     return {
         check_code_review_2_owner: check_code_review_2_owner,
         check_code_review_2_count: check_code_review_2_count,
@@ -306,6 +324,15 @@ function is_self_reviewed_note(json) {
         check_verified_minus_2_count: check_verified_minus_2_count,
         count_verified_human_length: count_verified_human_length,
         count_verified_length: count_verified_length,
+
+        check_code_review_1_owner: check_code_review_1_owner,
+        check_code_review_1_count: check_code_review_1_count,
+        check_code_review_minus_1_owner: check_code_review_minus_1_owner,
+        check_code_review_minus_1_count: check_code_review_minus_1_count,
+        check_verified_1_owner: check_verified_1_owner,
+        check_verified_1_count: check_verified_1_count,
+        check_verified_minus_1_owner: check_verified_minus_1_owner,
+        check_verified_minus_1_count: check_verified_minus_1_count,
     }
 
 }
