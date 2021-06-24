@@ -114,11 +114,14 @@ function check_value_to_ignore(metrics) {
     if (metrics["is_self_reviewed"] === 1)
         return true;
 
+    if (metrics["is_a_bot"] === true)
+        return true;
+
     if (metrics["first_revision_kind"].includes("TRIVIAL_REBASE"))
         return true;
 
-    /*if(check_self_review(metrics))
-        return true;*/
+    if(check_self_review(metrics))
+        return true;
 
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i]
@@ -134,17 +137,16 @@ function check_value_to_ignore(metrics) {
 
 function check_self_review(metrics) {
     let bool = false;
-    if (metrics["check_code_review_2_owner"] === 1 && metrics["check_code_review_length"] <= 1) {
+    if (metrics["check_code_review_2_owner"] >= 1 && metrics["check_code_review_length"] <= 1) {
         bool = true;
     }
-    if (metrics["check_code_review_minus_2_owner"] === 1 && metrics["check_code_review_human_length"] <= 1) {
+    if (metrics["check_code_review_minus_2_owner"] >= 1 && metrics["check_code_review_human_length"] <= 1) {
         bool = true;
     }
     return bool;
 }
 
 async function saveMetrics(json) {
-    //todo erase the file content in the begining
     let filename = projectName + "-metrics.csv";
     let path = PathLibrary.join(DATA_PATH, projectName);
     return Utils.add_line_to_file(json, filename, path)
@@ -154,7 +156,8 @@ function delete_metrics_file(){
     try {
         let filename = projectName + "-metrics.csv";
         let filename_path = PathLibrary.join(DATA_PATH, projectName, filename);
-        fs.unlinkSync(filename_path);
+        if(fs.existsSync(filename_path))
+            fs.unlinkSync(filename_path);
     } catch (error) {
         console.log(error);
     }

@@ -69,7 +69,8 @@ def process_changes(skip):
         del changes
         return process_changes(skip + dbutils.NUM_OF_CHANGES_LIMIT)
     else:
-        save_dic_in_file(changes_commit_dic, CHANGES_COMMIT_AND_FETCH_LIST)
+        changes_commit_dic_sorted = sort_changes_commit(changes_commit_dic)
+        save_dic_in_file(changes_commit_dic_sorted, CHANGES_COMMIT_AND_FETCH_LIST)
         save_dic_in_file(refspec, REFSPEC)
         save_set_in_file(sorted(repositories_list), REPO_TO_CLONE_LIST)
         print("\nFinish")
@@ -77,10 +78,15 @@ def process_changes(skip):
     return changes_commit_dic
 
 
+def sort_changes_commit(changes_commit):
+    return{k: v for k, v in sorted(changes_commit.items(), key=lambda item: item["num_files"])}
+
+
 def collect_repo(doc):
     pid = doc["id"]
     changes_commit_dic[pid] = {}
     revisions = doc["revisions"]
+    num_files = len(doc["files_list"])
     prev_number_save = math.inf
     fetch_url = ""
     fetch_refs = ""
@@ -100,6 +106,7 @@ def collect_repo(doc):
     changes_commit_dic[pid]["fetch_url"] = fetch_url
     changes_commit_dic[pid]["fetch_ref"] = fetch_refs
     changes_commit_dic[pid]["commit"] = commit
+    changes_commit_dic[pid]["num_files"] = num_files
     repositories_list.add(changes_commit_dic[pid]["fetch_url"])
     
     if not fetch_url in refspec:

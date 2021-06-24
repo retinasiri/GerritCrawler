@@ -118,6 +118,8 @@ def get_all_account_metrics(metrics_json, id, prefix="", suffix=""):
     results = add(results, eigenvector_centrality, prefix + "eigenvector_centrality" + suffix)
     results = add(results, clustering_coefficient, prefix + "clustering_coefficient" + suffix)
     results = add(results, core_number, prefix + "core_number" + suffix)
+
+    results['number_of_nodes'] = len(degree_centrality)
     
     return results
 
