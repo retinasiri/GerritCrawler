@@ -79,7 +79,7 @@ def process_changes(skip):
 
 
 def sort_changes_commit(changes_commit):
-    return{k: v for k, v in sorted(changes_commit.items(), key=lambda item: item[1]["num_files"])}
+    return{k: v for k, v in sorted(changes_commit.items(), key=lambda item: item[1]["num_files"], reverse=True)}
 
 
 def collect_repo(doc):

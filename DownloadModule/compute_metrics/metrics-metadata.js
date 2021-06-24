@@ -112,21 +112,21 @@ async function updateProgress() {
 async function collectMetadata(json) {
     let metadata = {};
     let messages = json.messages;
-    metadata["owner_id"] = json.owner._account_id;
-    metadata["msg_count"] = Object.keys(messages).length;
-    metadata['messages_per_account'] = {}
+    metadata["meta_owner_id"] = json.owner._account_id;
+    metadata["meta_msg_count"] = Object.keys(messages).length;
+    metadata['meta_messages_per_account'] = {}
     for(let key in messages) {
         let author = messages[key].author._account_id;
-        if(metadata['messages_per_account'][author])
-            metadata['messages_per_account'][author] = metadata['messages_per_account'][author] + 1;
+        if(metadata['meta_messages_per_account'][author])
+            metadata['meta_messages_per_account'][author] = metadata['messages_per_account'][author] + 1;
         else
-            metadata['messages_per_account'][author] = 1;
+            metadata['meta_messages_per_account'][author] = 1;
     }
     let revisions = json.revisions;
-    metadata["revisions_num"] = Object.keys(revisions).length
-    metadata["date_updated_date_created_diff"]= diffCreatedUpdatedTime(json);
-    metadata["reviewers_ids"] = getReviewersId(json);
-    metadata["not_bot_reviewers"] = MetricsUtils.getHumanReviewersID(json, projectName);
+    metadata["meta_revisions_num"] = Object.keys(revisions).length
+    metadata["meta_date_updated_date_created_diff"]= diffCreatedUpdatedTime(json);
+    metadata["meta_reviewers_ids"] = getReviewersId(json);
+    metadata["meta_not_bot_reviewers"] = MetricsUtils.getHumanReviewersID(json, projectName);
 
     return metadata;
 }
