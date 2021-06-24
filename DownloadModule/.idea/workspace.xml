@@ -20,9 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/compute_metrics/metrics-metadata.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compute_metrics/extract-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/extract-metrics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/add_graph_metrics_in_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/add_graph_metrics_in_db.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,7 +175,7 @@
       <workItem from="1624396473195" duration="39000" />
       <workItem from="1624455278715" duration="1385000" />
       <workItem from="1624468662657" duration="237000" />
-      <workItem from="1624546691949" duration="1344000" />
+      <workItem from="1624546691949" duration="3460000" />
     </task>
     <task id="LOCAL-00001" summary="quick fix">
       <created>1620486385609</created>
@@ -281,10 +280,10 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="241" y="17" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1618541985016" />
-    <state x="271" y="225" width="834" height="547" key="find.popup" timestamp="1623144864582">
+    <state x="271" y="225" width="834" height="547" key="find.popup" timestamp="1624551409433">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="271" y="225" width="834" height="547" key="find.popup/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1623144864582" />
-    <state x="271" y="225" width="834" height="547" key="find.popup/0.0.1280.800@0.0.1280.800" timestamp="1619536430963" />
+    <state x="271" y="225" width="834" height="547" key="find.popup/0.0.1280.800@0.0.1280.800" timestamp="1624551409433" />
   </component>
 </project>
