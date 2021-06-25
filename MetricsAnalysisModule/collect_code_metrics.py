@@ -19,7 +19,7 @@ REPOSITORIES_PATH = "/Volumes/SEAGATE-II/Data/Repositories"
 DATA_DIR_PATH = "data/"
 PROJET_NAME = "libreoffice"
 Database = dbutils.Database(dbutils.LIBRE_OFFICE_DB_NAME)
-code_metrics = {}
+#code_metrics = {}
 error_list = []
 
 def start(json):
@@ -62,12 +62,12 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
         '''
         metric = get_code_metrics(json_data[i], repo_root_path)
         if(metric is not None):
-            mid = metric["id"]
-            code_metrics[mid] = metric
+            #mid = metric["id"]
+            #code_metrics[mid] = metric
             Database.save_metrics(metric)
         bar.next()
     #save_metrics_file(code_metrics, data_dir_path)
-    save_json_in_file(code_metrics, data_dir_path, "-code-metrics.json")
+    #save_json_in_file(code_metrics, data_dir_path, "-code-metrics.json")
     save_json_in_file(error_list, data_dir_path, "-code-metrics-error.json")
     bar.finish()
     print("Finished with code metrics !!!!!")
