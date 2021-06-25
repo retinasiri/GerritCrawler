@@ -1,39 +1,30 @@
 const Moment = require('moment');
-const MathJs = require('mathjs');
 const cliProgress = require('cli-progress');
 const Database = require('../config/databaseConfig');
 const Change = require('../models/change');
-const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
-const Extension = require('../res/extension.json');
-const Keywords = require('../res/keywords.json');
 const MetricsUtils = require('./metrics-utils');
 
 const progressBar = new cliProgress.SingleBar({
     barCompleteChar: '#',
     barIncompleteChar: '-',
 }, cliProgress.Presets.shades_classic);
-const PathLibrary = require('path');
 
 let libreOfficeJson = Utils.getProjectParameters("libreoffice");
 let projectDBUrl = libreOfficeJson["projectDBUrl"];
-let projectApiUrl = libreOfficeJson["projectApiUrl"];
 let projectName = libreOfficeJson["projectName"];
 
 let DATA_PATH = "data/"
 let STARTING_POINT = 0;
 let NUM_OF_CHANGES_LIMIT = 35000;
-let NUMBER_DATABASE_REQUEST = 2;
-let metricsJson = {};
-let i = 1;
 
 if (typeof require !== 'undefined' && require.main === module) {
-    startComputeMetrics(libreOfficeJson).catch(err => {
+    startComputeMetadata(libreOfficeJson).catch(err => {
         console.log(err)
     });
 }
 
-function startComputeMetrics(json) {
+function startComputeMetadata(json) {
     if (json["projectDBUrl"])
         projectDBUrl = json["projectDBUrl"];
     if (json["output_directory"])
@@ -145,3 +136,7 @@ function getReviewersId(json) {
     }
     return reviewerArray;
 }
+
+module.exports = {
+    start: startComputeMetadata
+};

@@ -199,12 +199,14 @@ async function collectDocs(docs, Project, MetricsJson, progressBar, collectMetri
 
 function saveMetrics(json, Project, MetricsJson, progressBar) {
     return Metrics.updateOne({id: json.id}, json, {upsert: true}).then(() => {
-        MetricsJson.getMetricsJSON[json.id] = json;
-        let filename = Project.getName + "-" + MetricsJson.getType + "-metrics.csv";
-        return Utils.add_line_to_file(json, filename, Project.getOutputDirectory);
-    }).then(() => {
+        //MetricsJson.getMetricsJSON[json.id] = json;
+        //let filename = Project.getName + "-" + MetricsJson.getType + "-metrics.csv";
+        //return Utils.add_line_to_file(json, filename, Project.getOutputDirectory);
         return updateProgress(progressBar);
-    });
+    })
+    /*.then(() => {
+        return updateProgress(progressBar);
+    });*/
 }
 
 async function updateProgress(progressBar) {

@@ -5,6 +5,7 @@ const DownloadProjects = require('./prepare_code_change/download-project-info');
 const AddChangesInDB = require('./prepare_code_change/add-code-change-in-db');
 const ComputeSimpleMetrics = require('./compute_metrics/compute-simple-metrics');
 const ComputeOwnerMetrics = require('./compute_metrics/compute-owner-metrics');
+const ComputeMetadata = require('./compute_metrics/metrics-metadata');
 const ComputeRecentMetrics = require('./compute_metrics/compute-owner-recent-metrics');
 //const ComputeRecentMetrics = require('./compute_metrics/compute-recent-metrics');
 const ExtractMetrics = require('./compute_metrics/extract-metrics');
@@ -83,6 +84,15 @@ function main() {
             }
         }, function (argv) {
             buildGraph(argv)
+        })
+        .command('metadata [project]', 'Add metadata to code changes.', {
+            project: {
+                description: 'The project from which metadata of codes changes are computed',
+                alias: 'p',
+                type: 'string',
+            }
+        }, function (argv) {
+            computeMetadata(argv)
         })
         .option('start', {
             alias: 's',
@@ -198,6 +208,15 @@ function computeRecentMetrics(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
         return ComputeRecentMetrics.start(projectJson)
+            .catch(err => {
+                console.log(err)
+            });
+}
+
+function computeMetadata(argv) {
+    let projectJson = prepareCommand(argv);
+    if (projectJson)
+        return ComputeMetadata.start(projectJson)
             .catch(err => {
                 console.log(err)
             });
