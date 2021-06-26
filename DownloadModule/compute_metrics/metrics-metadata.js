@@ -116,7 +116,6 @@ async function collectMetadata(json) {
         metadata["meta_messages_count"] = Object.keys(messages).length;
 
     metadata['meta_messages_per_account'] = {}
-    metadata['meta_messages_count'] = 0
     metadata['meta_messages_human_count'] = 0
     metadata['meta_messages_bot_count'] = 0
 
