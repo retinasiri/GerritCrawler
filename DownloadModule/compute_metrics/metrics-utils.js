@@ -168,7 +168,7 @@ function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetric
         .aggregate([
             //{$match: {priorChangesCount : {$exists : false}}},
             //{$sort: {updated: 1, _number: 1}},
-            {$sort: {_number: 1}},
+            {$sort: {_number: -1}},
             {$skip: skip},
             {$limit: step}
         ])
@@ -208,12 +208,10 @@ async function collectDocs(docs, Project, MetricsJson, progressBar, collectMetri
 
 
 function saveMetrics(json, Project, MetricsJson, progressBar) {
-    console.time('saveMetrics')
     return Metrics.updateOne({id: json.id}, json, {upsert: true}).then(() => {
         //MetricsJson.getMetricsJSON[json.id] = json;
         //let filename = Project.getName + "-" + MetricsJson.getType + "-metrics.csv";
         //return Utils.add_line_to_file(json, filename, Project.getOutputDirectory);
-        console.timeEnd('saveMetrics')
         return updateProgress(progressBar);
     })
     /*.then(() => {
