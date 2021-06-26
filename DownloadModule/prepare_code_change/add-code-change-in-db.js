@@ -273,6 +273,7 @@ function get_files_list(json) {
             //Get only the first revision
             let revision_number = revisions[key]._number;
             if (revision_number !== 1) {
+                //some revision > 2 have too many files to be store in the DB for QT
                 delete revisions[key].files
                 continue;
             }

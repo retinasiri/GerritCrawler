@@ -228,7 +228,9 @@ function collectFileMetrics(json, metric) {
  * @param {JSON} metric Output Json
  */
 function collectOwnerMetrics(json, metric) {
-    metric["is_a_bot"] = MetricsUtils.isABot(json.owner, projectName);
+    if (json.owner)
+        metric["is_a_bot"] = MetricsUtils.isABot(json.owner._account_id, projectName);
+
     metric["num_human_reviewer"] = MetricsUtils.getHumanReviewersCount(json, projectName);
     metric["is_self_reviewed"] = isSelfReviewed(json);
 

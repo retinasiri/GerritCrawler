@@ -102,33 +102,46 @@ async function updateProgress() {
 
 async function collectMetadata(json) {
     let metadata = {};
+    metadata["id"] = json.id;
+
     let messages = json.messages;
-    metadata["meta_owner_id"] = json.owner._account_id;
-    metadata["meta_msg_count"] = Object.keys(messages).length;
+
+    if (json.owner){
+        let ownerId = json.owner._account_id;
+        metadata["meta_owner_id"] = ownerId;
+        metadata["meta_is_a_bot"] = MetricsUtils.isABot(ownerId, projectName);
+    }
+
+    if (messages)
+        metadata["meta_msg_count"] = Object.keys(messages).length;
+
     metadata['meta_messages_per_account'] = {}
 
-    if(!metadata['meta_messages_per_account'])
-        metadata['meta_messages_per_account'] = {}
+    for (let key in messages) {
+        if (!messages[key].author)
+            continue;
 
-    for(let key in messages) {
         let author = messages[key].author._account_id;
 
-        if(!metadata['meta_messages_per_account'][author])
+        if (!metadata['meta_messages_per_account'][author])
             metadata['meta_messages_per_account'][author] = 1;
         else
-            metadata['meta_messages_per_account'][author] = metadata['messages_per_account'][author] + 1;
+            metadata['meta_messages_per_account'][author] = metadata['meta_messages_per_account'][author] + 1;
 
     }
     let revisions = json.revisions;
-    metadata["meta_revisions_num"] = Object.keys(revisions).length
-    metadata["meta_date_updated_date_created_diff"]= diffCreatedUpdatedTime(json);
-    metadata["meta_reviewers_ids"] = getReviewersId(json);
-    metadata["meta_not_bot_reviewers"] = MetricsUtils.getHumanReviewersID(json, projectName);
-    metadata["meta_is_a_bot"] = MetricsUtils.isABot(json.owner, projectName);
-    metadata["meta_first_revision"] = MetricsUtils.get_first_revision(json)
-    metadata["meta_first_revision_kind"] = MetricsUtils.get_first_revision_kind(json)
-    metadata["meta_is_trivial_rebase"] = MetricsUtils.is_trivial_rebase(json);
+    if( revisions){
+        metadata["meta_revisions_num"] = Object.keys(revisions).length
+        metadata["meta_first_revision"] = MetricsUtils.get_first_revision_number(json)
+        metadata["meta_first_revision_kind"] = MetricsUtils.get_first_revision_kind(json)
+        metadata["meta_is_trivial_rebase"] = MetricsUtils.is_trivial_rebase(json);
+    }
 
+    metadata["meta_date_updated_date_created_diff"] = diffCreatedUpdatedTime(json);
+    if(json.reviewers){
+        metadata["meta_reviewers_ids"] = getReviewersId(json);
+        metadata["meta_not_bot_reviewers"] = MetricsUtils.getHumanReviewersID(json, projectName);
+    }
     return metadata;
 }
 
@@ -139,6 +152,7 @@ function diffCreatedUpdatedTime(json) {
 }
 
 function getReviewersId(json) {
+
     let reviewers = json.reviewers.REVIEWER
     let reviewerArray = []
     for (let id in reviewers) {

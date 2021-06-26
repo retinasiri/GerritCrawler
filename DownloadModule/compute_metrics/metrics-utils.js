@@ -29,9 +29,11 @@ function getHumanReviewersID(json, projectName) {
     let reviewersIDArray = [];
     for (let id in reviewers) {
         let reviewerId = reviewers[id]._account_id;
+        //console.log(reviewerId)
         if (!isABot(reviewerId, projectName))
             reviewersIDArray.push(reviewers[id]._account_id)
     }
+    //console.log(reviewersIDArray)
     return reviewersIDArray;
 }
 
@@ -51,11 +53,15 @@ function getHumanReviewersCount(json, projectName) {
 function isABot(accountId, projectName) {
     let bot = false;
     let BotAccounts = AllBotAccountJson[projectName]
-    for (let key in BotAccounts) {
+    if(BotAccounts[accountId])
+        bot = true;
+    /*for (let key in BotAccounts) {
         let botId = BotAccounts[key]._account_id;
         if (botId === accountId)
             bot = true;
-    }
+    }*/
+    /*if(bot === true)
+        console.log(accountId)*/
     return bot;
 }
 
@@ -89,6 +95,7 @@ function loadAllBotAccounts() {
     //let project = Config.project;
     let allBotAccountJson = {};
     let bot = require('../res/bot-account.json');
+
     Object.keys(bot).forEach(function (key) {
         //allBotAccountJson[key] = getBotAccount(key);
         allBotAccountJson[key] = bot[key]["bot_account"];
@@ -257,10 +264,7 @@ function get_first_revision_kind(json) {
 
 function is_trivial_rebase(json){
     let kind = get_first_revision_kind(json);
-    if(kind.includes("TRIVIAL_REBASE"))
-        return true;
-    else
-        return false;
+    return kind.includes("TRIVIAL_REBASE");
 }
 
 module.exports = {
