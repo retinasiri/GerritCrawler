@@ -22,7 +22,7 @@ function startComputeMetrics(projectJson) {
         end = projectJson["end"];
     return MetricsUtils.startComputeMetrics(projectName, start, end, "owner", function (json) {
         return collectMetrics(json)
-    });
+    })
 }
 
 async function collectMetrics(json) {
@@ -37,68 +37,131 @@ async function collectMetrics(json) {
                 metric[key] = values[key];
             }
         })
-        let changesTimeInfo = getChangesTimeInfo(json, values.priorMergedChangesCount, values.priorAbandonedChangesCount)
-        let task = Promise.resolve(metric);
-        return Promise.all([changesTimeInfo, task]);
-        //return Promise.resolve(metric);
-    }).then((results) => {
-        let values = results[0];
-        let metric = results[1];
-        Object.keys(values).forEach(function (key) {
-            if (values[key] === null || values[key] === undefined) {
-                metric[key] = 0;
-            } else {
-                metric[key] = values[key];
-            }
-        })
         return Promise.resolve(metric);
-    });
+    })
 }
 
-//count prior code changes
-//count prior merged changes
-//count prior abandoned changes
-
-//count owner prior code changes
-//count owner prior merged changes
-//count owner prior abandoned changes
-
-//count subsystem prior code changes
-//count subsystem prior merged changes
-//count subsystem prior abandoned changes
-
-//count owner subsystem prior code changes
-//count owner subsystem prior merged changes
-//count owner subsystem prior abandoned changes
-
-//count merge ratio
-//count abandoned ratio
-
-//count prior Subsystem percentage
-
-//count total change
-//count owner merged
-//count owner all change
-//count owner merge ratio
-//count percentage of merged
-//count owner percentage of merge
-
 async function getChangesInfo(json) {
+    /*
+    console.time('getPriorChangesCount')
+    let priorChangesCount = await getPriorChangesCount(json);
+    console.timeEnd('getPriorChangesCount')
+
+    console.time('getPriorTypeChangesCount')
+    let priorMergedChangesCount = await getPriorTypeChangesCount(json, "MERGED");
+    console.timeEnd('getPriorTypeChangesCount')
+
+    console.time('getPriorTypeChangesCount')
+    let priorAbandonedChangesCount = await getPriorTypeChangesCount(json, "ABANDONED");
+    console.timeEnd('getPriorTypeChangesCount')
+
+    console.time('getOwnerPriorChangesCount')
+    let ownerPriorChangesCount = await getOwnerPriorChangesCount(json);
+    console.timeEnd('getOwnerPriorChangesCount')
+
+    console.time('getOwnerPriorTypeChangesCount')
+    let ownerPriorMergedChangesCount = await getOwnerPriorTypeChangesCount(json, "MERGED");
+    console.timeEnd('getOwnerPriorTypeChangesCount')
+
+    console.time('getOwnerPriorTypeChangesCount')
+    let ownerPriorAbandonedChangesCount = await getOwnerPriorTypeChangesCount(json, "ABANDONED");
+    console.timeEnd('getOwnerPriorTypeChangesCount')
+
+    console.time('getPriorSubsystemChangesCount')
+    let priorSubsystemChangesCount = await getPriorSubsystemChangesCount(json);
+    console.timeEnd('getPriorSubsystemChangesCount')
+
+    console.time('getPriorSubsystemTypeChangesCount')
+    let priorSubsystemMergedChangesCount = await getPriorSubsystemTypeChangesCount(json, "MERGED");
+    console.timeEnd('getPriorSubsystemTypeChangesCount')
+
+    console.time('getPriorSubsystemTypeChangesCount')
+    let priorSubsystemAbandonedChangesCount = await getPriorSubsystemTypeChangesCount(json, "ABANDONED");
+    console.timeEnd('getPriorSubsystemTypeChangesCount')
+
+    console.time('getPriorSubsystemOwnerChangesCount')
+    let priorSubsystemOwnerChangesCount = await getPriorSubsystemOwnerChangesCount(json);
+    console.timeEnd('getPriorSubsystemOwnerChangesCount')
+
+    console.time('getPriorSubsystemOwnerTypeChangesCount')
+    let priorSubsystemOwnerMergedChangesCount = await getPriorSubsystemOwnerTypeChangesCount(json, "MERGED");
+    console.timeEnd('getPriorSubsystemOwnerTypeChangesCount')
+
+    console.time('getPriorSubsystemOwnerTypeChangesCount')
+    let priorSubsystemOwnerAbandonedChangesCount = await getPriorSubsystemOwnerTypeChangesCount(json, "ABANDONED");
+    console.timeEnd('getPriorSubsystemOwnerTypeChangesCount')
+
+    //getChangesTimeInfo
+    console.time('getPriorChangeMeanTimeType')
+    let priorChangesDuration = await getPriorChangeMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
+    console.timeEnd('getPriorChangeMeanTimeType')
+
+    console.time('getPriorOwnerChangesMeanTimeType')
+    let priorOwnerChangesDuration = await getPriorOwnerChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
+    console.timeEnd('getPriorOwnerChangesMeanTimeType')
+
+    console.time('getFileTimeAndCount')
+    let fileTimeAndCount = await getFileTimeAndCount(json, {$in: ['MERGED', 'ABANDONED']});
+    console.timeEnd('getFileTimeAndCount')
+
+    console.time('getFileTimeAndCountForOwner')
+    let fileTimeAndCountForOwner = await getFileTimeAndCountForOwner(json, {$in: ['MERGED', 'ABANDONED']});
+    console.timeEnd('getFileTimeAndCountForOwner')
+
+    console.time('getOwnerNumberOfRevision')
+    let ownerNumberOfRevision = await getOwnerNumberOfRevision(json, {$in: ['MERGED', 'ABANDONED']});
+    console.timeEnd('getOwnerNumberOfRevision')
+
+    console.time('getOwnerNumberOfReview')
+    let ownerNumberOfReview = await getOwnerNumberOfReview(json);
+    console.timeEnd('getOwnerNumberOfReview')
+
+    console.time('getFileDeveloperNumber')
+    let fileDeveloperNumber = await getFileDeveloperNumber(json);
+    console.timeEnd('getFileDeveloperNumber')
+
+    console.time('getOwnerPreviousMessageCount')
+    let ownerPreviousMessageCount = await getOwnerPreviousMessageCount(json);
+    console.timeEnd('getOwnerPreviousMessageCount')
+
+    console.time('getOwnerChangesMessagesCountAndAvgPerChanges')
+    let ownerChangesMessagesCountAndAvgPerChanges = await getOwnerChangesMessagesCountAndAvgPerChanges(json);
+    console.timeEnd('getOwnerChangesMessagesCountAndAvgPerChanges')
+
+    console.time('getChangesMessagesCountAndAvg')
+    let changesMessagesCountAndAvg = await getChangesMessagesCountAndAvg(json);
+    console.timeEnd('getChangesMessagesCountAndAvg')
+
+    console.time('getPriorChangesFiles')
+    let priorChangesFiles = await getPriorChangesFiles(json);
+    console.timeEnd('getPriorChangesFiles')
+    */
+
     let priorChangesCount = getPriorChangesCount(json);
-    let priorMergedChangesCount = getPriorTypeChangesCount(json, "MERGED");
-    let priorAbandonedChangesCount = getPriorTypeChangesCount(json, "ABANDONED");
+    let priorMergedChangesCount =  getPriorTypeChangesCount(json, "MERGED");
+    let priorAbandonedChangesCount =  getPriorTypeChangesCount(json, "ABANDONED");
+    let ownerPriorChangesCount =  getOwnerPriorChangesCount(json);
+    let ownerPriorMergedChangesCount =  getOwnerPriorTypeChangesCount(json, "MERGED");
+    let ownerPriorAbandonedChangesCount =  getOwnerPriorTypeChangesCount(json, "ABANDONED");
+    let priorSubsystemChangesCount =  getPriorSubsystemChangesCount(json);
+    let priorSubsystemMergedChangesCount =  getPriorSubsystemTypeChangesCount(json, "MERGED");
+    let priorSubsystemAbandonedChangesCount =  getPriorSubsystemTypeChangesCount(json, "ABANDONED");
+    let priorSubsystemOwnerChangesCount =  getPriorSubsystemOwnerChangesCount(json);
+    let priorSubsystemOwnerMergedChangesCount =  getPriorSubsystemOwnerTypeChangesCount(json, "MERGED");
+    let priorSubsystemOwnerAbandonedChangesCount =  getPriorSubsystemOwnerTypeChangesCount(json, "ABANDONED");
 
-    let ownerPriorChangesCount = getOwnerPriorChangesCount(json);
-    let ownerPriorMergedChangesCount = getOwnerPriorTypeChangesCount(json, "MERGED");
-    let ownerPriorAbandonedChangesCount = getOwnerPriorTypeChangesCount(json, "ABANDONED");
-
-    let priorSubsystemChangesCount = getPriorSubsystemChangesCount(json);
-    let priorSubsystemMergedChangesCount = getPriorSubsystemTypeChangesCount(json, "MERGED");
-    let priorSubsystemAbandonedChangesCount = getPriorSubsystemTypeChangesCount(json, "ABANDONED");
-
-    let priorSubsystemOwnerChangesCount = getPriorSubsystemOwnerChangesCount(json);
-    let priorSubsystemOwnerMergedChangesCount = getPriorSubsystemOwnerTypeChangesCount(json, "MERGED");
-    let priorSubsystemOwnerAbandonedChangesCount = getPriorSubsystemOwnerTypeChangesCount(json, "ABANDONED");
+    //getChangesTimeInfo
+    let priorChangesDuration =  getPriorChangeMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
+    let priorOwnerChangesDuration =  getPriorOwnerChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
+    let fileTimeAndCount =  getFileTimeAndCount(json, {$in: ['MERGED', 'ABANDONED']});
+    let fileTimeAndCountForOwner =  getFileTimeAndCountForOwner(json, {$in: ['MERGED', 'ABANDONED']});
+    let ownerNumberOfRevision =  getOwnerNumberOfRevision(json, {$in: ['MERGED', 'ABANDONED']});
+    let ownerNumberOfReview =  getOwnerNumberOfReview(json);
+    let fileDeveloperNumber =  getFileDeveloperNumber(json);
+    let ownerPreviousMessageCount =  getOwnerPreviousMessageCount(json);
+    let ownerChangesMessagesCountAndAvgPerChanges =  getOwnerChangesMessagesCountAndAvgPerChanges(json);
+    let changesMessagesCountAndAvg =  getChangesMessagesCountAndAvg(json);
+    let priorChangesFiles =  getPriorChangesFiles(json);
 
     return Promise.all([
         priorChangesCount, //0
@@ -112,7 +175,21 @@ async function getChangesInfo(json) {
         priorSubsystemAbandonedChangesCount, //8
         priorSubsystemOwnerChangesCount, //9
         priorSubsystemOwnerMergedChangesCount, //10
-        priorSubsystemOwnerAbandonedChangesCount //11
+        priorSubsystemOwnerAbandonedChangesCount, //11
+
+        priorChangesDuration, //12
+        priorOwnerChangesDuration, //13
+        fileTimeAndCount, //14
+        fileTimeAndCountForOwner, //15
+        ownerNumberOfRevision, //16
+        ownerNumberOfReview, //17
+        fileDeveloperNumber, //18
+        ownerPreviousMessageCount, //19
+        ownerChangesMessagesCountAndAvgPerChanges, //20
+        changesMessagesCountAndAvg, //21
+        priorChangesFiles, //22
+        //nonBotAccountPreviousMessageCount, //23
+
     ]).then((results) => {
         //console.log(results);
         return {
@@ -153,6 +230,70 @@ async function getChangesInfo(json) {
             priorOwnerPercentageOfMergedInSubsystem: safeDivision(results[10], results[7]),
             priorOwnerPercentageOfAbandonedInSubsystem: safeDivision(results[11], results[8]),
 
+            //getChangesTimeInfo
+
+            priorChangeDurationMean: results[12].avg,
+            priorChangeDurationMax: results[12].max,
+            priorChangeDurationMin: results[12].min,
+            priorChangeDurationStd: results[12].std,
+
+            priorOwnerChangesDurationMean: results[13].avg,
+            priorOwnerChangesDurationMax: results[13].max,
+            priorOwnerChangesDurationMin: results[13].min,
+            priorOwnerChangesDurationStd: results[13].std,
+
+            fileCountAvg: results[14].count_avg,
+            fileCountMax: results[14].count_max,
+            fileCountMin: results[14].count_min,
+            fileCountStd: results[14].count_std,
+            fileTimeAvg: results[14].time_avg,
+            fileTimeMax: results[14].time_max,
+            fileTimeMin: results[14].time_min,
+            fileTimeStd: results[14].time_std,
+
+            ownerFileCountAvg: results[15].count_avg,
+            ownerFileCountMax: results[15].count_max,
+            ownerFileCountMin: results[15].count_min,
+            ownerFileCountStd: results[15].count_std,
+            ownerFileTimeAvg: results[15].time_avg,
+            ownerFileTimeMax: results[15].time_max,
+            ownerFileTimeMin: results[15].time_min,
+            ownerFileTimeStd: results[15].time_std,
+
+            ownerNumberOfRevisionAvg: results[16].revision_avg,
+            ownerNumberOfRevisionMax: results[16].revision_max,
+            ownerNumberOfRevisionMin: results[16].revision_min,
+            ownerNumberOfRevisionStd: results[16].revision_std,
+
+            ownerNumberOfReview: results[17].count,
+
+            //rename fileDeveloperNumber: results[18].count,
+            AvgNumberOfDeveloperWhoModifiedFiles: results[18].count,
+
+            ownerPreviousMessageCount: results[19].count,
+
+            ownerChangesMessagesSum: results[20].count,
+            ownerChangesMessagesAvgPerChanges: results[20].avg,
+            ownerChangesMessagesMaxPerChanges: results[20].max,
+            ownerChangesMessagesMinPerChanges: results[20].min,
+            ownerChangesMessagesStdPerChanges: results[20].std,
+
+            changesMessagesSum: results[21].count,
+            changesMessagesAvg: results[21].avg,
+            changesMessagesMax: results[21].max,
+            changesMessagesMin: results[21].min,
+            changesMessagesStd: results[21].std,
+
+            priorChangesFiles: results[22].count,
+
+            /*
+            nonBotAccountPreviousMessageSum: results[23].count,
+            nonBotAccountPreviousMessageAvg: results[23].avg,
+            nonBotAccountPreviousMessageMax: results[23].max,
+            nonBotAccountPreviousMessageMin: results[23].min,
+            nonBotAccountPreviousMessageStd: results[23].std,
+            */
+
         };
     })
 }
@@ -184,7 +325,13 @@ function getPriorTypeChangesCount(json, TYPE) {
     let created_date = json.created;
     let number = json._number;
     let pipeline = [
-        {$match: {status: TYPE, _number: {$lt: number}, updated: {$lte: created_date}}},
+        {
+            $match: {
+                status: TYPE,
+                _number: {$lt: number},
+                updated: {$lte: created_date}
+            }
+        },
         {$count: "count"}
     ];
     return dbRequest(pipeline);
@@ -203,7 +350,12 @@ function getOwnerPriorChangesCount(json) {
     let number = json._number;
     let ownerId = json.owner._account_id;
     let pipeline = [
-        {$match: {'owner._account_id': ownerId, _number: {$lt: number}}},
+        {
+            $match: {
+                'owner._account_id': ownerId,
+                _number: {$lt: number}
+            }
+        },
         {$count: "count"}
     ]
     return dbRequest(pipeline);
@@ -216,6 +368,38 @@ function getOwnerPriorTypeChangesCount(json, TYPE) {
     let pipeline = [{
         $match: {
             'owner._account_id': ownerId,
+            status: TYPE,
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    },
+        {$count: "count"}
+    ]
+    return dbRequest(pipeline);
+}
+
+function getPriorBranchChangesCount(json) {
+    let number = json._number;
+    let branch = json.branch;
+    let pipeline = [{
+        $match: {
+            branch: branch,
+            _number: {$lt: number},
+        }
+    },
+        {$count: "count"}
+    ]
+
+    return dbRequest(pipeline);
+}
+
+function getPriorBranchTypeChangesCount(json, TYPE) {
+    let created_date = json.created;
+    let number = json._number;
+    let branch = json.branch;
+    let pipeline = [{
+        $match: {
+            branch: branch,
             status: TYPE,
             _number: {$lt: number},
             updated: {$lte: created_date}
@@ -334,203 +518,6 @@ function genericDBRequest(pipeline) {
         });
 }
 
-async function getChangesTimeInfo(json, mergedCount, abandonedCount) {
-    let priorChangeMeanTimeMerged = getPriorChangeMeanTimeType(json, "MERGED");
-    let priorChangeMeanTimeAbandoned = getPriorChangeMeanTimeType(json, "ABANDONED");
-
-    let priorOwnerChangesMeanTimeMerged = getPriorOwnerChangesMeanTimeType(json, "MERGED");
-    let priorOwnerChangesMeanTimeAbandoned = getPriorOwnerChangesMeanTimeType(json, "ABANDONED");
-
-    let reviewersChangesMeanNumMerged = getReviewersChangesMeanNumType(json, "MERGED", mergedCount);
-    let reviewersChangesMeanNumAbandoned = getReviewersChangesMeanNumType(json, "ABANDONED", abandonedCount);
-
-    let fileTimeAndCountMerged = getFileTimeAndCount(json, "MERGED");
-    let fileTimeAndCountAbandoned = getFileTimeAndCount(json, "ABANDONED");
-
-    let fileTimeAndCountForOwnerMerged = getFileTimeAndCountForOwner(json, "MERGED");
-    let fileTimeAndCountForOwnerAbandoned = getFileTimeAndCountForOwner(json, "ABANDONED");
-
-    let fileTimeAndCountForReviewersMerged = getFileTimeAndCountForReviewers(json, "MERGED");
-    let fileTimeAndCountForReviewersAbandoned = getFileTimeAndCountForReviewers(json, "ABANDONED");
-
-    let ownerNumberOfRevisionMerged = getOwnerNumberOfRevision(json, "MERGED");
-    let ownerNumberOfRevisionAbandoned = getOwnerNumberOfRevision(json, "ABANDONED");
-
-    let ownerNumberOfReview = getOwnerNumberOfReview(json, "ABANDONED");
-
-    let fileDeveloperNumber = getFileDeveloperNumber(json, "ABANDONED");
-
-    let ownerPreviousMessageCount = getOwnerPreviousMessageCount(json);
-    let reviewersTotalPreviousMessagesCount = getReviewersTotalPreviousMessagesCount(json);
-
-    let ownerChangesMessagesCountAndAvgPerChanges = getOwnerChangesMessagesCountAndAvgPerChanges(json);
-
-    let ownerAndReviewerCommonsChangesAndMessages = getOwnerAndReviewerCommonsChangesAndMessages(json);
-    let ownerChangesCountAndMessagesCountWithSameReviewers = getOwnerChangesCountAndMessagesCountWithSameReviewers(json);
-
-    return Promise.all([
-        priorChangeMeanTimeMerged, //0
-        priorChangeMeanTimeAbandoned, //1
-
-        priorOwnerChangesMeanTimeMerged, //2
-        priorOwnerChangesMeanTimeAbandoned, //3
-
-        reviewersChangesMeanNumMerged, //4
-        reviewersChangesMeanNumAbandoned, //5
-
-        fileTimeAndCountMerged, //6
-        fileTimeAndCountAbandoned, //7
-
-        fileTimeAndCountForOwnerMerged, //8
-        fileTimeAndCountForOwnerAbandoned, //9
-
-        fileTimeAndCountForReviewersMerged, //10
-        fileTimeAndCountForReviewersAbandoned, //11
-
-        ownerNumberOfRevisionMerged, //12
-        ownerNumberOfRevisionAbandoned, //13
-
-        ownerNumberOfReview, //14
-
-        fileDeveloperNumber, //15
-
-        ownerPreviousMessageCount, //16
-        reviewersTotalPreviousMessagesCount, //17
-
-        ownerChangesMessagesCountAndAvgPerChanges, //18
-
-        ownerAndReviewerCommonsChangesAndMessages, //19
-        ownerChangesCountAndMessagesCountWithSameReviewers, //20
-
-    ]).then((results) => {
-        //console.log(results);
-        return {
-
-            ownerNumberOfReview: results[14].count,
-            //rename fileDeveloperNumber: results[15].count,
-            AvgNumberOfDeveloperWhoChangesFileInChanges: results[15].count,
-            ownerPreviousMessageCount: results[16].count,
-            reviewersTotalPreviousMessagesCount: results[17].count,
-
-            priorMergedChangeMeanTime: results[0].avg,
-            priorMergedChangeMaxTime: results[0].max,
-            priorMergedChangeMinTime: results[0].min,
-            priorMergedChangeStdTime: results[0].std,
-            priorAbandonedChangeMeanTime: results[1].avg,
-            priorAbandonedChangeMaxTime: results[1].max,
-            priorAbandonedChangeMinTime: results[1].min,
-            priorAbandonedChangeStdTime: results[1].std,
-
-            priorOwnerMergedChangesMeanTime: results[2].avg,
-            priorOwnerMergedChangesMaxTime: results[2].max,
-            priorOwnerMergedChangesMinTime: results[2].min,
-            priorOwnerMergedChangesStdTime: results[2].std,
-            priorOwnerAbandonedChangesMeanTime: results[3].avg,
-            priorOwnerAbandonedChangesMaxTime: results[3].max,
-            priorOwnerAbandonedChangesMinTime: results[3].avg,
-            priorOwnerAbandonedChangesStdTime: results[3].std,
-
-            reviewersMergedChangesCountAvg: results[4].count_avg,
-            reviewersMergedChangesCountMax: results[4].count_max,
-            reviewersMergedChangesCountMin: results[4].count_min,
-            reviewersMergedChangesCountStd: results[4].count_std,
-            reviewersMergedChangesTimeAvg: results[4].time_avg,
-            reviewersMergedChangesTimeMax: results[4].time_max,
-            reviewersMergedChangesTimeMin: results[4].time_min,
-            reviewersMergedChangesTimeStd: results[4].time_std,
-            reviewersMergedChangesPercentageAvg: results[4].percentage_avg,
-            reviewersMergedChangesRatioAvg: results[4].ratio_avg,
-            reviewersAbandonedChangesCountAvg: results[5].count_avg,
-            reviewersAbandonedChangesCountMax: results[5].count_max,
-            reviewersAbandonedChangesCountMin: results[5].count_min,
-            reviewersAbandonedChangesCountStd: results[5].count_std,
-            reviewersAbandonedChangesTimeAvg: results[5].time_avg,
-            reviewersAbandonedChangesTimeMax: results[5].time_max,
-            reviewersAbandonedChangesTimeMin: results[5].time_min,
-            reviewersAbandonedChangesTimeStd: results[5].time_std,
-            reviewersAbandonedChangesPercentageAvg: results[5].percentage_avg,
-            reviewersAbandonedChangesRatioAvg: results[5].ratio_avg,
-
-            mergedFileCountAvg: results[6].count_avg,
-            mergedFileCountMax: results[6].count_max,
-            mergedFileCountMin: results[6].count_min,
-            mergedFileCountStd: results[6].count_std,
-            mergedFileTimeAvg: results[6].time_avg,
-            mergedFileTimeMax: results[6].time_max,
-            mergedFileTimeMin: results[6].time_min,
-            mergedFileTimeStd: results[6].time_std,
-            abandonedFileCountAvg: results[7].count_avg,
-            abandonedFileCountMax: results[7].count_max,
-            abandonedFileCountMin: results[7].count_min,
-            abandonedFileCountStd: results[7].count_std,
-            abandonedFileTimeAvg: results[7].time_avg,
-            abandonedFileTimeMax: results[7].time_max,
-            abandonedFileTimeMin: results[7].time_min,
-            abandonedFileTimeStd: results[7].time_std,
-
-            ownerMergedFileCountAvg: results[8].count_avg,
-            ownerMergedFileCountMax: results[8].count_max,
-            ownerMergedFileCountMin: results[8].count_min,
-            ownerMergedFileCountStd: results[8].count_std,
-            ownerMergedFileTimeAvg: results[8].time_avg,
-            ownerMergedFileTimeMax: results[8].time_max,
-            ownerMergedFileTimeMin: results[8].time_min,
-            ownerMergedFileTimeStd: results[8].time_std,
-            ownerAbandonedFileCountAvg: results[9].count_avg,
-            ownerAbandonedFileCountMax: results[9].count_max,
-            ownerAbandonedFileCountMin: results[9].count_min,
-            ownerAbandonedFileCountStd: results[9].count_std,
-            ownerAbandonedFileTimeAvg: results[9].time_avg,
-            ownerAbandonedFileTimeMax: results[9].time_max,
-            ownerAbandonedFileTimeMin: results[9].time_min,
-            ownerAbandonedFileTimeStd: results[9].time_std,
-
-            reviewersMergedFileCountAvg: results[10].count_avg,
-            reviewersMergedFileTimeAvg: results[10].time_avg,
-            reviewersAbandonedFileCountAvg: results[11].count_avg,
-            reviewersAbandonedFileTimeAvg: results[11].time_avg,
-
-            ownerNumberOfRevisionMergedAvg: results[12].revision_avg,
-            ownerNumberOfRevisionMergedMax: results[12].revision_max,
-            ownerNumberOfRevisionMergedMin: results[12].revision_min,
-            ownerNumberOfRevisionMergedStd: results[12].revision_std,
-            ownerNumberOfRevisionAbandonedAvg: results[13].revision_avg,
-            ownerNumberOfRevisionAbandonedMax: results[13].revision_max,
-            ownerNumberOfRevisionAbandonedMin: results[13].revision_min,
-            ownerNumberOfRevisionAbandonedStd: results[13].revision_std,
-
-            ownerChangesMessagesSum: results[18].count,
-            ownerChangesMessagesAvgPerChanges: results[18].avg,
-            ownerChangesMessagesMaxPerChanges: results[18].max,
-            ownerChangesMessagesMinPerChanges: results[18].min,
-            ownerChangesMessagesStdPerChanges: results[18].std,
-
-            ownerAndReviewerCommonsChangesSum: results[19].changes_count_sum,
-            ownerAndReviewerCommonsChangesAvg: results[19].changes_count_avg,
-            ownerAndReviewerCommonsChangesMax: results[19].changes_count_max,
-            ownerAndReviewerCommonsChangesMin: results[19].changes_count_min,
-            ownerAndReviewerCommonsChangesStd: results[19].changes_count_std,
-            ownerAndReviewerCommonsChangesMessagesSum: results[19].messages_count_sum,
-            ownerAndReviewerCommonsChangesMessagesAvg: results[19].messages_count_avg,
-            ownerAndReviewerCommonsChangesMessagesMax: results[19].messages_count_max,
-            ownerAndReviewerCommonsChangesMessagesMin: results[19].messages_count_min,
-            ownerAndReviewerCommonsChangesMessagesStd: results[19].messages_count_std,
-
-            ownerChangesWithSameReviewersSum: results[20].changes_count_sum,
-            ownerChangesWithSameReviewersAvg: results[20].changes_count_avg,
-            ownerChangesWithSameReviewersMax: results[20].changes_count_max,
-            ownerChangesWithSameReviewersMin: results[20].changes_count_min,
-            ownerChangesWithSameReviewersStd: results[20].changes_count_std,
-            ownerChangesMessagesWithSameReviewersSum: results[20].messages_count_sum,
-            ownerChangesMessagesWithSameReviewersAvg: results[20].messages_count_avg,
-            ownerChangesMessagesWithSameReviewersMax: results[20].messages_count_max,
-            ownerChangesMessagesWithSameReviewersMin: results[20].messages_count_min,
-            ownerChangesMessagesWithSameReviewersStd: results[20].messages_count_std,
-
-        };
-    })
-}
-
 function getProject() {
     return {
         $project: {
@@ -545,6 +532,7 @@ function getProject() {
     }
 }
 
+//check
 function getPriorChangeMeanTimeType(json, TYPE) {
     let created_date = json.created;
     let number = json._number;
@@ -558,20 +546,21 @@ function getPriorChangeMeanTimeType(json, TYPE) {
     let project = getProject();
     let pipeline = [
         match,
-        project,
+        //project,
         {
             $group: {
                 _id: 1,
-                avg: {$avg: "$dateDiff"},
-                max: {$max: "$dateDiff"},
-                min: {$min: "$dateDiff"},
-                std: {$stdDevPop: "$dateDiff"}
+                avg: {$avg: "$meta_date_updated_date_created_diff"},
+                max: {$max: "$meta_date_updated_date_created_diff"},
+                min: {$min: "$meta_date_updated_date_created_diff"},
+                std: {$stdDevPop: "$meta_date_updated_date_created_diff"}
             }
         }
     ]
     return genericDBRequest(pipeline);
 }
 
+//check
 function getPriorOwnerChangesMeanTimeType(json, TYPE) {
     let created_date = json.created;
     let ownerId = json.owner._account_id;
@@ -587,14 +576,14 @@ function getPriorOwnerChangesMeanTimeType(json, TYPE) {
     };
     let pipeline = [
         match,
-        project,
+        //project,
         {
             $group: {
                 _id: 1,
-                avg: {$avg: "$dateDiff"},
-                max: {$max: "$dateDiff"},
-                min: {$min: "$dateDiff"},
-                std: {$stdDevPop: "$dateDiff"}
+                avg: {$avg: "$meta_date_updated_date_created_diff"},
+                max: {$max: "$meta_date_updated_date_created_diff"},
+                min: {$min: "$meta_date_updated_date_created_diff"},
+                std: {$stdDevPop: "$meta_date_updated_date_created_diff"}
             }
         }
     ]
@@ -701,7 +690,7 @@ function get_file_pipeline(match, files_list) {
     return [
         match,
         {$unwind: "$files_list"},
-        {
+        /*{
             $project: {
                 id: 1, filename: "$files_list", dateDiff: {
                     $subtract: [
@@ -710,8 +699,8 @@ function get_file_pipeline(match, files_list) {
                     ]
                 }
             }
-        },
-        {$group: {_id: "$filename", count: {$sum: 1}, time: {$avg: "$dateDiff"}}},
+        },*/
+        {$group: {_id: "$filename", count: {$sum: 1}, time: {$avg: "$meta_date_updated_date_created_diff"}}},
         {$match: {_id: {$in: files_list}}},
         {
             $group: {
@@ -737,7 +726,8 @@ function getFileTimeAndCount(json, TYPE) {
         $match: {
             status: TYPE,
             _number: {$lt: number},
-            updated: {$lte: created_date}
+            updated: {$lte: created_date},
+            files_list: {$in: files_list}
         }
     };
     if (TYPE == null) delete match.$match.status;
@@ -755,7 +745,8 @@ function getFileTimeAndCountForOwner(json, TYPE) {
             status: TYPE,
             'owner._account_id': ownerId,
             _number: {$lt: number},
-            updated: {$lte: created_date}
+            updated: {$lte: created_date},
+            files_list: {$in: files_list}
         }
     };
     if (TYPE == null) delete match.$match.status;
@@ -818,6 +809,7 @@ function getFileTimeAndCountForReviewers(json, TYPE) {
 //refactoring et config file
 //install server
 
+//check
 function getOwnerNumberOfRevision(json, TYPE) {
     let created_date = json.created;
     let number = json._number;
@@ -832,50 +824,53 @@ function getOwnerNumberOfRevision(json, TYPE) {
     }
     let pipeline = [
         match,
-        {$project: {id: 1, owner_id: "$owner._account_id", revisions_num: {"$size": {"$objectToArray": "$revisions"}}}},
+        //{$project: {id: 1, owner_id: "$owner._account_id", revisions_num: {"$size": {"$objectToArray": "$revisions"}}}},
         {
             $group: {
                 _id: "$owner_id",
-                revision_avg: {$avg: "$revisions_num"},
-                revision_max: {$max: "$revisions_num"},
-                revision_min: {$min: "$revisions_num"},
-                revision_std: {$stdDevPop: "$revisions_num"}
+                revision_avg: {$avg: "$meta_revisions_num"},
+                revision_max: {$max: "$meta_revisions_num"},
+                revision_min: {$min: "$meta_revisions_num"},
+                revision_std: {$stdDevPop: "$meta_revisions_num"}
             }
         },
     ]
     return genericDBRequest(pipeline);
 }
 
-function getOwnerNumberOfReview(json, TYPE) {
+//done
+//todo correct Error
+function getOwnerNumberOfReview(json) {
     let created_date = json.created;
     let number = json._number;
     let ownerId = json.owner._account_id;
     let match = {
         $match: {
-            status: TYPE,
             _number: {$lt: number},
-            updated: {$lte: created_date}
+            updated: {$lte: created_date},
+            "reviewers.REVIEWER._account_id": ownerId
         }
     }
     let pipeline = [
         match,
-        {$unwind: "$reviewers.REVIEWER"},
-        {$project: {id: 1, reviewers: "$reviewers.REVIEWER"}},
-        {$match: {"reviewers._account_id": ownerId}},
+        //{$unwind: "$reviewers.REVIEWER"},
+        //{$project: {id: 1, reviewers: "$reviewers.REVIEWER"}},
+        //{$match: {"reviewers._account_id": ownerId}},
         {$count: "count"}
     ]
     return genericDBRequest(pipeline);
 }
 
-function getFileDeveloperNumber(json, TYPE) {
+//done
+function getFileDeveloperNumber(json) {
     let created_date = json.created;
     let number = json._number;
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
-            status: TYPE,
             _number: {$lt: number},
-            updated: {$lte: created_date}
+            updated: {$lte: created_date},
+            files_list: {$in: files_list}
         }
     }
     let pipeline = [
@@ -893,10 +888,55 @@ function getFileDeveloperNumber(json, TYPE) {
     return genericDBRequest(pipeline);
 }
 
+//done
+function getPriorChangesFiles(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let files_list = json.files_list ? json.files_list : [];
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            updated: {$lte: created_date},
+            files_list: {$in: files_list}
+        }
+    }
+    let pipeline = [
+        match,
+        {$unwind: "$files_list"},
+        {$match: {files_list: {$in: files_list}}},
+        {$group: {_id: "$id"}},
+        {$count: "count"}
+    ]
+    return genericDBRequest(pipeline);
+}
+
+//done
+//todo
 function getOwnerPreviousMessageCount(json) {
     let created_date = json.created;
     let number = json._number;
     let owner_id = json.owner._account_id;
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            updated: {$lte: created_date},
+            "messages.author._account_id": owner_id
+        }
+    }
+    let pipeline = [
+        match,
+        {$unwind: "$messages"},
+        {$group: {_id: "$messages.author._account_id", count: {$sum: 1}}},
+        {$match: {_id: owner_id}},
+    ]
+    return genericDBRequest(pipeline);
+}
+
+//bad
+function getPreviousMessageCount(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let botArray = MetricsUtils.getBotArray(projectName)
     let match = {
         $match: {
             _number: {$lt: number},
@@ -906,8 +946,22 @@ function getOwnerPreviousMessageCount(json) {
     let pipeline = [
         match,
         {$unwind: "$messages"},
-        {$group: {_id: "$messages.author._account_id", count: {$sum: 1}}},
-        {$match: {_id: owner_id}},
+        {
+            $group: {
+                _id: "$messages.author._account_id",
+                count: {$sum: 1}
+            }
+        },
+        {$match: {_id: {$nin: botArray}}},
+        {
+            $group: {
+                _id: 1,
+                avg: {$avg: "$count"},
+                max: {$max: "$count"},
+                min: {$min: "$count"},
+                std: {$stdDevPop: "$count"},
+            }
+        }
     ]
     return genericDBRequest(pipeline);
 }
@@ -932,6 +986,7 @@ function getReviewersTotalPreviousMessagesCount(json) {
     return genericDBRequest(pipeline);
 }
 
+//check
 function getOwnerChangesMessagesCountAndAvgPerChanges(json) {
     let created_date = json.created;
     let number = json._number;
@@ -948,15 +1003,42 @@ function getOwnerChangesMessagesCountAndAvgPerChanges(json) {
         //{$unwind: "$messages"},
         //{$group: {_id: "$id", count:{$sum:1}}},
         //{$group: {_id: 1, count:{$sum:"$count"}, avg:{$avg:"$count"}}},
-        {$project: {id: 1, msg_count: {$size: "$messages"}}},
+        //{$project: {id: 1, msg_count: {$size: "$messages"}}},
         {
             $group: {
                 _id: 1,
-                count: {$sum: "$msg_count"},
-                avg: {$avg: "$msg_count"},
-                max: {$max: "$msg_count"},
-                min: {$avg: "$msg_count"},
-                std: {$stdDevPop: "$msg_count"}
+                count: {$sum: "meta_messages_count"},
+                avg: {$avg: "$meta_messages_count"},
+                max: {$max: "$meta_messages_count"},
+                min: {$avg: "$meta_messages_count"},
+                std: {$stdDevPop: "meta_messages_count"}
+            }
+        }
+    ]
+    return genericDBRequest(pipeline);
+}
+
+//check
+function getChangesMessagesCountAndAvg(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    }
+    let pipeline = [
+        match,
+        //{$project: {id: 1, msg_count: {$size: "$messages"}}},
+        {
+            $group: {
+                _id: 1,
+                count: {$sum: "$meta_messages_count"},
+                avg: {$avg: "$meta_messages_count"},
+                max: {$max: "$meta_messages_count"},
+                min: {$avg: "$meta_messages_count"},
+                std: {$stdDevPop: "$meta_messages_count"}
             }
         }
     ]
@@ -988,7 +1070,7 @@ function getOwnerAndReviewerCommonsChangesAndMessages(json) {
                 messages: {$sum: 1},
             }
         },
-        {$project: {_id: "$_id", changes_count: {$size: "$id"}, messages_count:  "$messages"}},
+        {$project: {_id: "$_id", changes_count: {$size: "$id"}, messages_count: "$messages"}},
         {
             $group: {
                 _id: 1,

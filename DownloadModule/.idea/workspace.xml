@@ -20,13 +20,17 @@
       <path>
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:main" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/compute_metrics/compute-changes-metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics-V1.js" beforeDir="false" afterPath="$PROJECT_DIR$/trash/compute-owner-metrics-V1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_metrics/compute-recent-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/trash/compute-recent-metrics.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,9 +65,10 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/compute_metrics" />
+      <recent name="$PROJECT_DIR$/trash" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/prepare_code_change" />
-      <recent name="$PROJECT_DIR$/compute_metrics" />
       <recent name="$PROJECT_DIR$/res" />
     </key>
   </component>
@@ -185,7 +190,7 @@
       <workItem from="1624663090960" duration="11416000" />
       <workItem from="1624689831566" duration="457000" />
       <workItem from="1624713213646" duration="7390000" />
-      <workItem from="1624725266186" duration="3512000" />
+      <workItem from="1624725266186" duration="8943000" />
     </task>
     <task id="LOCAL-00001" summary="quick fix">
       <created>1620486385609</created>
@@ -228,22 +233,9 @@
         <entry key="MAIN">
           <value>
             <State>
-              <option name="FILTERS">
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
                 <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="main" />
-                      </list>
-                    </value>
-                  </entry>
-                  <entry key="structure">
-                    <value>
-                      <list>
-                        <option value="dir:/Users/jeefer/WebstormProjects/Gerrit-Predictions/DownloadModule/res" />
-                      </list>
-                    </value>
-                  </entry>
+                  <entry key="Show.Git.Branches" value="false" />
                 </map>
               </option>
             </State>
@@ -297,12 +289,13 @@
     <state x="328" y="135" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1620675674995" />
     <state x="328" y="135" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1280.800@0.0.1280.800" timestamp="1621777968059" />
     <state x="328" y="154" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.23.1280.777@0.23.1280.777" timestamp="1624196025427" />
-    <state x="100" y="82" width="1080" height="613" key="DiffContextDialog" timestamp="1624675060080">
+    <state x="100" y="61" width="1080" height="632" key="DiffContextDialog" timestamp="1624735945813">
       <screen x="0" y="23" width="1280" height="777" />
     </state>
     <state x="100" y="82" width="1080" height="613" key="DiffContextDialog/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1624675048976" />
+    <state x="100" y="61" width="1080" height="632" key="DiffContextDialog/0.0.1280.800@0.0.1280.800" timestamp="1624734031509" />
     <state x="100" y="82" width="1080" height="613" key="DiffContextDialog/0.23.1280.777/0.-1057.1920.1057@0.23.1280.777" timestamp="1624675060080" />
-    <state x="100" y="123" width="1080" height="577" key="DiffContextDialog/0.23.1280.777@0.23.1280.777" timestamp="1619979749894" />
+    <state x="100" y="61" width="1080" height="632" key="DiffContextDialog/0.23.1280.777@0.23.1280.777" timestamp="1624735945813" />
     <state width="1259" height="212" key="GridCell.Tab.0.bottom" timestamp="1622268365111">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
