@@ -106,12 +106,18 @@ async function collectMetadata(json) {
     metadata["meta_owner_id"] = json.owner._account_id;
     metadata["meta_msg_count"] = Object.keys(messages).length;
     metadata['meta_messages_per_account'] = {}
+
+    if(!metadata['meta_messages_per_account'])
+        metadata['meta_messages_per_account'] = {}
+
     for(let key in messages) {
         let author = messages[key].author._account_id;
-        if(metadata['meta_messages_per_account'][author])
-            metadata['meta_messages_per_account'][author] = metadata['messages_per_account'][author] + 1;
-        else
+
+        if(!metadata['meta_messages_per_account'][author])
             metadata['meta_messages_per_account'][author] = 1;
+        else
+            metadata['meta_messages_per_account'][author] = metadata['messages_per_account'][author] + 1;
+
     }
     let revisions = json.revisions;
     metadata["meta_revisions_num"] = Object.keys(revisions).length
