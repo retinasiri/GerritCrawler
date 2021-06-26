@@ -168,7 +168,7 @@ function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetric
         .aggregate([
             //{$match: {priorChangesCount : {$exists : false}}},
             //{$sort: {updated: 1, _number: 1}},
-            {$sort: {_number: -1}},
+            {$sort: {_number: 1}},
             {$skip: skip},
             {$limit: step}
         ])
@@ -190,6 +190,17 @@ function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetric
             console.log(err)
         });
 }
+
+function mixDoc(array){
+    let temp = []
+    for (let i = 0; i < array.length; i++){
+        if(isOdd(i))
+            temp.push(array[i])
+        else
+            temp.push(array[array.length - i])
+    }
+}
+function isOdd(num) { return num % 2;}
 
 async function collectDocs(docs, Project, MetricsJson, progressBar, collectMetrics) {
     console.time('collectDocs')
