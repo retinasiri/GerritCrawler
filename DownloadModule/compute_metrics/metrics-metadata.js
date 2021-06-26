@@ -129,7 +129,8 @@ async function collectMetadata(json) {
         else
             metadata['meta_messages_per_account'][author] = metadata['meta_messages_per_account'][author] + 1;
 
-        if(MetricsUtils.isABot(author)){
+        //console.log(messages[key].author)
+        if(MetricsUtils.isABot(author, projectName)){
             metadata['meta_messages_bot_count'] +=1
         } else {
             metadata['meta_messages_human_count'] +=1
