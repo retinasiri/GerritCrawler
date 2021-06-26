@@ -37,11 +37,13 @@ async function collectMetrics(json) {
                 metric[key] = values[key];
             }
         })
-        let changesTimeInfo = getChangesTimeInfo(json, values.priorMergedChangesCount, values.priorAbandonedChangesCount, values.priorChangesCount)
-        let task = Promise.resolve(metric);
-        return Promise.all([changesTimeInfo, task]);
-        //return Promise.resolve(metric);
-    }).then((results) => {
+        //let changesTimeInfo = getChangesTimeInfo(json, values.priorMergedChangesCount, values.priorAbandonedChangesCount, values.priorChangesCount)
+        //let task = Promise.resolve(metric);
+        //return Promise.all([changesTimeInfo, task]);
+
+        return Promise.resolve(metric);
+    })
+        /*.then((results) => {
         let values = results[0];
         let metric = results[1];
         Object.keys(values).forEach(function (key) {
@@ -52,7 +54,7 @@ async function collectMetrics(json) {
             }
         })
         return Promise.resolve(metric);
-    });
+    });*/
 }
 
 //count prior code changes
@@ -100,6 +102,19 @@ async function getChangesInfo(json) {
     let priorSubsystemOwnerMergedChangesCount = getPriorSubsystemOwnerTypeChangesCount(json, "MERGED");
     let priorSubsystemOwnerAbandonedChangesCount = getPriorSubsystemOwnerTypeChangesCount(json, "ABANDONED");
 
+    //getChangesTimeInfo
+    let priorChangesDuration = getPriorChangeMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
+    let priorOwnerChangesDuration = getPriorOwnerChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
+    let fileTimeAndCount = getFileTimeAndCount(json, {$in: ['MERGED', 'ABANDONED']});
+    let fileTimeAndCountForOwner = getFileTimeAndCountForOwner(json, {$in: ['MERGED', 'ABANDONED']});
+    let ownerNumberOfRevision = getOwnerNumberOfRevision(json, {$in: ['MERGED', 'ABANDONED']});
+    let ownerNumberOfReview = getOwnerNumberOfReview(json);
+    let fileDeveloperNumber = getFileDeveloperNumber(json);
+    let ownerPreviousMessageCount = getOwnerPreviousMessageCount(json);
+    let ownerChangesMessagesCountAndAvgPerChanges = getOwnerChangesMessagesCountAndAvgPerChanges(json);
+    let changesMessagesCountAndAvg = getChangesMessagesCountAndAvg(json);
+    let priorChangesFiles = getPriorChangesFiles(json);
+
     return Promise.all([
         priorChangesCount, //0
         priorMergedChangesCount, //1
@@ -112,7 +127,21 @@ async function getChangesInfo(json) {
         priorSubsystemAbandonedChangesCount, //8
         priorSubsystemOwnerChangesCount, //9
         priorSubsystemOwnerMergedChangesCount, //10
-        priorSubsystemOwnerAbandonedChangesCount //11
+        priorSubsystemOwnerAbandonedChangesCount, //11
+
+        priorChangesDuration, //12
+        priorOwnerChangesDuration, //13
+        fileTimeAndCount, //14
+        fileTimeAndCountForOwner, //15
+        ownerNumberOfRevision, //16
+        ownerNumberOfReview, //17
+        fileDeveloperNumber, //18
+        ownerPreviousMessageCount, //19
+        ownerChangesMessagesCountAndAvgPerChanges, //20
+        changesMessagesCountAndAvg, //21
+        priorChangesFiles, //22
+        //nonBotAccountPreviousMessageCount, //23
+
     ]).then((results) => {
         //console.log(results);
         return {
@@ -153,9 +182,173 @@ async function getChangesInfo(json) {
             priorOwnerPercentageOfMergedInSubsystem: safeDivision(results[10], results[7]),
             priorOwnerPercentageOfAbandonedInSubsystem: safeDivision(results[11], results[8]),
 
+
+            //getChangesTimeInfo
+
+            priorChangeDurationMean: results[12].avg,
+            priorChangeDurationMax: results[12].max,
+            priorChangeDurationMin: results[12].min,
+            priorChangeDurationStd: results[12].std,
+
+            priorOwnerChangesDurationMean: results[13].avg,
+            priorOwnerChangesDurationMax: results[13].max,
+            priorOwnerChangesDurationMin: results[13].min,
+            priorOwnerChangesDurationStd: results[13].std,
+
+            fileCountAvg: results[14].count_avg,
+            fileCountMax: results[14].count_max,
+            fileCountMin: results[14].count_min,
+            fileCountStd: results[14].count_std,
+            fileTimeAvg: results[14].time_avg,
+            fileTimeMax: results[14].time_max,
+            fileTimeMin: results[14].time_min,
+            fileTimeStd: results[14].time_std,
+
+            ownerFileCountAvg: results[15].count_avg,
+            ownerFileCountMax: results[15].count_max,
+            ownerFileCountMin: results[15].count_min,
+            ownerFileCountStd: results[15].count_std,
+            ownerFileTimeAvg: results[15].time_avg,
+            ownerFileTimeMax: results[15].time_max,
+            ownerFileTimeMin: results[15].time_min,
+            ownerFileTimeStd: results[15].time_std,
+
+            ownerNumberOfRevisionAvg: results[16].revision_avg,
+            ownerNumberOfRevisionMax: results[16].revision_max,
+            ownerNumberOfRevisionMin: results[16].revision_min,
+            ownerNumberOfRevisionStd: results[16].revision_std,
+
+            ownerNumberOfReview: results[17].count,
+
+            //rename fileDeveloperNumber: results[18].count,
+            AvgNumberOfDeveloperWhoModifiedFiles: results[18].count,
+
+            ownerPreviousMessageCount: results[19].count,
+
+            ownerChangesMessagesSum: results[20].count,
+            ownerChangesMessagesAvgPerChanges: results[20].avg,
+            ownerChangesMessagesMaxPerChanges: results[20].max,
+            ownerChangesMessagesMinPerChanges: results[20].min,
+            ownerChangesMessagesStdPerChanges: results[20].std,
+
+            changesMessagesSum: results[21].count,
+            changesMessagesAvg: results[21].avg,
+            changesMessagesMax: results[21].max,
+            changesMessagesMin: results[21].min,
+            changesMessagesStd: results[21].std,
+
+            priorChangesFiles: results[22].count,
+
+            /*
+            nonBotAccountPreviousMessageSum: results[23].count,
+            nonBotAccountPreviousMessageAvg: results[23].avg,
+            nonBotAccountPreviousMessageMax: results[23].max,
+            nonBotAccountPreviousMessageMin: results[23].min,
+            nonBotAccountPreviousMessageStd: results[23].std,
+            */
+
         };
     })
 }
+
+/*
+async function getChangesTimeInfo(json) {
+    let priorChangesDuration = getPriorChangeMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
+    let priorOwnerChangesDuration = getPriorOwnerChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
+    let fileTimeAndCount = getFileTimeAndCount(json, {$in: ['MERGED', 'ABANDONED']});
+    let fileTimeAndCountForOwner = getFileTimeAndCountForOwner(json, {$in: ['MERGED', 'ABANDONED']});
+    let ownerNumberOfRevision = getOwnerNumberOfRevision(json, {$in: ['MERGED', 'ABANDONED']});
+    let ownerNumberOfReview = getOwnerNumberOfReview(json);
+    let fileDeveloperNumber = getFileDeveloperNumber(json);
+    let ownerPreviousMessageCount = getOwnerPreviousMessageCount(json);
+    let ownerChangesMessagesCountAndAvgPerChanges = getOwnerChangesMessagesCountAndAvgPerChanges(json);
+    let changesMessagesCountAndAvg = getChangesMessagesCountAndAvg(json);
+    let priorChangesFiles = getPriorChangesFiles(json);
+    //let nonBotAccountPreviousMessageCount = getPreviousMessageCount(json);
+    return Promise.all([
+        priorChangesDuration, //0
+        priorOwnerChangesDuration, //1
+        fileTimeAndCount, //2
+        fileTimeAndCountForOwner, //3
+        ownerNumberOfRevision, //4
+        ownerNumberOfReview, //5
+        fileDeveloperNumber, //6
+        ownerPreviousMessageCount, //7
+        ownerChangesMessagesCountAndAvgPerChanges, //8
+        changesMessagesCountAndAvg, //9
+        priorChangesFiles, //10
+        //nonBotAccountPreviousMessageCount, //11
+    ]).then((results) => {
+        //console.log(results);
+        return {
+
+            priorChangeDurationMean: results[0].avg,
+            priorChangeDurationMax: results[0].max,
+            priorChangeDurationMin: results[0].min,
+            priorChangeDurationStd: results[0].std,
+
+            priorOwnerChangesDurationMean: results[1].avg,
+            priorOwnerChangesDurationMax: results[1].max,
+            priorOwnerChangesDurationMin: results[1].min,
+            priorOwnerChangesDurationStd: results[1].std,
+
+            fileCountAvg: results[2].count_avg,
+            fileCountMax: results[2].count_max,
+            fileCountMin: results[2].count_min,
+            fileCountStd: results[2].count_std,
+            fileTimeAvg: results[2].time_avg,
+            fileTimeMax: results[2].time_max,
+            fileTimeMin: results[2].time_min,
+            fileTimeStd: results[2].time_std,
+
+            ownerFileCountAvg: results[3].count_avg,
+            ownerFileCountMax: results[3].count_max,
+            ownerFileCountMin: results[3].count_min,
+            ownerFileCountStd: results[3].count_std,
+            ownerFileTimeAvg: results[3].time_avg,
+            ownerFileTimeMax: results[3].time_max,
+            ownerFileTimeMin: results[3].time_min,
+            ownerFileTimeStd: results[3].time_std,
+
+            ownerNumberOfRevisionAvg: results[4].revision_avg,
+            ownerNumberOfRevisionMax: results[4].revision_max,
+            ownerNumberOfRevisionMin: results[4].revision_min,
+            ownerNumberOfRevisionStd: results[4].revision_std,
+
+            ownerNumberOfReview: results[5].count,
+
+            //rename fileDeveloperNumber: results[6].count,
+            AvgNumberOfDeveloperWhoModifiedFiles: results[6].count,
+
+            ownerPreviousMessageCount: results[7].count,
+
+            ownerChangesMessagesSum: results[8].count,
+            ownerChangesMessagesAvgPerChanges: results[8].avg,
+            ownerChangesMessagesMaxPerChanges: results[8].max,
+            ownerChangesMessagesMinPerChanges: results[8].min,
+            ownerChangesMessagesStdPerChanges: results[8].std,
+
+            changesMessagesSum: results[9].count,
+            changesMessagesAvg: results[9].avg,
+            changesMessagesMax: results[9].max,
+            changesMessagesMin: results[9].min,
+            changesMessagesStd: results[9].std,
+
+            priorChangesFiles: results[10].count,
+
+
+            //nonBotAccountPreviousMessageSum: results[11].count,
+            //nonBotAccountPreviousMessageAvg: results[11].avg,
+            //nonBotAccountPreviousMessageMax: results[11].max,
+            //nonBotAccountPreviousMessageMin: results[11].min,
+            //nonBotAccountPreviousMessageStd: results[11].std,
+
+
+        };
+    })
+}
+*/
+
 
 function safeDivision(number1, number2) {
     return number2 !== 0 ? MathJs.divide(number1, number2) : 0;
@@ -376,103 +569,6 @@ function genericDBRequest(pipeline) {
             console.log(err)
         });
 }
-
-async function getChangesTimeInfo(json) {
-    let priorChangesDuration = getPriorChangeMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
-    let priorOwnerChangesDuration = getPriorOwnerChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
-    let fileTimeAndCount = getFileTimeAndCount(json, {$in: ['MERGED', 'ABANDONED']});
-    let fileTimeAndCountForOwner = getFileTimeAndCountForOwner(json, {$in: ['MERGED', 'ABANDONED']});
-    let ownerNumberOfRevision = getOwnerNumberOfRevision(json, {$in: ['MERGED', 'ABANDONED']});
-    let ownerNumberOfReview = getOwnerNumberOfReview(json);
-    let fileDeveloperNumber = getFileDeveloperNumber(json);
-    let ownerPreviousMessageCount = getOwnerPreviousMessageCount(json);
-    let ownerChangesMessagesCountAndAvgPerChanges = getOwnerChangesMessagesCountAndAvgPerChanges(json);
-    let changesMessagesCountAndAvg = getChangesMessagesCountAndAvg(json);
-    let priorChangesFiles = getPriorChangesFiles(json);
-    //let nonBotAccountPreviousMessageCount = getPreviousMessageCount(json);
-    return Promise.all([
-        priorChangesDuration, //0
-        priorOwnerChangesDuration, //1
-        fileTimeAndCount, //2
-        fileTimeAndCountForOwner, //3
-        ownerNumberOfRevision, //4
-        ownerNumberOfReview, //5
-        fileDeveloperNumber, //6
-        ownerPreviousMessageCount, //7
-        ownerChangesMessagesCountAndAvgPerChanges, //8
-        changesMessagesCountAndAvg, //9
-        priorChangesFiles, //10
-        //nonBotAccountPreviousMessageCount, //11
-    ]).then((results) => {
-        //console.log(results);
-        return {
-
-            priorChangeDurationMean: results[0].avg,
-            priorChangeDurationMax: results[0].max,
-            priorChangeDurationMin: results[0].min,
-            priorChangeDurationStd: results[0].std,
-
-            priorOwnerChangesDurationMean: results[1].avg,
-            priorOwnerChangesDurationMax: results[1].max,
-            priorOwnerChangesDurationMin: results[1].min,
-            priorOwnerChangesDurationStd: results[1].std,
-
-            fileCountAvg: results[2].count_avg,
-            fileCountMax: results[2].count_max,
-            fileCountMin: results[2].count_min,
-            fileCountStd: results[2].count_std,
-            fileTimeAvg: results[2].time_avg,
-            fileTimeMax: results[2].time_max,
-            fileTimeMin: results[2].time_min,
-            fileTimeStd: results[2].time_std,
-
-            ownerFileCountAvg: results[3].count_avg,
-            ownerFileCountMax: results[3].count_max,
-            ownerFileCountMin: results[3].count_min,
-            ownerFileCountStd: results[3].count_std,
-            ownerFileTimeAvg: results[3].time_avg,
-            ownerFileTimeMax: results[3].time_max,
-            ownerFileTimeMin: results[3].time_min,
-            ownerFileTimeStd: results[3].time_std,
-
-            ownerNumberOfRevisionAvg: results[4].revision_avg,
-            ownerNumberOfRevisionMax: results[4].revision_max,
-            ownerNumberOfRevisionMin: results[4].revision_min,
-            ownerNumberOfRevisionStd: results[4].revision_std,
-
-            ownerNumberOfReview: results[5].count,
-
-            //rename fileDeveloperNumber: results[6].count,
-            AvgNumberOfDeveloperWhoModifiedFiles: results[6].count,
-
-            ownerPreviousMessageCount: results[7].count,
-
-            ownerChangesMessagesSum: results[8].count,
-            ownerChangesMessagesAvgPerChanges: results[8].avg,
-            ownerChangesMessagesMaxPerChanges: results[8].max,
-            ownerChangesMessagesMinPerChanges: results[8].min,
-            ownerChangesMessagesStdPerChanges: results[8].std,
-
-            changesMessagesSum: results[9].count,
-            changesMessagesAvg: results[9].avg,
-            changesMessagesMax: results[9].max,
-            changesMessagesMin: results[9].min,
-            changesMessagesStd: results[9].std,
-
-            priorChangesFiles: results[10].count,
-
-            /*
-            nonBotAccountPreviousMessageSum: results[11].count,
-            nonBotAccountPreviousMessageAvg: results[11].avg,
-            nonBotAccountPreviousMessageMax: results[11].max,
-            nonBotAccountPreviousMessageMin: results[11].min,
-            nonBotAccountPreviousMessageStd: results[11].std,
-            */
-
-        };
-    })
-}
-
 
 function getProject() {
     return {

@@ -118,6 +118,10 @@ async function collectMetadata(json) {
     metadata["meta_date_updated_date_created_diff"]= diffCreatedUpdatedTime(json);
     metadata["meta_reviewers_ids"] = getReviewersId(json);
     metadata["meta_not_bot_reviewers"] = MetricsUtils.getHumanReviewersID(json, projectName);
+    metadata["meta_is_a_bot"] = MetricsUtils.isABot(json.owner, projectName);
+    metadata["meta_first_revision"] = MetricsUtils.get_first_revision(json)
+    metadata["meta_first_revision_kind"] = MetricsUtils.get_first_revision_kind(json)
+    metadata["meta_is_trivial_rebase"] = MetricsUtils.is_trivial_rebase(json);
 
     return metadata;
 }
@@ -136,6 +140,7 @@ function getReviewersId(json) {
     }
     return reviewerArray;
 }
+
 
 module.exports = {
     start: startComputeMetadata

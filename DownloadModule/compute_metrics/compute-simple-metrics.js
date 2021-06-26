@@ -1050,5 +1050,9 @@ function msg_has_feature_addition(json) {
 }
 
 module.exports = {
-    start: startComputeMetrics
+    start: startComputeMetrics,
+    get_first_revision_kind: get_first_revision_kind,
+    get_first_revision:get_first_revision,
+    get_first_revision_number: get_first_revision_number,
+    get_first_revision_id: get_first_revision_id
 };

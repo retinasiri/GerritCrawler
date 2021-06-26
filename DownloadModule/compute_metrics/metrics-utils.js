@@ -214,11 +214,65 @@ async function updateProgress(progressBar) {
     return Promise.resolve(true);
 }
 
+
+function get_first_revision_id(json) {
+    let revisions = json.revisions;
+    let first_revision_number = null;
+    let revision_id = 0;
+    for (let i in revisions) {
+        let number = revisions[i]._number;
+        if (first_revision_number === null) {
+            first_revision_number = number;
+            revision_id = i;
+        }
+
+        if (number <= first_revision_number) {
+            first_revision_number = number;
+            revision_id = i;
+        }
+    }
+    return revision_id;
+}
+
+function get_first_revision_number(json) {
+    let first_revision = get_first_revision(json)
+    return first_revision["_number"];
+}
+
+function get_first_revision(json) {
+    let revisions = json.revisions;
+    let first_revision_number = get_first_revision_id(json);
+    return revisions[first_revision_number];
+}
+
+function get_first_revision_kind(json) {
+    let first_revision = get_first_revision(json)
+    let kind = first_revision["kind"]
+    if (kind) {
+        return kind;
+    } else {
+        return "UNDEFINED";
+    }
+}
+
+function is_trivial_rebase(json){
+    let kind = get_first_revision_kind(json);
+    if(kind.includes("TRIVIAL_REBASE"))
+        return true;
+    else
+        return false;
+}
+
 module.exports = {
     getHumanReviewers: getHumanReviewers,
     getHumanReviewersID: getHumanReviewersID,
     getHumanReviewersCount: getHumanReviewersCount,
     isABot: isABot,
     getBotArray: getBotArray,
-    startComputeMetrics: startComputeMetrics
+    startComputeMetrics: startComputeMetrics,
+    get_first_revision_kind: get_first_revision_kind,
+    get_first_revision:get_first_revision,
+    get_first_revision_number: get_first_revision_number,
+    get_first_revision_id: get_first_revision_id,
+    is_trivial_rebase: is_trivial_rebase
 };
