@@ -45,11 +45,35 @@ function is_probably_a_bot(name, projectName) {
     return bool;
 }
 
-function test(){
-    let createdTime = Moment.utc("2021-06-13 17:19:14.000000000");
+function test() {
+    /*let createdTime = Moment.utc("2021-06-13 17:19:14.000000000");
     let updatedTime = Moment.utc("2021-06-13 16:18:10.000000000");
     console.log(createdTime.toDate())
     console.log(updatedTime.toDate())
     console.log(createdTime.toDate() - updatedTime.toDate())
     return Math.abs(createdTime.toDate() - updatedTime.toDate());
+    */
+    let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    console.log(mixArray(array))
+}
+
+function mixArray(array) {
+    let temp = []
+    let j = 0
+    for (let i = 0; i < array.length / 2; i++) {
+        console.log(i)
+        temp[j] = array[i]
+        if (i !== array.length - i - 1)
+            temp[j + 1] = array[array.length - i - 1]
+        j += 2
+    }
+    return temp;
+}
+
+function isOdd(num) {
+    return num % 2;
+}
+
+function isEven(num) {
+    return !isOdd(num);
 }
