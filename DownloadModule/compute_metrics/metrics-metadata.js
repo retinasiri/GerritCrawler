@@ -113,21 +113,27 @@ async function collectMetadata(json) {
     }
 
     if (messages)
-        metadata["meta_msg_count"] = Object.keys(messages).length;
+        metadata["meta_messages_count"] = Object.keys(messages).length;
 
     metadata['meta_messages_per_account'] = {}
+    metadata['meta_messages_count'] = 0
+    metadata['meta_messages_human_count'] = 0
+    metadata['meta_messages_bot_count'] = 0
 
     for (let key in messages) {
         if (!messages[key].author)
             continue;
-
         let author = messages[key].author._account_id;
-
         if (!metadata['meta_messages_per_account'][author])
             metadata['meta_messages_per_account'][author] = 1;
         else
             metadata['meta_messages_per_account'][author] = metadata['meta_messages_per_account'][author] + 1;
 
+        if(MetricsUtils.isABot(author)){
+            metadata['meta_messages_bot_count'] +=1
+        } else {
+            metadata['meta_messages_human_count'] +=1
+        }
     }
     let revisions = json.revisions;
     if( revisions){

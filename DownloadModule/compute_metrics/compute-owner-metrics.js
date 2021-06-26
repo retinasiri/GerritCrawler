@@ -14,6 +14,7 @@ if (typeof require !== 'undefined' && require.main === module) {
 }
 
 function startComputeMetrics(projectJson) {
+    console.time('startComputeMetrics')
     if (projectJson["projectName"])
         projectName = projectJson["projectName"];
     if (projectJson["start"])
@@ -22,7 +23,9 @@ function startComputeMetrics(projectJson) {
         end = projectJson["end"];
     return MetricsUtils.startComputeMetrics(projectName, start, end, "owner", function (json) {
         return collectMetrics(json)
-    });
+    }).then(()=>{
+        console.timeEnd('startComputeMetrics')
+    })
 }
 
 async function collectMetrics(json) {
@@ -86,34 +89,98 @@ async function collectMetrics(json) {
 //count owner percentage of merge
 
 async function getChangesInfo(json) {
-    let priorChangesCount = getPriorChangesCount(json);
-    let priorMergedChangesCount = getPriorTypeChangesCount(json, "MERGED");
-    let priorAbandonedChangesCount = getPriorTypeChangesCount(json, "ABANDONED");
+    console.time('getPriorChangesCount')
+    let priorChangesCount = await getPriorChangesCount(json);
+    console.timeEnd('getPriorChangesCount')
 
-    let ownerPriorChangesCount = getOwnerPriorChangesCount(json);
-    let ownerPriorMergedChangesCount = getOwnerPriorTypeChangesCount(json, "MERGED");
-    let ownerPriorAbandonedChangesCount = getOwnerPriorTypeChangesCount(json, "ABANDONED");
+    console.time('getPriorTypeChangesCount')
+    let priorMergedChangesCount = await getPriorTypeChangesCount(json, "MERGED");
+    console.timeEnd('getPriorTypeChangesCount')
 
-    let priorSubsystemChangesCount = getPriorSubsystemChangesCount(json);
-    let priorSubsystemMergedChangesCount = getPriorSubsystemTypeChangesCount(json, "MERGED");
-    let priorSubsystemAbandonedChangesCount = getPriorSubsystemTypeChangesCount(json, "ABANDONED");
+    console.time('getPriorTypeChangesCount')
+    let priorAbandonedChangesCount = await getPriorTypeChangesCount(json, "ABANDONED");
+    console.timeEnd('getPriorTypeChangesCount')
 
-    let priorSubsystemOwnerChangesCount = getPriorSubsystemOwnerChangesCount(json);
-    let priorSubsystemOwnerMergedChangesCount = getPriorSubsystemOwnerTypeChangesCount(json, "MERGED");
-    let priorSubsystemOwnerAbandonedChangesCount = getPriorSubsystemOwnerTypeChangesCount(json, "ABANDONED");
+    console.time('getOwnerPriorChangesCount')
+    let ownerPriorChangesCount = await getOwnerPriorChangesCount(json);
+    console.timeEnd('getOwnerPriorChangesCount')
+
+    console.time('getOwnerPriorTypeChangesCount')
+    let ownerPriorMergedChangesCount = await getOwnerPriorTypeChangesCount(json, "MERGED");
+    console.timeEnd('getOwnerPriorTypeChangesCount')
+
+    console.time('getOwnerPriorTypeChangesCount')
+    let ownerPriorAbandonedChangesCount = await getOwnerPriorTypeChangesCount(json, "ABANDONED");
+    console.timeEnd('getOwnerPriorTypeChangesCount')
+
+    console.time('getPriorSubsystemChangesCount')
+    let priorSubsystemChangesCount = await getPriorSubsystemChangesCount(json);
+    console.timeEnd('getPriorSubsystemChangesCount')
+
+    console.time('getPriorSubsystemTypeChangesCount')
+    let priorSubsystemMergedChangesCount = await getPriorSubsystemTypeChangesCount(json, "MERGED");
+    console.timeEnd('getPriorSubsystemTypeChangesCount')
+
+    console.time('getPriorSubsystemTypeChangesCount')
+    let priorSubsystemAbandonedChangesCount = await getPriorSubsystemTypeChangesCount(json, "ABANDONED");
+    console.timeEnd('getPriorSubsystemTypeChangesCount')
+
+    console.time('getPriorSubsystemOwnerChangesCount')
+    let priorSubsystemOwnerChangesCount = await getPriorSubsystemOwnerChangesCount(json);
+    console.timeEnd('getPriorSubsystemOwnerChangesCount')
+
+    console.time('getPriorSubsystemOwnerTypeChangesCount')
+    let priorSubsystemOwnerMergedChangesCount = await getPriorSubsystemOwnerTypeChangesCount(json, "MERGED");
+    console.timeEnd('getPriorSubsystemOwnerTypeChangesCount')
+
+    console.time('getPriorSubsystemOwnerTypeChangesCount')
+    let priorSubsystemOwnerAbandonedChangesCount = await getPriorSubsystemOwnerTypeChangesCount(json, "ABANDONED");
+    console.timeEnd('getPriorSubsystemOwnerTypeChangesCount')
 
     //getChangesTimeInfo
-    let priorChangesDuration = getPriorChangeMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
-    let priorOwnerChangesDuration = getPriorOwnerChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
-    let fileTimeAndCount = getFileTimeAndCount(json, {$in: ['MERGED', 'ABANDONED']});
-    let fileTimeAndCountForOwner = getFileTimeAndCountForOwner(json, {$in: ['MERGED', 'ABANDONED']});
-    let ownerNumberOfRevision = getOwnerNumberOfRevision(json, {$in: ['MERGED', 'ABANDONED']});
-    let ownerNumberOfReview = getOwnerNumberOfReview(json);
-    let fileDeveloperNumber = getFileDeveloperNumber(json);
-    let ownerPreviousMessageCount = getOwnerPreviousMessageCount(json);
-    let ownerChangesMessagesCountAndAvgPerChanges = getOwnerChangesMessagesCountAndAvgPerChanges(json);
-    let changesMessagesCountAndAvg = getChangesMessagesCountAndAvg(json);
-    let priorChangesFiles = getPriorChangesFiles(json);
+    console.time('getPriorChangeMeanTimeType')
+    let priorChangesDuration = await getPriorChangeMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
+    console.timeEnd('getPriorChangeMeanTimeType')
+
+    console.time('getPriorOwnerChangesMeanTimeType')
+    let priorOwnerChangesDuration = await getPriorOwnerChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
+    console.timeEnd('getPriorOwnerChangesMeanTimeType')
+
+    console.time('getFileTimeAndCount')
+    let fileTimeAndCount = await getFileTimeAndCount(json, {$in: ['MERGED', 'ABANDONED']});
+    console.timeEnd('getFileTimeAndCount')
+
+    console.time('getFileTimeAndCountForOwner')
+    let fileTimeAndCountForOwner = await getFileTimeAndCountForOwner(json, {$in: ['MERGED', 'ABANDONED']});
+    console.timeEnd('getFileTimeAndCountForOwner')
+
+    console.time('getOwnerNumberOfRevision')
+    let ownerNumberOfRevision = await getOwnerNumberOfRevision(json, {$in: ['MERGED', 'ABANDONED']});
+    console.timeEnd('getOwnerNumberOfRevision')
+
+    console.time('getOwnerNumberOfReview')
+    let ownerNumberOfReview = await getOwnerNumberOfReview(json);
+    console.timeEnd('getOwnerNumberOfReview')
+
+    console.time('getFileDeveloperNumber')
+    let fileDeveloperNumber = await getFileDeveloperNumber(json);
+    console.timeEnd('getFileDeveloperNumber')
+
+    console.time('getOwnerPreviousMessageCount')
+    let ownerPreviousMessageCount = await getOwnerPreviousMessageCount(json);
+    console.timeEnd('getOwnerPreviousMessageCount')
+
+    console.time('getOwnerChangesMessagesCountAndAvgPerChanges')
+    let ownerChangesMessagesCountAndAvgPerChanges = await getOwnerChangesMessagesCountAndAvgPerChanges(json);
+    console.timeEnd('getOwnerChangesMessagesCountAndAvgPerChanges')
+
+    console.time('getChangesMessagesCountAndAvg')
+    let changesMessagesCountAndAvg = await getChangesMessagesCountAndAvg(json);
+    console.timeEnd('getChangesMessagesCountAndAvg')
+
+    console.time('getPriorChangesFiles')
+    let priorChangesFiles = await getPriorChangesFiles(json);
+    console.timeEnd('getPriorChangesFiles')
 
     return Promise.all([
         priorChangesCount, //0
@@ -891,6 +958,7 @@ function getOwnerNumberOfRevision(json, TYPE) {
 }
 
 //done
+//todo correct Error
 function getOwnerNumberOfReview(json) {
     let created_date = json.created;
     let number = json._number;
@@ -899,7 +967,7 @@ function getOwnerNumberOfReview(json) {
         $match: {
             _number: {$lt: number},
             updated: {$lte: created_date},
-            "reviewers._account_id": ownerId
+            "reviewers.REVIEWER._account_id": ownerId
         }
     }
     let pipeline = [

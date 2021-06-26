@@ -142,7 +142,8 @@ function startComputeMetrics(projectName, start, end, metricsType, collectMetric
         })
         .then(() => {
             let name = Project.getName + "-" + MetricsJson.getType + "-metrics";
-            return Utils.saveJSONInFile(Project.getOutputDirectory, name, MetricsJson.getMetricsJSON);
+            //return Utils.saveJSONInFile(Project.getOutputDirectory, name, MetricsJson.getMetricsJSON);
+            return Promise.resolve(true)
         })
         .then(() => {
             //free memory
@@ -191,6 +192,7 @@ function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetric
 }
 
 async function collectDocs(docs, Project, MetricsJson, progressBar, collectMetrics) {
+    console.time('collectDocs')
     if (!docs)
         return Promise.resolve(true);
     for (let key in docs) {
@@ -200,15 +202,18 @@ async function collectDocs(docs, Project, MetricsJson, progressBar, collectMetri
                 return saveMetrics(json, Project, MetricsJson, progressBar);
             })
     }
+    console.timeEnd('collectDocs')
     return Promise.resolve(true);
 }
 
 
 function saveMetrics(json, Project, MetricsJson, progressBar) {
+    console.time('saveMetrics')
     return Metrics.updateOne({id: json.id}, json, {upsert: true}).then(() => {
         //MetricsJson.getMetricsJSON[json.id] = json;
         //let filename = Project.getName + "-" + MetricsJson.getType + "-metrics.csv";
         //return Utils.add_line_to_file(json, filename, Project.getOutputDirectory);
+        console.timeEnd('saveMetrics')
         return updateProgress(progressBar);
     })
     /*.then(() => {

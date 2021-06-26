@@ -10,6 +10,11 @@
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
       </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
     </expand>
     <select>
       <path>
@@ -22,11 +27,10 @@
   <component name="ChangeListManager">
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compute_metrics/compute-simple-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-simple-metrics.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-owner-metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_metrics/metrics-metadata.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/metrics-metadata.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_metrics/metrics-utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/metrics-utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prepare_code_change/add-code-change-in-db.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/add-code-change-in-db.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/bot-account.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/bot-account.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prepare_code_change/collect_bot_account.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/collect_bot_account.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,6 +187,8 @@
       <workItem from="1624546691949" duration="4492000" />
       <workItem from="1624600780519" duration="1450000" />
       <workItem from="1624663090960" duration="11416000" />
+      <workItem from="1624689831566" duration="457000" />
+      <workItem from="1624713213646" duration="6367000" />
     </task>
     <task id="LOCAL-00001" summary="quick fix">
       <created>1620486385609</created>
@@ -206,6 +212,17 @@
               <option name="CUSTOM_BOOLEAN_PROPERTIES">
                 <map>
                   <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
                 </map>
               </option>
             </State>
