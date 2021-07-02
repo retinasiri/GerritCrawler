@@ -36,7 +36,7 @@ def start(json):
     GRAPHS_FULL_METRICS_PATH = os.path.join(DATA_DIR_NAME,PROJET_NAME, PROJET_NAME + "-graph-full-metrics")
 
     global CHANGES_GRAPHS_LIST_PATH
-    CHANGES_GRAPHS_LIST_PATH = os.path.join(DATA_DIR_NAME,PROJET_NAME, PROJET_NAME + "-changes-graph-list.json")
+    CHANGES_GRAPHS_LIST_PATH = os.path.join(DATA_DIR_NAME, PROJET_NAME, PROJET_NAME + "-changes-graph-list.json")
 
     collect_metric(GRAPHS_METRICS_PATH, prefix="")
 
@@ -47,19 +47,28 @@ def start(json):
 
 def collect_metric(graph_metrics_path, prefix="", suffix=""):
     changes_graph_list_json = utils.load_json(CHANGES_GRAPHS_LIST_PATH)
+    n=0
     for id in changes_graph_list_json:
+        '''
+        if(n<22570):
+            n+=1
+            bar.next()
+            continue
+        '''
         graph_file = changes_graph_list_json[id]
         metrics_filepath = os.path.join(graph_metrics_path, str(graph_file) + ".json")
-        metrics_json = utils.load_json(metrics_filepath)["metrics"]
-        changes = get_change(id)
-        for change in changes:
-            owner_id = change['owner_id']
-            owner_metrics = get_owner_metrics(metrics_json, id, owner_id, prefix, suffix)
-            Database.save_metrics(owner_metrics)
-            all_account_metrics = get_all_account_metrics(metrics_json, id, prefix, suffix)
-            Database.save_metrics(all_account_metrics)
-        bar.next()
-        del metrics_json
+        temp = utils.load_json(metrics_filepath)
+        if temp is not None: 
+            metrics_json = temp["metrics"]
+            changes = get_change(id)
+            for change in changes:
+                owner_id = change['owner_id']
+                owner_metrics = get_owner_metrics(metrics_json, id, owner_id, prefix, suffix)
+                Database.save_metrics(owner_metrics)
+                all_account_metrics = get_all_account_metrics(metrics_json, id, prefix, suffix)
+                Database.save_metrics(all_account_metrics)
+            bar.next()
+            del metrics_json
     bar.finish()
     return 0
 

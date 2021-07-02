@@ -8,6 +8,7 @@ const ComputeOwnerMetrics = require('./compute_metrics/compute-owner-metrics');
 const ComputeChangesMetrics = require('./compute_metrics/compute-changes-metrics');
 const ComputeMetadata = require('./compute_metrics/metrics-metadata');
 const ComputeRecentMetrics = require('./compute_metrics/compute-owner-recent-metrics');
+const ChangeLite = require('./compute_metrics/add-change-lite');
 //const ComputeRecentMetrics = require('./compute_metrics/compute-recent-metrics');
 const ExtractMetrics = require('./compute_metrics/extract-metrics');
 const CollectRecentGraph = require('./prepare_code_change/collect-recent-graph');
@@ -67,6 +68,15 @@ function main() {
             }
         }, function (argv) {
             computeChangesMetrics_2(argv)
+        })
+        .command('lite [project]', 'Create smaller version of change', {
+            project: {
+                description: 'The project from which the codes changes are shrink',
+                alias: 'p',
+                type: 'string',
+            }
+        }, function (argv) {
+            addChangeLite(argv)
         })
         .command('recentMetrics [project]', 'Compute the changes metrics of a project.', {
             project: {
@@ -236,6 +246,15 @@ function computeMetadata(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
         return ComputeMetadata.start(projectJson)
+            .catch(err => {
+                console.log(err)
+            });
+}
+
+function addChangeLite(argv) {
+    let projectJson = prepareCommand(argv);
+    if (projectJson)
+        return ChangeLite.start(projectJson)
             .catch(err => {
                 console.log(err)
             });

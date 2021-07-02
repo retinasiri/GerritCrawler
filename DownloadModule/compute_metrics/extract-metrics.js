@@ -229,16 +229,16 @@ async function collectMetrics(metric) {
 
     //Collaboration Graph
     //todo put fg_
-    result = copy(result, metric, "degree_centrality", "degree_centrality");
-    result = copy(result, metric, "closeness_centrality", "closeness_centrality");
-    result = copy(result, metric, "betweenness_centrality", "betweenness_centrality");
-    result = copy(result, metric, "eigenvector_centrality", "eigenvector_centrality");
-    result = copy(result, metric, "clustering_coefficient", "clustering_coefficient");
-    result = copy(result, metric, "core_number", "core_number");
+    result = copy(result, metric, "fg_degree_centrality", "degree_centrality");
+    result = copy(result, metric, "fg_closeness_centrality", "closeness_centrality");
+    result = copy(result, metric, "fg_betweenness_centrality", "betweenness_centrality");
+    result = copy(result, metric, "fg_eigenvector_centrality", "eigenvector_centrality");
+    result = copy(result, metric, "fg_clustering_coefficient", "clustering_coefficient");
+    result = copy(result, metric, "fg_core_number", "core_number");
 
     //code
-    result = copy(result, metric, "lines_added_num");
-    result = copy(result, metric, "lines_deleted_num");
+    result = copy(result, metric, "first_revision_insertions", "insertions" );
+    result = copy(result, metric, "first_revision_deletions", "deletions");
     result = copy(result, metric, "diff_lines_added_line_deleted", "code_churn");
     result = copy(result, metric, "num_files");
     result = copy(result, metric, "num_files_type");
@@ -292,11 +292,11 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "ownerNumberOfRevisionStd", "owner_number_of_revision_std");
 
     //file metrics
+    result = copy(result, metric, "AvgNumberOfDeveloperWhoModifiedFiles", "developers_file");
     result = copy(result, metric, "fileTimeAvg", "file_changes_duration_avg", true);
     result = copy(result, metric, "fileTimeMax", "file_changes_duration_max", true);
     result = copy(result, metric, "fileTimeMin", "file_changes_duration_min", true);
     result = copy(result, metric, "fileTimeStd", "file_changes_duration_std", true);
-    result = copy(result, metric, "AvgNumberOfDeveloperWhoModifiedFiles", "developers_file");
     result = copy(result, metric, "fileCountAvg", "prior_changes_files_avg");
     result = copy(result, metric, "fileCountMax", "prior_changes_files_max");
     result = copy(result, metric, "fileCountMin", "prior_changes_files_min");

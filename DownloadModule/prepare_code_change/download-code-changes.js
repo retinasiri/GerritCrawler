@@ -20,6 +20,16 @@ let projectApiUrl = projectJson["projectApiUrl"];
 let DIRECTORY_NAME = projectJson["projectName"];
 let OUTPUT_DATA_PATH = "data/"
 
+//todo list project from file
+//todo loop starting project by project
+//todo crawl by project
+//todo test
+//todo download code fetch
+//todo clone repo
+//todo get code change id
+//todo download code change by id
+
+//todo add service user to bot
 
 function startDownload(json) {
     if (json["projectDBUrl"])
@@ -98,6 +108,7 @@ function getAllChanges(changesUrl) {
 }
 
 function hasToDownloadMoreChange(json, changesUrl) {
+
     let lastJson = getLastJson(json);
     if (lastJson)
         if (lastJson._more_changes) {
@@ -115,6 +126,7 @@ function hasToDownloadMoreChange(json, changesUrl) {
                         bool = true;
         }
     }
+
     return bool;
 }
 

@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 var Account = require('./account').schema;
 var Schema = mongoose.Schema;
 
-var ChangeSummarySchema = new Schema({
+var ChangeLiteSchema = new Schema({
+    _id : { type : String, required : true },
     id: String,
     project: String,
     branch: String,
@@ -16,13 +17,12 @@ var ChangeSummarySchema = new Schema({
     mergeable: Boolean,
     insertions: Number,
     deletions: Number,
-    total_comment_count: Number,
-    unresolved_comment_count: Number,
-    has_review_started: Boolean,
     _number: Number,
-    owner: {type: Account}
+    owner: {type: Account},
+    owner_id: Number,
 }, {
-    versionKey: false
+    versionKey: false,
+    strict: false
 });
 
-module.exports = mongoose.model('ChangeSummary', ChangeSummarySchema);
+module.exports = mongoose.model('ChangeLite', ChangeLiteSchema);

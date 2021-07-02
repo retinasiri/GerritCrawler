@@ -1,5 +1,6 @@
 //const BotAccounts = require('../res/libreoffice-bot-account.json');
 const fs = require('fs');
+const Moment = require('moment');
 const MathJs = require('mathjs');
 const PathLibrary = require('path');
 const Utils = require('../config/utils');
@@ -199,6 +200,7 @@ function mixDoc(array){
         else
             temp.push(array[array.length - i])
     }
+    return temp
 }
 function isOdd(num) { return num % 2;}
 
@@ -281,6 +283,22 @@ function is_trivial_rebase(json){
     return kind.includes("TRIVIAL_REBASE");
 }
 
+function diffCreatedUpdatedTime(json) {
+    let createdTime = Moment(json.created);
+    let updatedTime = Moment(json.updated);
+    return Math.abs(createdTime.toDate() - updatedTime.toDate());
+}
+
+function getReviewersId(json) {
+
+    let reviewers = json.reviewers.REVIEWER
+    let reviewerArray = []
+    for (let id in reviewers) {
+        reviewerArray.push(reviewers[id]._account_id)
+    }
+    return reviewerArray;
+}
+
 module.exports = {
     getHumanReviewers: getHumanReviewers,
     getHumanReviewersID: getHumanReviewersID,
@@ -292,5 +310,7 @@ module.exports = {
     get_first_revision:get_first_revision,
     get_first_revision_number: get_first_revision_number,
     get_first_revision_id: get_first_revision_id,
-    is_trivial_rebase: is_trivial_rebase
+    is_trivial_rebase: is_trivial_rebase,
+    diffCreatedUpdatedTime: diffCreatedUpdatedTime,
+    getReviewersId: getReviewersId
 };

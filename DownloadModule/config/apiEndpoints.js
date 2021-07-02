@@ -19,30 +19,30 @@ let pagingQuery = "S="
 let queryBuilder = "?q="
 let openChangeQuery = "status:open";
 let abandonedChangeQuery = "status:abandoned";
-let mergedChangeQuery = "status:merged" ;
+let mergedChangeQuery = "status:merged";
 //let query = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=CURRENT_COMMIT&o=ALL_FILES&o=DETAILED_ACCOUNTS&o=REVIEWER_UPDATES&o=MESSAGES";
 //let query = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS&o=REVIEWER_UPDATES&o=MESSAGES&o=DOWNLOAD_COMMANDS";
 //let query = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS" +
-    //"&o=REVIEWER_UPDATES&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS"
-    //"&o=CHANGE_ACTIONS&o=REVIEWED&o=SUBMITTABLE&o=CHECK&o=COMMIT_FOOTERS&o=TRACKING_IDS";
+//"&o=REVIEWER_UPDATES&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS"
+//"&o=CHANGE_ACTIONS&o=REVIEWED&o=SUBMITTABLE&o=CHECK&o=COMMIT_FOOTERS&o=TRACKING_IDS";
 //&o=REVIEWER_UPDATES&o=COMMIT_FOOTERS
 //&o=REVIEWER_UPDATES&o=COMMIT_FOOTERS
 
-let query = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS" +
+let query_params = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS" +
     "&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS&o=CHANGE_ACTIONS&o=REVIEWER_UPDATES&o=COMMIT_FOOTERS"
 
 //"&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS" +
 //"&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS&o=CHANGE_ACTIONS"
 
-function getProjectApi(projectName){
+function getProjectApi(projectName) {
     return Config.project[projectName]["api_url"];
 }
 
-function getProjectsUrl(url){
+function getProjectsUrl(url) {
     return new URL(url + projectsEndpoint);
 }
 
-function getProjectsUrlHref(url){
+function getProjectsUrlHref(url) {
     return url + projectsEndpoint;
 }
 
@@ -50,48 +50,74 @@ function getProjectsUrlHref(url){
     return url + changeEndpoint;
 }*/
 
-function getChangesUrl(url, start){
+function getChangesUrl(url, start) {
     return url + changeEndpoint + paging + start;
 }
 
-function getChangeDetailsUrl(url, id){
+function getChangeDetailsUrl(url, id) {
     return url + changeEndpoint + id + detailEndpoint;
 }
 
-function getAccountsDetail(url, id){
+function getAccountsDetail(url, id) {
     return url + accountsEndpoint + id;
 }
 
-function startAt(url, start){
-    return url + + "&" + pagingQuery + start;
+function startAt(url, start) {
+    return url + +"&" + pagingQuery + start;
 }
 
-function getOpenChangeUrl(url){
-    return url + changeEndpoint + queryBuilder + openChangeQuery + query;
+/*
+function getOpenChangeUrl(url) {
+    return url + changeEndpoint + queryBuilder + openChangeQuery + query_params;
 }
 
-function getAbandonedChangeUrl(url){
-    return url + changeEndpoint + queryBuilder + abandonedChangeQuery + query;
+function getAbandonedChangeUrl(url) {
+    return url + changeEndpoint + queryBuilder + abandonedChangeQuery + query_params;
 }
 
-function getMergedChangeUrl(url){
-    return url + changeEndpoint + queryBuilder + mergedChangeQuery + query;
+function getMergedChangeUrl(url) {
+    return url + changeEndpoint + queryBuilder + mergedChangeQuery + query_params;
 }
 
-function getOpenChangeUrl(url, start){
-    return new URL(url + changeEndpoint + queryBuilder + openChangeQuery + query + "&" + pagingQuery + start);
+function getOpenChangeUrl(url, start) {
+    return new URL(url + changeEndpoint + queryBuilder + openChangeQuery + query_params + "&" + pagingQuery + start);
 }
 
-function getAbandonedChangeUrl(url, start){
-    return new URL(url + changeEndpoint + queryBuilder + abandonedChangeQuery + query + "&" + pagingQuery + start);
+function getAbandonedChangeUrl(url, start) {
+    return new URL(url + changeEndpoint + queryBuilder + abandonedChangeQuery + query_params + "&" + pagingQuery + start);
 }
 
-function getMergedChangeUrl(url, start){
+function getMergedChangeUrl(url, start) {
     //console.log("mergedUrl : " + mergedUrl)
-    return new URL(url + changeEndpoint + queryBuilder + mergedChangeQuery + query + "&" + pagingQuery + start);
+    return new URL(url + changeEndpoint + queryBuilder + mergedChangeQuery + query_params + "&" + pagingQuery + start);
+}
+*/
+
+function getTypeChangeUrl(url, start, query, project = ""){
+    if (!project || project.length === 0)
+        return new URL(url + changeEndpoint + queryBuilder + query + query_params + "&" + pagingQuery + start);
+    else
+        return new URL(url + changeEndpoint + queryBuilder + query + '+' + getProjectString(project) + query_params + "&" + pagingQuery + start);
 }
 
-function getProjectName(url){
+function getOpenChangeUrl(url, start, project = "") {
+    return getTypeChangeUrl(url, start, openChangeQuery, project)
+}
+
+function getAbandonedChangeUrl(url, start, project = "") {
+    return getTypeChangeUrl(url, start, abandonedChangeQuery, project)
+}
+
+function getMergedChangeUrl(url, start, project = "") {
+    return getTypeChangeUrl(url, start, mergedChangeQuery, project)
+}
+
+//+encodeURIComponent(password)
+function getProjectString(project) {
+    return 'project:' + encodeURIComponent(project)
+}
+
+function getProjectName(url) {
     return (url.hostname.split("."))[1]
 }
 

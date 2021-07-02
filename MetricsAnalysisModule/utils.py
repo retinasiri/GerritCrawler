@@ -2,6 +2,7 @@ from progress.bar import Bar
 import os
 import json
 import sys
+from pathlib import Path as pathlib
 from humanfriendly import format_timespan
 
 
@@ -46,10 +47,20 @@ def get_full_graph_list(projectName, output_dir):
 
 
 def load_json(path):
+    if os.path.exists(path):
+        with open(path) as f:
+            json_file = json.load(f)
+            f.close()
+        return json_file
+    else:
+        return None
+
+'''
+def load_json(path):
     with open(path) as f:
         json_file = json.load(f)
-        f.close()
     return json_file
+'''
 
 
 def get_bot_accounts(projectName):
@@ -73,11 +84,15 @@ def get_project_json(projectName):
     json["db_name"] = Config["project"][projectName]["db_name"]
     return json
 
-
-def load_json(path):
-    with open(path) as f:
-        json_file = json.load(f)
-    return json_file
+def save_json_in_file(PROJET_NAME, data, path, filename):
+    output_file_name = PROJET_NAME + filename
+    full_path = os.path.join(path, PROJET_NAME, output_file_name)
+    dir_path = pathlib(path)
+    dir_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(full_path, "wb") as f:
+        f.write(json.dumps(data, indent=4).encode("utf-8"))
+        f.close()
+    return 0
 
 
 def launch(function):
