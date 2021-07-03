@@ -215,7 +215,12 @@ function fetchFromApi(apiEndpoint, project="") {
         .catch(function (err) {
             let typeOfChange = (new URL(apiEndpoint)).searchParams.get('q');
             console.log(getTime() + typeOfChange + "- Api Error : " + err);
-            return getAllChanges(new URL(apiEndpoint), project);
+            if (err.response) {
+                if(err.response.status !== 400)
+                    return getAllChanges(new URL(apiEndpoint), project);
+                else
+                    return Promise.resolve(false);
+            }
         });
 }
 
