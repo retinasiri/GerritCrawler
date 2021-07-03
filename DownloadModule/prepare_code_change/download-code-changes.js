@@ -10,7 +10,7 @@ const ApiEndPoints = require('../config/apiEndpoints');
 const Utils = require("../config/utils");
 const PathLibrary = require('path');
 
-const axios = RateLimit(Axios.create(), {maxRPS: 20})
+const axios = RateLimit(Axios.create(), {maxRPS: 10})
 const TIMEOUT = 20 * 60 * 1000;
 let LAST_YEAR_TO_COLLECT = 2000;
 let NUMBER_OF_CHANGES_REQUESTED = 250;
