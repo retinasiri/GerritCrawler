@@ -6,21 +6,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/compute_metrics/add-change-lite.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/compute_metrics/compute-change-metrics-for-lite-changes.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/compute_metrics/metrics-utils-for-lite.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compute_metrics/extract-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/extract-metrics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compute_metrics/metrics-utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/metrics-utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/apiEndpoints.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/apiEndpoints.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/dbUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/dbUtils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/changeSummary.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/changeLite.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/crawling.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/crawling.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/prepare_code_change/download-code-changes.js" beforeDir="false" afterPath="$PROJECT_DIR$/prepare_code_change/download-code-changes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/add_graph_metrics_in_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/add_graph_metrics_in_db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MetricsAnalysisModule/split-files.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../MetricsAnalysisModule/split-files.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,7 +176,8 @@
       <workItem from="1624950350383" duration="409000" />
       <workItem from="1625062899230" duration="482000" />
       <workItem from="1625164837301" duration="3777000" />
-      <workItem from="1625205599046" duration="84000" />
+      <workItem from="1625205599046" duration="252000" />
+      <workItem from="1625237083162" duration="12714000" />
     </task>
     <task id="LOCAL-00001" summary="quick fix">
       <created>1620486385609</created>
@@ -315,10 +306,10 @@
       <screen x="0" y="0" width="1280" height="800" />
     </state>
     <state x="241" y="17" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1618541985016" />
-    <state x="271" y="225" width="834" height="547" key="find.popup" timestamp="1624813688387">
+    <state x="271" y="225" width="834" height="547" key="find.popup" timestamp="1625267365237">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state x="271" y="225" width="834" height="547" key="find.popup/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1624674116867" />
+    <state x="271" y="225" width="834" height="547" key="find.popup/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1625267365237" />
     <state x="271" y="225" width="834" height="547" key="find.popup/0.0.1280.800@0.0.1280.800" timestamp="1624813688387" />
     <state x="373" y="120" key="git4idea.branch.GitSmartOperationDialog" timestamp="1624674951858">
       <screen x="0" y="0" width="1280" height="800" />
