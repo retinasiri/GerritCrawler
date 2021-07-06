@@ -102,20 +102,13 @@ async function collectDocs(docs) {
 function check_value_to_ignore(metrics) {
     let bool = false;
 
-    if (metrics["status"]) {
+    if (metrics["status"])
         if (metrics["status"].includes("NEW"))
             return true;
-    }
-
     if (metrics["first_revision_number"] !== 1)
         return true;
-
     if (metrics["is_a_bot"] === true)
         return true;
-
-    /*if (metrics["first_revision_kind"].includes("TRIVIAL_REBASE"))
-        return true;*/
-
     if(check_self_review(metrics))
         return true;
 
@@ -126,8 +119,7 @@ function check_value_to_ignore(metrics) {
             bool = true;
         }
     }
-    //console.log(bool);
-    //console.log(metrics);
+
     return bool;
 }
 
