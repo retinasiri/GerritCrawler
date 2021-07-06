@@ -233,6 +233,8 @@ function collectOwnerMetrics(json, metric) {
 
     metric["num_human_reviewer"] = MetricsUtils.getHumanReviewersCount(json, projectName);
     metric["is_self_reviewed"] = isSelfReviewed(json);
+    metric["is_owner_a_reviewer"] = isOwnerAReviewer(json);
+    metric["is_owner_the_only_reviewer"] = isOwnerTheOnlyReviewer(json);
 
     let self_review = is_self_reviewed_note(json);
     metric["labels_code_review_2_owner"] = self_review.check_code_review_2_owner;
@@ -270,6 +272,18 @@ function isSelfReviewed(json) {
             return 1
     }
     return 0;
+}
+
+function isOwnerAReviewer(json){
+    let reviewersId = MetricsUtils.getReviewersId(json);
+    let ownerId = json.owner._account_id;
+    return reviewersId.includes(ownerId);
+}
+
+function isOwnerTheOnlyReviewer(json){
+    let reviewersId = MetricsUtils.getReviewersId(json);
+    let ownerId = json.owner._account_id;
+    return reviewersId.includes(ownerId) && reviewersId.length===1;
 }
 
 function is_self_reviewed_note(json) {

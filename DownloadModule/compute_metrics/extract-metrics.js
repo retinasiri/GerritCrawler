@@ -110,9 +110,6 @@ function check_value_to_ignore(metrics) {
     if (metrics["first_revision_number"] !== 1)
         return true;
 
-    if (metrics["is_self_reviewed"] === 1)
-        return true;
-
     if (metrics["is_a_bot"] === true)
         return true;
 
@@ -135,14 +132,14 @@ function check_value_to_ignore(metrics) {
 }
 
 function check_self_review(metrics) {
-    let bool = false;
-    if (metrics["check_code_review_2_owner"] >= 1 && metrics["check_code_review_length"] <= 1) {
-        bool = true;
-    }
-    if (metrics["check_code_review_minus_2_owner"] >= 1 && metrics["check_code_review_human_length"] <= 1) {
-        bool = true;
-    }
-    return bool;
+    if (metrics["is_owner_the_only_reviewer"])
+        return true;
+    if (metrics["labels_code_review_2_owner"] && metrics["labels_code_review_2_count"] === 1)
+        return true;
+    if (metrics["labels_code_review_minus_2_owner"] && metrics["labels_code_review_minus_2_count"] === 1)
+        return true;
+
+    return false;
 }
 
 async function saveMetrics(json) {
