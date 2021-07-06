@@ -1,9 +1,9 @@
 {
   "output_data_path": "/Volumes/SEAGATE-II/Gerrit-Code-Changes",
-  "database_hostname": "localhost",
+  "database_hostname": "173.209.46.162",
   "database_port": 27017,
-  "database_username": "",
-  "database_password": "",
+  "database_username": "mongoadmin",
+  "database_password": "ptsdadmin321",
   "project": {
     "libreoffice": {
       "api_url": "https://gerrit.libreoffice.org/",

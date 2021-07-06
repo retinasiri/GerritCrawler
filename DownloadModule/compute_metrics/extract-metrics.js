@@ -7,6 +7,7 @@ const fs = require('fs');
 const MetricsUtils = require('./metrics-utils');
 
 const progressBar = new cliProgress.SingleBar({
+    format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | skipped : {skipped} ',
     barCompleteChar: '#',
     barIncompleteChar: '-',
 }, cliProgress.Presets.shades_classic);
@@ -17,6 +18,7 @@ let projectDBUrl = libreOfficeJson["projectDBUrl"];
 let projectName = libreOfficeJson["projectName"];
 let DATA_PATH = "data/"
 let NUM_OF_CHANGES_LIMIT = 10000;
+let skipped = 0;
 
 
 if (typeof require !== 'undefined' && require.main === module) {
@@ -84,8 +86,10 @@ async function collectDocs(docs) {
     for (let key in docs) {
         let doc = docs[key];
 
-        if (check_value_to_ignore(doc))
+        if (check_value_to_ignore(doc)){
+            skipped +=1;
             continue;
+        }
 
         await collectMetrics(doc)
             .then((json) => {
@@ -152,7 +156,7 @@ function delete_metrics_file(){
 }
 
 async function updateProgress() {
-    progressBar.increment(1);
+    progressBar.increment(1, {skipped: skipped});
     return Promise.resolve(true);
 }
 

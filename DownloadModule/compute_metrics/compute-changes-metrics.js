@@ -846,6 +846,7 @@ function getOwnerNumberOfReview(json) {
     let ownerId = json.owner._account_id;
     let match = {
         $match: {
+            status:{$in:['MERGED', 'ABANDONED']},
             _number: {$lt: number},
             updated: {$lte: created_date},
             "reviewers.REVIEWER._account_id": ownerId
@@ -868,6 +869,7 @@ function getFileDeveloperNumber(json) {
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
+            status:{$in:['MERGED', 'ABANDONED']},
             _number: {$lt: number},
             updated: {$lte: created_date},
             files_list: {$in: files_list}
@@ -895,6 +897,7 @@ function getPriorChangesFiles(json) {
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
+            status:{$in:['MERGED', 'ABANDONED']},
             _number: {$lt: number},
             updated: {$lte: created_date},
             files_list: {$in: files_list}
@@ -1022,6 +1025,7 @@ function getChangesMessagesCountAndAvg(json) {
     let number = json._number;
     let match = {
         $match: {
+            status:{$in:['MERGED', 'ABANDONED']},
             _number: {$lt: number},
             updated: {$lte: created_date}
         }
