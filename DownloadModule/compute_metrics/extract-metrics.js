@@ -229,9 +229,10 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "fg_core_number", "core_number");
 
     //code
-    result = copy(result, metric, "first_revision_insertions", "insertions" );
+    result = copy(result, metric, "first_revision_insertions", "insertions");
     result = copy(result, metric, "first_revision_deletions", "deletions");
-    result = copy(result, metric, "diff_lines_added_line_deleted", "code_churn");
+    //result = copy(result, metric, "diff_lines_added_line_deleted", "code_churn");
+    result["code_churn"] = result["insertions"] + result["deletions"]
     result = copy(result, metric, "num_files");
     result = copy(result, metric, "num_files_type");
     result = copy(result, metric, "num_directory");
@@ -262,6 +263,7 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "ownerPriorChangesCount", "owner_prior_changes");
     result = copy(result, metric, "ownerPriorMergedChangesCount", "owner_prior_merged_changes");
     result = copy(result, metric, "ownerPriorAbandonedChangesCount", "owner_prior_abandoned_changes");
+    result["owner_non_close_changes"] = result["owner_prior_changes"] - result["owner_prior_merged_changes"] - result["owner_prior_abandoned_changes"]
     result = copy(result, metric, "ownerMergedRatio", "owner_merge_ratio");
     result = copy(result, metric, "mergedRatio", "merge_ratio");
     result = copy(result, metric, "priorSubsystemChangesCount", "prior_subsystem_changes");

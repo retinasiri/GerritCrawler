@@ -184,9 +184,10 @@ function collectTimeMetrics(json, metric) {
     metric["diff_created_updated"] = diffCreatedUpdatedTime(json);
     metric["diff_created_updated_in_days"] = diff_date_days(json);
     metric["diff_created_updated_in_days_ceil"] = MathJs.ceil(diff_date_days(json));
-    metric["diff_created_updated_in_hours"] = diff_date_hours(json);
-    metric["diff_created_updated_in_hours_ceil"] = MathJs.ceil(diff_date_hours(json));
+    //metric["diff_created_updated_in_hours"] = diff_date_hours(json);
+    //metric["diff_created_updated_in_hours_ceil"] = MathJs.ceil(diff_date_hours(json));
     //metric["date_submitted"] = get_date_submitted(json);
+    metric["diff_created_updated_in_hours"] = json["meta_date_updated_date_created_diff"]
 }
 
 /**
@@ -252,7 +253,6 @@ function collectOwnerMetrics(json, metric) {
 
     metric["labels_verified_human_length"] = self_review.count_verified_human_length;
     metric["labels_verified_length"] = self_review.count_verified_length;
-
 
     metric["check_code_review_1_owner"] = self_review.check_code_review_1_owner;
     metric["check_code_review_1_count"] = self_review.check_code_review_1_count;

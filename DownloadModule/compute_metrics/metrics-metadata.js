@@ -148,13 +148,59 @@ async function collectMetadata(json) {
         metadata["meta_reviewers_ids"] = getReviewersId(json);
         metadata["meta_not_bot_reviewers"] = MetricsUtils.getHumanReviewersID(json, projectName);
     }
+
+    metadata["close_time"] = get_close_time(json)
+    metadata["is_close_time_updated_time"] = is_equal(metadata["close_time"], json.updated)
+    metadata["meta_date_updated_date_created_diff"] = timeDiff(json.created, metadata["close_time"])
+
     return metadata;
 }
 
+function is_equal(time1, time2){
+    return time1 === time2;
+}
+
+function get_close_time(json){
+    let labels = json["labels"];
+    let time = json.updated
+
+    if (!!!labels)
+        return time;
+
+    let code_review = []
+    if (labels["Code-Review"]){
+        if (labels["Code-Review"]["all"])
+            code_review = labels["Code-Review"]["all"];
+        else
+            return time;
+    } else {
+        return time;
+    }
+
+
+    for (let i = 0; i < code_review.length; i++) {
+        let review = code_review[i];
+        let value = review.value;
+        if (value === 2 || value ===-2){
+            time = review.date
+        }
+    }
+
+    return time;
+}
+
+function timeDiff(time1, time2) {
+    let createdTime = Moment.utc(time1);
+    let updatedTime = Moment.utc(time2);
+    let time = Math.abs(createdTime.toDate() - updatedTime.toDate());
+    return Moment.duration(time).asHours()
+}
+
 function diffCreatedUpdatedTime(json) {
-    let createdTime = Moment(json.created);
-    let updatedTime = Moment(json.updated);
-    return Math.abs(createdTime.toDate() - updatedTime.toDate());
+    let createdTime = Moment.utc(json.created);
+    let updatedTime = Moment.utc(json.updated);
+    let time = Math.abs(createdTime.toDate() - updatedTime.toDate());
+    return Moment.duration(time).asHours()
 }
 
 function getReviewersId(json) {

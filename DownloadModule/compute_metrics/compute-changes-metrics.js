@@ -1136,6 +1136,25 @@ function getOwnerChangesCountAndMessagesCountWithSameReviewers(json) {
     return genericDBRequest(pipeline);
 }
 
+
+function recent_rate_of_close(json){
+    let created_date = json.created;
+    let daysAgo = Moment(json.created).subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+    let weekAgo = Moment(json.created).subtract(7, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+    let monthAgo = Moment(json.created).subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+    let yearAgo = Moment(json.created).subtract(365, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+
+    let match = {
+        $match: {
+            status:{$in:['MERGED', 'ABANDONED']},
+            _number: {$lt: number},
+            updated: {$lte: created_date}
+        }
+    }
+
+
+}
+
 module.exports = {
     start: startComputeMetrics
 };

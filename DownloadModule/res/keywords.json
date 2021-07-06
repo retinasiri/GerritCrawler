@@ -33,32 +33,52 @@
     "resolved",
     "solve",
     "solves",
-    "solved"
+    "solved",
+    "crash",
+    "make sure"
   ],
   "feature-addition":[
     "new",
     "add",
     "requirement",
     "initial",
-    "create"
+    "create",
+    "implement",
+    "implementing",
+    "insert"
   ],
   "merge": [
-    "merge"
+    "merge",
+    "combine",
+    "unite",
+    "join",
+    "consolidate",
+    "incorporate",
+    "fuse",
+    "mix"
   ],
   "non-functional": [
     "doc",
     "docs",
     "document",
-    "documentation"
+    "documentation",
+    "help"
   ],
   "perfective": [
-
+    "instead",
+    "improve",
+    "better"
   ],
   "preventive": [
     "test",
     "junit",
     "coverage",
-    "asset"
+    "asset",
+    "unit",
+    "unit test",
+    "UnitTest",
+    "prevent",
+    "cppunit"
   ],
   "refactoring": [
     "clean",
@@ -106,7 +126,13 @@
     "remov",
     "rewrit",
     "restructur",
-    "reorganiz"
+    "reorganiz",
+    "generalise",
+    "->",
+    "deprecated",
+    "depreca",
+    "code",
+    "readability"
   ]
 
 }

@@ -8,8 +8,11 @@
     <list default="true" id="cc52e8e9-6ac3-49c6-a58d-36179afdb5f7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_metrics/compute-changes-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-changes-metrics.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_metrics/compute-simple-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/compute-simple-metrics.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_metrics/extract-metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/extract-metrics.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_metrics/metrics-metadata.js" beforeDir="false" afterPath="$PROJECT_DIR$/compute_metrics/metrics-metadata.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/keywords.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/keywords.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -182,7 +185,9 @@
       <workItem from="1625459029583" duration="2426000" />
       <workItem from="1625534176771" duration="1903000" />
       <workItem from="1625543648079" duration="3691000" />
-      <workItem from="1625549520832" duration="1893000" />
+      <workItem from="1625549520832" duration="4735000" />
+      <workItem from="1625589888234" duration="4969000" />
+      <workItem from="1625612159887" duration="365000" />
     </task>
     <task id="LOCAL-00001" summary="quick fix">
       <created>1620486385609</created>
@@ -302,10 +307,10 @@
     </state>
     <state x="149" y="16" key="SettingsEditor/0.0.1280.800/0.-1057.1920.1057@0.0.1280.800" timestamp="1618548499532" />
     <state x="149" y="39" key="SettingsEditor/0.23.1280.777/0.-1057.1920.1057@0.23.1280.777" timestamp="1618524724233" />
-    <state width="500" height="445" key="SwitcherDM" timestamp="1625414109095">
+    <state width="500" height="445" key="SwitcherDM" timestamp="1625558164622">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="500" height="445" key="SwitcherDM/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1618507558320" />
+    <state width="500" height="445" key="SwitcherDM/0.0.1280.800/0.-1080.1920.1080@0.0.1280.800" timestamp="1625558164622" />
     <state width="500" height="445" key="SwitcherDM/0.0.1280.800@0.0.1280.800" timestamp="1625414109095" />
     <state x="241" y="17" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1618541985016">
       <screen x="0" y="0" width="1280" height="800" />
