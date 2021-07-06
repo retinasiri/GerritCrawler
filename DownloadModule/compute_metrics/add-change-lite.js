@@ -214,7 +214,7 @@ function add_revision_info(json, change_lite) {
     let self_review = is_self_reviewed_note(json);
     change_lite["labels_code_review_2_owner"] = self_review.check_code_review_2_owner;
     change_lite["labels_code_review_2_count"] = self_review.check_code_review_2_count;
-    change_lite["labels_code_review_minus_2_count"] = self_review.check_code_review_minus_2_owner;
+    change_lite["labels_code_review_minus_2_owner"] = self_review.check_code_review_minus_2_owner;
     change_lite["labels_code_review_minus_2_count"] = self_review.check_code_review_minus_2_count;
 
     change_lite["labels_code_review_human_length"] = self_review.check_code_review_human_length;

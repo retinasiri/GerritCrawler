@@ -101,7 +101,6 @@ async function collectDocs(docs) {
 
 function check_value_to_ignore(metrics) {
     let bool = false;
-    let keys = ['degree_centrality', 'num_segs_added']
 
     if (metrics["status"]) {
         if (metrics["status"].includes("NEW"))
@@ -117,17 +116,17 @@ function check_value_to_ignore(metrics) {
     if (metrics["is_a_bot"] === true)
         return true;
 
-    if (metrics["first_revision_kind"].includes("TRIVIAL_REBASE"))
-        return true;
+    /*if (metrics["first_revision_kind"].includes("TRIVIAL_REBASE"))
+        return true;*/
 
     if(check_self_review(metrics))
         return true;
 
+    let keys = ['fg_degree_centrality', 'num_segs_added']
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i]
         if (metrics[key] == null || !metrics.hasOwnProperty(key) || !(key in metrics)) {
             bool = true;
-
         }
     }
     //console.log(bool);
@@ -250,8 +249,8 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "num_segs_deleted");
     result = copy(result, metric, "num_segs_modify");
 
-    result = copy(result, metric, "first_revision_kind", "kind_of_revision");
-    result["kind_of_revision"] = match_review_kind_value(result["kind_of_revision"])
+    /*result = copy(result, metric, "first_revision_kind", "kind_of_revision");
+    result["kind_of_revision"] = match_review_kind_value(result["kind_of_revision"])*/
 
     //Text metrics
     result = copy(result, metric, "subject_length");
