@@ -152,6 +152,8 @@ async function collectMetadata(json) {
     metadata["close_time"] = get_close_time(json)
     metadata["is_close_time_updated_time"] = is_equal(metadata["close_time"], json.updated)
     metadata["meta_date_updated_date_created_diff"] = timeDiff(json.created, metadata["close_time"])
+    metadata["previous_updated"] = metadata["updated"]
+    metadata["updated"] = metadata["close_time"];
 
     return metadata;
 }

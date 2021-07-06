@@ -184,10 +184,10 @@ function collectTimeMetrics(json, metric) {
     metric["diff_created_updated"] = diffCreatedUpdatedTime(json);
     metric["diff_created_updated_in_days"] = diff_date_days(json);
     metric["diff_created_updated_in_days_ceil"] = MathJs.ceil(diff_date_days(json));
-    //metric["diff_created_updated_in_hours"] = diff_date_hours(json);
+    metric["diff_created_updated_in_hours"] = diff_date_hours(json);
     //metric["diff_created_updated_in_hours_ceil"] = MathJs.ceil(diff_date_hours(json));
     //metric["date_submitted"] = get_date_submitted(json);
-    metric["diff_created_updated_in_hours"] = json["meta_date_updated_date_created_diff"]
+    //metric["diff_created_updated_in_hours"] = json["meta_date_updated_date_created_diff"]
 }
 
 /**
@@ -417,23 +417,23 @@ function get_date_submitted(json) {
 }
 
 function get_date_created_time(json) {
-    return Moment(json.created).toDate().getTime();
+    return Moment.utc(json.created).toDate().getTime();
 }
 
 function get_date_updated_time(json) {
-    return Moment(json.updated).toDate().getTime();
+    return Moment.utc(json.updated).toDate().getTime();
 }
 
 function get_days_of_the_weeks(json) {
-    return Moment(json.created).isoWeekday();
+    return Moment.utc(json.created).isoWeekday();
 }
 
 function get_days_of_the_weeks_date_created(json) {
-    return Moment(json.created).isoWeekday();
+    return Moment.utc(json.created).isoWeekday();
 }
 
 function get_days_of_the_weeks_date_updated(json) {
-    return Moment(json.updated).isoWeekday();
+    return Moment.utc(json.updated).isoWeekday();
 }
 
 function get_commit_date(json) {
@@ -448,16 +448,16 @@ function get_commit_date(json) {
 
 function get_commit_date_time(json) {
     let date = get_commit_date(json);
-    return Moment(date).toDate().getTime()
+    return Moment.utc(date).toDate().getTime()
 }
 
 function is_created_date_a_weekend(json) {
-    let date = Moment(json.created).isoWeekday();
+    let date = Moment.utc(json.created).isoWeekday();
     return (date === 6) || (date === 7)
 }
 
 function is_updated_date_a_weekend(json) {
-    let date = Moment(json.updated).isoWeekday();
+    let date = Moment.utc(json.updated).isoWeekday();
     return (date === 6) || (date === 7)
 }
 
@@ -835,21 +835,21 @@ function num_subsystem(json) {
 }
 
 function diffCreatedUpdatedTime(json) {
-    let createdTime = Moment(json.created);
-    let updatedTime = Moment(json.updated);
+    let createdTime = Moment.utc(json.created);
+    let updatedTime = Moment.utc(json.updated);
     return Math.abs(createdTime.toDate() - updatedTime.toDate());
 }
 
 function diff_date_days(json) {
-    let createdTime = Moment(json.created).toDate();
-    let updatedTime = Moment(json.updated).toDate();
+    let createdTime = Moment.utc(json.created).toDate();
+    let updatedTime = Moment.utc(json.updated).toDate();
     let time = Math.abs(createdTime - updatedTime);
     return Moment.duration(time).asDays();
 }
 
 function diff_date_hours(json) {
-    let createdTime = Moment(json.created).toDate();
-    let updatedTime = Moment(json.updated).toDate();
+    let createdTime = Moment.utc(json.created).toDate();
+    let updatedTime = Moment.utc(json.updated).toDate();
     let time = Math.abs(createdTime - updatedTime);
     return Moment.duration(time).asHours();
 }
