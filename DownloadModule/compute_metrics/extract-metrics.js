@@ -250,8 +250,8 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "num_segs_deleted");
     result = copy(result, metric, "num_segs_modify");
 
-    result = copy(result, metric, "first_revision_kind", "type_of_revision");
-    result["type_of_revision"] = match_review_kind_value(result["type_of_revision"])
+    result = copy(result, metric, "first_revision_kind", "kind_of_revision");
+    result["kind_of_revision"] = match_review_kind_value(result["kind_of_revision"])
 
     //Text metrics
     result = copy(result, metric, "subject_length");
@@ -267,19 +267,28 @@ async function collectMetrics(metric) {
     //result = copy(result, metric, "is_perfective");
 
     //Owner experience metrics
-    result = copy(result, metric, "ownerPriorChangesCount", "num_owner_prior_changes");
-    result = copy(result, metric, "priorMergedChangesCount", "num_prior_merged_changes");
-    result = copy(result, metric, "priorAbandonedChangesCount", "num_prior_abandoned_changes");
+    result = copy(result, metric, "ownerPriorChangesCount", "owner_prior_changes");
+    result = copy(result, metric, "ownerPriorMergedChangesCount", "owner_prior_merged_changes");
+    result = copy(result, metric, "ownerPriorAbandonedChangesCount", "owner_prior_abandoned_changes");
+    result = copy(result, metric, "ownerMergedRatio", "owner_merge_ratio");
     result = copy(result, metric, "mergedRatio", "merge_ratio");
-    result = copy(result, metric, "priorSubsystemChangesCount", "num_prior_subsystem_changes");
-    result = copy(result, metric, "priorChangeDurationMean", "prior_change_duration_mean", true);
+    result = copy(result, metric, "priorSubsystemChangesCount", "prior_subsystem_changes");
+
+    /*result = copy(result, metric, "priorChangeDurationMean", "prior_change_duration_mean", true);
     result = copy(result, metric, "priorChangeDurationMax", "prior_change_duration_max", true);
     result = copy(result, metric, "priorChangeDurationMin", "prior_change_duration_min", true);
-    result = copy(result, metric, "priorChangeDurationStd", "prior_change_duration_std", true);
-    result = copy(result, metric, "ownerPriorChangesCount", "prior_owner_subsystem_changes_count");
-    result = copy(result, metric, "ownerMergedRatio", "owner_merge_ratio");
+    result = copy(result, metric, "priorChangeDurationStd", "prior_change_duration_std", true);*/
+
+    result = copy(result, metric, "priorOwnerChangesDurationMean", "owner_prior_change_duration_mean", true);
+    result = copy(result, metric, "priorOwnerChangesDurationMax", "owner_prior_change_duration_max", true);
+    result = copy(result, metric, "priorOwnerChangesDurationMin", "owner_prior_change_duration_min", true);
+    result = copy(result, metric, "priorOwnerChangesDurationStd", "owner_prior_change_duration_std", true);
+
+    result = copy(result, metric, "priorOwnerSubsystemChangesCount", "prior_owner_subsystem_changes");
     result = copy(result, metric, "priorOwnerSubsystemChangesRatio", "prior_owner_subsystem_changes_ratio");
+
     result = copy(result, metric, "ownerNumberOfReview", "reviewed_changes_owner");
+
     result = copy(result, metric, "ownerPreviousMessageCount", "owner_previous_message");
     result = copy(result, metric, "ownerChangesMessagesSum", "owner_exchanged_messages");
     result = copy(result, metric, "ownerChangesMessagesAvgPerChanges", "owner_changes_messages_avg");

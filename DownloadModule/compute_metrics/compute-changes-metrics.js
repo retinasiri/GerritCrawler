@@ -700,7 +700,7 @@ function get_file_pipeline(match, files_list) {
                 }
             }
         },*/
-        {$group: {_id: "$filename", count: {$sum: 1}, time: {$avg: "$meta_date_updated_date_created_diff"}}},
+        {$group: {_id: "$files_list", count: {$sum: 1}, time: {$avg: "$meta_date_updated_date_created_diff"}}},
         {$match: {_id: {$in: files_list}}},
         {
             $group: {
@@ -918,6 +918,7 @@ function getOwnerPreviousMessageCount(json) {
     let owner_id = json.owner._account_id;
     let match = {
         $match: {
+            status:{$in:['MERGED', 'ABANDONED']},
             _number: {$lt: number},
             updated: {$lte: created_date},
             "messages.author._account_id": owner_id
@@ -993,6 +994,7 @@ function getOwnerChangesMessagesCountAndAvgPerChanges(json) {
     let ownerId = json.owner._account_id;
     let match = {
         $match: {
+            status:{$in:['MERGED', 'ABANDONED']},
             _number: {$lt: number},
             "owner._account_id": ownerId,
             updated: {$lte: created_date}
@@ -1000,18 +1002,14 @@ function getOwnerChangesMessagesCountAndAvgPerChanges(json) {
     }
     let pipeline = [
         match,
-        //{$unwind: "$messages"},
-        //{$group: {_id: "$id", count:{$sum:1}}},
-        //{$group: {_id: 1, count:{$sum:"$count"}, avg:{$avg:"$count"}}},
-        //{$project: {id: 1, msg_count: {$size: "$messages"}}},
         {
             $group: {
                 _id: 1,
-                count: {$sum: "meta_messages_count"},
+                count: {$sum: "$meta_messages_count"},
                 avg: {$avg: "$meta_messages_count"},
                 max: {$max: "$meta_messages_count"},
                 min: {$avg: "$meta_messages_count"},
-                std: {$stdDevPop: "meta_messages_count"}
+                std: {$stdDevPop: "$meta_messages_count"}
             }
         }
     ]
@@ -1030,7 +1028,6 @@ function getChangesMessagesCountAndAvg(json) {
     }
     let pipeline = [
         match,
-        //{$project: {id: 1, msg_count: {$size: "$messages"}}},
         {
             $group: {
                 _id: 1,

@@ -1,6 +1,7 @@
 const Database = require('./config/databaseConfig');
 const ApiEndPoints = require('./config/apiEndpoints');
 const DownloadCodeChanges = require('./prepare_code_change/download-code-changes');
+const DownloadCodeChangesById = require('./prepare_code_change/download-code-changes-by-id');
 const DownloadProjects = require('./prepare_code_change/download-project-info');
 const AddChangesInDB = require('./prepare_code_change/add-code-change-in-db');
 const ComputeSimpleMetrics = require('./compute_metrics/compute-simple-metrics');
@@ -32,6 +33,15 @@ function main() {
             }
         }, function (argv) {
             downloadCodeChanges(argv)
+        })
+        .command('downloadById [project]', 'Download all the code changes of a projects using changes id.', {
+            project: {
+                description: 'The project from which codes changes are downloaded',
+                alias: 'p',
+                type: 'string',
+            }
+        }, function (argv) {
+            downloadCodeChangesById(argv)
         })
         .command('prepare [project]', 'Add the project in the database.', {
             project: {
@@ -173,6 +183,15 @@ function downloadCodeChanges(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
         return DownloadCodeChanges.start(projectJson)
+            .catch(err => {
+                console.log(err)
+            });
+}
+
+function downloadCodeChangesById(argv) {
+    let projectJson = prepareCommand(argv);
+    if (projectJson)
+        return DownloadCodeChangesById.start(projectJson)
             .catch(err => {
                 console.log(err)
             });

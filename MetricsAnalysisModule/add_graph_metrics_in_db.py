@@ -50,7 +50,7 @@ def collect_metric(graph_metrics_path, prefix="", suffix=""):
     n=0
     for id in changes_graph_list_json:
         '''
-        if(n<22570):
+        if(n<225000):
             n+=1
             bar.next()
             continue

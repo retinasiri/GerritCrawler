@@ -28,7 +28,7 @@ do
    #git ls-remote ${URL} | grep refs/changes/ > "$directory_path/${filename}.txt"   
    #printf "$i/${nb_lines} : git ls-remote ${URL} | grep refs/changes/ > $directory_path/${filename}.txt \n"
    #git ls-remote ${URL} | grep refs/changes/ > "$directory_path/${filename}.txt"
-   printf "$i/${nb_lines} : git ls-remote ${URL} grep -o 'refs\/changes\/.*\/meta' > $directory_path/${filename}.txt \n"
+   printf "$i/${nb_lines} : git ls-remote ${URL} | grep -o 'refs\/changes\/.*\/meta' > $directory_path/${filename}.txt \n"
    git ls-remote ${URL} | grep -o 'refs\/changes\/.*\/meta' > "$directory_path/${filename}.txt"
    i=$(($i+1))
    printf "\n"

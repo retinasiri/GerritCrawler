@@ -4,7 +4,6 @@ while getopts i:o: flag
 do
     case "${flag}" in
         i) input_directory=${OPTARG};;
-        o) output_directory=${OPTARG};;
     esac
 done
 
