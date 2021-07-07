@@ -87,7 +87,7 @@ async function collectDocs(docs) {
             .then((json) => {
                 if (typeof json === 'boolean') {
                     if (!json) {
-                        return deleteChange(json)
+                        return deleteChange(docs[key])
                     }
                 }
                 return saveMetadata(json);
