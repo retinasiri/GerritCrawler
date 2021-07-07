@@ -6,7 +6,7 @@ const Utils = require('../config/utils');
 const MetricsUtils = require('./metrics-utils');
 
 const progressBar = new cliProgress.SingleBar({
-    format: '{type} [{bar}] {percentage}% | ETA: {eta}s | {delete_change_nums}',
+    format: '[{bar}] {percentage}% | ETA: {eta}s | {delete_change_nums}',
     barCompleteChar: '#',
     barIncompleteChar: '-',
 }, cliProgress.Presets.shades_classic);
