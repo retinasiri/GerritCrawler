@@ -86,7 +86,9 @@ async function collectDocs(docs) {
         await collectMetadata(docs[key])
             .then((json) => {
                 if(typeof json === 'boolean'){
+                    console.log('json === \'boolean\'')
                     if(!json){
+                        console.log('!json')
                         return deleteChange(json)
                     }
                 }
@@ -97,6 +99,7 @@ async function collectDocs(docs) {
 }
 
 function deleteChange(json){
+    console.log('deleteChange')
     return Change.deleteOne({id: json.id})
         .then(() => {
             return updateProgress();
