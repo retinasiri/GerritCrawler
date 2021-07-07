@@ -97,9 +97,10 @@ async function collectDocs(docs) {
 }
 
 function deleteChange(json) {
-    console.log('deleteChange')
+    console.log('deleteChange : ' + json.id)
     return Change.deleteOne({id: json.id})
         .then(() => {
+            console.log('deleted')
             return updateProgress();
         }).catch(err => {
             console.log(err)
