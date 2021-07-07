@@ -6,7 +6,7 @@ const Utils = require('../config/utils');
 const MetricsUtils = require('./metrics-utils');
 
 const progressBar = new cliProgress.SingleBar({
-    format: '[{bar}] {percentage}% | ETA: {eta}s | {delete_change_nums}',
+    format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | delete_nums : {delete_change_nums}',
     barCompleteChar: '#',
     barIncompleteChar: '-',
 }, cliProgress.Presets.shades_classic);
@@ -59,6 +59,7 @@ function startComputeMetadata(json) {
 function getChanges(skip) {
     return Change
         .aggregate([
+            {$match: {meta_is_a_bot: true}},
             {$sort: {_number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
@@ -124,10 +125,9 @@ async function collectMetadata(json) {
         let ownerId = json.owner._account_id;
         metadata["meta_owner_id"] = ownerId;
         metadata["meta_is_a_bot"] = MetricsUtils.isABot(ownerId, projectName);
+        if(metadata["meta_is_a_bot"])
+            return Promise.resolve(false)
     }
-
-    if(metadata["meta_is_a_bot"])
-        return Promise.resolve(false)
 
     if (messages)
         metadata["meta_messages_count"] = Object.keys(messages).length;
