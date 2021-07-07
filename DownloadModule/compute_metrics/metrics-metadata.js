@@ -82,10 +82,22 @@ async function collectDocs(docs) {
     for (let key in docs) {
         await collectMetadata(docs[key])
             .then((json) => {
+                if(typeof json === 'boolean'){
+                    if(!json){
+                        return deleteChange(json)
+                    }
+                }
                 return saveMetadata(json);
             })
     }
     return Promise.resolve(true);
+}
+
+function deleteChange(json){
+    Change.deleteOne({id: json.id})
+        .then(() => {
+            return updateProgress();
+        });
 }
 
 function saveMetadata(json) {
@@ -111,6 +123,9 @@ async function collectMetadata(json) {
         metadata["meta_owner_id"] = ownerId;
         metadata["meta_is_a_bot"] = MetricsUtils.isABot(ownerId, projectName);
     }
+
+    if(metadata["meta_is_a_bot"])
+        return Promise.resolve(false)
 
     if (messages)
         metadata["meta_messages_count"] = Object.keys(messages).length;
