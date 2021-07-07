@@ -85,8 +85,8 @@ async function collectDocs(docs) {
     for (let key in docs) {
         await collectMetadata(docs[key])
             .then((json) => {
-                if(typeof json === 'boolean'){
-                    if(!json){
+                if (typeof json === 'boolean') {
+                    if (!json) {
                         return deleteChange(json)
                     }
                 }
@@ -96,11 +96,13 @@ async function collectDocs(docs) {
     return Promise.resolve(true);
 }
 
-function deleteChange(json){
+function deleteChange(json) {
     console.log('deleteChange')
     return Change.deleteOne({id: json.id})
         .then(() => {
             return updateProgress();
+        }).catch(err => {
+            console.log(err)
         });
 }
 
@@ -108,6 +110,8 @@ function saveMetadata(json) {
     return Change.updateOne({id: json.id}, json, {upsert: true})
         .then(() => {
             return updateProgress();
+        }).catch(err => {
+            console.log(err)
         });
 }
 
@@ -122,11 +126,11 @@ async function collectMetadata(json) {
 
     let messages = json.messages;
 
-    if (json.owner){
+    if (json.owner) {
         let ownerId = json.owner._account_id;
         metadata["meta_owner_id"] = ownerId;
         metadata["meta_is_a_bot"] = MetricsUtils.isABot(ownerId, projectName);
-        if(metadata["meta_is_a_bot"])
+        if (metadata["meta_is_a_bot"])
             return Promise.resolve(false)
     }
 
@@ -147,14 +151,14 @@ async function collectMetadata(json) {
             metadata['meta_messages_per_account'][author] = metadata['meta_messages_per_account'][author] + 1;
 
         //console.log(messages[key].author)
-        if(MetricsUtils.isABot(author, projectName)){
-            metadata['meta_messages_bot_count'] +=1
+        if (MetricsUtils.isABot(author, projectName)) {
+            metadata['meta_messages_bot_count'] += 1
         } else {
-            metadata['meta_messages_human_count'] +=1
+            metadata['meta_messages_human_count'] += 1
         }
     }
     let revisions = json.revisions;
-    if( revisions){
+    if (revisions) {
         metadata["meta_revisions_num"] = Object.keys(revisions).length
         metadata["meta_first_revision"] = MetricsUtils.get_first_revision_number(json)
         metadata["meta_first_revision_kind"] = MetricsUtils.get_first_revision_kind(json)
@@ -162,7 +166,7 @@ async function collectMetadata(json) {
     }
 
     metadata["meta_date_updated_date_created_diff"] = diffCreatedUpdatedTime(json);
-    if(json.reviewers){
+    if (json.reviewers) {
         metadata["meta_reviewers_ids"] = getReviewersId(json);
         metadata["meta_not_bot_reviewers"] = MetricsUtils.getHumanReviewersID(json, projectName);
     }
@@ -176,11 +180,11 @@ async function collectMetadata(json) {
     return metadata;
 }
 
-function is_equal(time1, time2){
+function is_equal(time1, time2) {
     return time1 === time2;
 }
 
-function get_close_time(json){
+function get_close_time(json) {
     let labels = json["labels"];
     let time = json.updated
 
@@ -188,7 +192,7 @@ function get_close_time(json){
         return time;
 
     let code_review = []
-    if (labels["Code-Review"]){
+    if (labels["Code-Review"]) {
         if (labels["Code-Review"]["all"])
             code_review = labels["Code-Review"]["all"];
         else
@@ -201,7 +205,7 @@ function get_close_time(json){
     for (let i = 0; i < code_review.length; i++) {
         let review = code_review[i];
         let value = review.value;
-        if (value === 2 || value ===-2){
+        if (value === 2 || value === -2) {
             time = review.date
         }
     }
