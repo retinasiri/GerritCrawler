@@ -59,7 +59,6 @@ function startComputeMetadata(json) {
 function getChanges(skip) {
     return Change
         .aggregate([
-            {$match: {meta_is_a_bot: true}},
             {$sort: {_number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
@@ -97,10 +96,9 @@ async function collectDocs(docs) {
 }
 
 function deleteChange(json) {
-    console.log('deleteChange : ' + json.id)
     return Change.deleteOne({id: json.id})
         .then(() => {
-            console.log('deleted')
+            delete_change_nums +=1;
             return updateProgress();
         }).catch(err => {
             console.log(err)
