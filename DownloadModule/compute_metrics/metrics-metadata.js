@@ -94,7 +94,7 @@ async function collectDocs(docs) {
 }
 
 function deleteChange(json){
-    Change.deleteOne({id: json.id})
+    return Change.deleteOne({id: json.id})
         .then(() => {
             return updateProgress();
         });
@@ -167,7 +167,7 @@ async function collectMetadata(json) {
     metadata["close_time"] = get_close_time(json)
     metadata["is_close_time_updated_time"] = is_equal(metadata["close_time"], json.updated)
     metadata["meta_date_updated_date_created_diff"] = timeDiff(json.created, metadata["close_time"])
-    metadata["previous_updated"] = metadata["updated"]
+    metadata["previous_updated"] = json["updated"]
     metadata["updated"] = metadata["close_time"];
 
     return metadata;
