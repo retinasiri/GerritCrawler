@@ -6,6 +6,7 @@ const Utils = require('../config/utils');
 const MetricsUtils = require('./metrics-utils');
 
 const progressBar = new cliProgress.SingleBar({
+    format: '{type} [{bar}] {percentage}% | ETA: {eta}s | {delete_change_nums}',
     barCompleteChar: '#',
     barIncompleteChar: '-',
 }, cliProgress.Presets.shades_classic);
@@ -17,6 +18,7 @@ let projectName = libreOfficeJson["projectName"];
 let DATA_PATH = "data/"
 let STARTING_POINT = 0;
 let NUM_OF_CHANGES_LIMIT = 35000;
+let delete_change_nums = 0;
 
 if (typeof require !== 'undefined' && require.main === module) {
     startComputeMetadata(libreOfficeJson).catch(err => {
@@ -108,7 +110,7 @@ function saveMetadata(json) {
 }
 
 async function updateProgress() {
-    progressBar.increment(1);
+    progressBar.increment(1, {delete_change_nums: delete_change_nums});
     return Promise.resolve(true);
 }
 
