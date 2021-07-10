@@ -129,10 +129,13 @@
     "reorganiz",
     "generalise",
     "->",
+    "=>",
+    "move",
     "deprecated",
     "depreca",
     "code",
-    "readability"
+    "readability",
+    "test"
   ]
 
 }

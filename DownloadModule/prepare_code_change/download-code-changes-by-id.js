@@ -10,14 +10,15 @@ const dbUtils = require('../config/dbUtils');
 const axios = RateLimit(Axios.create(), {maxRPS: 10})
 
 const progressBar = new cliProgress.SingleBar({
-    format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | add : {add} | failed: {failed} | find: {find} ',
+    format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | add : {add} | failed: {failed} | find: {find} | err_429: {err_429} ',
     barCompleteChar: '#',
     barIncompleteChar: '-',
 }, cliProgress.Presets.shades_classic);
 
-let prefix = "https://android-review.googlesource.com/changes/"
+let prefix = "https://android-review.googlesource.com/changes/?q=change:"
 let id = "Ic4d52a8be7cc2f9bbeb260c2506db88712a8d910"
-let suffix = "/detail/?o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=MESSAGES&o=WEB_LINKS&o=COMMIT_FOOTERS&o=PUSH_CERTIFICATES&o=TRACKING_IDS"
+let suffix = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS" +
+    "&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS&o=CHANGE_ACTIONS&o=REVIEWER_UPDATES&o=COMMIT_FOOTERS&o=PUSH_CERTIFICATES&o=TRACKING_IDS";
 
 let projectJson = Utils.getProjectParameters("libreoffice");
 let projectDBUrl = projectJson["projectDBUrl"];
@@ -27,6 +28,7 @@ let OUTPUT_DATA_PATH = "data/"
 let num_failed = 0;
 let num_find = 0;
 let num_add = 0;
+let err_429 = 0;
 let projectName = "android";
 
 //load all id
@@ -51,22 +53,21 @@ async function startDownload(json) {
         projectApiUrl = json["projectApiUrl"];
     if (json["output_directory"])
         OUTPUT_DATA_PATH = json["output_directory"];
-    if (json["projectName"]){
+    if (json["projectName"]) {
         DIRECTORY_NAME = json["projectName"];
         projectName = json["projectName"];
     }
 
     await Database.dbConnection(projectDBUrl);
-
     let changesIdList = readChangeIdList(json["projectName"], OUTPUT_DATA_PATH)
 
-    progressBar.start(changesIdList.length, 0);
+    //let changesIdList = changes_List.slice(446362, changesIdList.length-1)
 
+    progressBar.start(changesIdList.length, 0, {add: num_add, find: num_find, failed: num_failed, err_429: err_429});
     if (!changesIdList || changesIdList.length === 0) {
         console.log("Change Id list is empty")
         return Promise.resolve(true)
     }
-
     return process(changesIdList)
 }
 
@@ -83,15 +84,15 @@ async function process(changesIdList) {
     let NUM_CONCURRENCY = 500;
     let n = 0;
     for (let i = 0; i < changesIdList.length; i++) {
+
         let id = changesIdList[i];
         let t = checkIfChangeExists(id)
             .then((result) => {
-                if(!result){
-                    return get_change_id(id)
-                } else {
-                    num_find+=1;
-                    progressBar.increment(1, {add: num_add, find: num_find, failed: num_failed});
+                if (result) {
+                    num_find += 1;
+                    progressBar.increment(0, {add: num_add, find: num_find, failed: num_failed, err_429: err_429});
                 }
+                return get_change_id(id)
             })
             .catch(err => {
                 console.log(err)
@@ -108,52 +109,48 @@ async function process(changesIdList) {
 
 }
 
-function getTime() {
-    let dt = (new Date());
-    return dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds() + " : ";
+function saveChangeInDB(jsonArray) {
+    let tasks = []
+    for (let i = 0; i < jsonArray.length; i++) {
+        let json = jsonArray[i]
+        let t = dbUtils.saveChange(json).then(() => {
+            let path = PathLibrary.join(OUTPUT_DATA_PATH, projectName, projectName + "-codes-changes");
+            Utils.saveJSONInFile(path, json.id, json)
+            num_add += 1;
+            progressBar.increment(1, {add: num_add, find: num_find, failed: num_failed, err_429: err_429});
+        })
+        tasks.push(t)
+    }
+    return Promise.all(tasks);
 }
 
-function saveChangeInDB(json) {
-    return dbUtils.saveChange(json).then(()=>{
-        let path = PathLibrary.join(OUTPUT_DATA_PATH, projectName, "downloaded_changes");
-        Utils.saveJSONInFile(path, json.id, json)
-
-        num_add+=1;
-        progressBar.increment(1, {add: num_add, find: num_find, failed: num_failed});
-    })
-}
-
-async function get_change_id(id){
+async function get_change_id(id) {
     let url = get_change_id_url(id);
-    axios.get(url)
+    return axios.get(url)
         .then(response => {
             let json = JSON.parse(response.data.slice(5));
             if (Object.keys(json).length === 0)
                 return {};
             return json;
         })
-        .then((json)=>{
-            return saveChangeInDB(json)
+        .then((jsonArray) => {
+            return saveChangeInDB(jsonArray)
         })
         .catch(function (err) {
             if (err.response) {
-                num_failed +=1;
-                if (err.response) {
-                    //console.log(getTime() + id + " - Api Error : " + err.response.status);
-                    progressBar.increment(1, {add: num_add, find: num_find, failed: num_failed});
-
-                    /*if(err.response.status !== 400)
+                num_failed += 1;
+                if (err.response.status === 429) {
+                    err_429 += 1
+                    setTimeout(function () {
+                        err_429 -= 1
                         return get_change_id(id);
-                    else if (err.response.status === 426){
-                        setTimeout(function(){
-                            return get_change_id(id);
-                        },60000);
-                    }
-                    else
-                        return Promise.resolve(false);
-                     */
+                    }, 60000);
+                }
+                if (err.response.status !== 429) {
+                    console.log("status : erreur " + err.response.status + " - " + id)
                 }
             }
+            progressBar.increment(0, {add: num_add, find: num_find, failed: num_failed, err_429: err_429});
         });
 }
 

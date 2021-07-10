@@ -273,10 +273,10 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "priorChangeDurationMin", "prior_change_duration_min", true);
     result = copy(result, metric, "priorChangeDurationStd", "prior_change_duration_std", true);*/
 
-    result = copy(result, metric, "priorOwnerChangesDurationMean", "owner_prior_change_duration_mean", true);
-    result = copy(result, metric, "priorOwnerChangesDurationMax", "owner_prior_change_duration_max", true);
-    result = copy(result, metric, "priorOwnerChangesDurationMin", "owner_prior_change_duration_min", true);
-    result = copy(result, metric, "priorOwnerChangesDurationStd", "owner_prior_change_duration_std", true);
+    result = copy(result, metric, "priorOwnerChangesDurationMean", "owner_prior_change_duration_mean");
+    result = copy(result, metric, "priorOwnerChangesDurationMax", "owner_prior_change_duration_max");
+    result = copy(result, metric, "priorOwnerChangesDurationMin", "owner_prior_change_duration_min");
+    result = copy(result, metric, "priorOwnerChangesDurationStd", "owner_prior_change_duration_std");
 
     result = copy(result, metric, "priorOwnerSubsystemChangesCount", "prior_owner_subsystem_changes");
     result = copy(result, metric, "priorOwnerSubsystemChangesRatio", "prior_owner_subsystem_changes_ratio");
@@ -296,10 +296,10 @@ async function collectMetrics(metric) {
 
     //file metrics
     result = copy(result, metric, "AvgNumberOfDeveloperWhoModifiedFiles", "developers_file");
-    result = copy(result, metric, "fileTimeAvg", "file_changes_duration_avg", true);
-    result = copy(result, metric, "fileTimeMax", "file_changes_duration_max", true);
-    result = copy(result, metric, "fileTimeMin", "file_changes_duration_min", true);
-    result = copy(result, metric, "fileTimeStd", "file_changes_duration_std", true);
+    result = copy(result, metric, "fileTimeAvg", "file_changes_duration_avg");
+    result = copy(result, metric, "fileTimeMax", "file_changes_duration_max");
+    result = copy(result, metric, "fileTimeMin", "file_changes_duration_min");
+    result = copy(result, metric, "fileTimeStd", "file_changes_duration_std");
     result = copy(result, metric, "fileCountAvg", "prior_changes_files_avg");
     result = copy(result, metric, "fileCountMax", "prior_changes_files_max");
     result = copy(result, metric, "fileCountMin", "prior_changes_files_min");

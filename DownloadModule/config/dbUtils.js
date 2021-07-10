@@ -58,7 +58,7 @@ function saveChanges(changesJson) {
             //console.log('Change saved : ' + JSON.stringify(changeJson.id))
         })*/
         .catch(function (err) {
-            console.log("save Change Error : "  + changesJson.id + " "  + JSON.stringify(err));
+            console.log("save Changes Error : "  + changesJson.id + " "  + JSON.stringify(err));
         });
     /*return Change.insertMany(changesJson)
         .then(() => {

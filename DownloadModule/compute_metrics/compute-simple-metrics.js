@@ -17,14 +17,10 @@ const PathLibrary = require('path');
 
 let libreOfficeJson = Utils.getProjectParameters("libreoffice");
 let projectDBUrl = libreOfficeJson["projectDBUrl"];
-let projectApiUrl = libreOfficeJson["projectApiUrl"];
 let projectName = libreOfficeJson["projectName"];
 
 let DATA_PATH = "data/"
 let STARTING_POINT = 0;
-let NUM_OF_CHANGES_LIMIT = 35000;
-let NUMBER_DATABASE_REQUEST = 2;
-let metricsJson = {};
 let i = 1;
 
 if (typeof require !== 'undefined' && require.main === module) {
@@ -42,32 +38,18 @@ function startComputeMetrics(json) {
         projectName = json["projectName"];
 
     return Database.dbConnection(projectDBUrl)
-        .then(() => { // Counts the number of change
+        .then(() => {
             return Change.estimatedDocumentCount({});
         })
         .then((count) => {
-            //NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUMBER_DATABASE_REQUEST);
-            NUM_OF_CHANGES_LIMIT = 10000;
+            let NUM_OF_CHANGES_LIMIT = 20000;
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
-            return getChanges(STARTING_POINT);
+            return getChanges(STARTING_POINT, NUM_OF_CHANGES_LIMIT);
         })
         .then(() => {
-            let name = projectName + "-simple-metrics";
-            let path = PathLibrary.join(DATA_PATH, projectName);
-            return Utils.saveJSONInFile(path, name, metricsJson);
-        })
-        .then(() => {
-            //free memory
-            Object.keys(metricsJson).forEach(function (key) {
-                delete metricsJson[key];
-            })
-            metricsJson = null;
             progressBar.stop();
             console.log("Finished !!!!");
-            //return Database.freeMemory();
-        })
-        .then(() => {
             return Database.closeConnection();
         })
         .catch(err => {
@@ -76,10 +58,9 @@ function startComputeMetrics(json) {
 }
 
 //get changes id
-function getChanges(skip) {
+function getChanges(skip, NUM_OF_CHANGES_LIMIT=20000) {
     return Change
         .aggregate([
-            //{$sort: {updated: 1, _number: 1}},
             {$sort: {_number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
@@ -117,7 +98,6 @@ async function collectDocs(docs) {
 function saveMetrics(json) {
     return Metrics.updateOne({id: json.id}, json, {upsert: true})
         .then(() => {
-            metricsJson[json.id] = json;
             let filename = projectName + "-simple-metrics.csv";
             let path = PathLibrary.join(DATA_PATH, projectName);
             return Utils.add_line_to_file(json, filename, path);
@@ -145,8 +125,6 @@ async function collectMetrics(json) {
     collectMsgMetrics(json, metric);
     return metric;
 }
-
-//function (checkMetrics)
 
 /**
  * @param {JSON} json Input Json
@@ -605,8 +583,6 @@ function get_changes_files_modified(json) {
                 rev_experience.push(files_change_json[index]["reviewer"][reviewerId]["number_of_modif"])
                 rev_experience_time.push(files_change_json[index]["reviewer"][reviewerId]["time_of_modif"])
             }
-            //console.log("rev_experience" + average(rev_experience));
-
         }
         time_per_review.push(average(time));
         number_per_review.push(average(number));
@@ -619,9 +595,6 @@ function get_changes_files_modified(json) {
     let moy_time_owner_pass_on_change_files = average(dev_experience_time);
     let moy_number_of_time_reviewer_review_the_files = average(rev_experience);
     let moy_time_reviewer_pass_on_this_files = average(rev_experience_time);
-
-    //console.log("MathJs.mean(number_per_review) " + MathJs.mean(number_per_review));
-    //console.log("MathJs.mean(time_per_review) " + MathJs.mean(time_per_review));
 
     return {
         num_dev: num_dev,
@@ -748,11 +721,6 @@ function calculate_entropy(array) {
 //function
 function average(array) {
     return (array.length > 0) ? MathJs.mean(array) : 0;
-}
-
-function is_owner_a_bot(json) {
-    let owner = json.owner;
-    return (owner.email) ? 0 : 1;
 }
 
 function get_files(json) {

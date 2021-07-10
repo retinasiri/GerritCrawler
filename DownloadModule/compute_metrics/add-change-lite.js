@@ -16,7 +16,7 @@ let projectName = libreOfficeJson["projectName"];
 
 let DATA_PATH = "data/"
 let STARTING_POINT = 0;
-let NUM_OF_CHANGES_LIMIT = 35000;
+let NUM_OF_CHANGES_LIMIT_PER_QUERY = 20000;
 
 if (typeof require !== 'undefined' && require.main === module) {
     start(libreOfficeJson).catch(err => {
@@ -38,8 +38,8 @@ function start(json) {
             return Change.estimatedDocumentCount({});
         })
         .then((count) => {
-            NUM_OF_CHANGES_LIMIT = 10000;
-            console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
+            NUM_OF_CHANGES_LIMIT_PER_QUERY = 10000;
+            console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT_PER_QUERY);
             progressBar.start(count, 0);
             return getChanges(STARTING_POINT);
         })
@@ -60,7 +60,7 @@ function getChanges(skip) {
         .aggregate([
             {$sort: {_number: 1}},
             {$skip: skip},
-            {$limit: NUM_OF_CHANGES_LIMIT}
+            {$limit: NUM_OF_CHANGES_LIMIT_PER_QUERY}
         ])
         .allowDiskUse(true)
         .exec()
@@ -70,7 +70,7 @@ function getChanges(skip) {
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
         })
         .then(result => {
-            return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
+            return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT_PER_QUERY) : Promise.resolve(false);
         })
         .catch(err => {
             console.log(err)
