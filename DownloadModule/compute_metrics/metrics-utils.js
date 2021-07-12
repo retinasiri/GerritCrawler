@@ -54,15 +54,9 @@ function getHumanReviewersCount(json, projectName) {
 function isABot(accountId, projectName) {
     let bot = false;
     let BotAccounts = AllBotAccountJson[projectName]
+    //console.log(BotAccounts)
     if(BotAccounts[accountId])
         bot = true;
-    /*for (let key in BotAccounts) {
-        let botId = BotAccounts[key]._account_id;
-        if (botId === accountId)
-            bot = true;
-    }*/
-    /*if(bot === true)
-        console.log(accountId)*/
     return bot;
 }
 
@@ -299,6 +293,13 @@ function getReviewersId(json) {
     return reviewerArray;
 }
 
+function timeDiff(time1, time2) {
+    let createdTime = Moment.utc(time1);
+    let updatedTime = Moment.utc(time2);
+    let time = Math.abs(createdTime.toDate() - updatedTime.toDate());
+    return Moment.duration(time).asHours()
+}
+
 module.exports = {
     getHumanReviewers: getHumanReviewers,
     getHumanReviewersID: getHumanReviewersID,
@@ -312,5 +313,7 @@ module.exports = {
     get_first_revision_id: get_first_revision_id,
     is_trivial_rebase: is_trivial_rebase,
     diffCreatedUpdatedTime: diffCreatedUpdatedTime,
-    getReviewersId: getReviewersId
+    getReviewersId: getReviewersId,
+    timeDiff: timeDiff,
+
 };

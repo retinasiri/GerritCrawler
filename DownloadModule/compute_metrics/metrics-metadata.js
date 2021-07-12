@@ -7,7 +7,8 @@ const Utils = require('../config/utils');
 const MetricsUtils = require('./metrics-utils');
 
 const progressBar = new cliProgress.SingleBar({
-    format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | delete_nums : {delete_change_nums}',
+    //format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | delete_nums : {delete_change_nums}',
+    format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total}',
     barCompleteChar: '#',
     barIncompleteChar: '-',
 }, cliProgress.Presets.shades_classic);
@@ -39,7 +40,7 @@ function startComputeMetadata(json) {
             return Change.estimatedDocumentCount({});
         })
         .then((count) => {
-            let NUM_OF_CHANGES_LIMIT = 20000;
+            let NUM_OF_CHANGES_LIMIT = 3000;
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
             progressBar.start(count, 0);
             return getChanges(STARTING_POINT, NUM_OF_CHANGES_LIMIT);
@@ -83,25 +84,10 @@ async function collectDocs(docs) {
     for (let key in docs) {
         await collectMetadata(docs[key])
             .then((json) => {
-                if (typeof json === 'boolean') {
-                    if (!json) {
-                        return deleteChange(docs[key])
-                    }
-                }
                 return saveMetadata(json);
             })
     }
     return Promise.resolve(true);
-}
-
-function deleteChange(json) {
-    return Change.deleteOne({id: json.id})
-        .then(() => {
-            delete_change_nums += 1;
-            return updateProgress();
-        }).catch(err => {
-            console.log(err)
-        });
 }
 
 function saveMetadata(json) {
@@ -118,96 +104,117 @@ async function updateProgress() {
     return Promise.resolve(true);
 }
 
-function deleteUnnecessary(json) {
-    delete json["hashtags"]
-    delete json["requirements"]
-    delete json["removable_reviewers"]
+async function collectMetadata(json) {
+    let metadata = {};
+    metadata["id"] = json.id
+    metadata = get_owner_info(metadata, json)
+    metadata = get_revision_info(metadata, json)
+    metadata = get_time_info(metadata, json)
+    metadata = {...metadata, ...get_messages_information(json)}
+    //metadata = deleteUnnecessary(metadata)
+
+    metadata["close_time"] = json["updated"]
+    if (metadata["review_close_date"])
+        if (metadata["review_close_date"] < metadata["close_time"])
+            metadata["close_time"] = metadata["review_close_date"]
+    if (metadata["first_review_in_message_date"])
+        if (metadata["first_review_in_message_date"] < metadata["close_time"])
+            metadata["close_time"] = metadata["first_review_in_message_date"]
+
+    metadata["diff_created_close_time"] = timeDiff(metadata["close_time"], json.created)
+
+    let time_to_add_human_reviewers = get_time_to_add_human_reviewers(json, metadata["close_time"])
+    metadata["avg_time_to_add_human_reviewers"] = time_to_add_human_reviewers.avg_time_to_add_human_reviewers;
+    metadata["avg_time_to_add_human_reviewers_before_close"] = time_to_add_human_reviewers.avg_time_to_add_human_reviewers_before_close;
+
+
+    //do get the smallest date
+    //ab time to add reviewers
+    //todo work load of the owner.
+    //todo delete outlier
+    //todo revision before close time
+    //todo delete all but 1st revision
+    //todo add new features
+        //build time avg per file
+            //build time of owner
+        //avg time of revision of file
+        //avg time of revision of owner
+        //avg time between revision owner
+        //avg of fail of file
+
+    return metadata;
 }
 
-function get_messages_information(metadata, json) {
-    let messages = json.messages;
-    if (messages)
-        metadata["meta_messages_count"] = Object.keys(messages).length;
-
-    metadata['meta_messages_per_account'] = {}
-    metadata['meta_messages_human_count'] = 0
-    metadata['meta_messages_bot_count'] = 0
-
-    for (let key in messages) {
-        if (!messages[key].author)
-            continue;
-        let author = messages[key].author._account_id;
-
-        if (!metadata['meta_messages_per_account'][author])
-            metadata['meta_messages_per_account'][author] = 1;
-        else
-            metadata['meta_messages_per_account'][author] = metadata['meta_messages_per_account'][author] + 1;
-
-        //count bot message
-        if (MetricsUtils.isABot(author, projectName)) {
-            metadata['meta_messages_bot_count'] += 1
-        } else {
-            metadata['meta_messages_human_count'] += 1
+function get_time_to_add_human_reviewers(json, close_time) {
+    let reviewers_updated = json["reviewers_updated"];
+    let date_created = json["date_created"]
+    let dateDiff = []
+    let dateDiff_before_close = []
+    for (let i = 0; i < reviewers_updated.length; i++) {
+        let updated = reviewers_updated[i];
+        let reviewer_id = updated["reviewer"]["_account_id"];
+        if (!MetricsUtils.isABot(reviewer_id, projectName)) {
+            let date = updated["date"];
+            dateDiff.push(timeDiff(date, date_created))
+            if (date < close_time)
+                dateDiff_before_close.push(timeDiff(date, date_created))
         }
     }
-
+    return {
+        avg_time_to_add_human_reviewers: avg(dateDiff),
+        avg_time_to_add_human_reviewers_before_close: avg(dateDiff_before_close)
+    }
 }
 
-function get_revision_info(metadata, json) {
-    let revisions = json.revisions;
-    if (revisions) {
-        metadata["meta_revisions_num"] = Object.keys(revisions).length
-        metadata["meta_first_revision"] = MetricsUtils.get_first_revision_number(json)
-        metadata["meta_first_revision_kind"] = MetricsUtils.get_first_revision_kind(json)
-        metadata["meta_is_trivial_rebase"] = MetricsUtils.is_trivial_rebase(json);
-    }
-    return metadata
+function avg(num_array) {
+    return num_array.length > 0 ? MathJs.mean(num_array) : 0;
 }
 
 function get_owner_info(metadata, json) {
     if (json.owner) {
         let ownerId = json.owner._account_id;
-        metadata["meta_owner_id"] = ownerId;
-        metadata["meta_is_a_bot"] = MetricsUtils.isABot(ownerId, projectName);
-        if (metadata["meta_is_a_bot"])
+        metadata["owner_id"] = ownerId;
+        metadata["is_a_bot"] = MetricsUtils.isABot(ownerId, projectName);
+        if (metadata["is_a_bot"])
             return Promise.resolve(false)
     }
     return metadata
 }
 
-function get_time_info(metadata, json) {
-    metadata["review_close_time"] = get_review_close_time(json)
-
-    //get_first_review_in_message(json)
-
-    metadata["meta_date_updated_date_created_diff"] = diffCreatedUpdatedTime(json);
-    metadata["is_close_time_updated_time"] = is_equal(metadata["close_time"], json.updated)
-    metadata["meta_date_updated_date_created_diff"] = timeDiff(json.created, metadata["close_time"])
-    metadata["previous_updated"] = json["updated"]
-    metadata["updated"] = metadata["close_time"];
+function get_revision_info(metadata, json) {
+    let revisions = json.revisions;
+    if (revisions) {
+        metadata["revisions_num"] = Object.keys(revisions).length
+        metadata["first_revision"] = MetricsUtils.get_first_revision_number(json)
+        metadata["first_revision_kind"] = MetricsUtils.get_first_revision_kind(json)
+        metadata["is_trivial_rebase"] = MetricsUtils.is_trivial_rebase(json);
+    }
+    return metadata
 }
 
-//autoabandonned
-//automerged
-
-function get_first_review_time(json) {
-    let messages = json.messages;
-    let timeSet = {time_updated: 0, time_in_code_review: 0, time_in_message: 0}
-    let time_updated = json.updated;
-    let time_in_code_review = get_review_time_in_label(json);
-    //let time_in_message = get_review_time_in_message(json)
+function get_time_info(metadata, json) {
+    metadata["review_close_date"] = get_review_time_in_label(json)
+    metadata["date_updated_date_created_diff"] = timeDiff(json.created, json.updated)
+    metadata["is_review_close_date_equal_updated_time"] = is_equal(metadata["review_close_date"], json.updated)
+    if (metadata["review_close_date"])
+        metadata["review_close_to_date_created_diff"] = timeDiff(json.created, metadata["review_close_date"])
+    return metadata
 }
 
 function get_messages_information(json) {
     let messages = json.messages;
+
+    if (!messages)
+        return {}
+
     let messages_count = Object.keys(messages).length;
     let messages_per_account = {}
     let messages_human_count = 0
     let messages_bot_count = 0
     let message_review_time = [];
     //let message_auto_tag = [];
-    let has_auto_tag_merged = [];
-    let has_auto_tag_abandoned = [];
+    let has_auto_tag_merged = false;
+    let has_auto_tag_abandoned = false;
 
     let time_diff_between_messages = []
     let time_diff_between_messages_before_review = []
@@ -220,6 +227,9 @@ function get_messages_information(json) {
     for (let i = 0; i < messages.length; i++) {
         let message = messages[i];
         let date = message.date;
+
+        if (!message.author)
+            continue;
 
         let code_review = analyse_code_review(message)
         if (code_review !== undefined) {
@@ -254,8 +264,12 @@ function get_messages_information(json) {
         }
 
         //analyse time between message
+        if (i === 0) {
+
+        }
         if (lastTime !== 0) {
-            let diff_time = timeDiff(time_diff_between_messages[time_diff_between_messages.length - 1], date)
+            //let diff_time = timeDiff(time_diff_between_messages[time_diff_between_messages.length - 1], date)
+            let diff_time = timeDiff(lastTime, date)
             time_diff_between_messages.push(diff_time)
             if (!has_been_review) {
                 time_diff_between_messages_before_review.push(diff_time)
@@ -264,24 +278,22 @@ function get_messages_information(json) {
 
         //analyse time between revision
         let revision_number = message._revision_number;
+        //console.log(revisions_list)
         if (last_revision_number !== revision_number) {
             let rev = {revision: revision_number, start: date}
             revisions_list.push(rev)
             if (last_revision_number > 1) {
-                let rev1 = revisions_list[revision_number - 1]
-                rev1["end"] = date;
+                revisions_list[revisions_list.length - 1]["end"] = date;
             }
             last_revision_number = revision_number;
         } else {
-            let rev1 = revisions_list[revision_number];
-            rev1["last_message_time"] = date;
-            rev1["end"] = date;
+            revisions_list[revisions_list.length - 1]["last_message_time"] = date;
+            revisions_list[revisions_list.length - 1]["end"] = date;
         }
 
         if (i === messages.length - 1) {
-            let rev1 = revisions_list[revision_number]
-            rev1["end"] = date;
-            rev1["last_message_time"] = date;
+            revisions_list[revisions_list.length - 1]["end"] = date;
+            revisions_list[revisions_list.length - 1]["last_message_time"] = date;
         }
 
         //analyse build time
@@ -292,15 +304,16 @@ function get_messages_information(json) {
         lastTime = Moment.utc(date);
     }
     //anaylse all info collected
-    let max_inactive_time = MathJs.max(time_diff_between_messages_before_review)
+    let max_inactive_time = time_diff_between_messages.length > 0 ? MathJs.max(time_diff_between_messages) : 0
+    let max_inactive_time_before_review = time_diff_between_messages_before_review.length > 0 ? MathJs.max(time_diff_between_messages_before_review) : 0
     let is_inactive = false;
     if (max_inactive_time > 2190) {
         //3 month
         is_inactive = true
     }
 
-    let avg_time_between_msg = MathJs.mean(time_diff_between_messages)
-    let avg_time_between_msg_before_revision = MathJs.mean(time_diff_between_messages_before_review)
+    let avg_time_between_msg = time_diff_between_messages.length > 0 ? MathJs.mean(time_diff_between_messages) : 0
+    let avg_time_between_msg_before_revision = time_diff_between_messages_before_review.length > 0 ? MathJs.mean(time_diff_between_messages_before_review) : 0
 
     let revision_time = []
     let revision_time_to_last_msg = []
@@ -312,10 +325,9 @@ function get_messages_information(json) {
         revision_time_to_last_msg.push(timeDiff(rev_item["start"], rev_item["last_message_time"]))
         time_between_revision.push(timeDiff(rev_item["start"], rev_item["end"]) - timeDiff(rev_item["start"], rev_item["last_message_time"]))
     }
-    let avg_time_revision = MathJs.mean(revision_time)
-    let avg_revision_time_to_last_msg = MathJs.mean(revision_time_to_last_msg)
-    let avg_time_between_revision = MathJs.mean(time_between_revision)
-
+    let avg_time_revision = revision_time.length > 0 ? MathJs.mean(revision_time) : 0
+    let avg_revision_time_to_last_msg = revision_time_to_last_msg.length > 0 ? MathJs.mean(revision_time_to_last_msg) : 0;
+    let avg_time_between_revision = time_between_revision > 0 ? MathJs.mean(time_between_revision) : 0
 
     //message per account
     let messages_per_account_array = []
@@ -324,7 +336,11 @@ function get_messages_information(json) {
     }
 
     //analyse build info
-    let avg_build_time = analyse_build_info(build_message_list, revisions_list)
+    let first_review_in_message_date = message_review_time.length > 0 ? message_review_time[0] : 0
+    let build_info = analyse_build_info(build_message_list, revisions_list)
+    let avg_build_time = build_info.avg_time_of_build;
+    let num_of_build_success = build_info.num_of_build_success;
+    let num_of_build_failures = build_info.num_of_build_failures;
 
     return {
         messages_count: messages_count,
@@ -333,6 +349,7 @@ function get_messages_information(json) {
         messages_bot_count: messages_bot_count,
         is_inactive: is_inactive,
         max_inactive_time: max_inactive_time,
+        max_inactive_time_before_review: max_inactive_time_before_review,
         has_auto_tag_merged: has_auto_tag_merged,
         has_auto_tag_abandoned: has_auto_tag_abandoned,
         avg_time_between_msg: avg_time_between_msg,
@@ -341,35 +358,44 @@ function get_messages_information(json) {
         avg_revision_time_to_last_msg: avg_revision_time_to_last_msg,
         avg_time_between_revision: avg_time_between_revision,
         has_been_review_in_message: has_been_review,
-        avg_ci_build_time: avg_build_time,
+        first_review_in_message_date: first_review_in_message_date,
+        avg_build_time: avg_build_time,
+        num_of_build_success: num_of_build_success,
+        num_of_build_failures: num_of_build_failures,
     };
 }
 
 //todo time to add reviewer
 
-function get_bot_message(message) {
-    let date = message.date;
-    let revision_number = message._revision_number;
-    let author_id = message.author._account_id;
+function get_bot_message(message_info) {
+    let date = message_info.date;
+    let revision_number = message_info._revision_number;
+
+    if (!message_info.author)
+        return undefined;
+
+    let author_id = message_info.author._account_id;
+
+    let message = message_info.message;
     let is_a_bot = MetricsUtils.isABot(author_id, projectName)
 
     if (!is_a_bot)
         return undefined
 
-    let build_start_patt = /.*Build (Started|queued).*\bhttps?:\/\/\S+.*/m
-    let build_success_patt = /.*Build Successful .* \bhttps?:\/\/\S+.* : SUCCESS /m
-    let build_succeeded_patt = /.*Build succeeded \(check pipeline\).*/m
-    let build_failed_patt = /.*Build Failed .* \bhttps?:\/\/\S+.* : [FAILURE|ABORTED] /m;
     //let url_pat = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/gm
     let url_pat = /\bhttps?:\/\/\S+/gi
     const urls = message.match(url_pat);
 
-    if (['qt'].contains(projectName)) {
-        let build_start_patt = /.*(Added to build .* for .*|Pre Continuous Integration Quick Check: Running).*/m
-        let build_success_patt = /.*(Continuous Integration: Passed|Pre Continuous Integration Quick Check: Passed).*/m
-        let build_failed_patt = /.*(Continuous Integration: (Failed|Cancelled)|Pre Continuous Integration Quick Check: (Failed|Cancelled)).*/m;
+    if (['qt'].includes(projectName)) {
+        let build_start_patt = /.*(Added to build .* for .*|Pre Continuous Integration Quick Check: Running).*/mi
+        let build_success_patt = /.*(Continuous Integration: Passed|Pre Continuous Integration Quick Check: Passed).*/mi
+        let build_failed_patt = /.*(Continuous Integration: (Failed|Cancelled)|Pre Continuous Integration Quick Check: (Failed|Cancelled)).*/mi;
         let ref_patt = /\brefs\/builds\/\S+/i
-        const refs = message.match(ref_patt);
+        let urls_ref_patt = /\bhttps:\/\/testresults.qt.io\/\S+/i
+        let refs = message.match(ref_patt);
+        if (!refs)
+            refs = message.match(urls_ref_patt);
+
         if (build_start_patt.test(message)) {
             return {
                 date: date,
@@ -403,13 +429,13 @@ function get_bot_message(message) {
             }
         }
 
-    } else if (['android'].contains(projectName)) {
-        let build_start_patt = /.*=== Started presubmit run .* === .*/m
-        let build_finished_patt = /.*TreeHugger finished with: .*/m
-        let verified_failed_patt = /.*Presubmit-Verified(-1|-2).*/m
-        let verified_success_patt = /.*Presubmit-Verified(\+1|\+2).*/m
+    } else if (['android'].includes(projectName)) {
+        let build_start_patt = /.*=== Started presubmit run .* === .*/mi
+        let build_finished_patt = /.*TreeHugger finished with: .*/mi
+        let verified_failed_patt = /.*Presubmit-Verified(-1|-2).*/mi
+        let verified_success_patt = /.*Presubmit-Verified(\+1|\+2).*/mi
         let ref_patt = /\bhttps?:\/\/android-build.googleplex.com\/builds\/\S+/i
-        let build_refs_patt = /L[0-9]+\S+/g
+        let build_refs_patt = /L[0-9]+\S+/i
         const refs = message.match(ref_patt);
         const build_refs = message.match(build_refs_patt);
         if (build_start_patt.test(message)) {
@@ -438,9 +464,13 @@ function get_bot_message(message) {
             }
         }
     }
-
     //if (['libreoffice', 'asterisk', 'scilab', 'eclipse', 'onap'].contains(projectName)) {
     else {
+        let build_start_patt = /.*Build (Started|queued).*\bhttps?:\/\/\S+.*/mi
+        let build_success_patt = /.*Build Successful .* \bhttps?:\/\/\S+.* : SUCCESS /mi
+        let build_succeeded_patt = /.*Build succeeded \(check pipeline\).*/mi
+        let build_failed_patt = /.*Build Failed .* \bhttps?:\/\/\S+.* : (FAILURE|ABORTED) /mi;
+
         let url_pat = /\bhttps?:\/\/\S+/gi
         let success_pat = /\bSUCCESS\S+/gi
         let failure_pat = /\bFAILURE\S+/gi
@@ -491,7 +521,7 @@ function analyse_build_info(build_message_list, revisions_list) {
     let avg_time_of_build = 0;
     let build_time_array = [];
 
-    if (['android'].contains(projectName)) {
+    if (['android'].includes(projectName)) {
         let build_time = {};
         for (let i = 0; i < build_message_list.length; i++) {
             let build_message = build_message_list[i];
@@ -510,7 +540,7 @@ function analyse_build_info(build_message_list, revisions_list) {
         for (let key in build_time) {
             build_time_array.push(timeDiff(build_time[key]["started"], build_time[key]["finished"]))
         }
-    } else if (['qt'].contains(projectName)) {
+    } else if (['qt'].includes(projectName)) {
         let build_time = {};
         for (let i = 0; i < build_message_list.length; i++) {
             let build_message = build_message_list[i];
@@ -546,19 +576,26 @@ function analyse_build_info(build_message_list, revisions_list) {
                 )
             } else if (build_message["ci_tag"] === "started") {
                 let refs = build_message["refs"]
-                build_time[bot_id][refs]["started"] = build_message["date"];
-                build_time[bot_id][refs]["revision"] = build_message["revision_number"]
+                for (let k in refs) {
+                    let ref = refs[k]
+                    build_time[bot_id][ref]["started"] = build_message["date"];
+                    build_time[bot_id][ref]["revision"] = build_message["revision_number"]
+                }
             } else if (build_message["ci_tag"] === "failed" || build_message["ci_tag"] === "success") {
                 let refs = build_message["refs"]
-                build_time[bot_id][refs]["finished"] = build_message["date"];
-                build_time[bot_id][refs]["revision"] = build_message["revision_number"]
-                if ([refs]["failed"])
-                    num_of_build_failures += 1
-                if ([refs]["success"])
-                    num_of_build_success += 1
+                for (let k in refs) {
+                    let ref = refs[k]
+                    build_time[bot_id][ref]["finished"] = build_message["date"];
+                    build_time[bot_id][ref]["revision"] = build_message["revision_number"]
+                    if ([ref]["failed"])
+                        num_of_build_failures += 1
+                    if ([ref]["success"])
+                        num_of_build_success += 1
+                }
             }
         }
         //get bot avg time
+        let build_time_array_for_bot_individually = []
         for (let k in build_time) {
             //build_time_array.push(timeDiff(build_time[key]["started"], build_time[key]["finished"]))
             let bot_build_time = build_time[k]
@@ -569,21 +606,35 @@ function analyse_build_info(build_message_list, revisions_list) {
                     bot_build_time_array.push(timeDiff(bot_time["started"], bot_time["finished"]))
                 else {
                     let revision_number = bot_time["revision_number"]
-                    let revision_start_date = revisions_list[revision_number - 1]["date"]
-                    build_time_array.push(timeDiff(revision_start_date, bot_time["finished"]))
+                    let revision_start_date = 0
+                    for (let j in revisions_list) {
+                        if (revisions_list[j]["revision_number"] === revision_number)
+                            revision_start_date = revisions_list[j]["date"]
+                    }
+
+                    bot_build_time_array.push(timeDiff(revision_start_date, bot_time["finished"]))
                 }
             }
-            let avg_bot_build_time = MathJs.mean(bot_build_time_array)
-            build_time_array.push(avg_bot_build_time)
+            let avg_bot_build_time = bot_build_time_array.length > 0 ? MathJs.mean(bot_build_time_array) : 0
+            build_time_array_for_bot_individually.push(avg_bot_build_time)
         }
         //get succeeded time
+        let build_time_array_for_all = []
         for (let k in build_succeeded_time) {
             let bot_build_succeeded_time = build_succeeded_time[k]
             num_of_build_failures = bot_build_succeeded_time["fail_num"]
             num_of_build_success = bot_build_succeeded_time["success_num"]
             let revision_number = bot_build_succeeded_time["revision_number"]
-            let revision_start_date = revisions_list[revision_number - 1]["date"]
-            build_time_array.push(timeDiff(revision_start_date, build_time[key]["finished"]))
+            let revision_start_date = revisions_list[revisions_list.length - 1]["date"]
+            build_time_array_for_all.push(timeDiff(revision_start_date, build_time[k]["finished"]))
+        }
+
+        if (build_time_array_for_all.length > 0) {
+            let avg_time = MathJs.mean(build_time_array_for_all)
+            build_time_array.push(avg_time)
+        } else {
+            let avg_time = build_time_array_for_bot_individually.length > 0 ? MathJs.mean(build_time_array_for_bot_individually) : 0
+            build_time_array.push(avg_time)
         }
 
     }
@@ -600,6 +651,10 @@ function analyse_auto_tag(message) {
     let pat_auto_tag_merged = /.*autogenerated:gerrit:merged.*/;
     let pat_auto_tag_abandon = /.*autogenerated:gerrit:abandon.*/;
     let date = message.date;
+
+    if (!message.author)
+        return undefined;
+
     let author_id = message.author._account_id;
     if (pat_auto_tag_merged.test(message)) {
         return {date: date, tag: "merged", author_id: author_id}
@@ -616,7 +671,12 @@ function analyse_code_review(message) {
     let pat_minus_2 = /.*Code-Review-2.*/;
     let pat_minus_1 = /.*Code-Review-1.*/;
     let date = message.date;
+
+    if (!message.author)
+        return undefined;
+
     let author_id = message.author._account_id;
+
     if (pat_plus_2.test(message)) {
         return {date: date, "Code-Review": 2, author_id: author_id}
     } else if (pat_minus_2.test(message)) {
@@ -630,23 +690,13 @@ function analyse_code_review(message) {
     }
 }
 
-async function collectMetadata(json) {
-    let metadata = JSON.parse(JSON.stringify(json));
-    metadata = get_owner_info(metadata, json)
-    metadata = get_revision_info(metadata, json)
-    metadata = get_messages_information(metadata, json)
-    metadata = get_time_info(metadata, json)
-    metadata = deleteUnnecessary(metadata)
-    return metadata;
-}
-
 function is_equal(time1, time2) {
     return time1 === time2;
 }
 
 function get_review_time_in_label(json) {
     let labels = json["labels"];
-    let time = 0
+    let time = undefined
 
     if (!!!labels)
         return time;

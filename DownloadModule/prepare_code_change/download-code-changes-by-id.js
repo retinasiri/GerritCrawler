@@ -61,7 +61,8 @@ async function startDownload(json) {
     await Database.dbConnection(projectDBUrl);
     let changesIdList = readChangeIdList(json["projectName"], OUTPUT_DATA_PATH)
 
-    //let changesIdList = changes_List.slice(446362, changesIdList.length-1)
+    //changesIdList = changesIdList.slice(446362, changesIdList.length-1)
+    changesIdList = changesIdList.slice(446000+108600+2391, changesIdList.length-1)
 
     progressBar.start(changesIdList.length, 0, {add: num_add, find: num_find, failed: num_failed, err_429: err_429});
     if (!changesIdList || changesIdList.length === 0) {

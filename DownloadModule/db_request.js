@@ -1,3 +1,8 @@
+db.getCollection('metrics').aggregate([
+    {$match: {recent_owner_merged_ratio : {$exists : false}}},
+    {$count: "count"}
+])
+
 db.getCollection('changes').aggregate([
     //{$match : {status: {$in: ['MERGED', 'ABANDONED']}}},
     {$match : {status: {$in: ['ABANDONED']}}},
