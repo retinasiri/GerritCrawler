@@ -130,10 +130,15 @@ async function collectMetadata(json) {
 
     //do get the smallest date
     //ab time to add reviewers
+    //do revision before close time
+    //todo test
+    //todo real status
+
     //todo work load of the owner.
+
     //todo delete outlier
-    //todo revision before close time
     //todo delete all but 1st revision
+
     //todo add new features
         //build time avg per file
             //build time of owner
@@ -141,6 +146,7 @@ async function collectMetadata(json) {
         //avg time of revision of owner
         //avg time between revision owner
         //avg of fail of file
+        //add branch metrics
 
     return metadata;
 }
