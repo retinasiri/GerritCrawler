@@ -1,22 +1,16 @@
-const Database = require('./config/databaseConfig');
-const ApiEndPoints = require('./config/apiEndpoints');
 const DownloadCodeChanges = require('./prepare_code_change/download-code-changes');
 const DownloadCodeChangesById = require('./prepare_code_change/download-code-changes-by-id');
 const DownloadProjects = require('./prepare_code_change/download-project-info');
 const AddChangesInDB = require('./prepare_code_change/add-code-change-in-db');
 const ComputeSimpleMetrics = require('./compute_metrics/compute-simple-metrics');
-const ComputeOwnerMetrics = require('./compute_metrics/compute-owner-metrics');
 const ComputeChangesMetrics = require('./compute_metrics/compute-changes-metrics');
 const ComputeMetadata = require('./compute_metrics/metrics-metadata');
-const ComputeRecentMetrics = require('./compute_metrics/compute-owner-recent-metrics');
-const ChangeLite = require('./compute_metrics/add-change-lite');
-//const ComputeRecentMetrics = require('./compute_metrics/compute-recent-metrics');
 const ExtractMetrics = require('./compute_metrics/extract-metrics');
+const DeleteChanges = require('./compute_metrics/delete-change');
 const CollectRecentGraph = require('./prepare_code_change/collect-recent-graph');
 const Config = require('./config');
 const Yargs = require('yargs');
 const Utils = require("./config/utils");
-
 
 if (typeof require !== 'undefined' && require.main === module) {
     main();
@@ -52,6 +46,15 @@ function main() {
         }, function (argv) {
             prepareCodeChanges(argv)
         })
+        .command('deleteChanges [project]', 'Delete unnecessary code changes.', {
+            project: {
+                description: 'The project.',
+                alias: 'p',
+                type: 'string',
+            }
+        }, function (argv) {
+            deleteCodeChanges(argv)
+        })
         .command('metrics [project]', 'Compute the metrics of a project.', {
             project: {
                 description: 'The project from which metrics of codes changes are computed',
@@ -61,15 +64,6 @@ function main() {
         }, function (argv) {
             computeSimpleMetrics(argv)
         })
-        .command('changesMetrics [project]', 'Compute the changes metrics of a project.', {
-            project: {
-                description: 'The project from which metrics of codes changes are computed',
-                alias: 'p',
-                type: 'string',
-            }
-        }, function (argv) {
-            computeChangesMetrics(argv)
-        })
         .command('computeMetrics [project]', 'Compute the changes metrics of a project.', {
             project: {
                 description: 'The project from which metrics of codes changes are computed',
@@ -77,25 +71,7 @@ function main() {
                 type: 'string',
             }
         }, function (argv) {
-            computeChangesMetrics_2(argv)
-        })
-        .command('lite [project]', 'Create smaller version of change', {
-            project: {
-                description: 'The project from which the codes changes are shrink',
-                alias: 'p',
-                type: 'string',
-            }
-        }, function (argv) {
-            addChangeLite(argv)
-        })
-        .command('recentMetrics [project]', 'Compute the changes metrics of a project.', {
-            project: {
-                description: 'The project from which metrics of codes changes are computed',
-                alias: 'p',
-                type: 'string',
-            }
-        }, function (argv) {
-            computeRecentMetrics(argv)
+            computeChangesMetrics(argv)
         })
         .command('extract [project]', 'Extract the metrics of a project.', {
             project: {
@@ -147,9 +123,6 @@ function main() {
 }
 
 function prepareCommand(argv) {
-
-    //console.log(argv)
-
     let projectName = argv.project;
     let start = argv.start;
     let end = argv.end;
@@ -161,13 +134,11 @@ function prepareCommand(argv) {
                 json = Utils.getProjectParameters(projectName);
                 json["start"] = start;
                 json["end"] = end;
-                //console.log("good");
             } else{
                 console.log("the end should be greater than the start");
             }
         } else{
             json = Utils.getProjectParameters(projectName);
-            //console.log("not so good");
         }
         if(days !== undefined)
             json["NUM_DAYS_FOR_RECENT"] = days
@@ -237,25 +208,7 @@ function computeSimpleMetrics(argv) {
 function computeChangesMetrics(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
-        return ComputeOwnerMetrics.start(projectJson)
-            .catch(err => {
-                console.log(err)
-            });
-}
-
-function computeChangesMetrics_2(argv) {
-    let projectJson = prepareCommand(argv);
-    if (projectJson)
         return ComputeChangesMetrics.start(projectJson)
-            .catch(err => {
-                console.log(err)
-            });
-}
-
-function computeRecentMetrics(argv) {
-    let projectJson = prepareCommand(argv);
-    if (projectJson)
-        return ComputeRecentMetrics.start(projectJson)
             .catch(err => {
                 console.log(err)
             });
@@ -270,10 +223,10 @@ function computeMetadata(argv) {
             });
 }
 
-function addChangeLite(argv) {
+function deleteCodeChanges(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
-        return ChangeLite.start(projectJson)
+        return DeleteChanges.start(projectJson)
             .catch(err => {
                 console.log(err)
             });

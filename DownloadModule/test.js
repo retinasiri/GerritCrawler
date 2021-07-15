@@ -37,7 +37,7 @@ async function collectMetadata(json) {
     metadata = get_owner_info(metadata, json)
     metadata = get_revision_info(metadata, json)
     metadata = get_time_info(metadata, json)
-    metadata = {...metadata, ...get_messages_information(json.messages)}
+    metadata = {...metadata, ...get_messages_information(json.messages, json.created)}
     //metadata = deleteUnnecessary(metadata)
 
     metadata["close_time"] = json["updated"]
@@ -55,10 +55,10 @@ async function collectMetadata(json) {
     metadata["avg_time_to_add_human_reviewers_before_close"] = time_to_add_human_reviewers.avg_time_to_add_human_reviewers_before_close;
 
     let msg = get_messages_before_close(json.messages, metadata["close_time"])
-    let msg_before_close_info = get_messages_information(msg)
+    let msg_before_close_info = get_messages_information(msg, json.created)
     metadata = {...metadata, ...add_suffix_to_json(msg_before_close_info, '_before_close')}
 
-    console.log(metadata)
+    //console.log(metadata)
 
     //do get the smallest date
     //ab time to add reviewers
@@ -165,7 +165,7 @@ function get_messages_before_close(messages, close_time) {
     return msgs;
 }
 
-function get_messages_information(messages) {
+function get_messages_information(messages, date_created) {
     if (!messages)
         return {}
 
@@ -197,9 +197,9 @@ function get_messages_information(messages) {
             if (code_review["Code-Review"] === 2 || code_review["Code-Review"] === -2) {
                 message_review_time.push(code_review["date"])
                 has_been_review = true;
-                if(code_review["Code-Review"] === 2 )
+                if (code_review["Code-Review"] === 2)
                     new_status = "MERGED"
-                if(code_review["Code-Review"] === -2 )
+                if (code_review["Code-Review"] === -2)
                     new_status = "ABANDONED"
             }
         }
@@ -229,7 +229,8 @@ function get_messages_information(messages) {
 
         //analyse time between message
         if (i === 0) {
-
+            let diff_time = timeDiff(date_created, date)
+            time_diff_between_messages.push(diff_time)
         }
         if (lastTime !== 0) {
             let diff_time = timeDiff(lastTime, date)
@@ -239,9 +240,15 @@ function get_messages_information(messages) {
         //analyse time between revision
         let revision_number = message._revision_number;
         if (last_revision_number !== revision_number) {
-            let rev = {revision: revision_number, start: date}
-            revisions_list.push(rev)
-            if (last_revision_number > 1) {
+            if(revisions_list.length === 0){
+                let rev = {revision: revision_number, start: date_created}
+                revisions_list.push(rev)
+            }
+            else {
+                let rev = {revision: revision_number, start: date}
+                revisions_list.push(rev)
+            }
+            if (revisions_list.length >= 1) {
                 revisions_list[revisions_list.length - 1]["end"] = date;
             }
             last_revision_number = revision_number;
@@ -260,12 +267,13 @@ function get_messages_information(messages) {
 
         lastTime = Moment.utc(date);
     }
+    console.log(revisions_list)
     let first_review_in_message_date = message_review_time.length > 0 ? message_review_time[0] : 0
 
     //analyse all info collected
     let max_inactive_time = time_diff_between_messages.length > 0 ? MathJs.max(time_diff_between_messages) : 0
     let is_inactive = false;
-    if (max_inactive_time > 2190) {
+    if (max_inactive_time > 1460) {
         //3 month 2190 //2 month 1460
         is_inactive = true
     }
@@ -278,12 +286,13 @@ function get_messages_information(messages) {
         let rev_item = revisions_list[i];
         let start = rev_item["start"];
         let end = rev_item["end"];
-        revision_time.push(timeDiff(start, end)) //todo before revision
+        revision_time.push(timeDiff(start, end))
         if (i > 0) {
             time_between_revision.push(timeDiff(revisions_list[i - 1]["end"], revisions_list[i]["start"]))
         }
     }
 
+    console.log(revision_time)
     let avg_time_revision = revision_time.length > 0 ? MathJs.mean(revision_time) : 0
     let avg_time_between_revision = time_between_revision > 0 ? MathJs.mean(time_between_revision) : 0
 
@@ -382,7 +391,8 @@ function get_bot_message(message_info) {
             }
         }
 
-    } else if (['android'].includes(projectName)) {
+    }
+    else if (['android'].includes(projectName)) {
         let build_start_patt = /.*Started presubmit run: .*/mi
         let build_finished_patt = /.*TreeHugger finished with: .*/mi
         let verified_failed_patt = /.*Presubmit-Verified(-1|-2).*/mi
@@ -439,28 +449,43 @@ function get_bot_message(message_info) {
 
         if (refs_temp)
             refs = refs_temp.toString().match(url_pat_2)
+
+        let success_num = message.match(success_pat) ? message.match(success_pat).length : 0;
+        let fail_num = message.match(failure_pat) ? message.match(failure_pat).length : 0;
+
         if (build_start_patt.test(message)) {
             return {
                 date: date, "ci_tag": "started",
-                author_id: author_id, url: urls, revision_number: revision_number, refs: refs
-
+                author_id: author_id,
+                url: urls,
+                revision_number: revision_number,
+                refs: refs
             }
         } else if (build_success_patt.test(message)) {
             return {
-                date: date, "ci_tag": "success", author_id: author_id, url: urls,
+                date: date, "ci_tag": "success",
+                author_id: author_id,
+                url: urls,
                 failed: false,
                 success: true,
-                revision_number: revision_number, refs: refs
+                revision_number: revision_number,
+                refs: refs,
+                fail_num: fail_num,
+                success_num: success_num
             }
         } else if (build_failed_patt.test(message)) {
             return {
-                date: date, "ci_tag": "failed", author_id: author_id,
-                url: urls, revision_number: revision_number, failed: true,
-                success: false, refs: refs
+                date: date, "ci_tag": "failed",
+                author_id: author_id,
+                url: urls,
+                revision_number: revision_number,
+                failed: true,
+                success: false, refs: refs,
+                fail_num: fail_num,
+                success_num: success_num
             }
         } else if (build_succeeded_patt.test(message)) {
-            let success_num = message.match(success_pat) ? message.match(success_pat).length : 0;
-            let fail_num = message.match(failure_pat) ? message.match(failure_pat).length : 0;
+
             return {
                 date: date,
                 "ci_tag": "succeeded",
@@ -558,7 +583,7 @@ function analyse_qt_build_info(build_message_list, revisions_list) {
 }
 
 function analyse_project_build_info(build_message_list, revisions_list) {
-    console.log(build_message_list)
+    //console.log(build_message_list)
     let build_time = {};
     let num_of_build_success = 0;
     let num_of_build_failures = 0;
@@ -593,17 +618,17 @@ function analyse_project_build_info(build_message_list, revisions_list) {
                 if (!build_time[ref])
                     build_time[ref] = {}
                 build_time[ref]["finished"] = build_message["date"];
-                if ([ref]["failed"])
-                    num_of_build_failures += 1
-                if ([ref]["success"])
-                    num_of_build_success += 1
+                if (build_message["fail_num"])
+                    num_of_build_failures += build_message["fail_num"]
+                if (build_message["fail_num"])
+                    num_of_build_success += build_message["fail_num"]
             }
         }
     }
 
     let build_time_array_for_all = []
 
-    console.log(build_succeeded_time)
+    //console.log(build_succeeded_time)
 
     //For all bot
     for (let k in build_succeeded_time) {
@@ -612,7 +637,7 @@ function analyse_project_build_info(build_message_list, revisions_list) {
         num_of_build_success = bst["success_num"]
         let revision_start_date = get_revision_started_date(bst["revision_number"], revisions_list)
         build_time_array_for_all.push(timeDiff(revision_start_date, bst["date"]))
-        console.log(revision_start_date +" - " + bst["date"])
+        //console.log(revision_start_date + " - " + bst["date"])
         //console.log(build_time["finished"])
     }
 

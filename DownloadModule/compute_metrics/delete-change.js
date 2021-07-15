@@ -7,7 +7,7 @@ const Utils = require('../config/utils');
 const MetricsUtils = require('./metrics-utils');
 
 const progressBar = new cliProgress.SingleBar({
-    //format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | delete_nums : {delete_change_nums}',
+    //format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | added: {added} | deleted: {deleted}',
     format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total}',
     barCompleteChar: '#',
     barIncompleteChar: '-',
@@ -19,7 +19,8 @@ let projectName = libreOfficeJson["projectName"];
 
 let DATA_PATH = "data/"
 let STARTING_POINT = 0;
-let delete_change_nums = 0;
+let deleted_change_nums = 0;
+let added_change_nums = 0;
 
 if (typeof require !== 'undefined' && require.main === module) {
     startComputeMetadata(libreOfficeJson).catch(err => {
@@ -40,9 +41,9 @@ function startComputeMetadata(json) {
             return Change.estimatedDocumentCount({});
         })
         .then((count) => {
-            let NUM_OF_CHANGES_LIMIT = 3000;
+            let NUM_OF_CHANGES_LIMIT = 10000;
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
-            progressBar.start(count, 0);
+            progressBar.start(count, 0, {deleted: 0, added: 0});
             return getChanges(STARTING_POINT, NUM_OF_CHANGES_LIMIT);
         })
         .then(() => {
@@ -87,11 +88,11 @@ async function collectDocs(docs) {
                 let json = data.data;
                 let keep = data.keep;
                 if (typeof keep === 'boolean') {
-                    if (!json) {
+                    if (!keep) {
                         return deleteChange(docs[key])
                     }
                 }
-                return saveMetadata(json);
+                return replaceDocuments(json);
             })
     }
     return Promise.resolve(true);
@@ -100,31 +101,15 @@ async function collectDocs(docs) {
 function deleteChange(json) {
     return Change.deleteOne({id: json.id})
         .then(() => {
-            delete_change_nums += 1;
+            deleted_change_nums += 1;
             return updateProgress();
         }).catch(err => {
             console.log(err)
         });
 }
 
-function deleteUnnecessary(json) {
-    delete json["actions"]
-    delete json["hashtags"]
-    delete json["labels"]
-    delete json["messages"]
-    delete json["pending_reviewers"]
-    delete json["removable_reviewers"]
-    delete json["requirements"]
-    delete json["reviewer_updates"]
-    delete json["total_comment_count"]
-    delete json["unresolved_comment_count"]
-    delete json["mergeable"]
-    delete json["revisions"] //todo delete all but 1st revision
-    return json
-}
-
-function saveMetadata(json) {
-    return Change.updateOne({id: json.id}, json, {upsert: true})
+function replaceDocuments(json) {
+    return Change.replaceOne({id: json.id}, json)
         .then(() => {
             return updateProgress();
         }).catch(err => {
@@ -133,8 +118,24 @@ function saveMetadata(json) {
 }
 
 async function updateProgress() {
-    progressBar.increment(1, {delete_change_nums: delete_change_nums});
+    progressBar.increment(1, {deleted: deleted_change_nums, added: added_change_nums});
     return Promise.resolve(true);
+}
+
+function deleteUnnecessary(json) {
+    delete json["actions"]
+    delete json["hashtags"]
+    //delete json["labels"]
+    delete json["messages"]
+    delete json["pending_reviewers"]
+    delete json["removable_reviewers"]
+    delete json["requirements"]
+    delete json["reviewer_updates"]
+    delete json["total_comment_count"]
+    delete json["unresolved_comment_count"]
+    delete json["mergeable"]
+    delete json["submitter"]
+    return json
 }
 
 async function collectMetadata(json) {
@@ -143,18 +144,46 @@ async function collectMetadata(json) {
     json = deleteUnnecessary(json)
     let time_diff = json["diff_created_close_time"]
     let inactive_time_before_review = json["max_inactive_time_before_review"]
+    let first_revision = json["first_revision"]
     let created = json["created"]
     let updated = json["updated"]
+    let is_a_bot = json["is_a_bot"]
+
+    json["updated_original"] = json["updated"]
+    json["updated"] = json["close_time"]
+    json["status_original"] = json["status"]
+    json["status"] = json["new_status"]
+    json["date_updated_date_created_diff_original"] = json["date_updated_date_created_diff"]
+    json["date_updated_date_created_diff"] = json["diff_created_close_time"]
+
+    let revisions = json.revisions
+    for (let i in revisions) {
+        let rev = revisions[i]
+        if (rev._number !== 1)
+            delete json["revisions"][i]
+    }
+
+    /*let labels = json.labels
+    for (let i in labels) {
+        if (i !== "Code-Review")
+            delete labels[i]
+    }*/
 
     if (created === updated)
         keep = false;
 
-    //duration > 10 min
-    if(time_diff < 0.166667)
+    //duration > 2 min
+    if (time_diff <= 0.02)
         keep = false;
 
     //inactive time > 3 months //2190 //1460 //730
-    if(inactive_time_before_review > 1460)
+    if (inactive_time_before_review >= 730)
+        keep = false;
+
+    if (first_revision !== 1)
+        keep = false;
+
+    if (is_a_bot === true)
         keep = false;
 
     return {
@@ -162,3 +191,7 @@ async function collectMetadata(json) {
         keep: keep,
     };
 }
+
+module.exports = {
+    start: startComputeMetadata
+};

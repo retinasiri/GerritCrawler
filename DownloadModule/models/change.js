@@ -6,7 +6,7 @@ var ReviewerUpdate = require('./reviewerUpdate').schema;
 var Schema = mongoose.Schema;
 
 var ChangeSchema = new Schema({
-    id:String,
+    id: {type: String, index: true},
     project: String,
     branch: String,
     topic: String,
@@ -63,13 +63,6 @@ var ChangeSchema = new Schema({
     versionKey: false,
     strict: false
 });
-const Change = mongoose.model('Change', ChangeSchema);
-//Change.createIndexes();
-module.exports = Change;
 
-/*attention_set: [{
-    _id: false,
-    account: {type: Account},
-    last_update: String,
-    reason: String
-}],*/
+module.exports = mongoose.model('Change', ChangeSchema);;
+

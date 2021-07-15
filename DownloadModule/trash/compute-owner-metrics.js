@@ -1,7 +1,7 @@
 const MathJs = require('mathjs');
 const Moment = require('moment');
 const Change = require('../models/change');
-const MetricsUtils = require("./metrics-utils");
+const MetricsUtils = require("../compute_metrics/metrics-utils");
 
 let projectName = "libreoffice";
 let start = 0;
