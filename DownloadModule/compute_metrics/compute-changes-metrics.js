@@ -31,12 +31,17 @@ async function collectMetrics(json) {
         metric["number"] = json._number;
         metric["id"] = json.id;
         Object.keys(values).forEach(function (key) {
-            if (values[key] === null || values[key] === undefined) {
+            if (values[key] === null || values[key] === undefined || isNaN(values[key]) ) {
                 metric[key] = 0;
             } else {
                 metric[key] = values[key];
             }
         })
+
+        /*if(metric["ownerRateOfAutoReview"]>0) {
+            console.log(metric["id"])
+            console.log(metric["ownerRateOfAutoReview"])
+        }*/
         return Promise.resolve(metric);
     })
 }
@@ -173,6 +178,8 @@ async function getChangesInfo(json) {
     let filesRevisionTime = getFilesRevisionTime(json);
     let filesNumFails = getFilesNumFails(json);
     let ownerNumberOfAutoReview = getOwnerNumberOfAutoReview(json);
+    //console.log(ownerNumberOfAutoReview);
+    //console.log("filesNumFails" + filesNumFails);
 
     return Promise.all([
         priorChangesCount, //0
@@ -352,7 +359,7 @@ async function getChangesInfo(json) {
             filesNumFailsMin: results[31].min,
             filesNumFailsStd: results[31].std,
 
-            ownerRateOfAutoReview: results[3] > 0 ? results[32] / results[3] : 0,
+            ownerRateOfAutoReview: results[3] > 0 ? results[32].count / results[3] : 0,
 
         };
     })
@@ -1111,6 +1118,7 @@ function getOwnerNumberOfAutoReview(json) {
     let number = json._number;
     let match = {
         $match: {
+            status: {$in: ['MERGED', 'ABANDONED']},
             updated: {$lt: created_date},
             _number: {$lt: number},
             $and:
@@ -1146,6 +1154,7 @@ function getPreviousMessageCount(json) {
     let botArray = MetricsUtils.getBotArray(projectName)
     let match = {
         $match: {
+            status: {$in: ['MERGED', 'ABANDONED']},
             _number: {$lt: number},
             updated: {$lt: created_date}
         }
