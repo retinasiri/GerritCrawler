@@ -307,52 +307,52 @@ async function getChangesInfo(json) {
 
             priorChangesFiles: results[22].count,
 
-            branchBuildTimeAvg:results[23].avg,
-            branchBuildTimeMax:results[23].max,
-            branchBuildTimeMin:results[23].min,
-            branchBuildTimeStd:results[23].std,
+            branchBuildTimeAvg: results[23].avg,
+            branchBuildTimeMax: results[23].max,
+            branchBuildTimeMin: results[23].min,
+            branchBuildTimeStd: results[23].std,
 
-            revisionTimeAvg:results[24].avg,
-            revisionTimeMax:results[24].max,
-            revisionTimeMin:results[24].min,
-            revisionTimeStd:results[24].std,
+            revisionTimeAvg: results[24].avg,
+            revisionTimeMax: results[24].max,
+            revisionTimeMin: results[24].min,
+            revisionTimeStd: results[24].std,
 
-            branchRevisionTimeAvg:results[25].avg,
-            branchRevisionTimeMax:results[25].max,
-            branchRevisionTimeMin:results[25].min,
-            branchRevisionTimeStd:results[25].std,
+            branchRevisionTimeAvg: results[25].avg,
+            branchRevisionTimeMax: results[25].max,
+            branchRevisionTimeMin: results[25].min,
+            branchRevisionTimeStd: results[25].std,
 
-            ownerRevisionTimeAvg:results[26].avg,
-            ownerRevisionTimeMax:results[26].max,
-            ownerRevisionTimeMin:results[26].min,
-            ownerRevisionTimeStd:results[26].std,
+            ownerRevisionTimeAvg: results[26].avg,
+            ownerRevisionTimeMax: results[26].max,
+            ownerRevisionTimeMin: results[26].min,
+            ownerRevisionTimeStd: results[26].std,
 
-            ownerTimeBetweenRevisionAvg:results[27].avg,
-            ownerTimeBetweenRevisionMax:results[27].max,
-            ownerTimeBetweenRevisionMin:results[27].min,
-            ownerTimeBetweenRevisionStd:results[27].std,
+            ownerTimeBetweenRevisionAvg: results[27].avg,
+            ownerTimeBetweenRevisionMax: results[27].max,
+            ownerTimeBetweenRevisionMin: results[27].min,
+            ownerTimeBetweenRevisionStd: results[27].std,
 
-            ownerTimeToAddReviewerAvg:results[28].avg,
-            ownerTimeToAddReviewerMax:results[28].max,
-            ownerTimeToAddReviewerMin:results[28].min,
-            ownerTimeToAddReviewerStd:results[28].std,
+            ownerTimeToAddReviewerAvg: results[28].avg,
+            ownerTimeToAddReviewerMax: results[28].max,
+            ownerTimeToAddReviewerMin: results[28].min,
+            ownerTimeToAddReviewerStd: results[28].std,
 
-            filesBuildTimeAvg:results[29].avg,
-            filesBuildTimeMax:results[29].max,
-            filesBuildTimeMin:results[29].min,
-            filesBuildTimeStd:results[29].std,
+            filesBuildTimeAvg: results[29].avg,
+            filesBuildTimeMax: results[29].max,
+            filesBuildTimeMin: results[29].min,
+            filesBuildTimeStd: results[29].std,
 
-            filesRevisionTimeAvg:results[30].avg,
-            filesRevisionTimeMax:results[30].max,
-            filesRevisionTimeMin:results[30].min,
-            filesRevisionTimeStd:results[30].std,
+            filesRevisionTimeAvg: results[30].avg,
+            filesRevisionTimeMax: results[30].max,
+            filesRevisionTimeMin: results[30].min,
+            filesRevisionTimeStd: results[30].std,
 
-            filesNumFailsAvg:results[31].avg,
-            filesNumFailsMax:results[31].max,
-            filesNumFailsMin:results[31].min,
-            filesNumFailsStd:results[31].std,
+            filesNumFailsAvg: results[31].avg,
+            filesNumFailsMax: results[31].max,
+            filesNumFailsMin: results[31].min,
+            filesNumFailsStd: results[31].std,
 
-            ownerRateOfAutoReview:results[32]/results[3],
+            ownerRateOfAutoReview: results[3] > 0 ? results[32] / results[3] : 0,
 
         };
     })
@@ -698,10 +698,10 @@ function getOwnerNumberOfRevision(json) {
         {
             $group: {
                 _id: "$owner_id",
-                revision_avg: {$avg: "$meta_revisions_num"},
-                revision_max: {$max: "$meta_revisions_num"},
-                revision_min: {$min: "$meta_revisions_num"},
-                revision_std: {$stdDevPop: "$meta_revisions_num"}
+                revision_avg: {$avg: "$revisions_num"},
+                revision_max: {$max: "$revisions_num"},
+                revision_min: {$min: "$revisions_num"},
+                revision_std: {$stdDevPop: "$revisions_num"}
             }
         },
     ]
@@ -824,11 +824,11 @@ function getOwnerChangesMessagesCountAndAvgPerChanges(json) {
         {
             $group: {
                 _id: 1,
-                count: {$sum: "messages_count_before_close"},
-                avg: {$avg: "messages_count_before_close"},
-                max: {$max: "messages_count_before_close"},
-                min: {$avg: "messages_count_before_close"},
-                std: {$stdDevPop: "messages_count_before_close"}
+                count: {$sum: "$messages_count_before_close"},
+                avg: {$avg: "$messages_count_before_close"},
+                max: {$max: "$messages_count_before_close"},
+                min: {$avg: "$messages_count_before_close"},
+                std: {$stdDevPop: "$messages_count_before_close"}
             }
         }
     ]
@@ -851,11 +851,11 @@ function getChangesMessagesCountAndAvg(json) {
         {
             $group: {
                 _id: 1,
-                count: {$sum: "messages_count_before_close"},
-                avg: {$avg: "messages_count_before_close"},
-                max: {$max: "messages_count_before_close"},
-                min: {$avg: "messages_count_before_close"},
-                std: {$stdDevPop: "messages_count_before_close"}
+                count: {$sum: "$messages_count_before_close"},
+                avg: {$avg: "$messages_count_before_close"},
+                max: {$max: "$messages_count_before_close"},
+                min: {$avg: "$messages_count_before_close"},
+                std: {$stdDevPop: "$messages_count_before_close"}
             }
         }
     ]
@@ -892,10 +892,12 @@ function getBranchBuildTime(json) {
 
 function getRevisionTime(json) {
     let created_date = json.created;
+    let number = json._number;
     let match = {
         $match: {
             status: {$in: ['MERGED', 'ABANDONED']},
             updated: {$lt: created_date},
+            _number: {$lt: number},
         }
     }
     let pipeline = [
@@ -916,11 +918,13 @@ function getRevisionTime(json) {
 function getBranchRevisionTime(json) {
     let created_date = json.created;
     let branch = json.branch;
+    let number = json._number;
     let match = {
         $match: {
             status: {$in: ['MERGED', 'ABANDONED']},
             updated: {$lt: created_date},
-            branch: branch
+            branch: branch,
+            _number: {$lt: number},
         }
     }
     let pipeline = [
@@ -941,11 +945,13 @@ function getBranchRevisionTime(json) {
 function getOwnerRevisionTime(json) {
     let created_date = json.created;
     let ownerId = json.owner._account_id;
+    let number = json._number;
     let match = {
         $match: {
             status: {$in: ['MERGED', 'ABANDONED']},
             updated: {$lt: created_date},
             "owner._account_id": ownerId,
+            _number: {$lt: number},
         }
     }
     let pipeline = [
@@ -966,11 +972,13 @@ function getOwnerRevisionTime(json) {
 function getOwnerTimeBetweenRevision(json) {
     let created_date = json.created;
     let ownerId = json.owner._account_id;
+    let number = json._number;
     let match = {
         $match: {
             status: {$in: ['MERGED', 'ABANDONED']},
             updated: {$lt: created_date},
             "owner._account_id": ownerId,
+            _number: {$lt: number},
         }
     }
     let pipeline = [
@@ -991,11 +999,13 @@ function getOwnerTimeBetweenRevision(json) {
 function getOwnerTimeToAddReviewer(json) {
     let created_date = json.created;
     let ownerId = json.owner._account_id;
+    let number = json._number;
     let match = {
         $match: {
             status: {$in: ['MERGED', 'ABANDONED']},
             updated: {$lt: created_date},
             "owner._account_id": ownerId,
+            _number: {$lt: number},
         }
     }
     let pipeline = [
@@ -1098,9 +1108,11 @@ function getFilesNumFails(json) {
 function getOwnerNumberOfAutoReview(json) {
     let created_date = json.created;
     let ownerId = json.owner._account_id;
+    let number = json._number;
     let match = {
         $match: {
             updated: {$lt: created_date},
+            _number: {$lt: number},
             $and:
                 [
                     {"owner._account_id": ownerId},

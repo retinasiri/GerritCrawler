@@ -113,10 +113,10 @@ function check_value_to_ignore(metrics) {
         return true;
     if (metrics["is_a_bot"] === true)
         return true;
-    if(check_self_review(metrics))
-        return true;
+    /*if(check_self_review(metrics))
+        return true;*/
 
-    let keys = ['fg_degree_centrality', 'num_segs_added']
+    let keys = ['fg_degree_centrality', 'num_segs_added', 'revisionTimeAvg']
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i]
         if (metrics[key] == null || !metrics.hasOwnProperty(key) || !(key in metrics)) {
@@ -286,13 +286,48 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "ownerPreviousMessageCount", "owner_previous_message");
     result = copy(result, metric, "ownerChangesMessagesSum", "owner_exchanged_messages");
     result = copy(result, metric, "ownerChangesMessagesAvgPerChanges", "owner_changes_messages_avg");
-    result = copy(result, metric, "ownerChangesMessagesMaxPerChanges", "owner_changes_messages_min");
-    result = copy(result, metric, "ownerChangesMessagesMinPerChanges", "owner_changes_messages_max");
+    result = copy(result, metric, "ownerChangesMessagesMaxPerChanges", "owner_changes_messages_max");
+    result = copy(result, metric, "ownerChangesMessagesMinPerChanges", "owner_changes_messages_min");
     result = copy(result, metric, "ownerChangesMessagesStdPerChanges", "owner_changes_messages_std");
     result = copy(result, metric, "ownerNumberOfRevisionAvg", "owner_number_of_revision_avg");
     result = copy(result, metric, "ownerNumberOfRevisionMax", "owner_number_of_revision_max");
     result = copy(result, metric, "ownerNumberOfRevisionMin", "owner_number_of_revision_min");
     result = copy(result, metric, "ownerNumberOfRevisionStd", "owner_number_of_revision_std");
+    result = copy(result, metric, "ownerNumberOfRevisionStd", "owner_number_of_revision_std");
+
+    result = copy(result, metric, "ownerRateOfAutoReview", "owner_rate_of_auto_review");
+
+    result = copy(result, metric, "revisionTimeAvg", "revision_time_avg");
+    result = copy(result, metric, "revisionTimeMax", "revision_time_max");
+    result = copy(result, metric, "revisionTimeMin", "revision_time_min");
+    result = copy(result, metric, "revisionTimeStd", "revision_time_std");
+
+    result = copy(result, metric, "ownerRevisionTimeAvg", "owner_revision_time_avg");
+    result = copy(result, metric, "ownerRevisionTimeMax", "owner_revision_time_max");
+    result = copy(result, metric, "ownerRevisionTimeMin", "owner_revision_time_min");
+    result = copy(result, metric, "ownerRevisionTimeStd", "owner_revision_time_std");
+
+    result = copy(result, metric, "ownerTimeBetweenRevisionAvg", "owner_time_between_revision_avg");
+    result = copy(result, metric, "ownerTimeBetweenRevisionMax", "owner_time_between_revision_max");
+    result = copy(result, metric, "ownerTimeBetweenRevisionMin", "owner_time_between_revision_min");
+    result = copy(result, metric, "ownerTimeBetweenRevisionStd", "owner_time_between_revision_std");
+
+    result = copy(result, metric, "ownerTimeToAddReviewerAvg", "owner_time_to_add_reviewer_avg");
+    result = copy(result, metric, "ownerTimeToAddReviewerMax", "owner_time_to_add_reviewer_max");
+    result = copy(result, metric, "ownerTimeToAddReviewerMin", "owner_time_to_add_reviewer_min");
+    result = copy(result, metric, "ownerTimeToAddReviewerStd", "owner_time_to_add_reviewer_std");
+
+    //branch metrics
+    result = copy(result, metric, "branchBuildTimeAvg", "branch_build_time_avg")
+    result = copy(result, metric, "branchBuildTimeMax", "branch_build_time_max");
+    result = copy(result, metric, "branchBuildTimeMin", "branch_build_time_min");
+    result = copy(result, metric, "branchBuildTimeStd", "branch_build_time_std");
+
+    result = copy(result, metric, "branchRevisionTimeAvg", "branch_revision_time_avg");
+    result = copy(result, metric, "branchRevisionTimeMax", "branch_revision_time_max");
+    result = copy(result, metric, "branchRevisionTimeMin", "branch_revision_time_min");
+    result = copy(result, metric, "branchRevisionTimeStd", "branch_revision_time_std");
+
 
     //file metrics
     result = copy(result, metric, "AvgNumberOfDeveloperWhoModifiedFiles", "developers_file");
@@ -304,6 +339,21 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "fileCountMax", "prior_changes_files_max");
     result = copy(result, metric, "fileCountMin", "prior_changes_files_min");
     result = copy(result, metric, "fileCountStd", "prior_changes_files_std");
+
+    result = copy(result, metric, "filesBuildTimeAvg", "files_build_time_avg");
+    result = copy(result, metric, "filesBuildTimeMax", "files_build_time_max");
+    result = copy(result, metric, "filesBuildTimeMin", "files_build_time_min");
+    result = copy(result, metric, "filesBuildTimeStd", "files_build_time_std");
+
+    result = copy(result, metric, "filesRevisionTimeAvg", "files_revision_time_avg");
+    result = copy(result, metric, "filesRevisionTimeMax", "files_revision_time_max");
+    result = copy(result, metric, "filesRevisionTimeMin", "files_revision_time_min");
+    result = copy(result, metric, "filesRevisionTimeStd", "files_revision_time_std");
+
+    result = copy(result, metric, "filesNumFailsAvg", "files_num_fails_avg");
+    result = copy(result, metric, "filesNumFailsMax", "files_num_fails_max");
+    result = copy(result, metric, "filesNumFailsMin", "files_num_fails_min");
+    result = copy(result, metric, "filesNumFailsStd", "files_num_fails_std");
 
     //metrics to predict
     result = copy(result, metric, "diff_created_updated_in_hours");
