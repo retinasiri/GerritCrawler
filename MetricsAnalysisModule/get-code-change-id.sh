@@ -42,7 +42,7 @@ get_code_change_id (){
     echo "${project} done!!!!"
 }
 
-N=100
+N=25
 while IFS= read -r project_url
 do 
     ((i=i%N)); ((i++==0)) && wait

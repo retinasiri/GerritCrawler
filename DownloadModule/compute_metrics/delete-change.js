@@ -3,12 +3,13 @@ const MathJs = require('mathjs');
 const cliProgress = require('cli-progress');
 const Database = require('../config/databaseConfig');
 const Change = require('../models/change');
+const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
 const MetricsUtils = require('./metrics-utils');
 
 const progressBar = new cliProgress.SingleBar({
     //format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | added: {added} | deleted: {deleted}',
-    format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total}',
+    format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | deleted: {deleted}',
     barCompleteChar: '#',
     barIncompleteChar: '-',
 }, cliProgress.Presets.shades_classic);
@@ -103,13 +104,18 @@ function deleteChange(json) {
         .then(() => {
             deleted_change_nums += 1;
             return updateProgress();
-        }).catch(err => {
+        })
+        .then(() => {
+            return Metrics.deleteOne({id: json.id})
+        })
+        .catch(err => {
             console.log(err)
         });
 }
 
 function replaceDocuments(json) {
-    return Change.replaceOne({id: json.id}, json)
+    //return Change.replaceOne({id: json.id}, json)
+    return Change.updateOne({id: json.id}, json)
         .then(() => {
             return updateProgress();
         }).catch(err => {
@@ -138,12 +144,31 @@ function deleteUnnecessary(json) {
     return json
 }
 
+
+async function collectMetadata(json) {
+    let metadata = json;
+    let keep = true;
+
+    metadata["id"] = json["id"];
+    metadata["updated_original"] = json["updated"]
+    metadata["updated"] = json["close_time"]
+    metadata["status_original"] = json["status"]
+    metadata["status"] = json["new_status"]
+    metadata["date_updated_date_created_diff_original"] = json["date_updated_date_created_diff"]
+    metadata["date_updated_date_created_diff"] = json["diff_created_close_time"]
+
+    return {
+        data: json,
+        keep: keep,
+    };
+}
+
+/*
 async function collectMetadata(json) {
     //let metadata = json;
     let keep = true;
-    json = deleteUnnecessary(json)
     let time_diff = json["diff_created_close_time"]
-    let inactive_time_before_review = json["max_inactive_time_before_review"]
+    let inactive_time_before_review = json["max_inactive_time_before_close"]
     let first_revision = json["first_revision"]
     let created = json["created"]
     let updated = json["updated"]
@@ -162,18 +187,23 @@ async function collectMetadata(json) {
         if (rev._number !== 1)
             delete json["revisions"][i]
     }
+    json = deleteUnnecessary(json)
 
-    /*let labels = json.labels
+
+    let labels = json.labels
     for (let i in labels) {
         if (i !== "Code-Review")
             delete labels[i]
-    }*/
+    }
 
     if (created === updated)
         keep = false;
 
     //duration > 2 min
-    if (time_diff <= 0.02)
+    if (time_diff <= 0.1)
+        keep = false;
+
+    if (time_diff >= 1000)
         keep = false;
 
     //inactive time > 3 months //2190 //1460 //730
@@ -191,6 +221,7 @@ async function collectMetadata(json) {
         keep: keep,
     };
 }
+*/
 
 module.exports = {
     start: startComputeMetadata

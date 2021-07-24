@@ -2,6 +2,7 @@ const cliProgress = require('cli-progress');
 const Moment = require('moment');
 const Database = require('../config/databaseConfig');
 const Metrics = require('../models/metrics');
+const Changes = require('../models/change');
 const Utils = require('../config/utils');
 const fs = require('fs');
 const MetricsUtils = require('./metrics-utils');
@@ -60,7 +61,13 @@ function startComputeMetrics(json) {
 function getMetrics(skip) {
     return Metrics
         .aggregate([
-            {$match: {status: {$in: ['MERGED', 'ABANDONED']}}},
+            {
+                $match: {
+                    status: {$in: ['MERGED', 'ABANDONED']},
+                    //"is_a_bot" : false,
+                    //"first_revision" : 1,
+                }
+            },
             {$sort: {number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
@@ -85,9 +92,15 @@ async function collectDocs(docs) {
         return Promise.resolve(true);
     for (let key in docs) {
         let doc = docs[key];
+        let id = doc.id;
 
-        if (check_value_to_ignore(doc)){
-            skipped +=1;
+        let check = await Changes.exists({id: id});
+        if (!check)
+            continue;
+        //todo
+
+        if (check_value_to_ignore(doc)) {
+            skipped += 1;
             continue;
         }
 
@@ -113,10 +126,13 @@ function check_value_to_ignore(metrics) {
         return true;
     if (metrics["is_a_bot"] === true)
         return true;
-    /*if(check_self_review(metrics))
-        return true;*/
+
+    if (check_self_review(metrics))
+        return true;
+    //todo
 
     let keys = ['fg_degree_centrality', 'num_segs_added', 'revisionTimeAvg']
+    //let keys = ['fg_degree_centrality', 'num_segs_added']
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i]
         if (metrics[key] == null || !metrics.hasOwnProperty(key) || !(key in metrics)) {
@@ -144,11 +160,11 @@ async function saveMetrics(json) {
     return Utils.add_line_to_file(json, filename, path)
 }
 
-function delete_metrics_file(){
+function delete_metrics_file() {
     try {
         let filename = projectName + "-metrics.csv";
         let filename_path = PathLibrary.join(DATA_PATH, projectName, filename);
-        if(fs.existsSync(filename_path))
+        if (fs.existsSync(filename_path))
             fs.unlinkSync(filename_path);
     } catch (error) {
         console.log(error);
@@ -170,7 +186,7 @@ function copy(result, json, key, new_name = "", convert_to_hours = false) {
     }
 
     if (json[key] !== null) {
-        if(typeof(json[key]) === "number"){
+        if (typeof (json[key]) === "number") {
             result[name] = parseFloat(json[key]);
             if (convert_to_hours) {
                 result[name] = Moment.duration(result[name]).asHours()
@@ -191,17 +207,17 @@ function copy(result, json, key, new_name = "", convert_to_hours = false) {
     return result;
 }
 
-function match_review_kind_value(metric){
+function match_review_kind_value(metric) {
     let value = 1;
-    if(metric.includes("REWORK")){
+    if (metric.includes("REWORK")) {
         value = 1;
-    } else if(metric.includes("TRIVIAL_REBASE")){
+    } else if (metric.includes("TRIVIAL_REBASE")) {
         value = 2;
-    } else if(metric.includes("MERGE_FIRST_PARENT_UPDATE")){
+    } else if (metric.includes("MERGE_FIRST_PARENT_UPDATE")) {
         value = 3;
-    } else if(metric.includes("NO_CODE_CHANGE")){
+    } else if (metric.includes("NO_CODE_CHANGE")) {
         value = 4;
-    }else if(metric.includes("NO_CHANGE")){
+    } else if (metric.includes("NO_CHANGE")) {
         value = 5;
     }
     return value;
@@ -235,6 +251,7 @@ async function collectMetrics(metric) {
     result["code_churn"] = result["insertions"] + result["deletions"]
     result = copy(result, metric, "num_files");
     result = copy(result, metric, "num_files_type");
+    result = copy(result, metric, "num_programming_language");
     result = copy(result, metric, "num_directory");
     result = copy(result, metric, "modify_entropy", "change_entropy");
     result = copy(result, metric, "sum_loc");
@@ -295,6 +312,7 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "ownerNumberOfRevisionStd", "owner_number_of_revision_std");
     result = copy(result, metric, "ownerNumberOfRevisionStd", "owner_number_of_revision_std");
 
+
     result = copy(result, metric, "ownerRateOfAutoReview", "owner_rate_of_auto_review");
 
     result = copy(result, metric, "revisionTimeAvg", "revision_time_avg");
@@ -340,6 +358,7 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "fileCountMin", "prior_changes_files_min");
     result = copy(result, metric, "fileCountStd", "prior_changes_files_std");
 
+
     result = copy(result, metric, "filesBuildTimeAvg", "files_build_time_avg");
     result = copy(result, metric, "filesBuildTimeMax", "files_build_time_max");
     result = copy(result, metric, "filesBuildTimeMin", "files_build_time_min");
@@ -355,8 +374,10 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "filesNumFailsMin", "files_num_fails_min");
     result = copy(result, metric, "filesNumFailsStd", "files_num_fails_std");
 
+
     //metrics to predict
-    result = copy(result, metric, "diff_created_updated_in_hours");
+    //result = copy(result, metric, "diff_created_updated_in_hours");
+    result = copy(result, metric, "date_updated_date_created_diff"); //todo
     return Promise.resolve(result);
 
     //do prior_changes_files

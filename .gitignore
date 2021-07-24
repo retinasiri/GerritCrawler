@@ -2,5 +2,10 @@ Data/
 DownloadModule/node_modules/
 DownloadModule/data/
 MetricsAnalysisModule/__pycache__/
-MetricsAnalysisModule/venv37/
+MetricsAnalysisModule/venv/
+MetricsAnalysisModule/.idea/
+MetricsAnalysisModule/.vscode/
 MetricsAnalysisModule/data/
+.idea/
+DownloadModule/.idea/
+DownloadModule/config.json

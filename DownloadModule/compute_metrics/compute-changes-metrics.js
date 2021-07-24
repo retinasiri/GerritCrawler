@@ -1121,12 +1121,15 @@ function getOwnerNumberOfAutoReview(json) {
             status: {$in: ['MERGED', 'ABANDONED']},
             updated: {$lt: created_date},
             _number: {$lt: number},
-            $and:
+            is_self_review: true,
+            "owner._account_id": ownerId
+            /*$and:
                 [
                     {"owner._account_id": ownerId},
                     {"labels.Code-Review.all._account_id": ownerId},
                     {"labels.Code-Review.all.value": {$in: [2, -2]}}
                 ]
+             */
         }
     }
     let pipeline = [
@@ -1135,6 +1138,11 @@ function getOwnerNumberOfAutoReview(json) {
     ]
     return genericDBRequest(pipeline);
 }
+
+//todo owner age
+//todo branch age
+//todo project age
+//todo rate of change
 
 /*function getOwnerWorkLoad(json) {
 }*/

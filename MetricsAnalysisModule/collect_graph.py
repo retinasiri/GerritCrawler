@@ -122,7 +122,7 @@ def getIntermediaryUpdatedChanges(json, previous_json):
         {
             "$match": {
                 "status": {"$in": ['MERGED', 'ABANDONED']},
-                "updated": {"$lte": created, "$gte": previous_created}
+                "updated": {"$lt": created, "$gte": previous_created}
             }
         },
         {"$project": {"id": 1, "owner_id": "$owner._account_id", "reviewers_id": "$reviewers.REVIEWER._account_id"}},

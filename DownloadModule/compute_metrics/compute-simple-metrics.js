@@ -165,6 +165,8 @@ function collectTimeMetrics(json, metric) {
     metric["diff_created_updated_in_days"] = diff_date_days(json);
     metric["diff_created_updated_in_days_ceil"] = MathJs.ceil(diff_date_days(json));
     metric["diff_created_updated_in_hours"] = diff_date_hours(json);
+    metric["date_updated_date_created_diff"] = json['date_updated_date_created_diff'];
+    metric["diff_created_close_time"] = json['diff_created_close_time'];
     //metric["diff_created_updated_in_hours_ceil"] = MathJs.ceil(diff_date_hours(json));
     //metric["date_submitted"] = get_date_submitted(json);
     //metric["diff_created_updated_in_hours"] = json["meta_date_updated_date_created_diff"]

@@ -84,6 +84,10 @@ async function collectDocs(docs) {
     for (let key in docs) {
         await collectMetadata(docs[key])
             .then((json) => {
+                if(json.id === null){
+                    console.log(docs[key].id)
+                    return Promise.resolve(true)
+                }
                 return saveMetadata(json);
             })
     }
@@ -104,9 +108,29 @@ async function updateProgress() {
     return Promise.resolve(true);
 }
 
+//console.log(metadata)
+
+//do get the smallest date
+//ab time to add reviewers
+//do new status
+//do revision before close time
+//todo work load of the owner.
+//do delete outlier
+//do delete all but 1st revision
+//do add new features
+//build time avg per file
+//build time avg per branch
+//build time of owner
+//avg time of revision of file
+//avg time of revision of owner
+//avg time between revision owner
+//avg of fail of file
+//owner time to add reviewer
+//file build fail
+
 async function collectMetadata(json) {
     let metadata = {};
-    metadata["id"] = json.id
+    //metadata["id"] = json.id
     metadata = get_owner_info(metadata, json)
     metadata = get_revision_info(metadata, json)
     metadata = get_time_info(metadata, json)
@@ -131,25 +155,20 @@ async function collectMetadata(json) {
     let msg_before_close_info = get_messages_information(msg, json.created)
     metadata = {...metadata, ...add_suffix_to_json(msg_before_close_info, '_before_close')}
 
-    //console.log(metadata)
+    metadata["is_self_review"] = MetricsUtils.check_self_review(json, projectName);
 
-    //do get the smallest date
-    //ab time to add reviewers
-    //do new status
-    //do revision before close time
-    //todo work load of the owner.
-    //todo delete outlier
-    //todo delete all but 1st revision
-    //todo add new features
-    //build time avg per file
-    //build time avg per branch
-    //build time of owner
-    //avg time of revision of file
-    //avg time of revision of owner
-    //avg time between revision owner
-    //avg of fail of file
-    //owner time to add reviewer
-    //file build fail
+    metadata["new_status"] = metadata["new_status"] ? metadata["new_status"] : json["status"]
+    metadata["new_status_before_close"] = metadata["new_status_before_close"] ? metadata["new_status_before_close"] : json["status"]
+
+    //metadata["id"] = json["id"];
+    metadata["updated_original"] = json["updated"]
+    metadata["status_original"] = json["status"]
+    metadata["date_updated_date_created_diff_original"] = timeDiff(json.created, json.updated)
+
+    metadata["updated"] = metadata["close_time"]
+    metadata["status"] = metadata["new_status_before_close"]
+    metadata["date_updated_date_created_diff"] = parseFloat(metadata["diff_created_close_time"])
+    metadata["id"] = json.id
 
     return metadata;
 }
@@ -257,6 +276,7 @@ function get_messages_information(messages, date_created) {
     let revisions_list = [];
     let build_message_list = [];
     let new_status = ""
+    let all_status = []
 
     for (let i = 0; i < messages.length; i++) {
         let message = messages[i];
@@ -265,15 +285,22 @@ function get_messages_information(messages, date_created) {
         if (!message.author)
             continue;
 
+        let msg = message.message
+        let abandoned_patt = /^abandoned/i;
+        if (abandoned_patt.test(msg)) {
+            message_review_time.push(date);
+            all_status.push("ABANDONED");
+        }
+
         let code_review = analyse_code_review(message)
         if (code_review !== undefined) {
             if (code_review["Code-Review"] === 2 || code_review["Code-Review"] === -2) {
                 message_review_time.push(code_review["date"])
                 has_been_review = true;
-                if(code_review["Code-Review"] === 2 )
-                    new_status = "MERGED"
-                if(code_review["Code-Review"] === -2 )
-                    new_status = "ABANDONED"
+                if (code_review["Code-Review"] === 2)
+                    all_status.push("MERGED")
+                if (code_review["Code-Review"] === -2)
+                    all_status.push("ABANDONED")
             }
         }
 
@@ -313,7 +340,7 @@ function get_messages_information(messages, date_created) {
         //analyse time between revision
         let revision_number = message._revision_number;
         if (last_revision_number !== revision_number) {
-            if(revisions_list.length === 0){
+            if (revisions_list.length === 0) {
                 let rev = {revision: revision_number, start: date_created}
                 revisions_list.push(rev)
             } else {
@@ -385,7 +412,8 @@ function get_messages_information(messages, date_created) {
         messages_per_account: messages_per_account_array,
         messages_human_count: messages_human_count,
         messages_bot_count: messages_bot_count,
-        new_status: new_status,
+        new_status: all_status.length > 0 ? all_status[0] : 0,
+        all_status: new_status,
         is_inactive: is_inactive,
         max_inactive_time: max_inactive_time,
         has_auto_tag_merged: has_auto_tag_merged,
@@ -463,8 +491,7 @@ function get_bot_message(message_info) {
             }
         }
 
-    }
-    else if (['android'].includes(projectName)) {
+    } else if (['android'].includes(projectName)) {
         let build_start_patt = /.*Started presubmit run: .*/mi
         let build_finished_patt = /.*TreeHugger finished with: .*/mi
         let verified_failed_patt = /.*Presubmit-Verified(-1|-2).*/mi
