@@ -392,7 +392,7 @@ function get_messages_information(messages, date_created) {
     }
 
     let avg_time_revision = revision_time.length > 0 ? MathJs.mean(revision_time) : 0
-    let avg_time_between_revision = time_between_revision > 0 ? MathJs.mean(time_between_revision) : 0
+    let avg_time_between_revision = time_between_revision.length > 0 ? MathJs.mean(time_between_revision) : 0
 
     //message per account
     let messages_per_account_array = []

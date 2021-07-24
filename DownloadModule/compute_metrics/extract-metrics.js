@@ -7,6 +7,9 @@ const Utils = require('../config/utils');
 const fs = require('fs');
 const MetricsUtils = require('./metrics-utils');
 
+//todo correct time betweenRevision
+//todo time of inactivity
+
 const progressBar = new cliProgress.SingleBar({
     format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | skipped : {skipped} ',
     barCompleteChar: '#',
@@ -127,11 +130,12 @@ function check_value_to_ignore(metrics) {
     if (metrics["is_a_bot"] === true)
         return true;
 
-    if (check_self_review(metrics))
-        return true;
+    /*if (check_self_review(metrics))
+        return true;*/
     //todo
 
-    let keys = ['fg_degree_centrality', 'num_segs_added', 'revisionTimeAvg']
+    let keys = ['fg_degree_centrality', 'num_segs_added', 'filesBuildTimeAvg']
+    //let keys = ['fg_degree_centrality', 'num_segs_added', 'revisionTimeAvg']
     //let keys = ['fg_degree_centrality', 'num_segs_added']
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i]
@@ -232,7 +236,7 @@ async function collectMetrics(metric) {
     //result["n"] = i++
     result["id"] = metric["id"]
     result = copy(result, metric, "days_of_the_weeks_of_date_created");
-    result = copy(result, metric, "is_created_date_a_weekend");
+    //result = copy(result, metric, "is_created_date_a_weekend");
     result = copy(result, metric, "author_timezone");
 
     //Collaboration Graph
@@ -245,17 +249,17 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "fg_core_number", "core_number");
 
     //code
-    result = copy(result, metric, "first_revision_insertions", "insertions");
-    result = copy(result, metric, "first_revision_deletions", "deletions");
+    //result = copy(result, metric, "first_revision_insertions", "insertions");
+    //result = copy(result, metric, "first_revision_deletions", "deletions");
     //result = copy(result, metric, "diff_lines_added_line_deleted", "code_churn");
-    result["code_churn"] = result["insertions"] + result["deletions"]
+    result["code_churn"] = metric["first_revision_insertions"] + metric["first_revision_deletions"]
     result = copy(result, metric, "num_files");
-    result = copy(result, metric, "num_files_type");
+    //result = copy(result, metric, "num_files_type");
     result = copy(result, metric, "num_programming_language");
     result = copy(result, metric, "num_directory");
     result = copy(result, metric, "modify_entropy", "change_entropy");
-    result = copy(result, metric, "sum_loc");
-    result = copy(result, metric, "sum_complexity");
+    //result = copy(result, metric, "sum_loc");
+    //result = copy(result, metric, "sum_complexity");
     result = copy(result, metric, "num_segs_added");
     result = copy(result, metric, "num_segs_deleted");
     result = copy(result, metric, "num_segs_modify");
@@ -264,26 +268,26 @@ async function collectMetrics(metric) {
     result["kind_of_revision"] = match_review_kind_value(result["kind_of_revision"])*/
 
     //Text metrics
-    result = copy(result, metric, "subject_length");
-    result = copy(result, metric, "subject_word_count");
+    //result = copy(result, metric, "subject_length");
+    //result = copy(result, metric, "subject_word_count");
     result = copy(result, metric, "msg_length");
-    result = copy(result, metric, "msg_word_count");
+    //result = copy(result, metric, "msg_word_count");
     result = copy(result, metric, "is_non_fonctional");
     result = copy(result, metric, "is_refactoring");
     result = copy(result, metric, "is_corrective");
     result = copy(result, metric, "is_preventive");
-    result = copy(result, metric, "is_merge");
+    //result = copy(result, metric, "is_merge");
     result = copy(result, metric, "has_feature_addition");
     //result = copy(result, metric, "is_perfective");
 
     //Owner experience metrics
     result = copy(result, metric, "ownerPriorChangesCount", "owner_prior_changes");
-    result = copy(result, metric, "ownerPriorMergedChangesCount", "owner_prior_merged_changes");
-    result = copy(result, metric, "ownerPriorAbandonedChangesCount", "owner_prior_abandoned_changes");
-    result["owner_non_close_changes"] = result["owner_prior_changes"] - result["owner_prior_merged_changes"] - result["owner_prior_abandoned_changes"]
+    //result = copy(result, metric, "ownerPriorMergedChangesCount", "owner_prior_merged_changes");
+    //result = copy(result, metric, "ownerPriorAbandonedChangesCount", "owner_prior_abandoned_changes");
+    result["owner_non_close_changes"] = metric["ownerPriorChangesCount"] - metric["ownerPriorMergedChangesCount"] - metric["ownerPriorAbandonedChangesCount"]
     result = copy(result, metric, "ownerMergedRatio", "owner_merge_ratio");
-    result = copy(result, metric, "mergedRatio", "merge_ratio");
-    result = copy(result, metric, "priorSubsystemChangesCount", "prior_subsystem_changes");
+    //result = copy(result, metric, "mergedRatio", "merge_ratio");
+    //result = copy(result, metric, "priorSubsystemChangesCount", "prior_subsystem_changes");
 
     /*result = copy(result, metric, "priorChangeDurationMean", "prior_change_duration_mean", true);
     result = copy(result, metric, "priorChangeDurationMax", "prior_change_duration_max", true);
@@ -291,88 +295,88 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "priorChangeDurationStd", "prior_change_duration_std", true);*/
 
     result = copy(result, metric, "priorOwnerChangesDurationMean", "owner_prior_change_duration_mean");
-    result = copy(result, metric, "priorOwnerChangesDurationMax", "owner_prior_change_duration_max");
-    result = copy(result, metric, "priorOwnerChangesDurationMin", "owner_prior_change_duration_min");
-    result = copy(result, metric, "priorOwnerChangesDurationStd", "owner_prior_change_duration_std");
+    //result = copy(result, metric, "priorOwnerChangesDurationMax", "owner_prior_change_duration_max");
+    //result = copy(result, metric, "priorOwnerChangesDurationMin", "owner_prior_change_duration_min");
+    //result = copy(result, metric, "priorOwnerChangesDurationStd", "owner_prior_change_duration_std");
 
-    result = copy(result, metric, "priorOwnerSubsystemChangesCount", "prior_owner_subsystem_changes");
-    result = copy(result, metric, "priorOwnerSubsystemChangesRatio", "prior_owner_subsystem_changes_ratio");
+    //result = copy(result, metric, "priorOwnerSubsystemChangesCount", "prior_owner_subsystem_changes");
+    //result = copy(result, metric, "priorOwnerSubsystemChangesRatio", "prior_owner_subsystem_changes_ratio");
 
     result = copy(result, metric, "ownerNumberOfReview", "reviewed_changes_owner");
 
     result = copy(result, metric, "ownerPreviousMessageCount", "owner_previous_message");
-    result = copy(result, metric, "ownerChangesMessagesSum", "owner_exchanged_messages");
+    //result = copy(result, metric, "ownerChangesMessagesSum", "owner_exchanged_messages");
     result = copy(result, metric, "ownerChangesMessagesAvgPerChanges", "owner_changes_messages_avg");
-    result = copy(result, metric, "ownerChangesMessagesMaxPerChanges", "owner_changes_messages_max");
-    result = copy(result, metric, "ownerChangesMessagesMinPerChanges", "owner_changes_messages_min");
-    result = copy(result, metric, "ownerChangesMessagesStdPerChanges", "owner_changes_messages_std");
+    //result = copy(result, metric, "ownerChangesMessagesMaxPerChanges", "owner_changes_messages_max");
+    //result = copy(result, metric, "ownerChangesMessagesMinPerChanges", "owner_changes_messages_min");
+    //result = copy(result, metric, "ownerChangesMessagesStdPerChanges", "owner_changes_messages_std");
     result = copy(result, metric, "ownerNumberOfRevisionAvg", "owner_number_of_revision_avg");
-    result = copy(result, metric, "ownerNumberOfRevisionMax", "owner_number_of_revision_max");
-    result = copy(result, metric, "ownerNumberOfRevisionMin", "owner_number_of_revision_min");
-    result = copy(result, metric, "ownerNumberOfRevisionStd", "owner_number_of_revision_std");
-    result = copy(result, metric, "ownerNumberOfRevisionStd", "owner_number_of_revision_std");
-
+    //result = copy(result, metric, "ownerNumberOfRevisionMax", "owner_number_of_revision_max");
+    //result = copy(result, metric, "ownerNumberOfRevisionMin", "owner_number_of_revision_min");
+    //result = copy(result, metric, "ownerNumberOfRevisionStd", "owner_number_of_revision_std");
 
     result = copy(result, metric, "ownerRateOfAutoReview", "owner_rate_of_auto_review");
 
     result = copy(result, metric, "revisionTimeAvg", "revision_time_avg");
-    result = copy(result, metric, "revisionTimeMax", "revision_time_max");
-    result = copy(result, metric, "revisionTimeMin", "revision_time_min");
-    result = copy(result, metric, "revisionTimeStd", "revision_time_std");
+    //result = copy(result, metric, "revisionTimeMax", "revision_time_max");
+    //result = copy(result, metric, "revisionTimeMin", "revision_time_min");
+    //result = copy(result, metric, "revisionTimeStd", "revision_time_std");
 
-    result = copy(result, metric, "ownerRevisionTimeAvg", "owner_revision_time_avg");
-    result = copy(result, metric, "ownerRevisionTimeMax", "owner_revision_time_max");
-    result = copy(result, metric, "ownerRevisionTimeMin", "owner_revision_time_min");
-    result = copy(result, metric, "ownerRevisionTimeStd", "owner_revision_time_std");
+    //result = copy(result, metric, "ownerRevisionTimeAvg", "owner_revision_time_avg");
+    //result = copy(result, metric, "ownerRevisionTimeMax", "owner_revision_time_max");
+    //result = copy(result, metric, "ownerRevisionTimeMin", "owner_revision_time_min");
+    //result = copy(result, metric, "ownerRevisionTimeStd", "owner_revision_time_std");
 
     result = copy(result, metric, "ownerTimeBetweenRevisionAvg", "owner_time_between_revision_avg");
-    result = copy(result, metric, "ownerTimeBetweenRevisionMax", "owner_time_between_revision_max");
-    result = copy(result, metric, "ownerTimeBetweenRevisionMin", "owner_time_between_revision_min");
-    result = copy(result, metric, "ownerTimeBetweenRevisionStd", "owner_time_between_revision_std");
+    //result = copy(result, metric, "ownerTimeBetweenRevisionMax", "owner_time_between_revision_max");
+    //result = copy(result, metric, "ownerTimeBetweenRevisionMin", "owner_time_between_revision_min");
+    //result = copy(result, metric, "ownerTimeBetweenRevisionStd", "owner_time_between_revision_std");
 
-    result = copy(result, metric, "ownerTimeToAddReviewerAvg", "owner_time_to_add_reviewer_avg");
-    result = copy(result, metric, "ownerTimeToAddReviewerMax", "owner_time_to_add_reviewer_max");
-    result = copy(result, metric, "ownerTimeToAddReviewerMin", "owner_time_to_add_reviewer_min");
-    result = copy(result, metric, "ownerTimeToAddReviewerStd", "owner_time_to_add_reviewer_std");
+    //result = copy(result, metric, "ownerTimeToAddReviewerAvg", "owner_time_to_add_reviewer_avg");
+    //result = copy(result, metric, "ownerTimeToAddReviewerMax", "owner_time_to_add_reviewer_max");
+    //result = copy(result, metric, "ownerTimeToAddReviewerMin", "owner_time_to_add_reviewer_min");
+    //result = copy(result, metric, "ownerTimeToAddReviewerStd", "owner_time_to_add_reviewer_std");
 
     //branch metrics
-    result = copy(result, metric, "branchBuildTimeAvg", "branch_build_time_avg")
-    result = copy(result, metric, "branchBuildTimeMax", "branch_build_time_max");
-    result = copy(result, metric, "branchBuildTimeMin", "branch_build_time_min");
-    result = copy(result, metric, "branchBuildTimeStd", "branch_build_time_std");
+    //result = copy(result, metric, "branchBuildTimeAvg", "branch_build_time_avg")
+    //result = copy(result, metric, "branchBuildTimeMax", "branch_build_time_max");
+    //result = copy(result, metric, "branchBuildTimeMin", "branch_build_time_min");
+    //result = copy(result, metric, "branchBuildTimeStd", "branch_build_time_std");
 
-    result = copy(result, metric, "branchRevisionTimeAvg", "branch_revision_time_avg");
-    result = copy(result, metric, "branchRevisionTimeMax", "branch_revision_time_max");
-    result = copy(result, metric, "branchRevisionTimeMin", "branch_revision_time_min");
-    result = copy(result, metric, "branchRevisionTimeStd", "branch_revision_time_std");
+    //result = copy(result, metric, "branchRevisionTimeAvg", "branch_revision_time_avg");
+    //result = copy(result, metric, "branchRevisionTimeMax", "branch_revision_time_max");
+    //result = copy(result, metric, "branchRevisionTimeMin", "branch_revision_time_min");
+    //result = copy(result, metric, "branchRevisionTimeStd", "branch_revision_time_std");
 
 
     //file metrics
     result = copy(result, metric, "AvgNumberOfDeveloperWhoModifiedFiles", "developers_file");
+
     result = copy(result, metric, "fileTimeAvg", "file_changes_duration_avg");
-    result = copy(result, metric, "fileTimeMax", "file_changes_duration_max");
-    result = copy(result, metric, "fileTimeMin", "file_changes_duration_min");
-    result = copy(result, metric, "fileTimeStd", "file_changes_duration_std");
+    //result = copy(result, metric, "fileTimeMax", "file_changes_duration_max");
+    //result = copy(result, metric, "fileTimeMin", "file_changes_duration_min");
+    //result = copy(result, metric, "fileTimeStd", "file_changes_duration_std");
+
     result = copy(result, metric, "fileCountAvg", "prior_changes_files_avg");
-    result = copy(result, metric, "fileCountMax", "prior_changes_files_max");
-    result = copy(result, metric, "fileCountMin", "prior_changes_files_min");
-    result = copy(result, metric, "fileCountStd", "prior_changes_files_std");
+    //result = copy(result, metric, "fileCountMax", "prior_changes_files_max");
+    //result = copy(result, metric, "fileCountMin", "prior_changes_files_min");
+    //result = copy(result, metric, "fileCountStd", "prior_changes_files_std");
 
 
     result = copy(result, metric, "filesBuildTimeAvg", "files_build_time_avg");
-    result = copy(result, metric, "filesBuildTimeMax", "files_build_time_max");
-    result = copy(result, metric, "filesBuildTimeMin", "files_build_time_min");
-    result = copy(result, metric, "filesBuildTimeStd", "files_build_time_std");
+    //result = copy(result, metric, "filesBuildTimeMax", "files_build_time_max");
+    //result = copy(result, metric, "filesBuildTimeMin", "files_build_time_min");
+    //result = copy(result, metric, "filesBuildTimeStd", "files_build_time_std");
 
-    result = copy(result, metric, "filesRevisionTimeAvg", "files_revision_time_avg");
+    /*result = copy(result, metric, "filesRevisionTimeAvg", "files_revision_time_avg");
     result = copy(result, metric, "filesRevisionTimeMax", "files_revision_time_max");
     result = copy(result, metric, "filesRevisionTimeMin", "files_revision_time_min");
-    result = copy(result, metric, "filesRevisionTimeStd", "files_revision_time_std");
+    result = copy(result, metric, "filesRevisionTimeStd", "files_revision_time_std");*/
 
     result = copy(result, metric, "filesNumFailsAvg", "files_num_fails_avg");
-    result = copy(result, metric, "filesNumFailsMax", "files_num_fails_max");
-    result = copy(result, metric, "filesNumFailsMin", "files_num_fails_min");
-    result = copy(result, metric, "filesNumFailsStd", "files_num_fails_std");
+    //result = copy(result, metric, "filesNumFailsMax", "files_num_fails_max");
+    //result = copy(result, metric, "filesNumFailsMin", "files_num_fails_min");
+    //result = copy(result, metric, "filesNumFailsStd", "files_num_fails_std");
 
 
     //metrics to predict
