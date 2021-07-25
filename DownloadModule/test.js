@@ -734,10 +734,27 @@ let json = {
     "updated_original" : "2021-06-15 03:28:23.000000000"
 }
 
-collectMetadata(json)
+//collectMetadata(json)
 
 function ObjectId(text){
     return text;
+}
+
+console.log(get_days_of_the_weeks_date_created(json))
+
+let date = "2021-06-14 12:00:00.000000000"
+function get_precise_days_of_the_weeks_date_created(json) {
+    let date = Moment.utc(json.created);
+    return date.isoWeekday() + Moment.duration(date.format("hh:mm:ss.SSSSSSSSS")).asDays()
+}
+
+console.log(get_days_of_the_weeks_date_create_2(date))
+
+function get_days_of_the_weeks_date_create_2(date) {
+    let days_of_the_week = Moment.utc(date).isoWeekday();
+    let tmp = Moment.utc(date).format("hh:mm:ss.SSSSSSSSS");
+    let hour = Moment.duration(tmp).asDays()
+    return days_of_the_week + hour
 }
 
 async function collectMetadata(json) {

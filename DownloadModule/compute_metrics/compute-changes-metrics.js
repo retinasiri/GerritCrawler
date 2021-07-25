@@ -657,9 +657,9 @@ function getFileTimeAndCount(json, TYPE) {
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
-            status: TYPE,
             _number: {$lt: number},
             updated: {$lt: created_date},
+            status: TYPE,
             files_list: {$in: files_list}
         }
     };
@@ -675,10 +675,10 @@ function getFileTimeAndCountForOwner(json, TYPE) {
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
-            status: TYPE,
-            'owner._account_id': ownerId,
             _number: {$lt: number},
             updated: {$lt: created_date},
+            status: TYPE,
+            'owner._account_id': ownerId,
             files_list: {$in: files_list}
         }
     };

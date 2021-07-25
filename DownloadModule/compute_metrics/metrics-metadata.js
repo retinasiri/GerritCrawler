@@ -6,6 +6,8 @@ const Change = require('../models/change');
 const Utils = require('../config/utils');
 const MetricsUtils = require('./metrics-utils');
 
+//todo detect cherry-pick
+
 const progressBar = new cliProgress.SingleBar({
     //format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | delete_nums : {delete_change_nums}',
     format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total}',
@@ -20,6 +22,7 @@ let projectName = libreOfficeJson["projectName"];
 let DATA_PATH = "data/"
 let STARTING_POINT = 0;
 let delete_change_nums = 0;
+const MAX_INACTIVE_TIME_DELAY = 730;
 
 if (typeof require !== 'undefined' && require.main === module) {
     startComputeMetadata(libreOfficeJson).catch(err => {
@@ -84,7 +87,7 @@ async function collectDocs(docs) {
     for (let key in docs) {
         await collectMetadata(docs[key])
             .then((json) => {
-                if(json.id === null){
+                if (json.id === null) {
                     console.log(docs[key].id)
                     return Promise.resolve(true)
                 }
@@ -148,8 +151,18 @@ async function collectMetadata(json) {
     metadata["diff_created_close_time"] = timeDiff(metadata["close_time"], json.created)
 
     let time_to_add_human_reviewers = get_time_to_add_human_reviewers(json, metadata["close_time"])
-    metadata["avg_time_to_add_human_reviewers"] = time_to_add_human_reviewers.avg_time_to_add_human_reviewers;
-    metadata["avg_time_to_add_human_reviewers_before_close"] = time_to_add_human_reviewers.avg_time_to_add_human_reviewers_before_close;
+
+    if (time_to_add_human_reviewers.avg_time_to_add_human_reviewers === undefined || time_to_add_human_reviewers.avg_time_to_add_human_reviewers === 0) {
+        metadata["avg_time_to_add_human_reviewers"] = metadata["close_time"];
+    } else {
+        metadata["avg_time_to_add_human_reviewers"] = time_to_add_human_reviewers.avg_time_to_add_human_reviewers;
+    }
+
+    if (time_to_add_human_reviewers.avg_time_to_add_human_reviewers_before_close === undefined || time_to_add_human_reviewers.avg_time_to_add_human_reviewers_before_close === 0) {
+        metadata["avg_time_to_add_human_reviewers_before_close"] = metadata["close_time"];
+    } else {
+        metadata["avg_time_to_add_human_reviewers_before_close"] = time_to_add_human_reviewers.avg_time_to_add_human_reviewers_before_close;
+    }
 
     let msg = get_messages_before_close(json.messages, metadata["close_time"])
     let msg_before_close_info = get_messages_information(msg, json.created)
@@ -214,6 +227,7 @@ function avg(num_array) {
     return num_array.length > 0 ? MathJs.mean(num_array) : 0;
 }
 
+
 function get_owner_info(metadata, json) {
     if (json.owner) {
         let ownerId = json.owner._account_id;
@@ -257,6 +271,12 @@ function get_messages_before_close(messages, close_time) {
     return msgs;
 }
 
+function check_if_cherry_picked(msg) {
+    let cherry_pick_patt = /^Patch Set 1: Cherry Picked from/i;
+    return cherry_pick_patt.test(msg);
+}
+
+
 function get_messages_information(messages, date_created) {
     if (!messages)
         return {}
@@ -275,17 +295,21 @@ function get_messages_information(messages, date_created) {
     let last_revision_number = 0;
     let revisions_list = [];
     let build_message_list = [];
-    let new_status = ""
-    let all_status = []
+    let new_status = "";
+    let all_status = [];
+    let is_a_cherry_pick = false;
 
     for (let i = 0; i < messages.length; i++) {
         let message = messages[i];
         let date = message.date;
+        let msg = message.message
 
         if (!message.author)
             continue;
 
-        let msg = message.message
+        if (!is_a_cherry_pick)
+            is_a_cherry_pick = check_if_cherry_picked(msg)
+
         let abandoned_patt = /^abandoned/i;
         if (abandoned_patt.test(msg)) {
             message_review_time.push(date);
@@ -312,7 +336,7 @@ function get_messages_information(messages, date_created) {
                 has_auto_tag_abandoned = true
         }
 
-        let author = messages[i].author._account_id;
+        let author = message.author._account_id;
 
         //count message per account
         if (!messages_per_account[author])
@@ -372,8 +396,8 @@ function get_messages_information(messages, date_created) {
     //analyse all info collected
     let max_inactive_time = time_diff_between_messages.length > 0 ? MathJs.max(time_diff_between_messages) : 0
     let is_inactive = false;
-    if (max_inactive_time > 1460) {
-        //3 month 2190 //2 month 1460
+    if (max_inactive_time > MAX_INACTIVE_TIME_DELAY) {
+        //3 month 2190 //2 month 1460 //1 month 730
         is_inactive = true
     }
 

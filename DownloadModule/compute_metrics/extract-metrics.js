@@ -134,6 +134,20 @@ function check_value_to_ignore(metrics) {
         return true;*/
     //todo
 
+    //if(metrics["date_updated_date_created_diff"] < 24)
+    if(metrics["date_updated_date_created_diff"] < 1)
+        return true;
+
+    //if(metrics["date_updated_date_created_diff"] > 336)
+    if(metrics["date_updated_date_created_diff"] > 730)
+        return true;
+
+    if(metrics["max_inactive_time_before_close"] > 168)
+        return true;
+
+    /*if(metrics["is_self_review"])
+        return true;*/
+
     let keys = ['fg_degree_centrality', 'num_segs_added', 'filesBuildTimeAvg']
     //let keys = ['fg_degree_centrality', 'num_segs_added', 'revisionTimeAvg']
     //let keys = ['fg_degree_centrality', 'num_segs_added']
@@ -249,14 +263,14 @@ async function collectMetrics(metric) {
     result = copy(result, metric, "fg_core_number", "core_number");
 
     //code
-    //result = copy(result, metric, "first_revision_insertions", "insertions");
-    //result = copy(result, metric, "first_revision_deletions", "deletions");
+    result = copy(result, metric, "first_revision_insertions", "insertions");
+    result = copy(result, metric, "first_revision_deletions", "deletions");
     //result = copy(result, metric, "diff_lines_added_line_deleted", "code_churn");
-    result["code_churn"] = metric["first_revision_insertions"] + metric["first_revision_deletions"]
+    //result["code_churn"] = metric["first_revision_insertions"] + metric["first_revision_deletions"]
     result = copy(result, metric, "num_files");
     //result = copy(result, metric, "num_files_type");
     result = copy(result, metric, "num_programming_language");
-    result = copy(result, metric, "num_directory");
+    //result = copy(result, metric, "num_directory");
     result = copy(result, metric, "modify_entropy", "change_entropy");
     //result = copy(result, metric, "sum_loc");
     //result = copy(result, metric, "sum_complexity");
@@ -302,9 +316,9 @@ async function collectMetrics(metric) {
     //result = copy(result, metric, "priorOwnerSubsystemChangesCount", "prior_owner_subsystem_changes");
     //result = copy(result, metric, "priorOwnerSubsystemChangesRatio", "prior_owner_subsystem_changes_ratio");
 
-    result = copy(result, metric, "ownerNumberOfReview", "reviewed_changes_owner");
+    //result = copy(result, metric, "ownerNumberOfReview", "reviewed_changes_owner");
 
-    result = copy(result, metric, "ownerPreviousMessageCount", "owner_previous_message");
+    //result = copy(result, metric, "ownerPreviousMessageCount", "owner_previous_message");
     //result = copy(result, metric, "ownerChangesMessagesSum", "owner_exchanged_messages");
     result = copy(result, metric, "ownerChangesMessagesAvgPerChanges", "owner_changes_messages_avg");
     //result = copy(result, metric, "ownerChangesMessagesMaxPerChanges", "owner_changes_messages_max");

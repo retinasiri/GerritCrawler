@@ -146,25 +146,28 @@ function collectIdentityMetrics(json, metric) {
  */
 function collectTimeMetrics(json, metric) {
     metric["date_created"] = json.created;
-    metric["date_created_time"] = get_date_created_time(json);
     metric["date_updated"] = json.updated;
-    metric["date_updated_time"] = get_date_updated_time(json);
+    metric["date_created_time"] = get_date_time(json.created);
+    metric["date_updated_time"] = get_date_time(json.updated);
+    metric["days_of_the_weeks_of_date_created"] = get_days_of_the_weeks(json.created);
+    metric["days_of_the_weeks_of_date_updated"] = get_days_of_the_weeks(json.updated);
+    metric["days_of_the_weeks_date_created_precise"] = get_precise_days_of_the_weeks(json.created);
+    metric["days_of_the_weeks_of_date_updated_precise"] = get_precise_days_of_the_weeks(json.created);
+    metric["is_created_date_a_weekend"] = is_date_a_weekend(json.created);
+    metric["is_updated_date_a_weekend"] = is_date_a_weekend(json.updated);
+    metric["days_of_the_weeks_of_date_created_for_owner_timezone"] = get_days_of_the_weeks_for_owner_timezone(json.created, get_timezone(json).author);
+    metric["is_created_date_a_weekend_for_owner_timezone"] = is_date_a_weekend_for_owner_timezone(json.created, get_timezone(json).author);
     metric["date_commit"] = get_commit_date(json);
     metric["date_commit_time"] = get_commit_date_time(json);
-    metric["days_of_the_weeks_of_date_created"] = get_days_of_the_weeks_date_created(json);
-    metric["days_of_the_weeks_of_date_updated"] = get_days_of_the_weeks_date_updated(json);
-    metric["is_created_date_a_weekend"] = is_created_date_a_weekend(json);
-    metric["is_updated_date_a_weekend"] = is_updated_date_a_weekend(json);
     metric["committer_timezone"] = get_timezone(json).committer;
     metric["author_timezone"] = get_timezone(json).author;
-    metric["days_of_the_weeks_of_date_created_for_owner_timezone"] = get_days_of_the_weeks_date_created_for_owner_timezone(json, get_timezone(json).author);
-    metric["is_created_date_a_weekend_for_owner_timezone"] = is_created_date_a_weekend_for_owner_timezone(json, get_timezone(json).author);
 
     //metrics to forecast
     metric["diff_created_updated"] = diffCreatedUpdatedTime(json);
     metric["diff_created_updated_in_days"] = diff_date_days(json);
     metric["diff_created_updated_in_days_ceil"] = MathJs.ceil(diff_date_days(json));
     metric["diff_created_updated_in_hours"] = diff_date_hours(json);
+
     metric["date_updated_date_created_diff"] = json['date_updated_date_created_diff'];
     metric["diff_created_close_time"] = json['diff_created_close_time'];
     metric["max_inactive_time_before_close"] = json['max_inactive_time_before_close'];
@@ -409,16 +412,25 @@ function get_date_updated_time(json) {
     return Moment.utc(json.updated).toDate().getTime();
 }
 
-function get_days_of_the_weeks(json) {
-    return Moment.utc(json.created).isoWeekday();
+function get_date_time(dateString) {
+    return Moment.utc(dateString).toDate().getTime();
 }
 
 function get_days_of_the_weeks_date_created(json) {
     return Moment.utc(json.created).isoWeekday();
 }
 
-function get_days_of_the_weeks_date_created_for_owner_timezone(json, offset) {
-    return Moment.utc(json.created).utcOffset(offset).isoWeekday();
+function get_days_of_the_weeks(dateString) {
+    return Moment.utc(dateString).isoWeekday();
+}
+
+function get_precise_days_of_the_weeks(dateString) {
+    let date = Moment.utc(dateString);
+    return date.isoWeekday() + Moment.duration(date.format("hh:mm:ss.SSSSSSSSS")).asDays()
+}
+
+function get_days_of_the_weeks_for_owner_timezone(dateString, offset) {
+    return Moment.utc(dateString).utcOffset(offset).isoWeekday();
 }
 
 function get_days_of_the_weeks_date_updated(json) {
@@ -440,8 +452,8 @@ function get_commit_date_time(json) {
     return Moment.utc(date).toDate().getTime()
 }
 
-function is_created_date_a_weekend_for_owner_timezone(json, offset) {
-    let date = Moment.utc(json.created).utcOffset(offset).isoWeekday();
+function is_date_a_weekend_for_owner_timezone(dateString, offset) {
+    let date = Moment.utc(dateString).utcOffset(offset).isoWeekday();
     return (date === 6) || (date === 7)
 }
 
@@ -452,6 +464,11 @@ function is_created_date_a_weekend(json) {
 
 function is_updated_date_a_weekend(json) {
     let date = Moment.utc(json.updated).isoWeekday();
+    return (date === 6) || (date === 7)
+}
+
+function is_date_a_weekend(dateString) {
+    let date = Moment.utc(dateString).isoWeekday();
     return (date === 6) || (date === 7)
 }
 
