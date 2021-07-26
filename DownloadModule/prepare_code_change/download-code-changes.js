@@ -74,7 +74,7 @@ async function startDownload(json) {
             });
     } else {
         let tasks = []
-        let NUM_CONCURRENCY = 500;
+        let NUM_CONCURRENCY = 200;
         let n = 0;
         for (let i = 0; i < projectList.length; i++) {
             let project = projectList[i]
@@ -88,14 +88,14 @@ async function startDownload(json) {
 
             tasks.push(t)
             n++;
-            /*if (n >= NUM_CONCURRENCY) {
+            if (n >= NUM_CONCURRENCY) {
                 await Promise.all(tasks).then(() => {
                     n = 0;
                     tasks = [];
                 })
-            }*/
+            }
         }
-        await Promise.all(tasks);
+        //await Promise.all(tasks);
         console.log("Finished !!!!");
         return Promise.resolve(true);
     }

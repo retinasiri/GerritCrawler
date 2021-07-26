@@ -82,7 +82,7 @@ function get_change_id_url(id) {
 
 async function process(changesIdList) {
     let tasks = []
-    let NUM_CONCURRENCY = 500;
+    let NUM_CONCURRENCY = 200;
     let n = 0;
     for (let i = 0; i < changesIdList.length; i++) {
 
