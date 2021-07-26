@@ -324,7 +324,7 @@ function initCrawlingProgression(url, project = "") {
         number_of_abandoned_changes_collected: 0
     });
 
-    return Crawling.findOne({url: url})
+    return Crawling.findOne({_id: project})
         .then(result => {
             if (result) {
                 return Promise.resolve(result);
