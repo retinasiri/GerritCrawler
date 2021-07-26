@@ -183,7 +183,15 @@ async function collectMetadata(json) {
     metadata["date_updated_date_created_diff"] = parseFloat(metadata["diff_created_close_time"])
     metadata["id"] = json.id
 
+    metadata["days_of_the_weeks_date_created"] = get_days_of_the_weeks(json.created)
+    metadata["days_of_the_weeks_date_updated_original"] = get_days_of_the_weeks(json.updated)
+    metadata["days_of_the_weeks_date_updated"] = get_days_of_the_weeks(metadata["updated"])
+
     return metadata;
+}
+
+function get_days_of_the_weeks(dateString) {
+    return Moment.utc(dateString).isoWeekday();
 }
 
 function add_suffix_to_json(json, suffix) {
@@ -439,6 +447,7 @@ function get_messages_information(messages, date_created) {
         new_status: all_status.length > 0 ? all_status[0] : 0,
         all_status: new_status,
         is_inactive: is_inactive,
+        is_a_cherry_pick: is_a_cherry_pick,
         max_inactive_time: max_inactive_time,
         has_auto_tag_merged: has_auto_tag_merged,
         has_auto_tag_abandoned: has_auto_tag_abandoned,

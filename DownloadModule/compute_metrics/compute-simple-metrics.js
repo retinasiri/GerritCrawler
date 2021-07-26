@@ -58,7 +58,7 @@ function startComputeMetrics(json) {
 }
 
 //get changes id
-function getChanges(skip, NUM_OF_CHANGES_LIMIT=20000) {
+function getChanges(skip, NUM_OF_CHANGES_LIMIT = 20000) {
     return Change
         .aggregate([
             {$sort: {_number: 1}},
@@ -153,6 +153,8 @@ function collectTimeMetrics(json, metric) {
     metric["days_of_the_weeks_of_date_updated"] = get_days_of_the_weeks(json.updated);
     metric["days_of_the_weeks_date_created_precise"] = get_precise_days_of_the_weeks(json.created);
     metric["days_of_the_weeks_of_date_updated_precise"] = get_precise_days_of_the_weeks(json.created);
+    metric["hours_of_the_days_date_created"] = get_hours_of_the_days(json.created);
+    metric["hours_of_the_days_date_updated"] = get_hours_of_the_days(json.updated);
     metric["is_created_date_a_weekend"] = is_date_a_weekend(json.created);
     metric["is_updated_date_a_weekend"] = is_date_a_weekend(json.updated);
     metric["days_of_the_weeks_of_date_created_for_owner_timezone"] = get_days_of_the_weeks_for_owner_timezone(json.created, get_timezone(json).author);
@@ -173,6 +175,9 @@ function collectTimeMetrics(json, metric) {
     metric["max_inactive_time_before_close"] = json['max_inactive_time_before_close'];
     metric["max_inactive_time"] = json['max_inactive_time'];
     metric["is_self_review"] = json['is_self_review'];
+    metric["is_a_cherry_pick"] = json['is_a_cherry_pick'];
+    metric["project"] = json['project'];
+    metric["branch"] = json['branch'];
     //metric["diff_created_updated_in_hours_ceil"] = MathJs.ceil(diff_date_hours(json));
     //metric["date_submitted"] = get_date_submitted(json);
     //metric["diff_created_updated_in_hours"] = json["meta_date_updated_date_created_diff"]
@@ -210,6 +215,33 @@ function collectFileMetrics(json, metric) {
     metric["first_revision_deletions"] = fileInfo.first_revision_deletions;
     metric["first_revision_number"] = get_first_revision_number(json);
     metric["first_revision_kind"] = get_first_revision_kind(json);
+
+    metric["first_revision_code_churn"] = fileInfo.first_revision_insertions + fileInfo.first_revision_deletions;
+    metric["first_revision_code_churn_size"] = get_code_churn_size(fileInfo.first_revision_insertions + fileInfo.first_revision_deletions);
+}
+
+const ChurnSize = {
+    XS: 10,
+    SMALL: 50,
+    MEDIUM: 250,
+    LARGE: 1000,
+}
+
+function get_code_churn_size(churn) {
+    if (isNaN(churn) || churn === 0) {
+        return null;
+    }
+    if (churn < ChurnSize.XS) {
+        return 'XS';
+    } else if (churn < ChurnSize.SMALL) {
+        return 'S';
+    } else if (churn < ChurnSize.MEDIUM) {
+        return 'M';
+    } else if (churn < ChurnSize.LARGE) {
+        return 'L';
+    } else {
+        return 'XL';
+    }
 }
 
 /**
@@ -262,16 +294,16 @@ function isSelfReviewed(json) {
     return 0;
 }
 
-function isOwnerAReviewer(json){
+function isOwnerAReviewer(json) {
     let reviewersId = MetricsUtils.getReviewersId(json);
     let ownerId = json.owner._account_id;
     return reviewersId.includes(ownerId);
 }
 
-function isOwnerTheOnlyReviewer(json){
+function isOwnerTheOnlyReviewer(json) {
     let reviewersId = MetricsUtils.getReviewersId(json);
     let ownerId = json.owner._account_id;
-    return reviewersId.includes(ownerId) && reviewersId.length===1;
+    return reviewersId.includes(ownerId) && reviewersId.length === 1;
 }
 
 function is_self_reviewed_note(json) {
@@ -422,6 +454,11 @@ function get_days_of_the_weeks_date_created(json) {
 
 function get_days_of_the_weeks(dateString) {
     return Moment.utc(dateString).isoWeekday();
+}
+
+function get_hours_of_the_days(dateString) {
+    let date = Moment.utc(dateString);
+    return Moment.duration(date.format("hh:mm:ss.SSSSSSSSS")).asDays()
 }
 
 function get_precise_days_of_the_weeks(dateString) {
@@ -1070,7 +1107,7 @@ function msg_has_feature_addition(json) {
 module.exports = {
     start: startComputeMetrics,
     get_first_revision_kind: get_first_revision_kind,
-    get_first_revision:get_first_revision,
+    get_first_revision: get_first_revision,
     get_first_revision_number: get_first_revision_number,
     get_first_revision_id: get_first_revision_id
 };

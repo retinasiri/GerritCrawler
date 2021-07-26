@@ -87,15 +87,15 @@ async function startDownload(json) {
                 });
 
             tasks.push(t)
-            n++;
+            /*n++;
             if (n >= NUM_CONCURRENCY) {
                 await Promise.all(tasks).then(() => {
                     n = 0;
                     tasks = [];
                 })
-            }
+            }*/
         }
-        //await Promise.all(tasks);
+        await Promise.all(tasks);
         console.log("Finished !!!!");
         return Mongoose.connection.close();
     }
@@ -193,7 +193,7 @@ function getChanges(changesUrl, project = "") {
         .then((json) => {
             let url = new URL(changesUrl);
             let start = Number(url.getStartValue());
-            return saveCrawlingProgression(url, start + NUMBER_OF_CHANGES_REQUESTED)
+            return saveCrawlingProgression(url, start + NUMBER_OF_CHANGES_REQUESTED, project)
                 .then(() => {
                     return Promise.resolve(json);
                 })
@@ -204,7 +204,7 @@ function getChanges(changesUrl, project = "") {
  * @param {String} apiEndpoint The url of the code changes
  * @param {String} project The url of the code changes
  */
-function fetchFromApi(apiEndpoint, project="") {
+function fetchFromApi(apiEndpoint, project = "") {
     return axios.get(apiEndpoint, {timeout: TIMEOUT})
         .then(response => {
             let json = JSON.parse(response.data.slice(5));
@@ -216,7 +216,7 @@ function fetchFromApi(apiEndpoint, project="") {
             let typeOfChange = (new URL(apiEndpoint)).searchParams.get('q');
             console.log(getTime() + typeOfChange + "- Api Error : " + err);
             if (err.response) {
-                if(err.response.status !== 400)
+                if (err.response.status !== 400)
                     return getAllChanges(new URL(apiEndpoint), project);
                 else
                     return Promise.resolve(false);
@@ -258,7 +258,7 @@ async function saveFiles(changeUrlString, json, project = "") {
     let dirname = PathLibrary.join(OUTPUT_DATA_PATH, DIRECTORY_NAME, subDirname)
     let filename = start + "-" + (start + NUMBER_OF_CHANGES_REQUESTED)
     if (!(!project || project.length === 0))
-        filename =  filename + "-" + encodeURIComponent(project);
+        filename = filename + "-" + encodeURIComponent(project);
     filename = filename + ".json"
     let filePath = PathLibrary.join(dirname, filename)
     let data = JSON.stringify(json, null, 2);
@@ -278,18 +278,28 @@ function getUrlHost(url) {
 /**
  * @param {URL} url The date
  * @param {Number} number The date
+ * @param {String} project The date
  */
-function saveCrawlingProgression(url, number) {
+function saveCrawlingProgression(url, number, project = "") {
+    if (!project || project.length === 0){
+        project = url.hostname;
+    }
+
     let type = url.searchParams.get('q');
     let json = {}
-    if (type === ApiEndPoints.openChangeQuery) {
-        json = {number_of_open_changes_collected: number};
-    } else if (type === ApiEndPoints.mergedChangeQuery) {
-        json = {number_of_merged_changes_collected: number};
-    } else if (type === ApiEndPoints.abandonedChangeQuery) {
-        json = {number_of_abandoned_changes_collected: number};
+    if (project) {
+        json._id = project;
+        json.project = project;
     }
-    return Crawling.updateOne({url: projectApiUrl}, json)
+
+    if (type === ApiEndPoints.openChangeQuery) {
+        json["number_of_open_changes_collected"] = number;
+    } else if (type === ApiEndPoints.mergedChangeQuery) {
+        json["number_of_merged_changes_collected"] = number;
+    } else if (type === ApiEndPoints.abandonedChangeQuery) {
+        json["number_of_abandoned_changes_collected"] = number
+    }
+    return Crawling.updateOne({_id: project}, json)
         .catch(err => {
             console.log(err)
         });
@@ -300,8 +310,9 @@ function saveCrawlingProgression(url, number) {
  * @param {String} project The project
  */
 function initCrawlingProgression(url, project = "") {
-    if (!project || project.length === 0)
+    if (!project || project.length === 0){
         project = new URL(url).hostname;
+    }
 
     let initData = new Crawling({
         _id: project,
