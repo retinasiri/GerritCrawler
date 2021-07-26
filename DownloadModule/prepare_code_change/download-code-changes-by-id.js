@@ -92,8 +92,10 @@ async function process(changesIdList) {
                 if (result) {
                     num_find += 1;
                     progressBar.increment(0, {add: num_add, find: num_find, failed: num_failed, err_429: err_429});
+                    return Promise.resolve(true)
+                } else {
+                    return get_change_id(id)
                 }
-                return get_change_id(id)
             })
             .catch(err => {
                 console.log(err)
@@ -111,18 +113,19 @@ async function process(changesIdList) {
 }
 
 function saveChangeInDB(jsonArray) {
-    let tasks = []
+    //let tasks = []
     for (let i = 0; i < jsonArray.length; i++) {
         let json = jsonArray[i]
-        let t = dbUtils.saveChange(json).then(() => {
+        //let t = dbUtils.saveChange(json).then(() => {
             let path = PathLibrary.join(OUTPUT_DATA_PATH, projectName, projectName + "-codes-changes");
             Utils.saveJSONInFile(path, json.id, json)
             num_add += 1;
             progressBar.increment(1, {add: num_add, find: num_find, failed: num_failed, err_429: err_429});
-        })
-        tasks.push(t)
+        //})
+        //tasks.push(t)
     }
-    return Promise.all(tasks);
+    //return Promise.all(tasks);
+    return Promise.resolve(true);
 }
 
 async function get_change_id(id) {

@@ -97,7 +97,7 @@ async function startDownload(json) {
         }
         //await Promise.all(tasks);
         console.log("Finished !!!!");
-        return Promise.resolve(true);
+        return Mongoose.connection.close();
     }
 
 }
