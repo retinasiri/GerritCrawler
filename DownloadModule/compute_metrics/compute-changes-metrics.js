@@ -1617,8 +1617,6 @@ function recent_rate_of_close(json) {
             updated: {$lte: created_date}
         }
     }
-
-
 }
 
 module.exports = {

@@ -740,7 +740,10 @@ function ObjectId(text){
     return text;
 }
 
-console.log(get_days_of_the_weeks_date_created(json))
+let dt = new Date().getTime();
+console.log(dt)
+
+//console.log(get_days_of_the_weeks_date_created(json))
 
 let date = "2021-06-14 12:00:00.000000000"
 function get_precise_days_of_the_weeks_date_created(json) {
@@ -748,7 +751,7 @@ function get_precise_days_of_the_weeks_date_created(json) {
     return date.isoWeekday() + Moment.duration(date.format("hh:mm:ss.SSSSSSSSS")).asDays()
 }
 
-console.log(get_days_of_the_weeks_date_create_2(date))
+//console.log(get_days_of_the_weeks_date_create_2(date))
 
 function get_days_of_the_weeks_date_create_2(date) {
     let days_of_the_week = Moment.utc(date).isoWeekday();
