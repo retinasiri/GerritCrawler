@@ -98,14 +98,6 @@ def collect_graph(json, previous_json, graph, full_connected_graph):
         global i
         id = json["id"]
         changes_graph_list[id] = i
-        
-        '''
-        if(i == 0):
-            graph = nx.Graph()
-            full_connected_graph = nx.Graph()
-            save_graph(graph, full_connected_graph, str(i))
-        '''
-
         return [graph, full_connected_graph]
     
 
@@ -134,16 +126,15 @@ def getIntermediaryUpdatedChanges(json, previous_json):
 def add_updated_changes_in_graph(json, updatedChanges, graph, full_connected_graph):
     id = json["id"]
     owner_id = json["owner_id"]
+
+
     global i
-    
-    #if (i > 0):
     if (i == 0):
         save_graph(graph, full_connected_graph, str(i))
     i+=1
     changes_graph_list[id] = i
     graph = update_graph(updatedChanges, owner_id, graph);
     full_connected_graph = updateFullConnectedGraph(updatedChanges, owner_id, full_connected_graph);
-    #todo
     save_graph(graph, full_connected_graph, str(i))
     return[graph, full_connected_graph]
 
