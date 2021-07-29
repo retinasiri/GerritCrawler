@@ -1228,6 +1228,7 @@ function getPriorBranchTypeChangesCount(json) {
     return dbRequest(pipeline);
 }
 
+//todo owner ratio in branch
 function getPriorBranchOwnerChangesCount(json) {
     let number = json._number;
     let branch = json.branch;
@@ -1446,7 +1447,8 @@ function getBestReviewer(json){
     let created_date = json.created;
     let number = json._number;
     let ownerId = json.owner._account_id;
-    let botArray = MetricsUtils.getBotArray(projectName)
+    let accountToExclude = MetricsUtils.getBotArray(projectName)
+    accountToExclude.push(ownerId)
     let match = {
         $match: {
             status: {$in: ['MERGED', 'ABANDONED']},
@@ -1458,12 +1460,34 @@ function getBestReviewer(json){
     let pipeline = [
         match,
         {$unwind: "$reviewers.REVIEWER"},
-        {$match: {_id: {$nin: botArray}}},
+        {$match: {_id: {$nin: accountToExclude}}},
         {$group: {_id: "$reviewers.REVIEWER._account_id", count: {$sum: 1}}},
         {$sort: {count : -1}},
         {$limit: 5},
     ]
-    return genericDBRequest(pipeline);
+    return Change
+        .aggregate(pipeline)
+        .allowDiskUse(true)
+        .exec()
+        .then(docs => {
+            if (!docs)
+                return 0;
+            return docs.length > 0 ? docs : [];
+        })
+        .catch(err => {
+            console.log(err)
+        });
+}
+
+//reviewer exchange message
+//reviewer number of change type (merged, abandonned, unclosed)
+//reviewer number of review
+//reviewer number of review of file
+//get
+
+function getReviewersMetrics(json, reviewersDocs){
+    for (let index in reviewersDocs){
+    }
 }
 
 /*function getOwnerWorkLoad(json) {
@@ -1475,149 +1499,7 @@ function getBestReviewer(json){
 //todo last 24h non close changes
 //todo add metrics to compute
 
-//end add
 
-//bad
-function getPreviousMessageCount(json) {
-    let created_date = json.created;
-    let number = json._number;
-    let botArray = MetricsUtils.getBotArray(projectName)
-    let match = {
-        $match: {
-            status: {$in: ['MERGED', 'ABANDONED']},
-            _number: {$lt: number},
-            updated: {$lte: created_date}
-        }
-    }
-    let pipeline = [
-        match,
-        {$unwind: "$messages"},
-        {
-            $group: {
-                _id: "$messages.author._account_id",
-                count: {$sum: 1}
-            }
-        },
-        {$match: {_id: {$nin: botArray}}},
-        {
-            $group: {
-                _id: 1,
-                avg: {$avg: "$count"},
-                max: {$max: "$count"},
-                min: {$min: "$count"},
-                std: {$stdDevPop: "$count"},
-            }
-        }
-    ]
-    return genericDBRequest(pipeline);
-}
-
-//exclude bot in reviewersIdArray
-function getReviewersChangesMeanNumType(json, TYPE, count) {
-    let created_date = json.created;
-    let number = json._number;
-    let reviewersIdArray = MetricsUtils.getHumanReviewersID(json, projectName) ? MetricsUtils.getHumanReviewersID(json, projectName) : [];
-    let match = {
-        $match: {
-            status: TYPE,
-            _number: {$lt: number},
-            updated: {$lte: created_date}
-        }
-    };
-    if (TYPE == null) delete match.$match.status;
-    let pipeline = [
-        match,
-        {$unwind: "$reviewers.REVIEWER"},
-        {
-            $project: {
-                id: 1,
-                owner_id: "$owner._account_id",
-                reviewers_id: "$reviewers.REVIEWER._account_id",
-                dateDiff: {
-                    $subtract: [
-                        {$dateFromString: {dateString: {$substr: ["$updated", 0, 22]}, timezone: "UTC"}},
-                        {$dateFromString: {dateString: {$substr: ["$created", 0, 22]}, timezone: "UTC"}}
-                    ]
-                }
-            }
-        },
-        {
-            $group: {
-                _id: "$reviewers_id",
-                count: {$sum: 1},
-                //ratio: {"$divide": [{$sum: 1}, count]},
-                time: {$avg: "$dateDiff"}
-            }
-        },
-        {
-            $project: {
-                _id: 1,
-                count: 1,
-                time: 1,
-                ratio: {
-                    $cond: [
-                        {$eq: [count, 0]},
-                        0,
-                        {"$divide": ["$count", count]}]
-                },
-            }
-        },
-        {$match: {_id: {$in: reviewersIdArray}}},
-        {
-            $group: {
-                _id: 1,
-                count_avg: {$avg: "$count"},
-                count_max: {$max: "$count"},
-                count_min: {$min: "$count"},
-                count_std: {$stdDevPop: "$count"},
-                time_avg: {$avg: "$time"},
-                time_max: {$max: "$time"},
-                time_min: {$min: "$time"},
-                time_std: {$stdDevPop: "$time"},
-                //percentage_avg: {$divide: [{$avg: "$count"}, count]},
-                ratio_avg: {$avg: "$ratio"}
-            }
-        },
-        {
-            $project: {
-                _id: 1,
-                count_avg: 1,
-                count_max: 1,
-                count_min: 1,
-                count_std: 1,
-                time_avg: 1,
-                time_max: 1,
-                time_min: 1,
-                time_std: 1,
-                ratio_avg: 1,
-                percentage_avg: {
-                    $cond: [
-                        {$eq: [count, 0]},
-                        0,
-                        {"$divide": ["$count", count]}]
-                },
-                //percentage_avg: {$divide: [{$avg: "$count"}, count]},
-            }
-        }
-    ]
-    return genericDBRequest(pipeline);
-}
-
-function recent_rate_of_close(json) {
-    let created_date = json.created;
-    let daysAgo = Moment(json.created).subtract(1, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
-    let weekAgo = Moment(json.created).subtract(7, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
-    let monthAgo = Moment(json.created).subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
-    let yearAgo = Moment(json.created).subtract(365, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
-
-    let match = {
-        $match: {
-            status: {$in: ['MERGED', 'ABANDONED']},
-            _number: {$lt: number},
-            updated: {$lte: created_date}
-        }
-    }
-}
 
 module.exports = {
     start: startComputeMetrics
