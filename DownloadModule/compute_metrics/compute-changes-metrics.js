@@ -1435,8 +1435,7 @@ function agePipeline(match, created_date) {
                     ]
                 }
             }
-        },
-        {$count: 'count'}
+        }
     ]
     return Change
         .aggregate(pipeline)
