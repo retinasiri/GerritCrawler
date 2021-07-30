@@ -210,7 +210,8 @@ async function getChangesInfo(json) {
     let priorBranchOwnerAbandonedChangesCount = getPriorBranchOwnerTypeChangesCount(json, "ABANDONED");
     let priorBranchChangeMeanTimeType = getPriorBranchChangeMeanTimeType(json);
 
-    let projectAge = await getProjectAge(json);
+    let projectAge = getProjectAge(json);
+    //console.log(projectAge)
     let subsystemAge = getSubsystemAge(json);
     let branchAge = getBranchAge(json);
     let ownerAge = getOwnerAge(json);
@@ -448,14 +449,14 @@ async function getChangesInfo(json) {
             priorBranchChangeMeanTimeTypeMin: results[43].min,
             priorBranchChangeMeanTimeTypeStd: results[43].std,
 
-            projectAge: results[44],
-            subsystemAge: results[45],
-            branchAge: results[46],
-            ownerAge: results[47],
-            priorOverAllRateFromCount: safeDivision(results[0], results[44]),
-            priorOverAllBranchRateFromCount: safeDivision(results[37], results[46]),
-            priorOverAllSubsystemRateFromCount: safeDivision(results[6], results[45]),
-            priorOverAlOwnerRateFromCount: safeDivision(results[3], results[47]),
+            projectAge: convertAsDays(results[44]),
+            subsystemAge: convertAsDays(results[45]),
+            branchAge: convertAsDays(results[46]),
+            ownerAge: convertAsDays(results[47]),
+            priorOverAllRateFromCount: safeDivision(results[0], convertAsDays(results[44])),
+            priorOverAllBranchRateFromCount: safeDivision(results[37], convertAsDays(results[46])),
+            priorOverAllSubsystemRateFromCount: safeDivision(results[6], convertAsDays(results[45])),
+            priorOverAlOwnerRateFromCount: safeDivision(results[3], convertAsDays(results[47])),
 
             priorRateFromCount: results[48],
             priorBranchRateFromCount: results[49],
@@ -466,6 +467,14 @@ async function getChangesInfo(json) {
 
         };
     })
+}
+
+function convertAsDays(input) {
+    //console.log(Moment.duration(input).asDays())
+    if (typeof input === 'number')
+        return Moment.duration(input).asDays();
+    else
+        return 0;
 }
 
 function safeDivision(number1, number2) {
@@ -1424,14 +1433,9 @@ function agePipeline(match, created_date) {
             $project: {
                 _id: 0,
                 count: {
-                    $divide: [
-                        {
-                            $subtract: [
-                                {$dateFromString: {dateString: {$substr: [created_date, 0, 22]}, timezone: "UTC"}},
-                                {$dateFromString: {dateString: {$substr: ["$created", 0, 22]}, timezone: "UTC"}}
-                            ]
-                        },
-                        1000 * 60 * 60 * 24
+                    $subtract: [
+                        {$dateFromString: {dateString: {$substr: [created_date, 0, 22]}, timezone: "UTC"}},
+                        {$dateFromString: {dateString: {$substr: ["$created", 0, 22]}, timezone: "UTC"}}
                     ]
                 }
             }
@@ -1444,6 +1448,7 @@ function agePipeline(match, created_date) {
         .then(docs => {
             if (!docs)
                 return 0;
+            //console.log(docs)
             return docs.length > 0 ? docs[0].count : 0;
         })
         .catch(err => {
@@ -1456,7 +1461,7 @@ function getProjectAge(json) {
     let number = json._number;
     let match = {
         $match: {
-            number: {$lt: number},
+            _number: {$lt: number},
             //updated: {$lte: created},
         }
     }
@@ -1469,7 +1474,7 @@ function getSubsystemAge(json) {
     let number = json._number;
     let match = {
         $match: {
-            number: {$lt: number},
+            _number: {$lt: number},
             //updated: {$lte: created},
             project: project,
         }
@@ -1483,7 +1488,7 @@ function getBranchAge(json) {
     let number = json._number;
     let match = {
         $match: {
-            number: {$lt: number},
+            _number: {$lt: number},
             //updated: {$lte: created},
             branch: branch,
         }
@@ -1497,7 +1502,7 @@ function getOwnerAge(json) {
     let number = json._number;
     let match = {
         $match: {
-            number: {$lt: number},
+            _number: {$lt: number},
             //updated: {$lte: created},
             $or: [{'owner._account_id': ownerId}, {"reviewers.REVIEWER._account_id": ownerId}]
         }
@@ -1516,7 +1521,7 @@ function getPriorRateFromCount(json, number_of_days, property = null, value = nu
         {
             $match: {
                 status: {$in: ['MERGED', 'ABANDONED']},
-                number: {$lt: number},
+                _number: {$lt: number},
                 updated: {$lte: created},
                 created: {$gte: dateFromNumberOfDaysAgo}
             }
@@ -1524,7 +1529,7 @@ function getPriorRateFromCount(json, number_of_days, property = null, value = nu
         {$count: "count"},
         {
             $project: {
-                count: {$divide: ["$count", dateFromNumberOfDaysAgo]}
+                count: {$divide: ["$count", number_of_days]}
             }
         },
     ]
@@ -1566,7 +1571,7 @@ function getFilesNumberOfRecentChangesOnBranch(json, number_of_days) {
         {
             $match: {
                 //status: "MERGED",
-                number: {$lt: number},
+                _number: {$lt: number},
                 branch: branch,
                 updated: {$lte: created},
                 files_list: {$in: files_list},
