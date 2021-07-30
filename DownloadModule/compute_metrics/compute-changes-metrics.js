@@ -31,10 +31,10 @@ function startComputeMetrics(projectJson) {
 
 async function collectMetrics(json) {
     let t1 = getChangesInfo(json).then((values) => {
-        return getMetrics(values);
+        return getMetrics(json, values);
     })
     let t2 = getBestReviewer(json).then((values) => {
-        return getMetrics(values);
+        return getMetrics(json, values);
     })
 
     return Promise.all([t1, t2]).then((results) => {
@@ -42,7 +42,7 @@ async function collectMetrics(json) {
     })
 }
 
-function getMetrics(values) {
+function getMetrics(json, values) {
     let metric = {};
     metric["number"] = json._number;
     metric["id"] = json.id;
@@ -210,7 +210,7 @@ async function getChangesInfo(json) {
     let priorBranchOwnerAbandonedChangesCount = getPriorBranchOwnerTypeChangesCount(json, "ABANDONED");
     let priorBranchChangeMeanTimeType = getPriorBranchChangeMeanTimeType(json);
 
-    let projectAge = getProjectAge(json);
+    let projectAge = await getProjectAge(json);
     let subsystemAge = getSubsystemAge(json);
     let branchAge = getBranchAge(json);
     let ownerAge = getOwnerAge(json);
@@ -448,21 +448,21 @@ async function getChangesInfo(json) {
             priorBranchChangeMeanTimeTypeMin: results[43].min,
             priorBranchChangeMeanTimeTypeStd: results[43].std,
 
-            projectAge: results[44].count,
-            subsystemAge: results[45].count,
-            branchAge: results[46].count,
-            ownerAge: results[47].count,
-            priorOverAllRateFromCount: safeDivision(results[0], results[44].count),
-            priorOverAllBranchRateFromCount: safeDivision(results[37].count, results[46].count),
-            priorOverAllSubsystemRateFromCount: safeDivision(results[6], results[45].count),
-            priorOverAlOwnerRateFromCount: safeDivision(results[3], results[47].count),
+            projectAge: results[44],
+            subsystemAge: results[45],
+            branchAge: results[46],
+            ownerAge: results[47],
+            priorOverAllRateFromCount: safeDivision(results[0], results[44]),
+            priorOverAllBranchRateFromCount: safeDivision(results[37], results[46]),
+            priorOverAllSubsystemRateFromCount: safeDivision(results[6], results[45]),
+            priorOverAlOwnerRateFromCount: safeDivision(results[3], results[47]),
 
-            priorRateFromCount: results[48].count,
-            priorBranchRateFromCount: results[49].count,
-            priorSubsystemRateFromCount: results[50].count,
-            priorOwnerRateFromCount: results[51].count,
+            priorRateFromCount: results[48],
+            priorBranchRateFromCount: results[49],
+            priorSubsystemRateFromCount: results[50],
+            priorOwnerRateFromCount: results[51],
 
-            filesNumberOfRecentChangesOnBranch: results[52].count,
+            filesNumberOfRecentChangesOnBranch: results[52],
 
         };
     })
@@ -1438,7 +1438,18 @@ function agePipeline(match, created_date) {
         },
         {$count: 'count'}
     ]
-    return genericDBRequest(pipeline);
+    return Change
+        .aggregate(pipeline)
+        .allowDiskUse(true)
+        .exec()
+        .then(docs => {
+            if (!docs)
+                return 0;
+            return docs.length > 0 ? docs[0].count : 0;
+        })
+        .catch(err => {
+            console.log(err)
+        });
 }
 
 function getProjectAge(json) {
@@ -1447,7 +1458,7 @@ function getProjectAge(json) {
     let match = {
         $match: {
             number: {$lt: number},
-            updated: {$lte: created},
+            //updated: {$lte: created},
         }
     }
     return agePipeline(match, created);
@@ -1460,7 +1471,7 @@ function getSubsystemAge(json) {
     let match = {
         $match: {
             number: {$lt: number},
-            updated: {$lte: created},
+            //updated: {$lte: created},
             project: project,
         }
     }
@@ -1474,7 +1485,7 @@ function getBranchAge(json) {
     let match = {
         $match: {
             number: {$lt: number},
-            updated: {$lte: created},
+            //updated: {$lte: created},
             branch: branch,
         }
     }
@@ -1488,7 +1499,7 @@ function getOwnerAge(json) {
     let match = {
         $match: {
             number: {$lt: number},
-            updated: {$lte: created},
+            //updated: {$lte: created},
             $or: [{'owner._account_id': ownerId}, {"reviewers.REVIEWER._account_id": ownerId}]
         }
     }
@@ -1539,7 +1550,7 @@ function getPriorSubsystemRateFromCount(json, number_of_days) {
 }
 
 function getPriorOwnerRateFromCount(json, number_of_days) {
-    let property = "$or:";
+    let property = "$or";
     let ownerId = json.owner._account_id;
     let value = [{'owner._account_id': ownerId}, {"reviewers.REVIEWER._account_id": ownerId}]
     return getPriorRateFromCount(json, number_of_days, property, value)
