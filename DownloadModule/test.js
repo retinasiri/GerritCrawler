@@ -31,7 +31,7 @@ function test(jsonArray) {
     }
 }*/
 
-let json = {
+let json =[ {
     "id" : "core~master~Iee5ed15d58ea88e65ee7854bd05a87ceab22023d",
     "_number" : 117104,
     "actions" : {},
@@ -732,7 +732,12 @@ let json = {
     "revisions_num" : 4,
     "status_original" : "NEW",
     "updated_original" : "2021-06-15 03:28:23.000000000"
-}
+}]
+
+console.log(!json instanceof Array)
+
+lastNumber = 1;
+console.log(typeof lastNumber === 'number')
 
 //collectMetadata(json)
 
@@ -740,8 +745,8 @@ function ObjectId(text){
     return text;
 }
 
-let dt = new Date().getTime();
-console.log(dt)
+//let dt = new Date().getTime();
+//console.log(dt)
 
 //console.log(get_days_of_the_weeks_date_created(json))
 

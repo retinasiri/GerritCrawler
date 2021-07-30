@@ -103,29 +103,29 @@ async function getFiles(path, b) {
         });
 }
 
-function getLastNumber(filenames){
+function getLastNumber(filenames) {
     filenames.sort((a, b) => a.localeCompare(b, undefined, {numeric: true, ignorePunctuation: true}))
     let lastName = filenames[filenames.length - 1]
-    return parseInt(lastName.split("-")[0]);
+    if (lastName){
+        let lastNumber = parseInt(lastName.split("-")[0]);
+        if(typeof lastNumber === 'number')
+            return lastNumber;
+        else
+            return 0
+    }
+    else
+        return 0
 }
 
 async function info(path, filenames, b) {
-    //let total = filenames.length;
     let total = getLastNumber(filenames);
     b.setTotal(total)
-
     for (let filename of filenames) {
         if (filename.includes(".DS_Store") || filename.includes("._.DS_Store"))
             return Promise.resolve(true);
-
         if (!filename.includes(".json"))
             return Promise.resolve(true);
-
         await addInformationToDB(path, filename, b)
-            /*.then(() => {
-                b.increment(1, {name: filename});
-            });
-             */
     }
 }
 
@@ -137,11 +137,17 @@ async function addInformationToDB(path, filename, b) {
     } catch (e) {
     }
 
+    if (!(json instanceof Array)) {
+        let tmp = []
+        tmp.push(json)
+        json = tmp
+    }
+
     if (Object.keys(json).length === 0)
         return Promise.resolve(false);
 
     let name = b.getTotal() + "-"
-    if(filename.includes(name)){
+    if (filename.includes(name)) {
         let total = b.getTotal() + Object.keys(json).length;
         b.setTotal(total)
     }
@@ -175,7 +181,7 @@ async function addParticipantsInDB(participants) {
     for (let id in participants) {
         account[participants[id]._account_id] = participants[id];
         let name = participants[id].name;
-        if(is_probably_a_bot(name, projectName)){
+        if (is_probably_a_bot(name, projectName)) {
             botAccount[participants[id]._account_id] = participants[id];
         } else {
             humanAccount[participants[id]._account_id] = participants[id];
@@ -209,13 +215,13 @@ function getParticipants(json) {
             participant.push(reviewers[id])
         }
     } else {
-        if(!!!json["labels"]){
+        if (!!!json["labels"]) {
             json["reviewers"] = {};
             json["reviewers"]["REVIEWER"] = [];
             return []
         }
 
-        if(!!!json["labels"]["Code-Review"]){
+        if (!!!json["labels"]["Code-Review"]) {
             json["reviewers"] = {};
             json["reviewers"]["REVIEWER"] = [];
             return []
@@ -223,7 +229,7 @@ function getParticipants(json) {
 
         let codeReviews = json["labels"]["Code-Review"]["all"];
 
-        if(!!!codeReviews){
+        if (!!!codeReviews) {
             json["reviewers"] = {};
             json["reviewers"]["REVIEWER"] = [];
             return []

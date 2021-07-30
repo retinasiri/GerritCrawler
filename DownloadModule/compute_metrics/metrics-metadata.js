@@ -5,6 +5,7 @@ const Database = require('../config/databaseConfig');
 const Change = require('../models/change');
 const Utils = require('../config/utils');
 const MetricsUtils = require('./metrics-utils');
+const ComputeSimpleMetrics = require('./compute-simple-metrics');
 
 //todo detect cherry-pick
 
@@ -169,6 +170,7 @@ async function collectMetadata(json) {
     metadata = {...metadata, ...add_suffix_to_json(msg_before_close_info, '_before_close')}
 
     metadata["is_self_review"] = MetricsUtils.check_self_review(json, projectName);
+    metadata["description"]  = get_description(json);
 
     metadata["new_status"] = metadata["new_status"] ? metadata["new_status"] : json["status"]
     metadata["new_status_before_close"] = metadata["new_status_before_close"] ? metadata["new_status_before_close"] : json["status"]
@@ -188,6 +190,11 @@ async function collectMetadata(json) {
     metadata["days_of_the_weeks_date_updated"] = get_days_of_the_weeks(metadata["updated"])
 
     return metadata;
+}
+
+function get_description(json){
+    let first_revision = ComputeSimpleMetrics.get_first_revision(json);
+    return  first_revision["commit"]["message"]
 }
 
 function get_days_of_the_weeks(dateString) {

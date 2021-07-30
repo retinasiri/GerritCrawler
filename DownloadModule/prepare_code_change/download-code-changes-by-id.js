@@ -117,10 +117,11 @@ function saveChangeInDB(jsonArray) {
     for (let i = 0; i < jsonArray.length; i++) {
         let json = jsonArray[i]
         //let t = dbUtils.saveChange(json).then(() => {
-            let path = PathLibrary.join(OUTPUT_DATA_PATH, projectName, projectName + "-codes-changes");
-            Utils.saveJSONInFile(path, json.id, json)
-            num_add += 1;
-            progressBar.increment(1, {add: num_add, find: num_find, failed: num_failed, err_429: err_429});
+        let path = PathLibrary.join(OUTPUT_DATA_PATH, projectName, projectName + "-codes-changes");
+        //let dt = new Date().getTime();
+        Utils.saveJSONInFile(path, json.id, json)
+        num_add += 1;
+        progressBar.increment(1, {add: num_add, find: num_find, failed: num_failed, err_429: err_429});
         //})
         //tasks.push(t)
     }
