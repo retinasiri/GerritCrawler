@@ -63,6 +63,8 @@ async function startDownload(json) {
 
     //changesIdList = changesIdList.slice(446362, changesIdList.length-1)
     //changesIdList = changesIdList.slice(446000+108600+2391, changesIdList.length-1)
+    //changesIdList = changesIdList.slice(600000, changesIdList.length-1)
+    changesIdList = changesIdList.slice(686700, changesIdList.length-1)
 
     progressBar.start(changesIdList.length, 0, {add: num_add, find: num_find, failed: num_failed, err_429: err_429});
     if (!changesIdList || changesIdList.length === 0) {
@@ -91,7 +93,7 @@ async function process(changesIdList) {
             .then((result) => {
                 if (result) {
                     num_find += 1;
-                    progressBar.increment(0, {add: num_add, find: num_find, failed: num_failed, err_429: err_429});
+                    progressBar.increment(1, {add: num_add, find: num_find, failed: num_failed, err_429: err_429});
                     return Promise.resolve(true)
                 } else {
                     return get_change_id(id)

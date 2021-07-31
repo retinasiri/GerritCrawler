@@ -96,8 +96,12 @@ def collect_repo(doc):
         has_commit = "commit" in revisions[revId]
         if has_commit:
             if number <= prev_number_save:
-                fetch_url = revisions[revId]["fetch"]["anonymous http"]["url"]
-                fetch_refs = revisions[revId]["fetch"]["anonymous http"]["ref"]
+                if "http" in revisions[revId]["fetch"]:
+                    fetch_url = revisions[revId]["fetch"]["http"]["url"]
+                    fetch_refs = revisions[revId]["fetch"]["http"]["ref"]
+                else:
+                    fetch_url = revisions[revId]["fetch"]["anonymous http"]["url"]
+                    fetch_refs = revisions[revId]["fetch"]["anonymous http"]["ref"]
                 #commit = revisions[revId]["commit"]["parents"][0]["commit"]
                 commit = revId
                 prev_number_save = number
