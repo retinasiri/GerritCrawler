@@ -459,7 +459,7 @@ function add_suffix_to_json(json, suffix, id_to_conserved = null) {
     if (json) {
         Object.keys(json).forEach(function (key) {
             if (id_to_conserved !== null) {
-                if (id_to_conserved.contains(key)) {
+                if (id_to_conserved.includes(key)) {
                     new_json[key] = json[key]
                 } else {
                     new_json[key + suffix] = json[key]
