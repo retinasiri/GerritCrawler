@@ -38,7 +38,7 @@ function getHumanReviewersID(json, projectName) {
     return reviewersIDArray;
 }
 
-function getBotArray(projectName){
+function getBotArray(projectName) {
     let BotAccounts = AllBotAccountJson[projectName];
     let botArray = [];
     Object.keys(BotAccounts).forEach(function (key) {
@@ -55,7 +55,7 @@ function isABot(accountId, projectName) {
     let bot = false;
     let BotAccounts = AllBotAccountJson[projectName]
     //console.log(BotAccounts)
-    if(BotAccounts[accountId])
+    if (BotAccounts[accountId])
         bot = true;
     return bot;
 }
@@ -172,10 +172,9 @@ function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetric
         .then(docs => {
             if (!docs)
                 return Promise.resolve(false)
-            if (docs.length){
+            if (docs.length) {
                 return collectDocs(docs, Project, MetricsJson, progressBar, collectMetrics);
-            }
-            else
+            } else
                 return Promise.resolve(true);
         })
         /*.then(result => {
@@ -186,17 +185,20 @@ function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetric
         });
 }
 
-function mixDoc(array){
+function mixDoc(array) {
     let temp = []
-    for (let i = 0; i < array.length; i++){
-        if(isOdd(i))
+    for (let i = 0; i < array.length; i++) {
+        if (isOdd(i))
             temp.push(array[i])
         else
             temp.push(array[array.length - i])
     }
     return temp
 }
-function isOdd(num) { return num % 2;}
+
+function isOdd(num) {
+    return num % 2;
+}
 
 async function collectDocs(docs, Project, MetricsJson, progressBar, collectMetrics) {
     console.time('collectDocs')
@@ -272,7 +274,7 @@ function get_first_revision_kind(json) {
     }
 }
 
-function is_trivial_rebase(json){
+function is_trivial_rebase(json) {
     let kind = get_first_revision_kind(json);
     return kind.includes("TRIVIAL_REBASE");
 }
@@ -284,7 +286,7 @@ function diffCreatedUpdatedTime(json) {
 }
 
 function getReviewersId(json) {
-    if(!json.reviewers)
+    if (!json.reviewers)
         return []
 
     let reviewers = json.reviewers.REVIEWER
@@ -334,16 +336,16 @@ function isSelfReviewed(json, projectName) {
     return 0;
 }
 
-function isOwnerAReviewer(json){
+function isOwnerAReviewer(json) {
     let reviewersId = getReviewersId(json);
     let ownerId = json.owner._account_id;
     return reviewersId.includes(ownerId);
 }
 
-function isOwnerTheOnlyReviewer(json){
+function isOwnerTheOnlyReviewer(json) {
     let reviewersId = getReviewersId(json);
     let ownerId = json.owner._account_id;
-    return reviewersId.includes(ownerId) && reviewersId.length===1;
+    return reviewersId.includes(ownerId) && reviewersId.length === 1;
 }
 
 function is_self_reviewed_note(json, projectName) {
@@ -452,6 +454,24 @@ function check_review_count(code_review, VALUE) {
     return count;
 }
 
+function add_suffix_to_json(json, suffix, id_to_conserved = null) {
+    let new_json = {}
+    if (json) {
+        Object.keys(json).forEach(function (key) {
+            if (id_to_conserved !== null) {
+                if (id_to_conserved.contains(key)) {
+                    new_json[key] = json[key]
+                } else {
+                    new_json[key + suffix] = json[key]
+                }
+            } else {
+                new_json[key + suffix] = json[key]
+            }
+        })
+    }
+    return new_json;
+}
+
 
 module.exports = {
     getHumanReviewers: getHumanReviewers,
@@ -461,13 +481,14 @@ module.exports = {
     getBotArray: getBotArray,
     startComputeMetrics: startComputeMetrics,
     get_first_revision_kind: get_first_revision_kind,
-    get_first_revision:get_first_revision,
+    get_first_revision: get_first_revision,
     get_first_revision_number: get_first_revision_number,
     get_first_revision_id: get_first_revision_id,
     is_trivial_rebase: is_trivial_rebase,
     diffCreatedUpdatedTime: diffCreatedUpdatedTime,
     getReviewersId: getReviewersId,
     timeDiff: timeDiff,
-    check_self_review:check_self_review
+    check_self_review: check_self_review,
+    add_suffix_to_json: add_suffix_to_json
 
 };

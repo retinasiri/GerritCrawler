@@ -167,7 +167,7 @@ async function collectMetadata(json) {
 
     let msg = get_messages_before_close(json.messages, metadata["close_time"])
     let msg_before_close_info = get_messages_information(msg, json.created)
-    metadata = {...metadata, ...add_suffix_to_json(msg_before_close_info, '_before_close')}
+    metadata = {...metadata, ...MetricsUtils.add_suffix_to_json(msg_before_close_info, '_before_close')}
 
     metadata["is_self_review"] = MetricsUtils.check_self_review(json, projectName);
     metadata["description"]  = get_description(json);
@@ -199,16 +199,6 @@ function get_description(json){
 
 function get_days_of_the_weeks(dateString) {
     return Moment.utc(dateString).isoWeekday();
-}
-
-function add_suffix_to_json(json, suffix) {
-    let new_json = {}
-    if (json) {
-        Object.keys(json).forEach(function (key) {
-            new_json[key + suffix] = json[key]
-        })
-    }
-    return new_json;
 }
 
 function get_time_to_add_human_reviewers(json, close_time) {

@@ -6,10 +6,13 @@ const MetricsUtils = require("./metrics-utils");
 let projectName = "libreoffice";
 let start = 0;
 let end = 10000;
-let NUMBER_OF_DAYS_FOR_RECENT = null;
-let DATE_FOR_RECENT = null;
+let date_for_recent = null;
+
+let NUM_DAYS_FOR_RECENT = null;
 let NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE = 30;
 let NUMBER_OF_DAYS_FOR_RECENT_CHANGES_OF_FILES = 30;
+let NUMBER_OF_BEST_REVIEWER = 5;
+
 
 if (typeof require !== 'undefined' && require.main === module) {
     startComputeMetrics(projectName).catch(err => {
@@ -24,6 +27,9 @@ function startComputeMetrics(projectJson) {
         start = projectJson["start"];
     if (projectJson["end"])
         end = projectJson["end"];
+    if (projectJson["NUM_DAYS_FOR_RECENT"])
+        NUM_DAYS_FOR_RECENT = projectJson["NUM_DAYS_FOR_RECENT"];
+
     return MetricsUtils.startComputeMetrics(projectName, start, end, "owner", function (json) {
         return collectMetrics(json)
     })
@@ -38,7 +44,12 @@ async function collectMetrics(json) {
     })
 
     return Promise.all([t1, t2]).then((results) => {
-        return {...results[0], ...results[1]}
+        let metrics = {...results[0], ...results[1]};
+        if (NUM_DAYS_FOR_RECENT !== null){
+            let suffix = '_' + NUM_DAYS_FOR_RECENT + '_days'
+            metrics = MetricsUtils.add_suffix_to_json(metrics, suffix, ['id', 'number'])
+        }
+        return metrics
     })
 }
 
@@ -158,8 +169,8 @@ async function getChangesInfo(json) {
     let project = json.project;
     let files_list = json.files_list ? json.files_list : [];
 
-    if (NUMBER_OF_DAYS_FOR_RECENT !== null)
-        DATE_FOR_RECENT = Moment(json.created).subtract(NUMBER_OF_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+    if (NUM_DAYS_FOR_RECENT !== null)
+        date_for_recent = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
 
     let priorChangesCount = getPriorChangesCount(number);
     let priorMergedChangesCount = getPriorTypeChangesCount(number, created_date, "MERGED");
@@ -437,12 +448,12 @@ async function getChangesInfo(json) {
             ownerNumberOfCherryPicked: results[35].count,
             branchNumberOfCherryPicked: results[36].count,
 
-            priorBranchChangesCount: results[37].count,
-            priorBranchMergedChangesCount: results[38].count,
-            priorBranchAbandonedChangesCount: results[39].count,
-            priorBranchOwnerChangesCount: results[40].count,
-            priorBranchOwnerMergedChangesCount: results[41].count,
-            priorBranchOwnerAbandonedChangesCount: results[42].count,
+            priorBranchChangesCount: results[37],
+            priorBranchMergedChangesCount: results[38],
+            priorBranchAbandonedChangesCount: results[39],
+            priorBranchOwnerChangesCount: results[40],
+            priorBranchOwnerMergedChangesCount: results[41],
+            priorBranchOwnerAbandonedChangesCount: results[42],
 
             priorBranchChangeMeanTimeTypeAvg: results[43].avg,
             priorBranchChangeMeanTimeTypeMax: results[43].max,
@@ -501,8 +512,8 @@ function dbRequest(pipeline) {
 }
 
 function addRecentDateToPipeline(pipeline) {
-    if (DATE_FOR_RECENT !== null) {
-        pipeline[0]["$match"]["created"] = {$gte: DATE_FOR_RECENT}
+    if (date_for_recent !== null) {
+        pipeline[0]["$match"]["created"] = {$gte: date_for_recent}
         return pipeline
     } else
         return pipeline
@@ -1588,7 +1599,7 @@ function getBestReviewer(json) {
     let created_date = json.created;
     let number = json._number;
     let ownerId = json.owner._account_id;
-    let accountToExclude = MetricsUtils.getBotArray(projectName)
+    let accountToExclude = MetricsUtils.getBotArray(projectName);
     accountToExclude.push(ownerId)
     let match = {
         $match: {
@@ -1604,7 +1615,7 @@ function getBestReviewer(json) {
         {$match: {_id: {$nin: accountToExclude}}},
         {$group: {_id: "$reviewers.REVIEWER._account_id", count: {$sum: 1}}},
         {$sort: {count: -1}},
-        {$limit: 5},
+        {$limit: NUMBER_OF_BEST_REVIEWER},
     ]
     pipeline = addRecentDateToPipeline(pipeline);
     return Change
