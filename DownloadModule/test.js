@@ -734,12 +734,13 @@ let json =[ {
     "updated_original" : "2021-06-15 03:28:23.000000000"
 }]
 
-console.log(!json instanceof Array)
+//console.log(!json instanceof Array)
 
 lastNumber = 1;
-console.log(typeof lastNumber === 'number')
+//console.log(typeof lastNumber === 'number')
 
 //collectMetadata(json)
+console.log(MetricsUtils.isABot("1000239", "libreoffice"))
 
 function ObjectId(text){
     return text;

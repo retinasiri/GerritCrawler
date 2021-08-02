@@ -46,7 +46,7 @@ function startComputeMetadata(json) {
         .then((count) => {
             let NUM_OF_CHANGES_LIMIT = 10000;
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
-            progressBar.start(count, 0);
+            progressBar.start(count - STARTING_POINT, 0);
             return getChanges(STARTING_POINT, NUM_OF_CHANGES_LIMIT);
         })
         .then(() => {
@@ -170,7 +170,7 @@ async function collectMetadata(json) {
     metadata = {...metadata, ...MetricsUtils.add_suffix_to_json(msg_before_close_info, '_before_close')}
 
     metadata["is_self_review"] = MetricsUtils.check_self_review(json, projectName);
-    metadata["description"]  = get_description(json);
+    metadata["description"] = get_description(json);
 
     metadata["new_status"] = metadata["new_status"] ? metadata["new_status"] : json["status"]
     metadata["new_status_before_close"] = metadata["new_status_before_close"] ? metadata["new_status_before_close"] : json["status"]
@@ -192,9 +192,9 @@ async function collectMetadata(json) {
     return metadata;
 }
 
-function get_description(json){
+function get_description(json) {
     let first_revision = ComputeSimpleMetrics.get_first_revision(json);
-    return  first_revision["commit"]["message"]
+    return first_revision["commit"]["message"]
 }
 
 function get_days_of_the_weeks(dateString) {
@@ -238,8 +238,8 @@ function get_owner_info(metadata, json) {
         let ownerId = json.owner._account_id;
         metadata["owner_id"] = ownerId;
         metadata["is_a_bot"] = MetricsUtils.isABot(ownerId, projectName);
-        if (metadata["is_a_bot"])
-            return Promise.resolve(false)
+        /*if (metadata["is_a_bot"])
+            return Promise.resolve(false)*/
     }
     return metadata
 }
