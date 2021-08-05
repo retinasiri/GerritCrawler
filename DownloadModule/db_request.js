@@ -140,3 +140,98 @@ db.getCollection('changes').aggregate([
         }
     }
 ])
+
+db.getCollection('changes').aggregate([
+    {$match :
+            { files_list : {$size: 0} }
+        //{"owner._account_id": {$exists: false}}
+    },
+    {$count: 'count'}
+])
+
+db.getCollection('metrics').aggregate([
+    {$match :
+            { sum_loc : {$ne: 0} }
+        //{"owner._account_id": {$exists: false}}
+    },
+    {$count: 'count'}
+])
+
+db.getCollection('changes').aggregate([
+    {$match :
+        //{ files_list : {$size: 0} }
+        //{"owner._account_id": {$exists: false}}
+            {
+                //_number:{$gte: 780140},
+                //updated: {"$lt": "2021-06-15 03:19:29.000000000", "$gte": "2021-06-15 03:19:29.000000000"}
+                //updated: this.created
+            }
+    },
+    {$count: 'count'}
+])
+
+db.getCollection('changes').aggregate([
+
+    {$match :
+
+            {
+                _number:{$lte: 1000},
+                //updated: {"$lt": "2021-06-15 03:19:29.000000000", "$gte": "2021-06-15 03:19:29.000000000"}
+            }
+    },
+    {$unwind: "$reviewers.REVIEWER"},
+    {
+        $group:
+            {
+                _id: "$reviewers.REVIEWER._account_id"
+            }
+    },
+    {$count: 'count'}
+])
+
+db.getCollection('changes').aggregate([
+    {$sort:{created:1, _number:1}},
+    {$project:{_id:0, number:1, created:1, updated:1}}
+])
+
+db.getCollection('changes').aggregate([
+    {
+        $group: {
+            _id: "$updated",
+            count:{$sum: 1},
+            created: {$push: "$created"}
+        }
+    },
+    {$sort: {count:-1}},
+    {$limit: 50}
+    //{$count: 'count'}
+], {allowDiskUse: true})
+
+
+db.getCollection('changes').find({is_a_bot: true}).count()
+
+db.getCollection('metrics').aggregate([
+    {$match :
+            { sum_loc : {$ne: 0} }
+        //{"owner._account_id": {$exists: false}}
+    },
+    {$count: 'count'}
+])
+
+db.getCollection('changes').aggregate([
+    {$match :
+            {
+                $or: [
+                    {files_list : {$size: 0}},
+                    {
+                        $and: [
+                            {insertions:0},
+                            {deletions: 0},
+                        ]
+                    }
+                ]
+                //"owner._account_id": {$exists: false}
+            }
+    },
+    {$count: 'count'}
+])

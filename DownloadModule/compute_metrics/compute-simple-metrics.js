@@ -155,6 +155,8 @@ function collectTimeMetrics(json, metric) {
     metric["days_of_the_weeks_of_date_updated_precise"] = get_precise_days_of_the_weeks(json.created);
     metric["hours_of_the_days_date_created"] = get_hours_of_the_days(json.created);
     metric["hours_of_the_days_date_updated"] = get_hours_of_the_days(json.updated);
+    metric["hours_of_the_days_date_created_for_owner"] = get_hours_of_the_days_for_owner_timezone(json.created, get_timezone(json).author);
+    metric["hours_of_the_days_date_updated_for_owner"] = get_hours_of_the_days_for_owner_timezone(json.updated, get_timezone(json).author);
     metric["is_created_date_a_weekend"] = is_date_a_weekend(json.created);
     metric["is_updated_date_a_weekend"] = is_date_a_weekend(json.updated);
     metric["days_of_the_weeks_of_date_created_for_owner_timezone"] = get_days_of_the_weeks_for_owner_timezone(json.created, get_timezone(json).author);
@@ -458,6 +460,11 @@ function get_days_of_the_weeks(dateString) {
 
 function get_hours_of_the_days(dateString) {
     let date = Moment.utc(dateString);
+    return Moment.duration(date.format("hh:mm:ss.SSSSSSSSS")).asDays()
+}
+
+function get_hours_of_the_days_for_owner_timezone(dateString, offset) {
+    let date = Moment.utc(dateString).utcOffset(offset);
     return Moment.duration(date.format("hh:mm:ss.SSSSSSSSS")).asDays()
 }
 

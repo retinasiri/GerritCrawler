@@ -163,7 +163,7 @@ function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetric
         .aggregate([
             //{$match: {priorChangesCount : {$exists : false}}},
             //{$sort: {updated: 1, _number: 1}},
-            {$sort: {_number: 1}},
+            {$sort: {created: 1, _number: 1}},
             {$skip: skip},
             {$limit: step}
         ])
@@ -472,6 +472,10 @@ function add_suffix_to_json(json, suffix, id_to_conserved = null) {
     return new_json;
 }
 
+function safeDivision(number1, number2) {
+    return number2 !== 0 ? MathJs.divide(number1, number2) : 0;
+}
+
 
 module.exports = {
     getHumanReviewers: getHumanReviewers,
@@ -489,6 +493,7 @@ module.exports = {
     getReviewersId: getReviewersId,
     timeDiff: timeDiff,
     check_self_review: check_self_review,
-    add_suffix_to_json: add_suffix_to_json
+    add_suffix_to_json: add_suffix_to_json,
+    safeDivision: safeDivision
 
 };

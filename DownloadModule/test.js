@@ -740,11 +740,18 @@ lastNumber = 1;
 //console.log(typeof lastNumber === 'number')
 
 //collectMetadata(json)
-console.log(MetricsUtils.isABot("1000239", "libreoffice"))
+//console.log(MetricsUtils.isABot("1000239", "libreoffice"))
 
 function ObjectId(text){
     return text;
 }
+
+String.prototype.camelCaseToDashed = function(){
+    return this.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
+}
+
+console.log("author_timezone".camelCaseToDashed())
+console.log("authorTimezone".camelCaseToDashed())
 
 //let dt = new Date().getTime();
 //console.log(dt)
