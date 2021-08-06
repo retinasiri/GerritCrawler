@@ -7,6 +7,9 @@ import urllib.parse as urlparse
 from pathlib import Path as pathlib
 from utils import SlowBar as SlowBar
 from pydriller import RepositoryMining, ModificationType
+#import multiprocessing as mp
+#from multiprocessing import Pool, Value, Lock
+#from itertools import izip_longest, ifilter
 #import itertools
 #import time
 #import multiprocessing
@@ -42,32 +45,22 @@ def start(json):
 
     return processData(LIST_OF_COMMIT, REPOSITORIES_PATH, DATA_DIR_PATH)
 
-
 def processData(list_of_commit, repo_root_path, data_dir_path):
-    
     bar = SlowBar('Computing code metrics ')
-
     json_data = load_json(list_of_commit)
     bar.max = len(json_data)
-    #split_data(json_data, 24)
-    #process(json_data)
-    #pool_handler(json_data, repo_root_path, Database)
     n = 1
     for i in json_data:
-        '''
-        if(n<117000):
+        
+        if(n<506432):
             n+=1
             bar.next()
             continue
-        '''
+        
         metric = get_code_metrics(json_data[i], repo_root_path)
         if(metric is not None):
-            #mid = metric["id"]
-            #code_metrics[mid] = metric
             Database.save_metrics(metric)
         bar.next()
-    #save_metrics_file(code_metrics, data_dir_path)
-    #save_json_in_file(code_metrics, data_dir_path, "-code-metrics.json")
     save_json_in_file(error_list, data_dir_path, "-code-metrics-error.json")
     bar.finish()
     print("Finished with code metrics !!!!!")
@@ -85,85 +78,6 @@ def save_json_in_file(data, path, filename):
     return 0
 
 
-'''
-def save_metrics_file(metrics, data_path):
-    output_file_name = PROJET_NAME + "-code-metrics.json"
-    full_path = os.path.join(data_path, output_file_name)
-    dir_path = pathlib(data_path)
-    dir_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(full_path, "wb") as f:
-        f.write(json.dumps(metrics, indent=4).encode("utf-8"))
-        f.close()
-    return 0
-'''
-
-""""
-def process (json_data):
-    number_of_processes = multiprocessing.cpu_count() * 2
-    tasks_to_accomplish = Queue()
-    tasks_that_are_done = Queue()
-    processes = []
-    print (number_of_processes)
-    data = split_data(json_data, number_of_processes)
-    #list(map(tasks_to_accomplish.put, data))
-    time.sleep(1)
-    for i in range(len(data)):
-        tasks_to_accomplish.put(data[i])
-        time.sleep(0.1)
-    
-    cnt=1
-    while not tasks_to_accomplish.empty():
-        print('item no: ', cnt, ' ', len(tasks_to_accomplish.get()))
-        cnt += 1
-
-    tasks_to_accomplish.close()
-    tasks_to_accomplish.join_thread()
-    
-
-    pass
-
-
-def pool_handler(json_data, repo_root_path, Database):
-    number_of_processes = multiprocessing.cpu_count()
-    data = split_data(json_data, number_of_processes)
-    lock = multiprocessing.Lock()
-    procs = []
-    db_info = {"url": Database.get_db_url(), "database_name" : Database.get_database_name()}
-
-    for dt in data:
-        proc = Process(target=worker, args=(lock, dt, repo_root_path, db_info))
-        procs.append(proc)
-        proc.start()
-
-    for proc in procs:
-        proc.join()
-
-
-def worker(lock, data, repo_root_path, db_info):
-    metrics = {}
-    DB = dbutils.get_database_from_info(db_info)
-    for i in data:
-        lock.acquire()
-        metric = get_code_metrics(data[i], repo_root_path)
-        lock.release()
-        if(metric is not None):
-            print(metric)
-            DB.save_metrics(metric)
-            mid = metric.get("id")
-            print(mid)
-            metrics[mid] = metric
-    pass
-
-
-#https://stackoverflow.com/questions/29056525/how-do-i-split-a-dictionary-into-specific-number-of-smaller-dictionaries-using-p
-def split_data(data, chunk_size):
-    i = itertools.cycle(range(chunk_size))       
-    split = [dict() for _ in range(chunk_size)]
-    for k, v in data.items():
-        split[next(i)][k] = v
-    return split
-"""
-
 def load_json(path):
     with open(path) as f:
         json_file = json.load(f)
@@ -176,9 +90,6 @@ def get_code_metrics(data, repo_root_path):
     commit_hash = data["commit"]
     rel_path = "--".join(urlparse.urlsplit(fetch_url).path.split("/")[1:])
     repo_path = os.path.join(repo_root_path, rel_path)    
-    #repo_path = os.path.join(repo_root_path, *urlparse.urlsplit(fetch_url).path.split("/"))
-    #print("repo_root_path : " + repo_root_path)
-    #print("repo_path : " + repo_path)
     metrics = None
 
     try:
@@ -297,6 +208,46 @@ def update_code_segment_count(code_segment, add_line, deleted_line):
         code_segment["deleted"] += 1
     return code_segment
 
+
+def reorder_repo_list(all_data, data_dir_path):
+    new_values = {}
+    for id in all_data:
+        data = all_data[id]
+        fetch_url = data["fetch_url"]
+        if not fetch_url in new_values:
+            new_values[fetch_url] = {}
+        commit_hash = data["commit"]
+        new_values[fetch_url][commit_hash] = data
+    save_json_in_file(new_values, data_dir_path, "--changes-commit-and-fetch-2.json")
+    return new_values
+
+#def update(self, results):
+#        PROGRESS_BAR.next(results)
+
+'''
+def run(list_of_commit, data_dir_path):
+        json_data = load_json(list_of_commit)
+        list_data = reorder_repo_list(json_data, data_dir_path)
+        list_splited = list_data.values()
+        #chunks = [list_data.iteritems()]*100
+        #g = (dict(ifilter(None, v)) for v in izip_longest(*chunks))
+        #list_splited = list(g)
+
+        NB_PROCESS = mp.cpu_count();
+        
+        bar = SlowBar('')
+        bar.message = 'Processing Graph Metrics'
+        bar.max = count
+        
+        pool = mp.Pool(processes=NB_PROCESS)
+        processes = [pool.apply_async(process, (x,), callback=update) for x in list_splited]
+        
+        pool.close()
+        pool.join()
+
+        bar.finish()
+        pass
+'''
 
 if __name__ == '__main__':  
     #processData(LIST_OF_COMMIT, REPOSITORIES_PATH, DATA_DIR_PATH)

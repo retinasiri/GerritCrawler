@@ -1,3 +1,4 @@
+import re
 import dbutils
 import utils
 import json
@@ -91,7 +92,12 @@ def save_json(json_graph, path):
 
     
 def collect_graph(json, previous_json, graph, full_connected_graph):
-    updated_changes = getIntermediaryUpdatedChanges(json, previous_json)    
+    updated_changes = getIntermediaryUpdatedChanges(json, previous_json)
+    #print(json["id"])
+    #print(len(updated_changes))
+    #print(json["id"])
+    #print(json["created"])
+    #print(len(full_connected_graph.nodes()))
     if(len(updated_changes)>0):
         return add_updated_changes_in_graph(json, updated_changes, graph, full_connected_graph)
     else:
@@ -99,17 +105,62 @@ def collect_graph(json, previous_json, graph, full_connected_graph):
         id = json["id"]
         changes_graph_list[id] = i
         return [graph, full_connected_graph]
+
+def is_owner_the_only_reviewer(ownerId, reviewersId):
+
+    if(len(reviewersId) == 0):
+        return True
+
+    reviewersIdWithoutBot = exclude_bot(reviewersId)
+    if(len(reviewersIdWithoutBot) == 1):
+        if(reviewersIdWithoutBot[0] == ownerId):
+            return True
     
+    return False
 
 def getIntermediaryUpdatedChanges(json, previous_json):
+    #do nothing if it is a bot
+    owner_id = json['owner_id']
+    
+
+    if("reviewers_id" in json):
+        reviewers_id = json["reviewers_id"]
+    else:
+        reviewers_id = []
+        return []
+
     if(not previous_json):
         return []
-
-    if (not "created" in previous_json):
+    
+    if(owner_id in BOT_ACCOUNT):
         return []
 
+    if(is_owner_the_only_reviewer(owner_id, reviewers_id)):
+        return []
+    
+    if (not "created" in previous_json):
+        return []
     created = json["created"]
     previous_created = previous_json["created"]
+    if(created == previous_created):
+        return []
+
+    '''
+    if (not "updated" in previous_json):
+        return []
+    updated = json["updated"]
+    previous_updated = previous_json["updated"]
+    
+    #if(created == updated):
+    #    return []
+
+    if(previous_created == previous_updated):
+        return []
+    '''
+
+    #print('\n')
+    #print(created)
+    #print(previous_created)
     pipeline = [
         {
             "$match": {
@@ -127,7 +178,6 @@ def add_updated_changes_in_graph(json, updatedChanges, graph, full_connected_gra
     id = json["id"]
     owner_id = json["owner_id"]
 
-
     global i
     if (i == 0):
         save_graph(graph, full_connected_graph, str(i))
@@ -140,11 +190,22 @@ def add_updated_changes_in_graph(json, updatedChanges, graph, full_connected_gra
 
 
 def save_graph(G, FG, filename):
+    #print(len(FG.nodes()))
+    #print(len(FG.edges()))
     pathForSimple = os.path.join(GRAPHS_GPICKLE_PATH, filename + ".gpickle")
     pathForFullSimple = os.path.join(FULL_GRAPHS_GPICKLE_PATH, filename + ".gpickle")
     nx.write_gpickle(G, pathForSimple)
     nx.write_gpickle(FG, pathForFullSimple)
+
     '''
+    print(len(FG.nodes()))
+    print(len(FG.edges()))
+    weight = 0
+    for u,v in G.edges():
+        weight += G[u][v]['weight']
+
+    print(weight)
+
     pathForSimpleJson = os.path.join(JSON_GRAPHS_GPICKLE_PATH, filename)
     pathForFullSimpleJson = os.path.join(JSON_FULL_GRAPHS_GPICKLE_PATH, filename)
     save_graph_json(G, pathForSimpleJson)
@@ -216,7 +277,7 @@ def updateFullConnectedGraph(updatedChanges, owner_id, graph):
 
 
 def exclude_bot(reviewers_id):
-    return [a for a in reviewers_id if a not in BOT_ACCOUNT]
+    return [a for a in reviewers_id if str(a) not in BOT_ACCOUNT]
 
 
 if __name__ == '__main__':

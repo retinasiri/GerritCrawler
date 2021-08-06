@@ -51,7 +51,7 @@ class Database:
 
     def get_previous_metrics_list(self, skip):
         metrics_collection = self.get_previous_metrics_collection()
-        aggregation_string = [{"$sort": {"number" : 1}}, {"$skip": skip}, {"$limit": NUM_OF_CHANGES_LIMIT}]
+        aggregation_string = [{"$sort": {"created":1,"number" : 1}}, {"$skip": skip}, {"$limit": NUM_OF_CHANGES_LIMIT}]
         return list(metrics_collection.aggregate(aggregation_string, allowDiskUse=True))
 
     def get_changes_list(self, skip):
@@ -62,7 +62,7 @@ class Database:
     def get_changes_list_for_graph(self, skip):
         changes_collection = self.get_changes_collection()
         aggregation_string = [
-            {"$sort": {"_number": 1}},
+            {"$sort": {"created":1, "_number": 1}},
             {"$project": {"id": 1,"created": 1, "updated": 1,"_number": 1,"owner_id": "$owner._account_id","reviewers_id": "$reviewers.REVIEWER._account_id"}},
             {"$skip": skip},
             {"$limit": NUM_OF_CHANGES_LIMIT}

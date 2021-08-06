@@ -265,6 +265,10 @@ function addMetrics(json) {
     json["prior_branch_owner_ratio"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount"], json["priorBranchChangesCount"])
     json["owner_non_close_changes"] = json["ownerPriorChangesCount"] - json["ownerPriorMergedChangesCount"] - json["ownerPriorAbandonedChangesCount"]
 
+    if (json.hasOwnProperty("priorBranchOwnerChangesCount_14_days") && json.hasOwnProperty("priorBranchChangesCount_14_days")) {
+        json["prior_branch_owner_ratio_14_days"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount_14_days"], json["priorBranchChangesCount_14_days"])
+    }
+
     if (json.hasOwnProperty("priorBranchOwnerChangesCount_30_days") && json.hasOwnProperty("priorBranchChangesCount_30_days")) {
         json["prior_branch_owner_ratio_30_days"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount_30_days"], json["priorBranchChangesCount_30_days"])
     }
@@ -275,6 +279,11 @@ function addMetrics(json) {
 
     if (json.hasOwnProperty("priorBranchOwnerChangesCount_180_days") && json.hasOwnProperty("priorBranchChangesCount_180_days")) {
         json["prior_branch_owner_ratio_180_days"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount_180_days"], json["priorBranchChangesCount_180_days"])
+    }
+
+
+    if (json.hasOwnProperty("ownerPriorChangesCount_14_days") && json.hasOwnProperty("ownerPriorMergedChangesCount_14_days") && json.hasOwnProperty("ownerPriorAbandonedChangesCount_14_days")) {
+        json["owner_non_close_changes_14_days"] = json["ownerPriorChangesCount_14_days"] - json["ownerPriorMergedChangesCount_14_days"] - json["ownerPriorAbandonedChangesCount_14_days"]
     }
 
     if (json.hasOwnProperty("ownerPriorChangesCount_30_days") && json.hasOwnProperty("ownerPriorMergedChangesCount_30_days") && json.hasOwnProperty("ownerPriorAbandonedChangesCount_30_days")) {
@@ -295,6 +304,7 @@ async function collectMetrics(metric) {
 
     let result = {};
     let result_all = {};
+    let result_14_days = {};
     let result_30_days = {};
     let result_90_days = {};
     let result_180_days = {};
@@ -312,8 +322,14 @@ async function collectMetrics(metric) {
 
         result = copy(result, metric, id);
 
-        /*if(id.includes("reviewers"))
-            result_30_days = copy(result_30_days, metric, id + "_30_days")*/
+        if (metric.hasOwnProperty(id + "_14_days")) {
+            result_14_days = copy(result_14_days, metric, id + "_14_days")
+        } else {
+            if (id.includes("eviewer"))
+                result_14_days = copy(result_14_days, metric, id + "_14_days")
+            else
+                result_14_days = copy(result_14_days, metric, id)
+        }
 
         if (metric.hasOwnProperty(id + "_30_days")) {
             result_30_days = copy(result_30_days, metric, id + "_30_days")
@@ -342,7 +358,7 @@ async function collectMetrics(metric) {
                 result_180_days = copy(result_180_days, metric, id)
         }
 
-        result_all = {...result, ...result_30_days, ...result_90_days, ...result_180_days}
+        result_all = {...result, ...result_30_days, ...result_90_days, ...result_14_days}
     }
 
     delete result_all["date_updated_date_created_diff"]
@@ -350,6 +366,7 @@ async function collectMetrics(metric) {
 
     return Promise.all(
         [
+            saveMetrics(result_14_days, "metrics-14-days"),
             saveMetrics(result_30_days, "metrics-30-days"),
             saveMetrics(result_90_days, "metrics-90-days"),
             saveMetrics(result_180_days, "metrics-180-days"),

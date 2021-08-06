@@ -1904,9 +1904,9 @@ function getReviewersPriorChangesCount(reviewersId, number, created_date) {
     let pipeline = [
         {
             $match: {
-                'owner._account_id': {$in: reviewersId},
                 _number: {$lt: number},
                 created: {$lt: created_date},
+                'owner._account_id': {$in: reviewersId},
             }
         },
         {
@@ -1996,10 +1996,10 @@ function getReviewersPriorUnCloseChangesCount(number, reviewersId, created_date)
 function getReviewersNumberOfReview(number, reviewersId, created_date) {
     let match = {
         $match: {
-            status: {$in: ['MERGED', 'ABANDONED']},
             _number: {$lt: number},
             created: {$lt: created_date},
             updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
         }
     }
     let pipeline = [

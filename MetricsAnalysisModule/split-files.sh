@@ -7,7 +7,7 @@ do
     esac
 done
 
-split_size=25000;
+split_size=100000;
 echo ${input_directory}
 cd ${input_directory}/
 for f in ${input_directory}/*; 
@@ -19,7 +19,9 @@ do
     inf=$(((folder_num-1)* split_size))
     sup=$(((folder_num)* split_size))
     d=${input_directory}-${inf}-${sup};
-    echo 'mv' ${filename} '=>' ${d}
+    echo 'cp' ${filename} '=>' ${d}
+    #echo 'mv' ${filename} '=>' ${d}
     mkdir -p $d; 
-    mv "$f" $d; 
+    cp "$f" $d; 
+    #mv "$f" $d; 
 done

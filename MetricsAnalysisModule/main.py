@@ -93,3 +93,84 @@ if __name__ == '__main__':
     print(num_meta - left)
     save_set_in_file(sorted(big_project), "/Volumes/SEAGATE-II/Gerrit-Project-Data/big-project.txt")
     utils.save_json_in_file("aosp", dic, "/Volumes/SEAGATE-II/Gerrit-Project-Data/" ,"-changes-refs-meta.json")
+
+
+
+'''
+def save_metrics_file(metrics, data_path):
+    output_file_name = PROJET_NAME + "-code-metrics.json"
+    full_path = os.path.join(data_path, output_file_name)
+    dir_path = pathlib(data_path)
+    dir_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(full_path, "wb") as f:
+        f.write(json.dumps(metrics, indent=4).encode("utf-8"))
+        f.close()
+    return 0
+'''
+
+""""
+def process (json_data):
+    number_of_processes = multiprocessing.cpu_count() * 2
+    tasks_to_accomplish = Queue()
+    tasks_that_are_done = Queue()
+    processes = []
+    print (number_of_processes)
+    data = split_data(json_data, number_of_processes)
+    #list(map(tasks_to_accomplish.put, data))
+    time.sleep(1)
+    for i in range(len(data)):
+        tasks_to_accomplish.put(data[i])
+        time.sleep(0.1)
+    
+    cnt=1
+    while not tasks_to_accomplish.empty():
+        print('item no: ', cnt, ' ', len(tasks_to_accomplish.get()))
+        cnt += 1
+
+    tasks_to_accomplish.close()
+    tasks_to_accomplish.join_thread()
+    
+
+    pass
+
+
+def pool_handler(json_data, repo_root_path, Database):
+    number_of_processes = multiprocessing.cpu_count()
+    data = split_data(json_data, number_of_processes)
+    lock = multiprocessing.Lock()
+    procs = []
+    db_info = {"url": Database.get_db_url(), "database_name" : Database.get_database_name()}
+
+    for dt in data:
+        proc = Process(target=worker, args=(lock, dt, repo_root_path, db_info))
+        procs.append(proc)
+        proc.start()
+
+    for proc in procs:
+        proc.join()
+
+
+def worker(lock, data, repo_root_path, db_info):
+    metrics = {}
+    DB = dbutils.get_database_from_info(db_info)
+    for i in data:
+        lock.acquire()
+        metric = get_code_metrics(data[i], repo_root_path)
+        lock.release()
+        if(metric is not None):
+            print(metric)
+            DB.save_metrics(metric)
+            mid = metric.get("id")
+            print(mid)
+            metrics[mid] = metric
+    pass
+
+
+#https://stackoverflow.com/questions/29056525/how-do-i-split-a-dictionary-into-specific-number-of-smaller-dictionaries-using-p
+def split_data(data, chunk_size):
+    i = itertools.cycle(range(chunk_size))       
+    split = [dict() for _ in range(chunk_size)]
+    for k, v in data.items():
+        split[next(i)][k] = v
+    return split
+"""
