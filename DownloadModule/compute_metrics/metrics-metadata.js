@@ -134,7 +134,7 @@ async function updateProgress() {
 
 async function collectMetadata(json) {
     let metadata = {};
-    //metadata["id"] = json.id
+    metadata["id"] = json.id
     metadata = get_owner_info(metadata, json)
     metadata = get_revision_info(metadata, json)
     metadata = get_time_info(metadata, json)
@@ -183,7 +183,6 @@ async function collectMetadata(json) {
     metadata["updated"] = metadata["close_time"]
     metadata["status"] = metadata["new_status_before_close"]
     metadata["date_updated_date_created_diff"] = parseFloat(metadata["diff_created_close_time"])
-    metadata["id"] = json.id
 
     metadata["days_of_the_weeks_date_created"] = get_days_of_the_weeks(json.created)
     metadata["days_of_the_weeks_date_updated_original"] = get_days_of_the_weeks(json.updated)

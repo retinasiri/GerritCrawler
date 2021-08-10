@@ -52,7 +52,7 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
     n = 1
     for i in json_data:
         
-        if(n<506432):
+        if(n<594028):
             n+=1
             bar.next()
             continue

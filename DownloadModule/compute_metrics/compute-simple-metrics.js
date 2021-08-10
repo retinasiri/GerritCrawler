@@ -165,6 +165,10 @@ function collectTimeMetrics(json, metric) {
     metric["date_commit_time"] = get_commit_date_time(json);
     metric["committer_timezone"] = get_timezone(json).committer;
     metric["author_timezone"] = get_timezone(json).author;
+    metric["month_date_created"] = get_month(json.created);
+    metric["month_date_created_for_owner"] = get_month_for_owner(json.created, get_timezone(json).author);
+    metric["month_date_updated"] = get_month(json.updated);
+    metric["month_date_updated_for_owner"] = get_month_for_owner(json.updated, get_timezone(json).author);
 
     //metrics to forecast
     metric["diff_created_updated"] = diffCreatedUpdatedTime(json);
@@ -456,6 +460,14 @@ function get_days_of_the_weeks_date_created(json) {
 
 function get_days_of_the_weeks(dateString) {
     return Moment.utc(dateString).isoWeekday();
+}
+
+function get_month(dateString) {
+    return Moment.utc(dateString, "YYYY-MM-DD hh:mm:ss.SSSSSSSSS").format('MMMM')
+}
+
+function get_month_for_owner(dateString, offset) {
+    return Moment.utc(dateString, "YYYY-MM-DD hh:mm:ss.SSSSSSSSS").utcOffset(offset).format('MMMM')
 }
 
 function get_hours_of_the_days(dateString) {

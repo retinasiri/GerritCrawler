@@ -51,13 +51,6 @@ function startComputeMetrics(json) {
         })
         .then(() => {
             progressBar.stop();
-            let path = PathLibrary.join(DATA_PATH, projectName);
-            let filename_30_days = projectName + "-metrics-30-days.csv";
-            let filename_90_days = projectName + "-metrics-90-days.csv";
-            let filename_180_days = projectName + "-metrics-180-days.csv";
-            let filename_all = projectName + "-metrics-all.csv";
-
-
             console.log("Finished !!!!");
         })
         .then(() => {

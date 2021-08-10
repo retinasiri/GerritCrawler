@@ -5,13 +5,6 @@ db.getCollection('metrics').createIndex({number: 1})
 db.getCollection('metrics').createIndex({created_date: 1})
 db.getCollection('metrics').createIndex({number: 1, created_date: 1})
 
-db.getCollection('changes').createIndex({_number: -1})
-db.getCollection('changes').createIndex({created: -1})
-db.getCollection('changes').createIndex({updated: -1})
-db.getCollection('changes').createIndex({_number: 1, created: -1})
-db.getCollection('changes').createIndex({_number: -1, created: -1})
-db.getCollection('changes').createIndex({_number: -1, created: 1})
-
 db.getCollection('changes').createIndex({id: 1})
 db.getCollection('changes').createIndex({_number: 1})
 db.getCollection('changes').createIndex({created: 1})
@@ -144,3 +137,9 @@ db.getCollection('changes').createIndex({'messages.author._account_id': 1})
 db.getCollection('changes').createIndex({'messages.author._account_id': 1, number: -1, updated: -1})
 
 
+db.getCollection('changes').createIndex({_number: -1})
+db.getCollection('changes').createIndex({created: -1})
+db.getCollection('changes').createIndex({updated: -1})
+db.getCollection('changes').createIndex({_number: 1, created: -1})
+db.getCollection('changes').createIndex({_number: -1, created: -1})
+db.getCollection('changes').createIndex({_number: -1, created: 1})

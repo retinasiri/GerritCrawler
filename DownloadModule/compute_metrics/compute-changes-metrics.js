@@ -3,6 +3,15 @@ const Moment = require('moment');
 const Change = require('../models/change');
 const MetricsUtils = require("./metrics-utils");
 
+//todo separate compute metrics
+//todo compute metrics
+//todo rate for 3, 7, 14, 30, 90
+//todo last X (1, 3, 10, 100) time
+//branch rate of build
+//project rate of build
+//best reviewer timezone diff
+//probability of build
+
 let projectName = "libreoffice";
 let start = 0;
 let end = 10000;
@@ -47,7 +56,8 @@ async function collectMetrics(json) {
         let metrics = {...results[0], ...results[1]};
         if (NUM_DAYS_FOR_RECENT !== null) {
             let suffix = '_' + NUM_DAYS_FOR_RECENT + '_days'
-            metrics = MetricsUtils.add_suffix_to_json(metrics, suffix, ['id', 'number'])
+            let array = ['id', 'number', 'projectAge', 'subsystemAge', 'branchAge', 'ownerAge'];
+            metrics = MetricsUtils.add_suffix_to_json(metrics, suffix, array)
         }
         return metrics
     })
@@ -222,16 +232,38 @@ async function getChangesInfo(json) {
     let priorBranchChangeMeanTimeType = getPriorBranchChangeMeanTimeType(json);
 
     let projectAge = getProjectAge(json);
-    //console.log(projectAge)
     let subsystemAge = getSubsystemAge(json);
     let branchAge = getBranchAge(json);
     let ownerAge = getOwnerAge(json);
 
-    let priorRateFromCount = getPriorRateFromCount(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
-    let priorBranchRateFromCount = getPriorBranchRateFromCount(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
-    let priorSubsystemRateFromCount = getPriorSubsystemRateFromCount(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
-    let priorOwnerRateFromCount = getPriorOwnerRateFromCount(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
+    let priorRate = getPriorRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
+    let priorBranchRate = getPriorBranchRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
+    let priorSubsystemRate = getPriorSubsystemRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
+    let priorOwnerRate = getPriorOwnerRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
     let filesNumberOfRecentChangesOnBranch = getFilesNumberOfRecentChangesOnBranch(json, NUMBER_OF_DAYS_FOR_RECENT_CHANGES_OF_FILES);
+
+    //new
+    let priorBranchOwnerChangeMeanTimeType = getPriorBranchOwnerChangeMeanTimeType(json);
+    let priorProjectBranchChangesCount = getPriorProjectBranchChangesCount(json);
+    let getPriorProjectBranchMergedChangesCount = getPriorProjectBranchTypeChangesCount(json, "MERGED");
+    let getPriorProjectBranchAbandonedChangesCount = getPriorProjectBranchTypeChangesCount(json, "ABANDONED");
+    let priorProjectBranchChangeMeanTimeType = getPriorProjectBranchChangeMeanTimeType(json);
+    let priorProjectBranchOwnerChangesCount = getPriorProjectBranchOwnerChangesCount(json);
+    let priorProjectBranchOwnerMergedChangesCount = getPriorProjectBranchOwnerTypeChangesCount(json, "MERGED");
+    let priorProjectBranchOwnerAbandonedChangesCount = getPriorProjectBranchOwnerTypeChangesCount(json, "ABANDONED");
+    let priorProjectBranchOwnerChangeMeanTimeType = getPriorProjectBranchOwnerChangeMeanTimeType(json);
+
+    let numberChangesBuilt = getNumberChangesBuilt(json);
+    let projectNumberChangesBuilt = getProjectNumberChangesBuilt(json);
+    let projectBranchNumberChangesBuilt = getProjectBranchNumberChangesBuilt(json);
+    let ownerNumberChangesBuilt = getOwnerNumberChangesBuilt(json);
+    let ownerProjectBranchNumberChangesBuilt = getOwnerProjectBranchNumberChangesBuilt(json);
+    let filesNumberChangesBuilt = getFilesNumberChangesBuilt(json);
+    let filesExtensionNumberChangesCount = getFilesExtensionNumberChangesCount(json);
+    let filesExtensionNumberChangesBuilt = getFilesExtensionNumberChangesBuilt(json);
+    let directoriesExtensionNumberChangesCount = getDirectoriesExtensionNumberChangesCount(json);
+    let directoriesExtensionNumberChangesBuilt = getDirectoriesExtensionNumberChangesBuilt(json);
+    let branchNumberChangesBuilt = getBranchNumberChangesBuilt(json);
 
     return Promise.all([
         priorChangesCount, //0
@@ -286,11 +318,34 @@ async function getChangesInfo(json) {
         subsystemAge,//45
         branchAge,//46
         ownerAge,//47
-        priorRateFromCount,//48
-        priorBranchRateFromCount,//49
-        priorSubsystemRateFromCount,//50
-        priorOwnerRateFromCount,//51
+        priorRate,//48
+        priorBranchRate,//49
+        priorSubsystemRate,//50
+        priorOwnerRate,//51
         filesNumberOfRecentChangesOnBranch,//52
+
+        priorBranchOwnerChangeMeanTimeType,//53
+        priorProjectBranchChangesCount,//54
+        getPriorProjectBranchMergedChangesCount,//55
+        getPriorProjectBranchAbandonedChangesCount,//56
+        priorProjectBranchChangeMeanTimeType,//57
+        priorProjectBranchOwnerChangesCount,//58
+        priorProjectBranchOwnerMergedChangesCount,//59
+        priorProjectBranchOwnerAbandonedChangesCount,//60
+        priorProjectBranchOwnerChangeMeanTimeType,//61
+
+        numberChangesBuilt,//62
+        projectNumberChangesBuilt,//63
+        projectBranchNumberChangesBuilt,//64
+        ownerNumberChangesBuilt,//65
+        ownerProjectBranchNumberChangesBuilt,//66
+        filesNumberChangesBuilt,//67
+        filesExtensionNumberChangesCount,//68
+        filesExtensionNumberChangesBuilt,//69
+        directoriesExtensionNumberChangesCount,//70
+        directoriesExtensionNumberChangesBuilt,//71
+
+        branchNumberChangesBuilt,//72
 
     ]).then((results) => {
         //console.log(results);
@@ -454,6 +509,7 @@ async function getChangesInfo(json) {
             priorBranchOwnerChangesCount: results[40],
             priorBranchOwnerMergedChangesCount: results[41],
             priorBranchOwnerAbandonedChangesCount: results[42],
+            priorBranchOwnerChangesRatio: safeDivision(results[40], results[37]),
 
             priorBranchChangeMeanTimeTypeAvg: results[43].avg,
             priorBranchChangeMeanTimeTypeMax: results[43].max,
@@ -464,17 +520,62 @@ async function getChangesInfo(json) {
             subsystemAge: convertAsDays(results[45]),
             branchAge: convertAsDays(results[46]),
             ownerAge: convertAsDays(results[47]),
-            priorOverAllRateFromCount: safeDivision(results[0], convertAsDays(results[44])),
-            priorOverAllBranchRateFromCount: safeDivision(results[37], convertAsDays(results[46])),
-            priorOverAllSubsystemRateFromCount: safeDivision(results[6], convertAsDays(results[45])),
-            priorOverAllOwnerRateFromCount: safeDivision(results[3], convertAsDays(results[47])),
 
-            priorRateFromCount: results[48],
-            priorBranchRateFromCount: results[49],
-            priorSubsystemRateFromCount: results[50],
-            priorOwnerRateFromCount: results[51],
+            priorOverAllRate: safeDivision(results[0], convertAsDays(results[44])),
+            priorOverAllBranchRate: safeDivision(results[37], convertAsDays(results[46])),
+            priorOverAllSubsystemRate: safeDivision(results[6], convertAsDays(results[45])),
+            priorOverAllOwnerRate: safeDivision(results[3], convertAsDays(results[47])),
+
+            priorRate: results[48],
+            priorBranchRate: results[49],
+            priorSubsystemRate: results[50],
+            priorOwnerRate: results[51],
 
             filesNumberOfRecentChangesOnBranch: results[52],
+
+            priorBranchOwnerChangeMeanTimeTypeAvg: results[53].avg,//53
+            priorBranchOwnerChangeMeanTimeTypeMin: results[53].min,//53
+            priorBranchOwnerChangeMeanTimeTypeMax: results[53].max,//53
+            priorBranchOwnerChangeMeanTimeTypeStd: results[53].std,//53
+
+            priorProjectBranchChangesCount: results[54],//54
+            getPriorProjectBranchMergedChangesCount: results[55],//55
+            getPriorProjectBranchAbandonedChangesCount: results[56],//56
+
+            priorProjectBranchChangeMeanTimeTypeAvg: results[57].avg,//57
+            priorProjectBranchChangeMeanTimeTypeMin: results[57].min,//57
+            priorProjectBranchChangeMeanTimeTypeMax: results[57].max,//57
+            priorProjectBranchChangeMeanTimeTypeStd: results[57].std,//57
+
+            priorProjectBranchOwnerChangesCount: results[58],//58
+            priorProjectBranchOwnerMergedChangesCount: results[59],//59
+            priorProjectBranchOwnerAbandonedChangesCount: results[60],//60
+
+            priorProjectBranchOwnerChangeMeanTimeTypeAvg: results[61].avg,//61
+            priorProjectBranchOwnerChangeMeanTimeTypeMin: results[61].min,//61
+            priorProjectBranchOwnerChangeMeanTimeTypeMax: results[61].max,//61
+            priorProjectBranchOwnerChangeMeanTimeTypeStd: results[61].std,//61
+
+            numberChangesBuilt: results[62],//62
+            ratioChangeBuilt: safeDivision(results[62], parseInt(results[1]) + parseInt(results[2])),
+            projectNumberChangesBuilt: results[63],//63
+            ratioProjectNumberChangesBuilt: safeDivision(results[63], parseInt(results[7]) + parseInt(results[8])),
+            projectBranchNumberChangesBuilt: results[64],//64
+            ratioProjectBranchNumberChangesBuilt: safeDivision(results[64], parseInt(results[55]) + parseInt(results[56])),
+            ownerNumberChangesBuilt: results[65],//65
+            ratioOwnerNumberChangesBuilt: safeDivision(results[65], parseInt(results[4]) + parseInt(results[5])),
+            ownerProjectBranchNumberChangesBuilt: results[66],//66
+            ratioOwnerProjectBranchNumberChangesBuilt: safeDivision(results[66], parseInt(results[58]) + parseInt(results[59])),
+            filesNumberChangesBuilt: results[67],//67
+            //ratioFilesNumberChangesBuilt: safeDivision(results[67], parseInt(results[58]) + parseInt(results[14].max)),
+            filesExtensionNumberChangesCount: results[68],//68
+            filesExtensionNumberChangesBuilt: results[69],//69
+            ratioFilesExtensionNumberChangesBuilt: safeDivision(results[69], results[68]),
+            directoriesExtensionNumberChangesCount: results[70],//70
+            directoriesExtensionNumberChangesBuilt: results[71],//71
+            ratioDirectoriesExtensionNumberChangesBuilt: safeDivision(results[71], results[70]),
+            branchNumberChangesBuilt: results[72],//72
+            ratioBranchNumberChangesBuilt: safeDivision(results[72], parseInt(results[38]) + parseInt(results[39])),
 
         };
     })
@@ -676,7 +777,7 @@ function genericDBRequest(pipeline) {
         .exec()
         .then(docs => {
             if (!docs)
-                return 0;
+                return [];
             return docs.length > 0 ? docs[0] : [];
         })
         .catch(err => {
@@ -1515,6 +1616,446 @@ function getPriorBranchChangeMeanTimeType(json) {
     return genericDBRequest(pipeline);
 }
 
+//Added
+function getPriorBranchOwnerChangeMeanTimeType(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let branch = json.branch;
+    let ownerId = json.owner._account_id;
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            branch: branch,
+            'owner._account_id': ownerId,
+        }
+    };
+    let pipeline = [
+        match,
+        {
+            $group: {
+                _id: 1,
+                avg: {$avg: "$date_updated_date_created_diff"},
+                max: {$max: "$date_updated_date_created_diff"},
+                min: {$min: "$date_updated_date_created_diff"},
+                std: {$stdDevPop: "$date_updated_date_created_diff"}
+            }
+        }
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return genericDBRequest(pipeline);
+}
+
+//Project and branch
+function getPriorProjectBranchChangesCount(json) {
+    let number = json._number;
+    let branch = json.branch;
+    let project = json.project;
+    let created_date = json.created;
+    let pipeline = [{
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            branch: branch,
+            project: project,
+        }
+    },
+        {$count: "count"}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+function getPriorProjectBranchTypeChangesCount(json, TYPE) {
+    let created_date = json.created;
+    let number = json._number;
+    let branch = json.branch;
+    let project = json.project;
+    let pipeline = [{
+        $match: {
+            _number: {$lt: number},
+            updated: {$lte: created_date},
+            created: {$lt: created_date},
+            status: TYPE,
+            branch: branch,
+            project: project,
+        }
+    },
+        {$count: "count"}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+function getPriorProjectBranchChangeMeanTimeType(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let branch = json.branch;
+    let project = json.project;
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            branch: branch,
+            project: project,
+        }
+    };
+    let pipeline = [
+        match,
+        {
+            $group: {
+                _id: 1,
+                avg: {$avg: "$date_updated_date_created_diff"},
+                max: {$max: "$date_updated_date_created_diff"},
+                min: {$min: "$date_updated_date_created_diff"},
+                std: {$stdDevPop: "$date_updated_date_created_diff"}
+            }
+        }
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return genericDBRequest(pipeline);
+}
+
+function getPriorProjectBranchOwnerChangesCount(json) {
+    let number = json._number;
+    let branch = json.branch;
+    let project = json.project;
+    let ownerId = json.owner._account_id;
+    let created_date = json.created;
+    let pipeline = [{
+        $match: {
+            _number: {$lt: number},
+            updated: {$lte: created_date},
+            created: {$lt: created_date},
+            branch: branch,
+            project: project,
+            'owner._account_id': ownerId,
+        }
+    },
+        {$count: "count"}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+function getPriorProjectBranchOwnerTypeChangesCount(json, TYPE) {
+    let created_date = json.created;
+    let number = json._number;
+    let branch = json.branch;
+    let project = json.project;
+    let ownerId = json.owner._account_id;
+    let pipeline = [{
+        $match: {
+            _number: {$lt: number},
+            updated: {$lte: created_date},
+            created: {$lt: created_date},
+            status: TYPE,
+            branch: branch,
+            project: project,
+            'owner._account_id': ownerId,
+        }
+    },
+        {$count: "count"}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+function getPriorProjectBranchOwnerChangeMeanTimeType(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let branch = json.branch;
+    let project = json.project;
+    let ownerId = json.owner._account_id;
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            branch: branch,
+            project: project,
+            'owner._account_id': ownerId,
+        }
+    };
+    let pipeline = [
+        match,
+        {
+            $group: {
+                _id: 1,
+                avg: {$avg: "$date_updated_date_created_diff"},
+                max: {$max: "$date_updated_date_created_diff"},
+                min: {$min: "$date_updated_date_created_diff"},
+                std: {$stdDevPop: "$date_updated_date_created_diff"}
+            }
+        }
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return genericDBRequest(pipeline);
+}
+
+//Probability of build
+
+//all build
+function getNumberChangesBuilt(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            avg_build_time: {$gt: 0}
+        }
+    }
+    let pipeline = [
+        match,
+        {$count: 'count'}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+//project number of build
+function getProjectNumberChangesBuilt(json) {
+    let created_date = json.created;
+    let project = json.project;
+    let number = json._number;
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            project: project,
+            avg_build_time: {$gt: 0}
+        }
+    }
+    let pipeline = [
+        match,
+        {$count: 'count'}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+//project branch build
+function getProjectBranchNumberChangesBuilt(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let project = json.project;
+    let branch = json.branch;
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            project: project,
+            branch: branch,
+            avg_build_time: {$gt: 0}
+        }
+    }
+    let pipeline = [
+        match,
+        {$count: 'count'}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return genericDBRequest(pipeline);
+}
+
+//branch number of build
+function getBranchNumberChangesBuilt(json) {
+    let created_date = json.created;
+    let branch = json.branch;
+    let number = json._number;
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            branch: branch,
+            avg_build_time: {$gt: 0}
+        }
+    }
+    let pipeline = [
+        match,
+        {$count: 'count'}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+//owner number of build
+function getOwnerNumberChangesBuilt(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let ownerId = json.owner._account_id;
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            'owner._account_id': ownerId,
+            avg_build_time: {$gt: 0}
+        }
+    }
+    let pipeline = [
+        match,
+        {$count: 'count'}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+//project owner branch build
+function getOwnerProjectBranchNumberChangesBuilt(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let ownerId = json.owner._account_id;
+    let project = json.project;
+    let branch = json.branch;
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            project: project,
+            branch: branch,
+            'owner._account_id': ownerId,
+            avg_build_time: {$gt: 0}
+        }
+    }
+    let pipeline = [
+        match,
+        {$count: 'count'}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+//file number of build
+//project number of build
+function getFilesNumberChangesBuilt(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let files_list = json.files_list ? json.files_list : [];
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            files_list: {$in: files_list},
+            avg_build_time: {$gt: 0}
+        }
+    }
+    let pipeline = [
+        match,
+        {$count: 'count'}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+function getFilesExtensionNumberChangesCount(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let extensions_list = json.extensions_list ? json.extensions_list : [];
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            extensions_list: {$in: extensions_list},
+        }
+    }
+    let pipeline = [
+        match,
+        {$count: 'count'}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+function getFilesExtensionNumberChangesBuilt(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let extensions_list = json.extensions_list ? json.extensions_list : [];
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            extensions_list: {$in: extensions_list},
+            avg_build_time: {$gt: 0}
+        }
+    }
+    let pipeline = [
+        match,
+        {$count: 'count'}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+function getDirectoriesExtensionNumberChangesCount(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let directories_list = json.directories_list ? json.directories_list : [];
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            extensions_list: {$in: directories_list},
+        }
+    }
+    let pipeline = [
+        match,
+        {$count: 'count'}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+function getDirectoriesExtensionNumberChangesBuilt(json) {
+    let created_date = json.created;
+    let number = json._number;
+    let directories_list = json.directories_list ? json.directories_list : [];
+    let match = {
+        $match: {
+            _number: {$lt: number},
+            created: {$lt: created_date},
+            updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
+            extensions_list: {$in: directories_list},
+            avg_build_time: {$gt: 0}
+        }
+    }
+    let pipeline = [
+        match,
+        {$count: 'count'}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return dbRequest(pipeline);
+}
+
+
+//file type number of build
+
 //Age
 function agePipeline(match, created_date) {
     let pipeline = [
@@ -1613,7 +2154,11 @@ function getOwnerAge(json) {
 //Rate
 //get number of change to the date divide by the number of day
 
-function getPriorRateFromCount(json, number_of_days, property = null, value = null) {
+function getPriorRate(json, number_of_days, property = null, value = null) {
+
+    if (NUM_DAYS_FOR_RECENT != null)
+        number_of_days = NUM_DAYS_FOR_RECENT;
+
     let number = json._number;
     let created = json.created;
     let created_date = json.created;
@@ -1642,27 +2187,31 @@ function getPriorRateFromCount(json, number_of_days, property = null, value = nu
     return dbRequest(pipeline);
 }
 
-function getPriorBranchRateFromCount(json, number_of_days) {
+function getPriorBranchRate(json, number_of_days) {
     let property = "branch";
     let value = json.branch;
-    return getPriorRateFromCount(json, number_of_days, property, value)
+    return getPriorRate(json, number_of_days, property, value)
 }
 
-function getPriorSubsystemRateFromCount(json, number_of_days) {
+function getPriorSubsystemRate(json, number_of_days) {
     let property = "project";
     let value = json.project;
-    return getPriorRateFromCount(json, number_of_days, property, value)
+    return getPriorRate(json, number_of_days, property, value)
 }
 
-function getPriorOwnerRateFromCount(json, number_of_days) {
+function getPriorOwnerRate(json, number_of_days) {
     let property = "$or";
     let ownerId = json.owner._account_id;
     let value = [{'owner._account_id': ownerId}, {"reviewers.REVIEWER._account_id": ownerId}]
-    return getPriorRateFromCount(json, number_of_days, property, value)
+    return getPriorRate(json, number_of_days, property, value)
 }
 
 //file
 function getFilesNumberOfRecentChangesOnBranch(json, number_of_days) {
+
+    if (NUM_DAYS_FOR_RECENT != null)
+        number_of_days = NUM_DAYS_FOR_RECENT;
+
     let number = json._number;
     let created_date = json.created
     let branch = json.branch;
@@ -1786,9 +2335,11 @@ let initRev = {
     reviewersChangesStd: 0,
 }
 
-function getReviewersMetrics(json, reviewersDocs) {
+
+async function getReviewersMetrics(json, reviewersDocs) {
     let number = json._number;
     let created_date = json.created;
+    let ownerId = json.owner._account_id;
     let files_list = json.files_list ? json.files_list : [];
     let reviewersId = [];
     let allCount = [];
@@ -1813,6 +2364,12 @@ function getReviewersMetrics(json, reviewersDocs) {
 
     let reviewersChangesCount = Promise.resolve(getSumMeanMaxMinStd(allCount));
 
+    let reviewerTimezone = getReviewerTimezone(number, reviewersId, created_date);
+    let reviewerLastChange = getReviewerLastChange(number, reviewersId, created_date);
+    let reviewerLastMessage = getReviewerLastMessage(number, reviewersId, created_date, ownerId);
+    let reviewerLastReview = getReviewerLastReview(number, reviewersId, created_date, ownerId);
+    //console.log(reviewerLastReview)
+
     return Promise.all([
         reviewersPriorChangesCount,//0
         reviewersPriorMergedChangesCount,//1
@@ -1824,8 +2381,12 @@ function getReviewersMetrics(json, reviewersDocs) {
         ownerAndReviewerCommonsChangesSumAndMessagesSum,//7
         ownerAndReviewerCommonsMessagesAvg,//8
         reviewersChangesCount,//9
+        reviewerTimezone,//10
+        reviewerLastChange,//11
+        reviewerLastMessage,//12
+        reviewerLastReview,//13
     ]).then((results) => {
-        return {
+        let metadata = {
             reviewersPriorChangesSum: results[0].sum,
             reviewersPriorChangesAvg: results[0].avg,
             reviewersPriorChangesMax: results[0].max,
@@ -1885,9 +2446,188 @@ function getReviewersMetrics(json, reviewersDocs) {
             reviewersChangesMax: results[9].max,
             reviewersChangesMin: results[9].min,
             reviewersChangesStd: results[9].std,
+
+            reviewerTimezoneAvg: results[10].length > 0 ? results[10].avg : 0,
+            reviewerTimezoneMax: results[10].length > 0 ? results[10].max : 0,
+            reviewerTimezoneMin: results[10].length > 0 ? results[10].min : 0,
+            reviewerTimezoneStd: results[10].length > 0 ? results[10].std : 0,
+
+            reviewerLastChangeDate: results[11].length > 0 ? results[11].date : 0,
+            reviewerLastMessageDate: results[12].length > 0 ? results[12].date : 0,
+            reviewerLastReviewDate: results[13].length > 0 ? results[13].date : 0,
+
+            //reviewerLastChangeDateDiff: MetricsUtils.timeDiff(results[11].length > 0 ? results[11].date : 0 , created_date),
+            //reviewerLastMessageDateDiff: MetricsUtils.timeDiff(results[12].length > 0 ? results[12].date : 0, created_date),
+            //reviewerLastReviewDateDiff: MetricsUtils.timeDiff(results[13].length > 0 ? results[13].date : 0, created_date),
         }
+
+        metadata["reviewerLastChangeDateDiff"] = metadata["reviewerLastChangeDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastChangeDate"], created_date) : undefined;
+        metadata["reviewerLastMessageDateDiff"] = metadata["reviewerLastMessageDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastMessageDate"], created_date) : undefined;
+        metadata["reviewerLastReviewDateDiff"] = metadata["reviewerLastReviewDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastReviewDate"], created_date) : undefined;
+
+        if (!metadata["reviewerLastChangeDateDiff"] && !metadata["reviewerLastMessageDateDiff"] && !metadata["reviewerLastReviewDateDiff"])
+            metadata["reviewerLastActivity"] = undefined
+        else
+            metadata["reviewerLastActivity"] = MathJs.min([metadata["reviewerLastChangeDateDiff"], metadata["reviewerLastMessageDateDiff"], metadata["reviewerLastReviewDateDiff"]]);
+
+        return metadata;
     })
 
+}
+
+function getReviewerTimezone(number, reviewersId, created_date) {
+    let pipeline = [
+        {
+            $match: {
+                _number: {$lt: number},
+                created: {$lt: created_date},
+                'owner._account_id': {$in: reviewersId},
+            }
+        },
+        {
+            $group: {
+                _id: "$owner._account_id",
+                avg: {$avg: "$owner_timezone"},
+            }
+        },
+        {
+            $group: {
+                _id: 1,
+                avg: {$avg: "$owner_timezone"},
+                max: {$max: "$owner_timezone"},
+                min: {$min: "$owner_timezone"},
+                std: {$stdDevPop: "$owner_timezone"},
+            }
+        },
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return genericDBRequest(pipeline);
+}
+
+function getReviewerLastChange(number, reviewersId, created_date) {
+    let pipeline = [
+        {
+            $match:
+                {
+                    _number: {$lt: number},
+                    created: {$lt: created_date},
+                    "owner._account_id": {$in: reviewersId},
+                }
+        },
+        {$sort: {created: -1}},
+        {$limit: 1},
+        {
+            $project: {
+                _id: 0,
+                date: "$created",
+                /*dateDiff: {
+                    $subtract: [
+                        {$dateFromString: {dateString: {$substr: [created_date, 0, 22]}, timezone: "UTC"}},
+                        {
+                            $dateFromString: {
+                                dateString: {$substr: ["$created", 0, 22]},
+                                timezone: "UTC"
+                            }
+                        }
+                    ]
+                }*/
+            }
+        }
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return genericDBRequest(pipeline);
+}
+
+function getReviewerLastMessage(number, reviewersId, created_date, ownerId) {
+    let pipeline = [
+        {
+            $match:
+                {
+                    _number: {$lt: number},
+                    created: {$lt: created_date},
+                    $and:
+                        [
+                            {"messages.author._account_id": ownerId},
+                            {"messages.date": {$lt: created_date}},
+                        ]
+                }
+        },
+        {$sort: {created: -1}},
+        {$limit: 1},
+        {$unwind: "$messages"},
+        {
+            $match:
+                {
+                    "messages.author._account_id": ownerId,
+                    "messages.date": {$lt: created_date}
+                }
+        },
+        {$sort: {"messages.date": -1}},
+        {$limit: 1},
+        {
+            $project: {
+                _id: 0,
+                date: "$messages.date",
+                /*dateDiff: {
+                    $subtract: [
+                        {$dateFromString: {dateString: {$substr: [created_date, 0, 22]}, timezone: "UTC"}},
+                        {
+                            $dateFromString: {
+                                dateString: {$substr: ["$messages.date", 0, 22]},
+                                timezone: "UTC"
+                            }
+                        }
+                    ]
+                }*/
+            }
+        },
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return genericDBRequest(pipeline);
+}
+
+function getReviewerLastReview(number, reviewersId, created_date, ownerId) {
+    let pipeline = [
+        {
+            $match:
+                {
+                    _number: {$lt: number},
+                    created: {$lt: created_date},
+                    updated: {$lt: created_date},
+                    status: {$in: ['MERGED', 'ABANDONED']},
+                    "labels.Code-Review.all._account_id": ownerId
+                }
+        },
+        {$sort: {created: -1}},
+        {$limit: 1},
+        {$unwind: "$labels.Code-Review.all"},
+        {
+            $match:
+                {
+                    "labels.Code-Review.all._account_id": ownerId
+                }
+        },
+        {$sort: {"labels.Code-Review.all.date": -1}},
+        {$limit: 1},
+        {
+            $project: {
+                _id: 0, date: "$labels.Code-Review.all.date",
+                /*dateDiff: {
+                    $subtract: [
+                        {$dateFromString: {dateString: {$substr: [created_date, 0, 22]}, timezone: "UTC"}},
+                        {
+                            $dateFromString: {
+                                dateString: {$substr: ["$labels.Code-Review.all.date", 0, 22]},
+                                timezone: "UTC"
+                            }
+                        }
+                    ]
+                }*/
+            }
+        }
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return genericDBRequest(pipeline);
 }
 
 function getSumMeanMaxMinStd(array) {

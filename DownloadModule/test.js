@@ -2,7 +2,12 @@ const Axios = require('axios');
 const Moment = require('moment');
 const MathJs = require('mathjs');
 const fs = require('fs');
+
 const MetricsUtils = require('./compute_metrics/metrics-utils');
+
+
+//console.log(MathJs.min([undefined, undefined, undefined]))
+console.log([undefined, undefined, undefined].length)
 
 //let apiEndpoint = "https://android-review.googlesource.com/changes/?q=status:merged+project:platform/system/bt&n=5&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS&o=CHANGE_ACTIONS&o=REVIEWED&o=REVIEWER_UPDATES&o=COMMIT_FOOTERS&S=10500"
 
@@ -750,13 +755,18 @@ String.prototype.camelCaseToDashed = function(){
     return this.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
 }
 
-console.log("author_timezone".camelCaseToDashed())
-console.log("authorTimezone".camelCaseToDashed())
+//console.log("author_timezone".camelCaseToDashed())
+//console.log("authorTimezone".camelCaseToDashed())
 
 //let dt = new Date().getTime();
 //console.log(dt)
 
 //console.log(get_days_of_the_weeks_date_created(json))
+
+let filepath = "basegfx/test/B2DTupleTest.cxx"
+let dir = filepath.substr(0, filepath.lastIndexOf('/') + 1);
+let base_dir = filepath.substr(0, filepath.indexOf('/') + 1);
+console.log(parseInt(1))
 
 let date = "2021-06-14 12:00:00.000000000"
 function get_precise_days_of_the_weeks_date_created(json) {
@@ -764,7 +774,11 @@ function get_precise_days_of_the_weeks_date_created(json) {
     return date.isoWeekday() + Moment.duration(date.format("hh:mm:ss.SSSSSSSSS")).asDays()
 }
 
-//console.log(get_days_of_the_weeks_date_create_2(date))
+//console.log(get_month(date))
+
+function get_month(dateString) {
+    return Moment.utc(dateString, "YYYY-MM-DD hh:mm:ss.SSSSSSSSS").utcOffset(800).format('MMMM')
+}
 
 function get_days_of_the_weeks_date_create_2(date) {
     let days_of_the_week = Moment.utc(date).isoWeekday();

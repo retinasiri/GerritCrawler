@@ -476,6 +476,62 @@ function safeDivision(number1, number2) {
     return number2 !== 0 ? MathJs.divide(number1, number2) : 0;
 }
 
+function get_timezone(json) {
+    let tz = {"committer": 0, "author": 0};
+    let revisions = json.revisions
+    for (let id in revisions) {
+        let revision = revisions[id]
+        if (!!revision["commit"]) {
+            if (!!revision["commit"]["committer"])
+                tz.committer = revision.commit.committer.tz;
+            if (!!revision["commit"]["author"])
+                tz.author = revision.commit.author.tz;
+            break;
+        }
+    }
+    return tz;
+}
+
+function stringEqual(string1, string2){
+    let t1 = string1.toLowerCase().trim();
+    let t2 = string2.toLowerCase().trim();
+    return(t1 === t2)
+}
+
+function get_timezone_owner(json) {
+    let owner_name = json.owner.name;
+    let owner_email = json.owner.name;
+    let revisions = json.revisions
+    for (let id in revisions) {
+        let revision = revisions[id]
+        if (!!revision["commit"]) {
+            if (!!revision["commit"]["committer"]){
+                let committer_name = revision.commit.committer.name;
+                let committer_email = revision.commit.committer.email;
+                if(stringEqual(committer_name, owner_name) || stringEqual(owner_email, committer_email)){
+                    return revision.commit.committer.tz;
+                }
+            }
+            if (!!revision["commit"]["author"]){
+                let committer_name = revision.commit.author.name;
+                let committer_email = revision.commit.author.email;
+                if(stringEqual(committer_name, owner_name) || stringEqual(owner_email, committer_email)){
+                    return revision.commit.author.tz;
+                }
+            }
+            break;
+        }
+    }
+    return 0;
+}
+
+function get_month(dateString) {
+    return Moment.utc(dateString, "YYYY-MM-DD hh:mm:ss.SSSSSSSSS").format('MMMM')
+}
+
+function get_month_for_owner(dateString, offset) {
+    return Moment.utc(dateString, "YYYY-MM-DD hh:mm:ss.SSSSSSSSS").utcOffset(offset).format('MMMM')
+}
 
 module.exports = {
     getHumanReviewers: getHumanReviewers,
@@ -494,6 +550,9 @@ module.exports = {
     timeDiff: timeDiff,
     check_self_review: check_self_review,
     add_suffix_to_json: add_suffix_to_json,
-    safeDivision: safeDivision
-
+    safeDivision: safeDivision,
+    get_timezone: get_timezone,
+    get_timezone_owner: get_timezone_owner,
+    get_month: get_month,
+    get_month_for_owner: get_month_for_owner,
 };

@@ -235,3 +235,83 @@ db.getCollection('changes').aggregate([
     },
     {$count: 'count'}
 ])
+
+db.getCollection('changes').aggregate([
+    {$match :
+            {
+                "owner._account_id" : 1000154
+            }
+        //{"owner._account_id": {$exists: false}}
+    },
+    {$sort: {created: -1}},
+    {$limit: 1},
+    {$project: {_id:0, created:1}}
+])
+
+db.getCollection('changes').aggregate([
+    {$match :
+            {
+                "messages.author._account_id" : 1000154
+            }
+        //{"owner._account_id": {$exists: false}}
+    },
+    {$sort: {created: -1}},
+    {$limit: 1},
+    {$unwind: "$messages"},
+    {$match :
+            {
+                "messages.author._account_id" : 1000154
+            }
+    },
+    {$sort: {"messages.date": -1}},
+    {$limit: 1},
+    {$project: {_id:0, date:"$messages.date"}}
+])
+
+db.getCollection('changes').aggregate([
+    {$match :
+            {
+                status: {$in: ['MERGED','ABANDONED']},
+                "labels.Code-Review.all._account_id" : 1001002
+            }
+        //{"owner._account_id": {$exists: false}}
+    },
+
+    {$sort: {created: -1}},
+    {$limit: 1},
+    {$unwind: "$labels.Code-Review.all"},
+    {$match :
+            {
+                "labels.Code-Review.all._account_id" : 1001002
+            }
+    },
+    {$sort: {"labels.Code-Review.all.date": -1}},
+    {$limit: 1},
+    {$project: {_id:0, date:"$labels.Code-Review.all.date"}}
+
+])
+
+function getReviewerLastMessage(reviewersId, number, created_date, ownerId) {
+    let pipeline = [
+        {$match :
+                {
+                    _number: {$lt: number},
+                    created: {$lt: created_date},
+                    "messages.author._account_id" : ownerId,
+                    "messages.date" : {$lt: created_date}
+                }
+        },
+        {$unwind: "$messages"},
+        {$match :
+                {
+                    "messages.author._account_id" : ownerId,
+                    "messages.date" : {$lt: created_date}
+                }
+        },
+        {$sort: {created: -1}},
+        {$limit: 1},
+        {$project: {_id:0, date:"$messages.date"}}
+    ]
+    pipeline = addRecentDateToPipeline(pipeline);
+    return genericDBRequest(pipeline);
+}
