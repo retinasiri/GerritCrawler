@@ -493,9 +493,9 @@ function get_timezone(json) {
 }
 
 function stringEqual(string1, string2){
-    if(!t1)
+    if(!string1)
         return false;
-    if(!t2)
+    if(!string2)
         return false
     let t1 = string1.toLowerCase().trim();
     let t2 = string2.toLowerCase().trim();
