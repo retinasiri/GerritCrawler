@@ -5,6 +5,7 @@ const AddChangesInDB = require('./prepare_code_change/add-code-change-in-db');
 const ComputeSimpleMetrics = require('./compute_metrics/compute-simple-metrics');
 const ComputeChangesMetrics = require('./compute_metrics/compute-changes-metrics');
 const ComputeMetadata = require('./compute_metrics/metrics-metadata');
+const ComputeMetadata_2 = require('./compute_metrics/metrics-metadata-2');
 const ExtractMetrics = require('./compute_metrics/extract-metrics');
 const DeleteChanges = require('./compute_metrics/delete-change');
 const CollectRecentGraph = require('./prepare_code_change/collect-recent-graph');
@@ -217,7 +218,7 @@ function computeChangesMetrics(argv) {
 function computeMetadata(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
-        return ComputeMetadata.start(projectJson)
+        return ComputeMetadata_2.start(projectJson)
             .catch(err => {
                 console.log(err)
             });
