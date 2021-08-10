@@ -40,6 +40,27 @@ db.getCollection('changes').createIndex({status: 1, 'owner._account_id': 1, 'rev
 db.getCollection('changes').createIndex({'owner._account_id': 1, 'reviewers.REVIEWER._account_id': 1})
 
 
+db.getCollection('changes').createIndex({status: 1, branch: 1, 'owner._account_id': 1, _number: 1, created: 1, updated: 1})
+db.getCollection('changes').createIndex({project: 1, branch: 1, _number: 1, created: 1, updated: 1})
+db.getCollection('changes').createIndex({status: 1, project: 1, branch: 1, _number: 1, created: 1, updated: 1})
+db.getCollection('changes').createIndex({project: 1, branch: 1, 'owner._account_id': 1, _number: 1, created: 1, updated: 1})
+db.getCollection('changes').createIndex({status: 1, project: 1, branch: 1, 'owner._account_id': 1, _number: 1, created: 1, updated: 1})
+
+db.getCollection('changes').createIndex({status: 1, _number: 1, avg_build_time: 1, created: 1, updated: 1})
+db.getCollection('changes').createIndex({status: 1, _number: 1, project: 1, avg_build_time: 1, created: 1, updated: 1})
+db.getCollection('changes').createIndex({status: 1, _number: 1, project: 1, branch: 1, avg_build_time: 1, created: 1, updated: 1})
+db.getCollection('changes').createIndex({status: 1, _number: 1, branch: 1, avg_build_time: 1, created: 1, updated: 1})
+db.getCollection('changes').createIndex({status: 1, _number: 1, 'owner._account_id': 1, avg_build_time: 1, created: 1, updated: 1})
+db.getCollection('changes').createIndex({status: 1, _number: 1, project: 1, branch: 1, 'owner._account_id': 1, avg_build_time: 1, created: 1, updated: 1})
+db.getCollection('changes').createIndex({status: 1, _number: 1, files_list: 1, avg_build_time: 1, created: 1, updated: 1})
+db.getCollection('changes').createIndex({status: 1, _number: 1, extensions_list: 1, avg_build_time: 1, created: 1, updated: 1})
+db.getCollection('changes').createIndex({status: 1, _number: 1, base_directories: 1, avg_build_time: 1, created: 1, updated: 1})
+
+db.getCollection('changes').createIndex({_number: 1, created: 1, "owner._account_id": 1})
+db.getCollection('changes').createIndex({_number: 1, "messages.author._account_id": 1, created: 1, "messages.date":1})
+db.getCollection('changes').createIndex({_number: 1, "labels.Code-Review.all._account_id": 1, created: 1,  updated:1})
+
+
 
 
 

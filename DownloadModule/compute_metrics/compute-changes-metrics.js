@@ -224,11 +224,13 @@ async function getChangesInfo(json) {
     let ownerNumberOfCherryPicked = getOwnerNumberOfCherryPicked(json); //ratio of cherry pick
     let branchNumberOfCherryPicked = getBranchNumberOfCherryPicked(json);
     let priorBranchChangesCount = getPriorBranchChangesCount(json);
-    let priorBranchMergedChangesCount = getPriorBranchTypeChangesCount(json, "MERGED");
-    let priorBranchAbandonedChangesCount = getPriorBranchTypeChangesCount(json, "ABANDONED");
+    let priorBranchClosedChangesCount = getPriorBranchTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    //let priorBranchMergedChangesCount = getPriorBranchTypeChangesCount(json, "MERGED");
+    //let priorBranchAbandonedChangesCount = getPriorBranchTypeChangesCount(json, "ABANDONED");
     let priorBranchOwnerChangesCount = getPriorBranchOwnerChangesCount(json); //todo owner ratio in branch
-    let priorBranchOwnerMergedChangesCount = getPriorBranchOwnerTypeChangesCount(json, "MERGED");
-    let priorBranchOwnerAbandonedChangesCount = getPriorBranchOwnerTypeChangesCount(json, "ABANDONED");
+    let priorBranchOwnerClosedChangesCount = getPriorBranchOwnerTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    //let priorBranchOwnerMergedChangesCount = getPriorBranchOwnerTypeChangesCount(json, "MERGED");
+    //let priorBranchOwnerAbandonedChangesCount = getPriorBranchOwnerTypeChangesCount(json, "ABANDONED");
     let priorBranchChangeMeanTimeType = getPriorBranchChangeMeanTimeType(json);
 
     let projectAge = getProjectAge(json);
@@ -245,12 +247,14 @@ async function getChangesInfo(json) {
     //new
     let priorBranchOwnerChangeMeanTimeType = getPriorBranchOwnerChangeMeanTimeType(json);
     let priorProjectBranchChangesCount = getPriorProjectBranchChangesCount(json);
-    let getPriorProjectBranchMergedChangesCount = getPriorProjectBranchTypeChangesCount(json, "MERGED");
-    let getPriorProjectBranchAbandonedChangesCount = getPriorProjectBranchTypeChangesCount(json, "ABANDONED");
+    let getPriorProjectBranchClosedChangesCount = getPriorProjectBranchTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    //let getPriorProjectBranchMergedChangesCount = getPriorProjectBranchTypeChangesCount(json, "MERGED");
+    //let getPriorProjectBranchAbandonedChangesCount = getPriorProjectBranchTypeChangesCount(json, "ABANDONED");
     let priorProjectBranchChangeMeanTimeType = getPriorProjectBranchChangeMeanTimeType(json);
     let priorProjectBranchOwnerChangesCount = getPriorProjectBranchOwnerChangesCount(json);
-    let priorProjectBranchOwnerMergedChangesCount = getPriorProjectBranchOwnerTypeChangesCount(json, "MERGED");
-    let priorProjectBranchOwnerAbandonedChangesCount = getPriorProjectBranchOwnerTypeChangesCount(json, "ABANDONED");
+    let priorProjectBranchOwnerClosedChangesCount = getPriorProjectBranchOwnerTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    //let priorProjectBranchOwnerMergedChangesCount = getPriorProjectBranchOwnerTypeChangesCount(json, "MERGED");
+    //let priorProjectBranchOwnerAbandonedChangesCount = getPriorProjectBranchOwnerTypeChangesCount(json, "ABANDONED");
     let priorProjectBranchOwnerChangeMeanTimeType = getPriorProjectBranchOwnerChangeMeanTimeType(json);
 
     let numberChangesBuilt = getNumberChangesBuilt(json);
@@ -261,11 +265,11 @@ async function getChangesInfo(json) {
     let filesNumberChangesBuilt = getFilesNumberChangesBuilt(json);
     let filesExtensionNumberChangesCount = getFilesExtensionNumberChangesCount(json);
     let filesExtensionNumberChangesBuilt = getFilesExtensionNumberChangesBuilt(json);
-    let directoriesExtensionNumberChangesCount = getDirectoriesExtensionNumberChangesCount(json);
-    let directoriesExtensionNumberChangesBuilt = getDirectoriesExtensionNumberChangesBuilt(json);
+    //let directoriesExtensionNumberChangesCount = getDirectoriesExtensionNumberChangesCount(json);
+    //let directoriesExtensionNumberChangesBuilt = getDirectoriesExtensionNumberChangesBuilt(json);
     let branchNumberChangesBuilt = getBranchNumberChangesBuilt(json);
 
-    return Promise.all([
+    let values = [
         priorChangesCount, //0
         priorMergedChangesCount, //1
         priorAbandonedChangesCount, //2
@@ -307,278 +311,303 @@ async function getChangesInfo(json) {
         ownerNumberOfCherryPicked,//35
         branchNumberOfCherryPicked,//36
         priorBranchChangesCount,//37
-        priorBranchMergedChangesCount,//38
-        priorBranchAbandonedChangesCount,//39
-        priorBranchOwnerChangesCount,//40
-        priorBranchOwnerMergedChangesCount,//41
-        priorBranchOwnerAbandonedChangesCount,//42
-        priorBranchChangeMeanTimeType,//43
+        priorBranchClosedChangesCount,//38
+        //priorBranchMergedChangesCount,
+        //priorBranchAbandonedChangesCount,
+        priorBranchOwnerChangesCount,//39
+        priorBranchOwnerClosedChangesCount,//40
+        //priorBranchOwnerMergedChangesCount,
+        //priorBranchOwnerAbandonedChangesCount,
+        priorBranchChangeMeanTimeType,//41
 
-        projectAge,//44
-        subsystemAge,//45
-        branchAge,//46
-        ownerAge,//47
-        priorRate,//48
-        priorBranchRate,//49
-        priorSubsystemRate,//50
-        priorOwnerRate,//51
-        filesNumberOfRecentChangesOnBranch,//52
+        projectAge,//42
+        subsystemAge,//43
+        branchAge,//44
+        ownerAge,//45
+        priorRate,//46
+        priorBranchRate,//47
+        priorSubsystemRate,//48
+        priorOwnerRate,//49
+        filesNumberOfRecentChangesOnBranch,//50
 
-        priorBranchOwnerChangeMeanTimeType,//53
-        priorProjectBranchChangesCount,//54
-        getPriorProjectBranchMergedChangesCount,//55
-        getPriorProjectBranchAbandonedChangesCount,//56
-        priorProjectBranchChangeMeanTimeType,//57
-        priorProjectBranchOwnerChangesCount,//58
-        priorProjectBranchOwnerMergedChangesCount,//59
-        priorProjectBranchOwnerAbandonedChangesCount,//60
-        priorProjectBranchOwnerChangeMeanTimeType,//61
+        priorBranchOwnerChangeMeanTimeType,//51
+        priorProjectBranchChangesCount,//52
+        getPriorProjectBranchClosedChangesCount,//53
+        //getPriorProjectBranchMergedChangesCount,
+        //getPriorProjectBranchAbandonedChangesCount,
+        priorProjectBranchChangeMeanTimeType,//54
+        priorProjectBranchOwnerChangesCount,//55
+        priorProjectBranchOwnerClosedChangesCount,//56
+        //priorProjectBranchOwnerMergedChangesCount,
+        //priorProjectBranchOwnerAbandonedChangesCount,
+        priorProjectBranchOwnerChangeMeanTimeType,//57
 
-        numberChangesBuilt,//62
-        projectNumberChangesBuilt,//63
-        projectBranchNumberChangesBuilt,//64
-        ownerNumberChangesBuilt,//65
-        ownerProjectBranchNumberChangesBuilt,//66
-        filesNumberChangesBuilt,//67
-        filesExtensionNumberChangesCount,//68
-        filesExtensionNumberChangesBuilt,//69
-        directoriesExtensionNumberChangesCount,//70
-        directoriesExtensionNumberChangesBuilt,//71
-
-        branchNumberChangesBuilt,//72
-
-    ]).then((results) => {
+        numberChangesBuilt,//58
+        projectNumberChangesBuilt,//59
+        projectBranchNumberChangesBuilt,//60
+        ownerNumberChangesBuilt,//61
+        ownerProjectBranchNumberChangesBuilt,//62
+        filesNumberChangesBuilt,//63
+        filesExtensionNumberChangesCount,//64
+        filesExtensionNumberChangesBuilt,//65
+        branchNumberChangesBuilt,//66
+        //directoriesExtensionNumberChangesCount,
+        //directoriesExtensionNumberChangesBuilt,
+    ]
+    return Promise.all(values
+    ).then((results) => {
         //console.log(results);
-        return {
-            priorChangesCount: results[0],
-            priorMergedChangesCount: results[1],
-            priorAbandonedChangesCount: results[2],
+        //console.log(values.indexOf(priorChangesCount))
+        let data = {
+            priorChangesCount: getResult(results, values, priorChangesCount),
+            priorMergedChangesCount: getResult(results, values, priorMergedChangesCount),
+            priorAbandonedChangesCount: getResult(results, values, priorAbandonedChangesCount),
 
-            ownerPriorChangesCount: results[3],
-            ownerPriorMergedChangesCount: results[4],
-            ownerPriorAbandonedChangesCount: results[5],
-            ownerMergedRatio: safeDivision(results[4], results[3]),
-            ownerAbandonedRatio: safeDivision(results[5], results[3]),
-            ownerPercentageOfMerged: safeDivision(results[4], results[1]),
-            ownerPercentageOfAbandoned: safeDivision(results[5], results[2]),
+            ownerPriorChangesCount: getResult(results, values, ownerPriorChangesCount),
+            ownerPriorMergedChangesCount: getResult(results, values, ownerPriorMergedChangesCount),
+            ownerPriorAbandonedChangesCount: getResult(results, values, ownerPriorAbandonedChangesCount),
 
-            mergedRatio: safeDivision(results[1], results[0]),
-            abandonedRatio: safeDivision(results[2], results[0]),
+            priorSubsystemChangesCount: getResult(results, values, priorSubsystemChangesCount),
+            priorSubsystemMergedChangesCount: getResult(results, values, priorSubsystemMergedChangesCount),
+            priorSubsystemAbandonedChangesCount: getResult(results, values, priorSubsystemAbandonedChangesCount),
 
-            priorSubsystemChangesCount: results[6],
-            priorSubsystemMergedChangesCount: results[7],
-            priorSubsystemAbandonedChangesCount: results[8],
-
-            priorOwnerSubsystemChangesCount: results[9],
-            priorOwnerSubsystemMergedChangesCount: results[10],
-            priorOwnerSubsystemAbandonedChangesCount: results[11],
-
-            priorSubsystemPercentage: safeDivision(results[6], results[0]),
-            priorSubsystemMergedRatio: safeDivision(results[7], results[6]),
-            priorSubsystemAbandonedRatio: safeDivision(results[8], results[6]),
-
-            priorSubsystemMergedPercentageInMerged: safeDivision(results[7], results[1]),
-            priorSubsystemAbandonedPercentageInAbandoned: safeDivision(results[8], results[2]),
-
-            priorOwnerSubsystemChangesRatio: safeDivision(results[9], results[6]),
-            priorOwnerSubsystemMergedChangesRatio: safeDivision(results[10], results[9]),
-            priorOwnerSubsystemAbandonedChangesRatio: safeDivision(results[11], results[9]),
-
-            priorOwnerPercentageOfMergedInSubsystem: safeDivision(results[10], results[7]),
-            priorOwnerPercentageOfAbandonedInSubsystem: safeDivision(results[11], results[8]),
+            priorOwnerSubsystemChangesCount: getResult(results, values, priorSubsystemOwnerChangesCount),
+            priorOwnerSubsystemMergedChangesCount: getResult(results, values, priorSubsystemOwnerMergedChangesCount),
+            priorOwnerSubsystemAbandonedChangesCount: getResult(results, values, priorSubsystemOwnerAbandonedChangesCount),
 
             //getChangesTimeInfo
+            priorChangeDurationMean: getResult(results, values, priorChangesDuration).avg,
+            priorChangeDurationMax: getResult(results, values, priorChangesDuration).max,
+            priorChangeDurationMin: getResult(results, values, priorChangesDuration).min,
+            priorChangeDurationStd: getResult(results, values, priorChangesDuration).std,
 
-            priorChangeDurationMean: results[12].avg,
-            priorChangeDurationMax: results[12].max,
-            priorChangeDurationMin: results[12].min,
-            priorChangeDurationStd: results[12].std,
+            priorOwnerChangesDurationMean: getResult(results, values, priorOwnerChangesDuration).avg,
+            priorOwnerChangesDurationMax: getResult(results, values, priorOwnerChangesDuration).max,
+            priorOwnerChangesDurationMin: getResult(results, values, priorOwnerChangesDuration).min,
+            priorOwnerChangesDurationStd: getResult(results, values, priorOwnerChangesDuration).std,
 
-            priorOwnerChangesDurationMean: results[13].avg,
-            priorOwnerChangesDurationMax: results[13].max,
-            priorOwnerChangesDurationMin: results[13].min,
-            priorOwnerChangesDurationStd: results[13].std,
+            fileCountAvg: getResult(results, values, fileTimeAndCount).count_avg,
+            fileCountMax: getResult(results, values, fileTimeAndCount).count_max,
+            fileCountMin: getResult(results, values, fileTimeAndCount).count_min,
+            fileCountStd: getResult(results, values, fileTimeAndCount).count_std,
+            fileTimeAvg:  getResult(results, values, fileTimeAndCount).time_avg,
+            fileTimeMax:  getResult(results, values, fileTimeAndCount).time_max,
+            fileTimeMin:  getResult(results, values, fileTimeAndCount).time_min,
+            fileTimeStd:  getResult(results, values, fileTimeAndCount).time_std,
 
-            fileCountAvg: results[14].count_avg,
-            fileCountMax: results[14].count_max,
-            fileCountMin: results[14].count_min,
-            fileCountStd: results[14].count_std,
-            fileTimeAvg: results[14].time_avg,
-            fileTimeMax: results[14].time_max,
-            fileTimeMin: results[14].time_min,
-            fileTimeStd: results[14].time_std,
+            ownerFileCountAvg: getResult(results, values, fileTimeAndCountForOwner).count_avg,
+            ownerFileCountMax: getResult(results, values, fileTimeAndCountForOwner).count_max,
+            ownerFileCountMin: getResult(results, values, fileTimeAndCountForOwner).count_min,
+            ownerFileCountStd: getResult(results, values, fileTimeAndCountForOwner).count_std,
+            ownerFileTimeAvg:  getResult(results, values, fileTimeAndCountForOwner).time_avg,
+            ownerFileTimeMax:  getResult(results, values, fileTimeAndCountForOwner).time_max,
+            ownerFileTimeMin:  getResult(results, values, fileTimeAndCountForOwner).time_min,
+            ownerFileTimeStd:  getResult(results, values, fileTimeAndCountForOwner).time_std,
 
-            ownerFileCountAvg: results[15].count_avg,
-            ownerFileCountMax: results[15].count_max,
-            ownerFileCountMin: results[15].count_min,
-            ownerFileCountStd: results[15].count_std,
-            ownerFileTimeAvg: results[15].time_avg,
-            ownerFileTimeMax: results[15].time_max,
-            ownerFileTimeMin: results[15].time_min,
-            ownerFileTimeStd: results[15].time_std,
+            ownerNumberOfRevisionAvg: getResult(results, values, ownerNumberOfRevision).revision_avg,
+            ownerNumberOfRevisionMax: getResult(results, values, ownerNumberOfRevision).revision_max,
+            ownerNumberOfRevisionMin: getResult(results, values, ownerNumberOfRevision).revision_min,
+            ownerNumberOfRevisionStd: getResult(results, values, ownerNumberOfRevision).revision_std,
 
-            ownerNumberOfRevisionAvg: results[16].revision_avg,
-            ownerNumberOfRevisionMax: results[16].revision_max,
-            ownerNumberOfRevisionMin: results[16].revision_min,
-            ownerNumberOfRevisionStd: results[16].revision_std,
-
-            ownerNumberOfReview: results[17].count,
+            ownerNumberOfReview: getResult(results, values, ownerNumberOfReview).count,
 
             //rename fileDeveloperNumber: results[18].count,
-            AvgNumberOfDeveloperWhoModifiedFiles: results[18].count,
+            AvgNumberOfDeveloperWhoModifiedFiles: getResult(results, values, fileDeveloperNumber).count,
 
-            ownerPreviousMessageCount: results[19].count,
+            ownerPreviousMessageCount: getResult(results, values, ownerPreviousMessageCount).count,
 
-            ownerChangesMessagesSum: results[20].count,
-            ownerChangesMessagesAvgPerChanges: results[20].avg,
-            ownerChangesMessagesMaxPerChanges: results[20].max,
-            ownerChangesMessagesMinPerChanges: results[20].min,
-            ownerChangesMessagesStdPerChanges: results[20].std,
+            ownerChangesMessagesSum: getResult(results, values, ownerChangesMessagesCountAndAvgPerChanges).count,
+            ownerChangesMessagesAvgPerChanges: getResult(results, values, ownerChangesMessagesCountAndAvgPerChanges).avg,
+            ownerChangesMessagesMaxPerChanges: getResult(results, values, ownerChangesMessagesCountAndAvgPerChanges).max,
+            ownerChangesMessagesMinPerChanges: getResult(results, values, ownerChangesMessagesCountAndAvgPerChanges).min,
+            ownerChangesMessagesStdPerChanges: getResult(results, values, ownerChangesMessagesCountAndAvgPerChanges).std,
 
-            changesMessagesSum: results[21].count,
-            changesMessagesAvg: results[21].avg,
-            changesMessagesMax: results[21].max,
-            changesMessagesMin: results[21].min,
-            changesMessagesStd: results[21].std,
+            changesMessagesSum: getResult(results, values, changesMessagesCountAndAvg).count,
+            changesMessagesAvg: getResult(results, values, changesMessagesCountAndAvg).avg,
+            changesMessagesMax: getResult(results, values, changesMessagesCountAndAvg).max,
+            changesMessagesMin: getResult(results, values, changesMessagesCountAndAvg).min,
+            changesMessagesStd: getResult(results, values, changesMessagesCountAndAvg).std,
 
-            priorChangesFiles: results[22].count,
+            priorChangesFiles: getResult(results, values, priorChangesFiles).count,
 
-            branchBuildTimeAvg: results[23].avg,
-            branchBuildTimeMax: results[23].max,
-            branchBuildTimeMin: results[23].min,
-            branchBuildTimeStd: results[23].std,
+            branchBuildTimeAvg: getResult(results, values, branchBuildTime).avg,
+            branchBuildTimeMax: getResult(results, values, branchBuildTime).max,
+            branchBuildTimeMin: getResult(results, values, branchBuildTime).min,
+            branchBuildTimeStd: getResult(results, values, branchBuildTime).std,
 
-            revisionTimeAvg: results[24].avg,
-            revisionTimeMax: results[24].max,
-            revisionTimeMin: results[24].min,
-            revisionTimeStd: results[24].std,
+            revisionTimeAvg: getResult(results, values, revisionTime).avg,
+            revisionTimeMax: getResult(results, values, revisionTime).max,
+            revisionTimeMin: getResult(results, values, revisionTime).min,
+            revisionTimeStd: getResult(results, values, revisionTime).std,
 
-            branchRevisionTimeAvg: results[25].avg,
-            branchRevisionTimeMax: results[25].max,
-            branchRevisionTimeMin: results[25].min,
-            branchRevisionTimeStd: results[25].std,
+            branchRevisionTimeAvg: getResult(results, values, branchRevisionTime).avg,
+            branchRevisionTimeMax: getResult(results, values, branchRevisionTime).max,
+            branchRevisionTimeMin: getResult(results, values, branchRevisionTime).min,
+            branchRevisionTimeStd: getResult(results, values, branchRevisionTime).std,
 
-            ownerRevisionTimeAvg: results[26].avg,
-            ownerRevisionTimeMax: results[26].max,
-            ownerRevisionTimeMin: results[26].min,
-            ownerRevisionTimeStd: results[26].std,
+            ownerRevisionTimeAvg: getResult(results, values, ownerRevisionTime).avg,
+            ownerRevisionTimeMax: getResult(results, values, ownerRevisionTime).max,
+            ownerRevisionTimeMin: getResult(results, values, ownerRevisionTime).min,
+            ownerRevisionTimeStd: getResult(results, values, ownerRevisionTime).std,
 
-            ownerTimeBetweenRevisionAvg: results[27].avg,
-            ownerTimeBetweenRevisionMax: results[27].max,
-            ownerTimeBetweenRevisionMin: results[27].min,
-            ownerTimeBetweenRevisionStd: results[27].std,
+            ownerTimeBetweenRevisionAvg: getResult(results, values, ownerTimeBetweenRevision).avg,
+            ownerTimeBetweenRevisionMax: getResult(results, values, ownerTimeBetweenRevision).max,
+            ownerTimeBetweenRevisionMin: getResult(results, values, ownerTimeBetweenRevision).min,
+            ownerTimeBetweenRevisionStd: getResult(results, values, ownerTimeBetweenRevision).std,
 
-            ownerTimeToAddReviewerAvg: results[28].avg,
-            ownerTimeToAddReviewerMax: results[28].max,
-            ownerTimeToAddReviewerMin: results[28].min,
-            ownerTimeToAddReviewerStd: results[28].std,
+            ownerTimeToAddReviewerAvg: getResult(results, values, ownerTimeToAddReviewer).avg,
+            ownerTimeToAddReviewerMax: getResult(results, values, ownerTimeToAddReviewer).max,
+            ownerTimeToAddReviewerMin: getResult(results, values, ownerTimeToAddReviewer).min,
+            ownerTimeToAddReviewerStd: getResult(results, values, ownerTimeToAddReviewer).std,
 
-            filesBuildTimeAvg: results[29].avg,
-            filesBuildTimeMax: results[29].max,
-            filesBuildTimeMin: results[29].min,
-            filesBuildTimeStd: results[29].std,
+            filesBuildTimeAvg: getResult(results, values, filesBuildTime).avg,
+            filesBuildTimeMax: getResult(results, values, filesBuildTime).max,
+            filesBuildTimeMin: getResult(results, values, filesBuildTime).min,
+            filesBuildTimeStd: getResult(results, values, filesBuildTime).std,
 
-            filesRevisionTimeAvg: results[30].avg,
-            filesRevisionTimeMax: results[30].max,
-            filesRevisionTimeMin: results[30].min,
-            filesRevisionTimeStd: results[30].std,
+            filesRevisionTimeAvg: getResult(results, values, filesRevisionTime).avg,
+            filesRevisionTimeMax: getResult(results, values, filesRevisionTime).max,
+            filesRevisionTimeMin: getResult(results, values, filesRevisionTime).min,
+            filesRevisionTimeStd: getResult(results, values, filesRevisionTime).std,
 
-            filesNumFailsAvg: results[31].avg,
-            filesNumFailsMax: results[31].max,
-            filesNumFailsMin: results[31].min,
-            filesNumFailsStd: results[31].std,
+            filesNumFailsAvg: getResult(results, values, filesNumFails).avg,
+            filesNumFailsMax: getResult(results, values, filesNumFails).max,
+            filesNumFailsMin: getResult(results, values, filesNumFails).min,
+            filesNumFailsStd: getResult(results, values, filesNumFails).std,
 
-            ownerRateOfAutoReview: results[3] > 0 ? results[32].count / results[3] : 0,
+            ownerNumberOfAutoReview: getResult(results, values, ownerNumberOfAutoReview).count,
 
-            ownerInactiveTimeAvg: results[33].avg,
-            ownerInactiveTimeMax: results[33].max,
-            ownerInactiveTimeMin: results[33].min,
-            ownerInactiveTimeStd: results[33].std,
+            ownerInactiveTimeAvg: getResult(results, values, ownerInactiveTime).avg,
+            ownerInactiveTimeMax: getResult(results, values, ownerInactiveTime).max,
+            ownerInactiveTimeMin: getResult(results, values, ownerInactiveTime).min,
+            ownerInactiveTimeStd: getResult(results, values, ownerInactiveTime).std,
 
-            ownerTimeBetweenMessageAvg: results[34].avg,
-            ownerTimeBetweenMessageMax: results[34].max,
-            ownerTimeBetweenMessageMin: results[34].min,
-            ownerTimeBetweenMessageStd: results[34].std,
+            ownerTimeBetweenMessageAvg: getResult(results, values, ownerTimeBetweenMessage).avg,
+            ownerTimeBetweenMessageMax: getResult(results, values, ownerTimeBetweenMessage).max,
+            ownerTimeBetweenMessageMin: getResult(results, values, ownerTimeBetweenMessage).min,
+            ownerTimeBetweenMessageStd: getResult(results, values, ownerTimeBetweenMessage).std,
 
-            ownerNumberOfCherryPicked: results[35].count,
-            branchNumberOfCherryPicked: results[36].count,
+            ownerNumberOfCherryPicked: getResult(results, values, ownerNumberOfCherryPicked).count,
 
-            priorBranchChangesCount: results[37],
-            priorBranchMergedChangesCount: results[38],
-            priorBranchAbandonedChangesCount: results[39],
-            priorBranchOwnerChangesCount: results[40],
-            priorBranchOwnerMergedChangesCount: results[41],
-            priorBranchOwnerAbandonedChangesCount: results[42],
-            priorBranchOwnerChangesRatio: safeDivision(results[40], results[37]),
+            branchNumberOfCherryPicked: getResult(results, values, branchNumberOfCherryPicked).count,
 
-            priorBranchChangeMeanTimeTypeAvg: results[43].avg,
-            priorBranchChangeMeanTimeTypeMax: results[43].max,
-            priorBranchChangeMeanTimeTypeMin: results[43].min,
-            priorBranchChangeMeanTimeTypeStd: results[43].std,
+            priorBranchChangesCount: getResult(results, values, priorBranchChangesCount),
+            priorBranchClosedChangesCount: getResult(results, values, priorBranchClosedChangesCount),
+            //priorBranchMergedChangesCount: results[38],
+            //priorBranchAbandonedChangesCount: results[39],
+            priorBranchOwnerChangesCount: getResult(results, values, priorBranchOwnerChangesCount),
+            priorBranchOwnerClosedChangesCount: getResult(results, values, priorBranchOwnerClosedChangesCount),
+            //priorBranchOwnerMergedChangesCount: results[41],
+            //priorBranchOwnerAbandonedChangesCount: results[42],
 
-            projectAge: convertAsDays(results[44]),
-            subsystemAge: convertAsDays(results[45]),
-            branchAge: convertAsDays(results[46]),
-            ownerAge: convertAsDays(results[47]),
+            priorBranchChangeMeanTimeTypeAvg: getResult(results, values, priorBranchChangeMeanTimeType).avg,
+            priorBranchChangeMeanTimeTypeMax: getResult(results, values, priorBranchChangeMeanTimeType).max,
+            priorBranchChangeMeanTimeTypeMin: getResult(results, values, priorBranchChangeMeanTimeType).min,
+            priorBranchChangeMeanTimeTypeStd: getResult(results, values, priorBranchChangeMeanTimeType).std,
 
-            priorOverAllRate: safeDivision(results[0], convertAsDays(results[44])),
-            priorOverAllBranchRate: safeDivision(results[37], convertAsDays(results[46])),
-            priorOverAllSubsystemRate: safeDivision(results[6], convertAsDays(results[45])),
-            priorOverAllOwnerRate: safeDivision(results[3], convertAsDays(results[47])),
+            projectAge: convertAsDays(getResult(results, values, projectAge)),
+            subsystemAge: convertAsDays(getResult(results, values, subsystemAge)),
+            branchAge: convertAsDays(getResult(results, values, branchAge)),
+            ownerAge: convertAsDays(getResult(results, values, ownerAge)),
 
-            priorRate: results[48],
-            priorBranchRate: results[49],
-            priorSubsystemRate: results[50],
-            priorOwnerRate: results[51],
+            priorRate: getResult(results, values, priorRate),
+            priorBranchRate: getResult(results, values, priorBranchRate),
+            priorSubsystemRate: getResult(results, values, priorSubsystemRate),
+            priorOwnerRate: getResult(results, values, priorOwnerRate),
 
-            filesNumberOfRecentChangesOnBranch: results[52],
+            filesNumberOfRecentChangesOnBranch: getResult(results, values, filesNumberOfRecentChangesOnBranch),
 
-            priorBranchOwnerChangeMeanTimeTypeAvg: results[53].avg,//53
-            priorBranchOwnerChangeMeanTimeTypeMin: results[53].min,//53
-            priorBranchOwnerChangeMeanTimeTypeMax: results[53].max,//53
-            priorBranchOwnerChangeMeanTimeTypeStd: results[53].std,//53
+            priorBranchOwnerChangeMeanTimeTypeAvg: getResult(results, values, priorBranchOwnerChangeMeanTimeType).avg,//53
+            priorBranchOwnerChangeMeanTimeTypeMin: getResult(results, values, priorBranchOwnerChangeMeanTimeType).min,//53
+            priorBranchOwnerChangeMeanTimeTypeMax: getResult(results, values, priorBranchOwnerChangeMeanTimeType).max,//53
+            priorBranchOwnerChangeMeanTimeTypeStd: getResult(results, values, priorBranchOwnerChangeMeanTimeType).std,//53
 
-            priorProjectBranchChangesCount: results[54],//54
-            getPriorProjectBranchMergedChangesCount: results[55],//55
-            getPriorProjectBranchAbandonedChangesCount: results[56],//56
+            priorProjectBranchChangesCount: getResult(results, values, priorProjectBranchChangesCount),//54
+            getPriorProjectBranchClosedChangesCount: getResult(results, values, getPriorProjectBranchClosedChangesCount),//55
+            //getPriorProjectBranchMergedChangesCount: results[55],//55
+            //getPriorProjectBranchAbandonedChangesCount: results[56],//56
 
-            priorProjectBranchChangeMeanTimeTypeAvg: results[57].avg,//57
-            priorProjectBranchChangeMeanTimeTypeMin: results[57].min,//57
-            priorProjectBranchChangeMeanTimeTypeMax: results[57].max,//57
-            priorProjectBranchChangeMeanTimeTypeStd: results[57].std,//57
+            priorProjectBranchChangeMeanTimeTypeAvg: getResult(results, values, priorProjectBranchChangeMeanTimeType).avg,//57
+            priorProjectBranchChangeMeanTimeTypeMin: getResult(results, values, priorProjectBranchChangeMeanTimeType).min,//57
+            priorProjectBranchChangeMeanTimeTypeMax: getResult(results, values, priorProjectBranchChangeMeanTimeType).max,//57
+            priorProjectBranchChangeMeanTimeTypeStd: getResult(results, values, priorProjectBranchChangeMeanTimeType).std,//57
 
-            priorProjectBranchOwnerChangesCount: results[58],//58
-            priorProjectBranchOwnerMergedChangesCount: results[59],//59
-            priorProjectBranchOwnerAbandonedChangesCount: results[60],//60
+            priorProjectBranchOwnerChangesCount: getResult(results, values, priorProjectBranchOwnerChangesCount),//58
+            priorProjectBranchOwnerClosedChangesCount: getResult(results, values, priorProjectBranchOwnerClosedChangesCount),//59
+            //priorProjectBranchOwnerMergedChangesCount: results[59],//59
+            //priorProjectBranchOwnerAbandonedChangesCount: results[60],//60
 
-            priorProjectBranchOwnerChangeMeanTimeTypeAvg: results[61].avg,//61
-            priorProjectBranchOwnerChangeMeanTimeTypeMin: results[61].min,//61
-            priorProjectBranchOwnerChangeMeanTimeTypeMax: results[61].max,//61
-            priorProjectBranchOwnerChangeMeanTimeTypeStd: results[61].std,//61
+            priorProjectBranchOwnerChangeMeanTimeTypeAvg: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).avg,//61
+            priorProjectBranchOwnerChangeMeanTimeTypeMin: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).min,//61
+            priorProjectBranchOwnerChangeMeanTimeTypeMax: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).max,//61
+            priorProjectBranchOwnerChangeMeanTimeTypeStd: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).std,//61
 
-            numberChangesBuilt: results[62],//62
-            ratioChangeBuilt: safeDivision(results[62], results[1] + results[2]),
-            projectNumberChangesBuilt: results[63],//63
-            ratioProjectNumberChangesBuilt: safeDivision(results[63], results[7] + results[8]),
-            projectBranchNumberChangesBuilt: results[64],//64
-            ratioProjectBranchNumberChangesBuilt: safeDivision(results[64], results[55] + results[56]),
-            ownerNumberChangesBuilt: results[65],//65
-            ratioOwnerNumberChangesBuilt: safeDivision(results[65], results[4] + results[5]),
-            ownerProjectBranchNumberChangesBuilt: results[66],//66
-            ratioOwnerProjectBranchNumberChangesBuilt: safeDivision(results[66], results[58] + results[59]),
-            filesNumberChangesBuilt: results[67],//67
+            projectNumberChangesBuilt: getResult(results, values, projectNumberChangesBuilt),//63
+            projectBranchNumberChangesBuilt: getResult(results, values, projectBranchNumberChangesBuilt),//64
+            ownerNumberChangesBuilt: getResult(results, values, ownerNumberChangesBuilt),//65
+            ownerProjectBranchNumberChangesBuilt: getResult(results, values, ownerProjectBranchNumberChangesBuilt),//66
+            filesNumberChangesBuilt: getResult(results, values, filesNumberChangesBuilt),//67
+            filesExtensionNumberChangesCount: getResult(results, values, filesExtensionNumberChangesCount),//68
+            filesExtensionNumberChangesBuilt: getResult(results, values, filesExtensionNumberChangesBuilt),//69
+            branchNumberChangesBuilt: getResult(results, values, branchNumberChangesBuilt),//72
+            numberChangesBuilt: getResult(results, values, numberChangesBuilt),//62
+            //ratioBranchNumberChangesBuilt: safeDivision(results[72], results[38] + results[39]),
+            //ratioChangeBuilt: safeDivision(results[62], results[1] + results[2]),
+            //ratioProjectNumberChangesBuilt: safeDivision(results[63], results[7] + results[8]),
+            //ratioProjectBranchNumberChangesBuilt: safeDivision(results[64], results[55] + results[56]),
+            //ratioOwnerNumberChangesBuilt: safeDivision(results[65], results[4] + results[5]),
+            //ratioOwnerProjectBranchNumberChangesBuilt: safeDivision(results[66], results[58] + results[59]),
             //ratioFilesNumberChangesBuilt: safeDivision(results[67], parseInt(results[58]) + parseInt(results[14].max)),
-            filesExtensionNumberChangesCount: results[68],//68
-            filesExtensionNumberChangesBuilt: results[69],//69
-            ratioFilesExtensionNumberChangesBuilt: safeDivision(results[69], results[68]),
-            directoriesExtensionNumberChangesCount: results[70],//70
+            //ratioFilesExtensionNumberChangesBuilt: safeDivision(results[69], results[68]),
+            /*directoriesExtensionNumberChangesCount: results[70],//70
             directoriesExtensionNumberChangesBuilt: results[71],//71
-            ratioDirectoriesExtensionNumberChangesBuilt: safeDivision(results[71], results[70]),
-            branchNumberChangesBuilt: results[72],//72
-            ratioBranchNumberChangesBuilt: safeDivision(results[72], parseInt(results[38]) + parseInt(results[39])),
+            ratioDirectoriesExtensionNumberChangesBuilt: safeDivision(results[71], results[70]),*/
 
         };
+
+        data["ownerMergedRatio"] = safeDivision(data["ownerPriorMergedChangesCount"], data["ownerPriorAbandonedChangesCount"])
+        data["ownerAbandonedRatio"] = safeDivision(data["ownerPriorAbandonedChangesCount"], data["ownerPriorChangesCount"])
+        data["ownerPercentageOfMerged"] = safeDivision(data["ownerPriorMergedChangesCount"], data["priorMergedChangesCount"])
+        data["ownerPercentageOfAbandoned"] = safeDivision(data["ownerPriorAbandonedChangesCount"], data["priorAbandonedChangesCount"])
+        data["mergedRatio"] = safeDivision(data["priorMergedChangesCount"], data["priorChangesCount"])
+        data["abandonedRatio"] = safeDivision(data["priorAbandonedChangesCount"], data["priorChangesCount"])
+
+        data["abandonedRatio"] = safeDivision(data["priorAbandonedChangesCount"], data["priorChangesCount"])
+        data["priorSubsystemPercentage"] = safeDivision(data["priorSubsystemChangesCount"], data["priorChangesCount"])
+        data["priorSubsystemMergedRatio"] = safeDivision(data["priorSubsystemMergedChangesCount"], data["priorSubsystemChangesCount"])
+        data["priorSubsystemAbandonedRatio"] = safeDivision(data["priorSubsystemMergedChangesCount"], data["priorSubsystemChangesCount"])
+        data["priorSubsystemMergedPercentageInMerged"] = safeDivision(data["priorSubsystemMergedChangesCount"], data["priorMergedChangesCount"])
+        data["priorSubsystemAbandonedPercentageInAbandoned"] = safeDivision(data["priorSubsystemAbandonedChangesCount"], data["priorAbandonedChangesCount"])
+        data["priorOwnerSubsystemChangesRatio"] = safeDivision(data["priorOwnerSubsystemChangesCount"], data["priorSubsystemChangesCount"])
+        data["priorOwnerSubsystemMergedChangesRatio"] = safeDivision(data["priorOwnerSubsystemMergedChangesCount"], data["priorOwnerSubsystemChangesCount"])
+        data["priorOwnerSubsystemAbandonedChangesRatio"] = safeDivision(data["priorOwnerSubsystemAbandonedChangesCount"], data["priorOwnerSubsystemChangesCount"])
+        data["priorOwnerPercentageOfMergedInSubsystem"] = safeDivision(data["priorOwnerSubsystemMergedChangesCount"], data["priorSubsystemMergedChangesCount"])
+        data["priorOwnerPercentageOfAbandonedInSubsystem"] = safeDivision(data["priorOwnerSubsystemAbandonedChangesCount"], data["priorSubsystemAbandonedChangesCount"])
+
+        data["ownerRateOfAutoReview"] = data["ownerPriorChangesCount"] > 0 ? data["ownerNumberOfAutoReview"] / data["ownerPriorChangesCount"] : 0;
+
+        data["priorBranchOwnerChangesRatio"] = safeDivision(data["priorBranchOwnerChangesCount"], data["priorBranchChangesCount"])
+
+        data["priorOverAllRate"] = safeDivision(data["priorChangesCount"], data["projectAge"])
+        data["priorOverAllSubsystemRate"] = safeDivision(data["priorSubsystemChangesCount"], data["subsystemAge"])
+        data["priorOverAllBranchRate"] = safeDivision(data["priorBranchChangesCount"], data["branchAge"])
+        data["priorOverAllOwnerRate"] = safeDivision(data["ownerPriorChangesCount"], data["ownerAge"])
+
+        data["ratioChangeBuilt"] = safeDivision(data["numberChangesBuilt"], data["priorMergedChangesCount"] + data["priorAbandonedChangesCount"])
+        data["ratioProjectNumberChangesBuilt"] = safeDivision(data["projectNumberChangesBuilt"], data["priorSubsystemMergedChangesCount"] + data["priorSubsystemAbandonedChangesCount"])
+        data["ratioProjectBranchNumberChangesBuilt"] = safeDivision(data["projectBranchNumberChangesBuilt"], data["getPriorProjectBranchClosedChangesCount"])
+        data["ratioOwnerNumberChangesBuilt"] = safeDivision(data["ownerNumberChangesBuilt"], data["ownerPriorMergedChangesCount"] + data["ownerPriorAbandonedChangesCount"])
+        data["ratioOwnerProjectBranchNumberChangesBuilt"] = safeDivision(data["ownerProjectBranchNumberChangesBuilt"], data["priorProjectBranchOwnerClosedChangesCount"])
+        data["ratioFilesExtensionNumberChangesBuilt"] = safeDivision(data["filesExtensionNumberChangesBuilt"], data["filesExtensionNumberChangesCount"])
+        data["ratioBranchNumberChangesBuilt"] = safeDivision(data["branchNumberChangesBuilt"], data["priorBranchClosedChangesCount"])
+
+
+        return data;
     })
+}
+
+function getResult(results, values, index){
+    return results[values.indexOf(index)];
 }
 
 function convertAsDays(input) {
@@ -2020,7 +2049,7 @@ function getDirectoriesExtensionNumberChangesCount(json) {
             created: {$lt: created_date},
             updated: {$lte: created_date},
             status: {$in: ['MERGED', 'ABANDONED']},
-            extensions_list: {$in: directories_list},
+            base_directories: {$in: directories_list},
         }
     }
     let pipeline = [
@@ -2041,7 +2070,7 @@ function getDirectoriesExtensionNumberChangesBuilt(json) {
             created: {$lt: created_date},
             updated: {$lte: created_date},
             status: {$in: ['MERGED', 'ABANDONED']},
-            extensions_list: {$in: directories_list},
+            base_directories: {$in: directories_list},
             avg_build_time: {$gt: 0}
         }
     }
@@ -2520,17 +2549,6 @@ function getReviewerLastChange(number, reviewersId, created_date) {
             $project: {
                 _id: 0,
                 date: "$created",
-                /*dateDiff: {
-                    $subtract: [
-                        {$dateFromString: {dateString: {$substr: [created_date, 0, 22]}, timezone: "UTC"}},
-                        {
-                            $dateFromString: {
-                                dateString: {$substr: ["$created", 0, 22]},
-                                timezone: "UTC"
-                            }
-                        }
-                    ]
-                }*/
             }
         }
     ]
@@ -2568,17 +2586,6 @@ function getReviewerLastMessage(number, reviewersId, created_date, ownerId) {
             $project: {
                 _id: 0,
                 date: "$messages.date",
-                /*dateDiff: {
-                    $subtract: [
-                        {$dateFromString: {dateString: {$substr: [created_date, 0, 22]}, timezone: "UTC"}},
-                        {
-                            $dateFromString: {
-                                dateString: {$substr: ["$messages.date", 0, 22]},
-                                timezone: "UTC"
-                            }
-                        }
-                    ]
-                }*/
             }
         },
     ]
@@ -2612,17 +2619,6 @@ function getReviewerLastReview(number, reviewersId, created_date, ownerId) {
         {
             $project: {
                 _id: 0, date: "$labels.Code-Review.all.date",
-                /*dateDiff: {
-                    $subtract: [
-                        {$dateFromString: {dateString: {$substr: [created_date, 0, 22]}, timezone: "UTC"}},
-                        {
-                            $dateFromString: {
-                                dateString: {$substr: ["$labels.Code-Review.all.date", 0, 22]},
-                                timezone: "UTC"
-                            }
-                        }
-                    ]
-                }*/
             }
         }
     ]
