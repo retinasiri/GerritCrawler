@@ -557,15 +557,15 @@ async function getChangesInfo(json) {
             priorProjectBranchOwnerChangeMeanTimeTypeStd: results[61].std,//61
 
             numberChangesBuilt: results[62],//62
-            ratioChangeBuilt: safeDivision(results[62], parseInt(results[1]) + parseInt(results[2])),
+            ratioChangeBuilt: safeDivision(results[62], results[1] + results[2]),
             projectNumberChangesBuilt: results[63],//63
-            ratioProjectNumberChangesBuilt: safeDivision(results[63], parseInt(results[7]) + parseInt(results[8])),
+            ratioProjectNumberChangesBuilt: safeDivision(results[63], results[7] + results[8]),
             projectBranchNumberChangesBuilt: results[64],//64
-            ratioProjectBranchNumberChangesBuilt: safeDivision(results[64], parseInt(results[55]) + parseInt(results[56])),
+            ratioProjectBranchNumberChangesBuilt: safeDivision(results[64], results[55] + results[56]),
             ownerNumberChangesBuilt: results[65],//65
-            ratioOwnerNumberChangesBuilt: safeDivision(results[65], parseInt(results[4]) + parseInt(results[5])),
+            ratioOwnerNumberChangesBuilt: safeDivision(results[65], results[4] + results[5]),
             ownerProjectBranchNumberChangesBuilt: results[66],//66
-            ratioOwnerProjectBranchNumberChangesBuilt: safeDivision(results[66], parseInt(results[58]) + parseInt(results[59])),
+            ratioOwnerProjectBranchNumberChangesBuilt: safeDivision(results[66], results[58] + results[59]),
             filesNumberChangesBuilt: results[67],//67
             //ratioFilesNumberChangesBuilt: safeDivision(results[67], parseInt(results[58]) + parseInt(results[14].max)),
             filesExtensionNumberChangesCount: results[68],//68
@@ -1867,7 +1867,7 @@ function getProjectBranchNumberChangesBuilt(json) {
         {$count: 'count'}
     ]
     pipeline = addRecentDateToPipeline(pipeline);
-    return genericDBRequest(pipeline);
+    return dbRequest(pipeline);
 }
 
 //branch number of build
