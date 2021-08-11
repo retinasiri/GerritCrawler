@@ -205,69 +205,70 @@ async function getChangesInfo(json) {
     let fileDeveloperNumber = getFileDeveloperNumber(json);
     let ownerPreviousMessageCount = getOwnerPreviousMessageCount(number, ownerId, created_date);
     let ownerChangesMessagesCountAndAvgPerChanges = getOwnerChangesMessagesCountAndAvgPerChanges(json);
-    let changesMessagesCountAndAvg = getChangesMessagesCountAndAvg(json);
     let priorChangesFiles = getPriorChangesFiles(json);
 
-    let branchBuildTime = getBranchBuildTime(json);
-    let revisionTime = getRevisionTime(json);
-    let branchRevisionTime = getBranchRevisionTime(json);
+    let ownerProjectBranchBuildTime = getOwnerProjectBranchBuildTime(json);
     let ownerRevisionTime = getOwnerRevisionTime(json);
     let ownerTimeBetweenRevision = getOwnerTimeBetweenRevision(json);
     let ownerTimeToAddReviewer = getOwnerTimeToAddReviewer(json);
     let filesBuildTime = getFilesBuildTime(json);
-    let filesRevisionTime = getFilesRevisionTime(json);
+    let filesRevisionTime = getFilesRevisionTime(json); //todo remove
     let filesNumFails = getFilesNumFails(json);
     let ownerNumberOfAutoReview = getOwnerNumberOfAutoReview(json);
-
     let ownerInactiveTime = getOwnerInactiveTime(json);
     let ownerTimeBetweenMessage = getOwnerTimeBetweenMessage(json);
     let ownerNumberOfCherryPicked = getOwnerNumberOfCherryPicked(json); //ratio of cherry pick
-    let branchNumberOfCherryPicked = getBranchNumberOfCherryPicked(json);
-    let priorBranchChangesCount = getPriorBranchChangesCount(json);
-    let priorBranchClosedChangesCount = getPriorBranchTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
-    //let priorBranchMergedChangesCount = getPriorBranchTypeChangesCount(json, "MERGED");
-    //let priorBranchAbandonedChangesCount = getPriorBranchTypeChangesCount(json, "ABANDONED");
-    let priorBranchOwnerChangesCount = getPriorBranchOwnerChangesCount(json); //todo owner ratio in branch
-    let priorBranchOwnerClosedChangesCount = getPriorBranchOwnerTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
-    //let priorBranchOwnerMergedChangesCount = getPriorBranchOwnerTypeChangesCount(json, "MERGED");
-    //let priorBranchOwnerAbandonedChangesCount = getPriorBranchOwnerTypeChangesCount(json, "ABANDONED");
-    let priorBranchChangeMeanTimeType = getPriorBranchChangeMeanTimeType(json);
-
-    let projectAge = getProjectAge(json);
-    let subsystemAge = getSubsystemAge(json);
     let branchAge = getBranchAge(json);
     let ownerAge = getOwnerAge(json);
-
-    let priorRate = getPriorRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
-    let priorBranchRate = getPriorBranchRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
-    let priorSubsystemRate = getPriorSubsystemRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
     let priorOwnerRate = getPriorOwnerRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
     let filesNumberOfRecentChangesOnBranch = getFilesNumberOfRecentChangesOnBranch(json, NUMBER_OF_DAYS_FOR_RECENT_CHANGES_OF_FILES);
-
-    //new
-    let priorBranchOwnerChangeMeanTimeType = getPriorBranchOwnerChangeMeanTimeType(json);
-    let priorProjectBranchChangesCount = getPriorProjectBranchChangesCount(json);
-    let getPriorProjectBranchClosedChangesCount = getPriorProjectBranchTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
-    //let getPriorProjectBranchMergedChangesCount = getPriorProjectBranchTypeChangesCount(json, "MERGED");
-    //let getPriorProjectBranchAbandonedChangesCount = getPriorProjectBranchTypeChangesCount(json, "ABANDONED");
-    let priorProjectBranchChangeMeanTimeType = getPriorProjectBranchChangeMeanTimeType(json);
     let priorProjectBranchOwnerChangesCount = getPriorProjectBranchOwnerChangesCount(json);
     let priorProjectBranchOwnerClosedChangesCount = getPriorProjectBranchOwnerTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    let priorProjectBranchOwnerChangeMeanTimeType = getPriorProjectBranchOwnerChangeMeanTimeType(json);
+    let ownerProjectBranchNumberChangesBuilt = getOwnerProjectBranchNumberChangesBuilt(json);
+    let branchNumberChangesBuilt = getBranchNumberChangesBuilt(json);
+
+    /*
+
+    //let changesMessagesCountAndAvg = getChangesMessagesCountAndAvg(json);
+    //let branchNumberOfCherryPicked = await getBranchNumberOfCherryPicked(json); //todo remove
+    //let priorBranchOwnerChangesCount = await getPriorBranchOwnerChangesCount(json); //todo owner ratio in branch
+    //let priorBranchOwnerClosedChangesCount = await getPriorBranchOwnerTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    //let priorBranchChangeMeanTimeType = await getPriorBranchChangeMeanTimeType(json);
+    //let projectAge = await getProjectAge(json);
+    //let subsystemAge = await getSubsystemAge(json);
+    //let revisionTime = await getRevisionTime(json);
+    //let branchRevisionTime = await getBranchRevisionTime(json);
+
+    let priorBranchChangesCount = await getPriorBranchChangesCount(json);
+    let priorBranchClosedChangesCount = await getPriorBranchTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+
+    //let priorProjectBranchChangesCount = await getPriorProjectBranchChangesCount(json);
+    let getPriorProjectBranchClosedChangesCount = await getPriorProjectBranchTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    let priorProjectBranchChangeMeanTimeType = await getPriorProjectBranchChangeMeanTimeType(json);
+
+    let priorRate = await getPriorRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);//todo remove
+    let priorBranchRate = await getPriorBranchRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);//todo remove
+    let priorSubsystemRate = await getPriorSubsystemRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);//todo remove
+    let priorBranchOwnerChangeMeanTimeType = await getPriorBranchOwnerChangeMeanTimeType(json);//todo remove
+    let numberChangesBuilt = await getNumberChangesBuilt(json);//todo remove
+    let projectNumberChangesBuilt = await getProjectNumberChangesBuilt(json);//todo remove
+    let projectBranchNumberChangesBuilt = await getProjectBranchNumberChangesBuilt(json);//todo remove
+    let ownerNumberChangesBuilt = await getOwnerNumberChangesBuilt(json);//todo remove
+    let filesNumberChangesBuilt = await getFilesNumberChangesBuilt(json);//todo remove
+    let filesExtensionNumberChangesCount = await getFilesExtensionNumberChangesCount(json);//todo remove
+    let filesExtensionNumberChangesBuilt = await getFilesExtensionNumberChangesBuilt(json);//todo remove
+    */
+    //let getPriorProjectBranchMergedChangesCount = getPriorProjectBranchTypeChangesCount(json, "MERGED");
+    //let getPriorProjectBranchAbandonedChangesCount = getPriorProjectBranchTypeChangesCount(json, "ABANDONED");
     //let priorProjectBranchOwnerMergedChangesCount = getPriorProjectBranchOwnerTypeChangesCount(json, "MERGED");
     //let priorProjectBranchOwnerAbandonedChangesCount = getPriorProjectBranchOwnerTypeChangesCount(json, "ABANDONED");
-    let priorProjectBranchOwnerChangeMeanTimeType = getPriorProjectBranchOwnerChangeMeanTimeType(json);
-
-    let numberChangesBuilt = getNumberChangesBuilt(json);
-    let projectNumberChangesBuilt = getProjectNumberChangesBuilt(json);
-    let projectBranchNumberChangesBuilt = getProjectBranchNumberChangesBuilt(json);
-    let ownerNumberChangesBuilt = getOwnerNumberChangesBuilt(json);
-    let ownerProjectBranchNumberChangesBuilt = getOwnerProjectBranchNumberChangesBuilt(json);
-    let filesNumberChangesBuilt = getFilesNumberChangesBuilt(json);
-    let filesExtensionNumberChangesCount = getFilesExtensionNumberChangesCount(json);
-    let filesExtensionNumberChangesBuilt = getFilesExtensionNumberChangesBuilt(json);
     //let directoriesExtensionNumberChangesCount = getDirectoriesExtensionNumberChangesCount(json);
     //let directoriesExtensionNumberChangesBuilt = getDirectoriesExtensionNumberChangesBuilt(json);
-    let branchNumberChangesBuilt = getBranchNumberChangesBuilt(json);
+    //let priorBranchMergedChangesCount = getPriorBranchTypeChangesCount(json, "MERGED");
+    //let priorBranchAbandonedChangesCount = getPriorBranchTypeChangesCount(json, "ABANDONED");
+    //let priorBranchOwnerMergedChangesCount = getPriorBranchOwnerTypeChangesCount(json, "MERGED");
+    //let priorBranchOwnerAbandonedChangesCount = getPriorBranchOwnerTypeChangesCount(json, "ABANDONED");
 
     let values = [
         priorChangesCount, //0
@@ -284,73 +285,84 @@ async function getChangesInfo(json) {
         priorSubsystemOwnerAbandonedChangesCount, //11
 
         priorChangesDuration, //12
-        priorOwnerChangesDuration, //13
-        fileTimeAndCount, //14
-        fileTimeAndCountForOwner, //15
-        ownerNumberOfRevision, //16
-        ownerNumberOfReview, //17
-        fileDeveloperNumber, //18
-        ownerPreviousMessageCount, //19
-        ownerChangesMessagesCountAndAvgPerChanges, //20
-        changesMessagesCountAndAvg, //21
-        priorChangesFiles, //22
-        //nonBotAccountPreviousMessageCount,
-        branchBuildTime,//23
-        revisionTime,//24
-        branchRevisionTime,//25
-        ownerRevisionTime,//26
-        ownerTimeBetweenRevision,//27
-        ownerTimeToAddReviewer,//28
-        filesBuildTime,//29
-        filesRevisionTime,//30
-        filesNumFails,//31
-        ownerNumberOfAutoReview,//32
 
-        ownerInactiveTime,//33
-        ownerTimeBetweenMessage,//34
-        ownerNumberOfCherryPicked,//35
-        branchNumberOfCherryPicked,//36
-        priorBranchChangesCount,//37
-        priorBranchClosedChangesCount,//38
+        //changesMessagesCountAndAvg, //21
+
+        fileDeveloperNumber, //13
+        priorChangesFiles, //14
+        fileTimeAndCount, //15
+        fileTimeAndCountForOwner, //16
+        filesBuildTime,//17
+        filesRevisionTime,//18
+        filesNumFails,//219
+        filesNumberOfRecentChangesOnBranch,//20
+        branchAge,//21
+        ownerProjectBranchBuildTime,//22
+
+        priorOwnerChangesDuration, //23
+        ownerNumberOfRevision, //24
+        ownerNumberOfReview, //25
+        ownerPreviousMessageCount, //26
+        ownerChangesMessagesCountAndAvgPerChanges, //27
+        ownerRevisionTime,//28
+        ownerTimeBetweenRevision,//29
+        ownerTimeToAddReviewer,//30
+        ownerNumberOfAutoReview,//31
+        ownerInactiveTime,//32
+        ownerTimeBetweenMessage,//33
+        ownerNumberOfCherryPicked,//34
+        ownerAge,//35
+        priorOwnerRate,//36
+        priorProjectBranchOwnerChangesCount,//37
+        priorProjectBranchOwnerClosedChangesCount,//38
+        priorProjectBranchOwnerChangeMeanTimeType,//39
+        ownerProjectBranchNumberChangesBuilt,//40
+
+        //branchNumberOfCherryPicked,//33
+        //priorBranchOwnerChangesCount,//34
+        //priorBranchOwnerClosedChangesCount,//35
+        //priorBranchChangeMeanTimeType,//36
+
+        //projectAge,//37
+        //subsystemAge,//38
+
+
+        //nonBotAccountPreviousMessageCount,
+
+        //revisionTime,//24
+        //branchRevisionTime,//25
+
+        //priorBranchChangesCount,//37
+        //priorBranchClosedChangesCount,//38
         //priorBranchMergedChangesCount,
         //priorBranchAbandonedChangesCount,
-        priorBranchOwnerChangesCount,//39
-        priorBranchOwnerClosedChangesCount,//40
+
         //priorBranchOwnerMergedChangesCount,
         //priorBranchOwnerAbandonedChangesCount,
-        priorBranchChangeMeanTimeType,//41
 
-        projectAge,//42
-        subsystemAge,//43
-        branchAge,//44
-        ownerAge,//45
-        priorRate,//46
-        priorBranchRate,//47
-        priorSubsystemRate,//48
-        priorOwnerRate,//49
-        filesNumberOfRecentChangesOnBranch,//50
+        //priorRate,//46
+        //priorBranchRate,//47
+        //priorSubsystemRate,//48
 
-        priorBranchOwnerChangeMeanTimeType,//51
-        priorProjectBranchChangesCount,//52
-        getPriorProjectBranchClosedChangesCount,//53
+        //branchNumberChangesBuilt,//66
+
+        //priorBranchOwnerChangeMeanTimeType,//51
+        //priorProjectBranchChangesCount,//52
+        //getPriorProjectBranchClosedChangesCount,//53
         //getPriorProjectBranchMergedChangesCount,
         //getPriorProjectBranchAbandonedChangesCount,
-        priorProjectBranchChangeMeanTimeType,//54
-        priorProjectBranchOwnerChangesCount,//55
-        priorProjectBranchOwnerClosedChangesCount,//56
+        //priorProjectBranchChangeMeanTimeType,//54
+
         //priorProjectBranchOwnerMergedChangesCount,
         //priorProjectBranchOwnerAbandonedChangesCount,
-        priorProjectBranchOwnerChangeMeanTimeType,//57
 
-        numberChangesBuilt,//58
-        projectNumberChangesBuilt,//59
-        projectBranchNumberChangesBuilt,//60
-        ownerNumberChangesBuilt,//61
-        ownerProjectBranchNumberChangesBuilt,//62
-        filesNumberChangesBuilt,//63
-        filesExtensionNumberChangesCount,//64
-        filesExtensionNumberChangesBuilt,//65
-        branchNumberChangesBuilt,//66
+        //numberChangesBuilt,//58
+        //projectNumberChangesBuilt,//59
+        //projectBranchNumberChangesBuilt,//60
+        //ownerNumberChangesBuilt,//61
+        //filesNumberChangesBuilt,//63
+        //filesExtensionNumberChangesCount,//64
+        //filesExtensionNumberChangesBuilt,//65
         //directoriesExtensionNumberChangesCount,
         //directoriesExtensionNumberChangesBuilt,
     ]
@@ -422,20 +434,20 @@ async function getChangesInfo(json) {
             ownerChangesMessagesMinPerChanges: getResult(results, values, ownerChangesMessagesCountAndAvgPerChanges).min,
             ownerChangesMessagesStdPerChanges: getResult(results, values, ownerChangesMessagesCountAndAvgPerChanges).std,
 
-            changesMessagesSum: getResult(results, values, changesMessagesCountAndAvg).count,
+            /*changesMessagesSum: getResult(results, values, changesMessagesCountAndAvg).count,
             changesMessagesAvg: getResult(results, values, changesMessagesCountAndAvg).avg,
             changesMessagesMax: getResult(results, values, changesMessagesCountAndAvg).max,
             changesMessagesMin: getResult(results, values, changesMessagesCountAndAvg).min,
-            changesMessagesStd: getResult(results, values, changesMessagesCountAndAvg).std,
+            changesMessagesStd: getResult(results, values, changesMessagesCountAndAvg).std,*/
 
             priorChangesFiles: getResult(results, values, priorChangesFiles).count,
 
-            branchBuildTimeAvg: getResult(results, values, branchBuildTime).avg,
-            branchBuildTimeMax: getResult(results, values, branchBuildTime).max,
-            branchBuildTimeMin: getResult(results, values, branchBuildTime).min,
-            branchBuildTimeStd: getResult(results, values, branchBuildTime).std,
+            ownerProjectBranchBuildTimeAvg: getResult(results, values, ownerProjectBranchBuildTime).avg,
+            ownerProjectBranchBuildTimeMax: getResult(results, values, ownerProjectBranchBuildTime).max,
+            ownerProjectBranchBuildTimeMin: getResult(results, values, ownerProjectBranchBuildTime).min,
+            ownerProjectBranchBuildTimeStd: getResult(results, values, ownerProjectBranchBuildTime).std,
 
-            revisionTimeAvg: getResult(results, values, revisionTime).avg,
+            /*revisionTimeAvg: getResult(results, values, revisionTime).avg,
             revisionTimeMax: getResult(results, values, revisionTime).max,
             revisionTimeMin: getResult(results, values, revisionTime).min,
             revisionTimeStd: getResult(results, values, revisionTime).std,
@@ -443,7 +455,7 @@ async function getChangesInfo(json) {
             branchRevisionTimeAvg: getResult(results, values, branchRevisionTime).avg,
             branchRevisionTimeMax: getResult(results, values, branchRevisionTime).max,
             branchRevisionTimeMin: getResult(results, values, branchRevisionTime).min,
-            branchRevisionTimeStd: getResult(results, values, branchRevisionTime).std,
+            branchRevisionTimeStd: getResult(results, values, branchRevisionTime).std,*/
 
             ownerRevisionTimeAvg: getResult(results, values, ownerRevisionTime).avg,
             ownerRevisionTimeMax: getResult(results, values, ownerRevisionTime).max,
@@ -489,48 +501,48 @@ async function getChangesInfo(json) {
 
             ownerNumberOfCherryPicked: getResult(results, values, ownerNumberOfCherryPicked).count,
 
-            branchNumberOfCherryPicked: getResult(results, values, branchNumberOfCherryPicked).count,
+            //branchNumberOfCherryPicked: getResult(results, values, branchNumberOfCherryPicked).count,
 
-            priorBranchChangesCount: getResult(results, values, priorBranchChangesCount),
-            priorBranchClosedChangesCount: getResult(results, values, priorBranchClosedChangesCount),
+            //priorBranchChangesCount: getResult(results, values, priorBranchChangesCount),
+            //priorBranchClosedChangesCount: getResult(results, values, priorBranchClosedChangesCount),
             //priorBranchMergedChangesCount: results[38],
             //priorBranchAbandonedChangesCount: results[39],
-            priorBranchOwnerChangesCount: getResult(results, values, priorBranchOwnerChangesCount),
-            priorBranchOwnerClosedChangesCount: getResult(results, values, priorBranchOwnerClosedChangesCount),
+            //priorBranchOwnerChangesCount: getResult(results, values, priorBranchOwnerChangesCount),
+            //priorBranchOwnerClosedChangesCount: getResult(results, values, priorBranchOwnerClosedChangesCount),
             //priorBranchOwnerMergedChangesCount: results[41],
             //priorBranchOwnerAbandonedChangesCount: results[42],
 
-            priorBranchChangeMeanTimeTypeAvg: getResult(results, values, priorBranchChangeMeanTimeType).avg,
-            priorBranchChangeMeanTimeTypeMax: getResult(results, values, priorBranchChangeMeanTimeType).max,
-            priorBranchChangeMeanTimeTypeMin: getResult(results, values, priorBranchChangeMeanTimeType).min,
-            priorBranchChangeMeanTimeTypeStd: getResult(results, values, priorBranchChangeMeanTimeType).std,
+            //priorBranchChangeMeanTimeTypeAvg: getResult(results, values, priorBranchChangeMeanTimeType).avg,
+            //priorBranchChangeMeanTimeTypeMax: getResult(results, values, priorBranchChangeMeanTimeType).max,
+            //priorBranchChangeMeanTimeTypeMin: getResult(results, values, priorBranchChangeMeanTimeType).min,
+            //priorBranchChangeMeanTimeTypeStd: getResult(results, values, priorBranchChangeMeanTimeType).std,
 
-            projectAge: convertAsDays(getResult(results, values, projectAge)),
-            subsystemAge: convertAsDays(getResult(results, values, subsystemAge)),
+            //projectAge: convertAsDays(getResult(results, values, projectAge)),
+            //subsystemAge: convertAsDays(getResult(results, values, subsystemAge)),
             branchAge: convertAsDays(getResult(results, values, branchAge)),
             ownerAge: convertAsDays(getResult(results, values, ownerAge)),
 
-            priorRate: getResult(results, values, priorRate),
-            priorBranchRate: getResult(results, values, priorBranchRate),
-            priorSubsystemRate: getResult(results, values, priorSubsystemRate),
+            //priorRate: getResult(results, values, priorRate),
+            //priorBranchRate: getResult(results, values, priorBranchRate),
+            //priorSubsystemRate: getResult(results, values, priorSubsystemRate),
             priorOwnerRate: getResult(results, values, priorOwnerRate),
 
             filesNumberOfRecentChangesOnBranch: getResult(results, values, filesNumberOfRecentChangesOnBranch),
 
-            priorBranchOwnerChangeMeanTimeTypeAvg: getResult(results, values, priorBranchOwnerChangeMeanTimeType).avg,//53
-            priorBranchOwnerChangeMeanTimeTypeMin: getResult(results, values, priorBranchOwnerChangeMeanTimeType).min,//53
-            priorBranchOwnerChangeMeanTimeTypeMax: getResult(results, values, priorBranchOwnerChangeMeanTimeType).max,//53
-            priorBranchOwnerChangeMeanTimeTypeStd: getResult(results, values, priorBranchOwnerChangeMeanTimeType).std,//53
+            //priorBranchOwnerChangeMeanTimeTypeAvg: getResult(results, values, priorBranchOwnerChangeMeanTimeType).avg,//53
+            //priorBranchOwnerChangeMeanTimeTypeMin: getResult(results, values, priorBranchOwnerChangeMeanTimeType).min,//53
+            //priorBranchOwnerChangeMeanTimeTypeMax: getResult(results, values, priorBranchOwnerChangeMeanTimeType).max,//53
+            //priorBranchOwnerChangeMeanTimeTypeStd: getResult(results, values, priorBranchOwnerChangeMeanTimeType).std,//53
 
-            priorProjectBranchChangesCount: getResult(results, values, priorProjectBranchChangesCount),//54
-            getPriorProjectBranchClosedChangesCount: getResult(results, values, getPriorProjectBranchClosedChangesCount),//55
+            //priorProjectBranchChangesCount: getResult(results, values, priorProjectBranchChangesCount),//54
+            //getPriorProjectBranchClosedChangesCount: getResult(results, values, getPriorProjectBranchClosedChangesCount),//55
             //getPriorProjectBranchMergedChangesCount: results[55],//55
             //getPriorProjectBranchAbandonedChangesCount: results[56],//56
 
-            priorProjectBranchChangeMeanTimeTypeAvg: getResult(results, values, priorProjectBranchChangeMeanTimeType).avg,//57
-            priorProjectBranchChangeMeanTimeTypeMin: getResult(results, values, priorProjectBranchChangeMeanTimeType).min,//57
-            priorProjectBranchChangeMeanTimeTypeMax: getResult(results, values, priorProjectBranchChangeMeanTimeType).max,//57
-            priorProjectBranchChangeMeanTimeTypeStd: getResult(results, values, priorProjectBranchChangeMeanTimeType).std,//57
+            //priorProjectBranchChangeMeanTimeTypeAvg: getResult(results, values, priorProjectBranchChangeMeanTimeType).avg,//57
+            //priorProjectBranchChangeMeanTimeTypeMin: getResult(results, values, priorProjectBranchChangeMeanTimeType).min,//57
+            //priorProjectBranchChangeMeanTimeTypeMax: getResult(results, values, priorProjectBranchChangeMeanTimeType).max,//57
+            //priorProjectBranchChangeMeanTimeTypeStd: getResult(results, values, priorProjectBranchChangeMeanTimeType).std,//57
 
             priorProjectBranchOwnerChangesCount: getResult(results, values, priorProjectBranchOwnerChangesCount),//58
             priorProjectBranchOwnerClosedChangesCount: getResult(results, values, priorProjectBranchOwnerClosedChangesCount),//59
@@ -542,15 +554,15 @@ async function getChangesInfo(json) {
             priorProjectBranchOwnerChangeMeanTimeTypeMax: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).max,//61
             priorProjectBranchOwnerChangeMeanTimeTypeStd: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).std,//61
 
-            projectNumberChangesBuilt: getResult(results, values, projectNumberChangesBuilt),//63
-            projectBranchNumberChangesBuilt: getResult(results, values, projectBranchNumberChangesBuilt),//64
-            ownerNumberChangesBuilt: getResult(results, values, ownerNumberChangesBuilt),//65
+            //projectNumberChangesBuilt: getResult(results, values, projectNumberChangesBuilt),//63
+            //projectBranchNumberChangesBuilt: getResult(results, values, projectBranchNumberChangesBuilt),//64
+            //ownerNumberChangesBuilt: getResult(results, values, ownerNumberChangesBuilt),//65
             ownerProjectBranchNumberChangesBuilt: getResult(results, values, ownerProjectBranchNumberChangesBuilt),//66
-            filesNumberChangesBuilt: getResult(results, values, filesNumberChangesBuilt),//67
-            filesExtensionNumberChangesCount: getResult(results, values, filesExtensionNumberChangesCount),//68
-            filesExtensionNumberChangesBuilt: getResult(results, values, filesExtensionNumberChangesBuilt),//69
+            //filesNumberChangesBuilt: getResult(results, values, filesNumberChangesBuilt),//67
+            //filesExtensionNumberChangesCount: getResult(results, values, filesExtensionNumberChangesCount),//68
+            //filesExtensionNumberChangesBuilt: getResult(results, values, filesExtensionNumberChangesBuilt),//69
             branchNumberChangesBuilt: getResult(results, values, branchNumberChangesBuilt),//72
-            numberChangesBuilt: getResult(results, values, numberChangesBuilt),//62
+            //numberChangesBuilt: getResult(results, values, numberChangesBuilt),//62
             //ratioBranchNumberChangesBuilt: safeDivision(results[72], results[38] + results[39]),
             //ratioChangeBuilt: safeDivision(results[62], results[1] + results[2]),
             //ratioProjectNumberChangesBuilt: safeDivision(results[63], results[7] + results[8]),
@@ -586,20 +598,20 @@ async function getChangesInfo(json) {
 
         data["ownerRateOfAutoReview"] = data["ownerPriorChangesCount"] > 0 ? data["ownerNumberOfAutoReview"] / data["ownerPriorChangesCount"] : 0;
 
-        data["priorBranchOwnerChangesRatio"] = safeDivision(data["priorBranchOwnerChangesCount"], data["priorBranchChangesCount"])
+        //data["priorBranchOwnerChangesRatio"] = safeDivision(data["priorBranchOwnerChangesCount"], data["priorBranchChangesCount"])
 
-        data["priorOverAllRate"] = safeDivision(data["priorChangesCount"], data["projectAge"])
+        /*data["priorOverAllRate"] = safeDivision(data["priorChangesCount"], data["projectAge"])
         data["priorOverAllSubsystemRate"] = safeDivision(data["priorSubsystemChangesCount"], data["subsystemAge"])
         data["priorOverAllBranchRate"] = safeDivision(data["priorBranchChangesCount"], data["branchAge"])
-        data["priorOverAllOwnerRate"] = safeDivision(data["ownerPriorChangesCount"], data["ownerAge"])
+        data["priorOverAllOwnerRate"] = safeDivision(data["ownerPriorChangesCount"], data["ownerAge"])*/
 
-        data["ratioChangeBuilt"] = safeDivision(data["numberChangesBuilt"], data["priorMergedChangesCount"] + data["priorAbandonedChangesCount"])
-        data["ratioProjectNumberChangesBuilt"] = safeDivision(data["projectNumberChangesBuilt"], data["priorSubsystemMergedChangesCount"] + data["priorSubsystemAbandonedChangesCount"])
-        data["ratioProjectBranchNumberChangesBuilt"] = safeDivision(data["projectBranchNumberChangesBuilt"], data["getPriorProjectBranchClosedChangesCount"])
-        data["ratioOwnerNumberChangesBuilt"] = safeDivision(data["ownerNumberChangesBuilt"], data["ownerPriorMergedChangesCount"] + data["ownerPriorAbandonedChangesCount"])
+        //data["ratioChangeBuilt"] = safeDivision(data["numberChangesBuilt"], data["priorMergedChangesCount"] + data["priorAbandonedChangesCount"])
+        //data["ratioProjectNumberChangesBuilt"] = safeDivision(data["projectNumberChangesBuilt"], data["priorSubsystemMergedChangesCount"] + data["priorSubsystemAbandonedChangesCount"])
+        //data["ratioProjectBranchNumberChangesBuilt"] = safeDivision(data["projectBranchNumberChangesBuilt"], data["getPriorProjectBranchClosedChangesCount"])
+        //data["ratioOwnerNumberChangesBuilt"] = safeDivision(data["ownerNumberChangesBuilt"], data["ownerPriorMergedChangesCount"] + data["ownerPriorAbandonedChangesCount"])
         data["ratioOwnerProjectBranchNumberChangesBuilt"] = safeDivision(data["ownerProjectBranchNumberChangesBuilt"], data["priorProjectBranchOwnerClosedChangesCount"])
-        data["ratioFilesExtensionNumberChangesBuilt"] = safeDivision(data["filesExtensionNumberChangesBuilt"], data["filesExtensionNumberChangesCount"])
-        data["ratioBranchNumberChangesBuilt"] = safeDivision(data["branchNumberChangesBuilt"], data["priorBranchClosedChangesCount"])
+        //data["ratioFilesExtensionNumberChangesBuilt"] = safeDivision(data["filesExtensionNumberChangesBuilt"], data["filesExtensionNumberChangesCount"])
+        //data["ratioBranchNumberChangesBuilt"] = safeDivision(data["branchNumberChangesBuilt"], data["priorBranchClosedChangesCount"])
 
 
         return data;
@@ -1137,10 +1149,12 @@ function getChangesMessagesCountAndAvg(json) {
 }
 
 //begin add
-function getBranchBuildTime(json) {
+function getOwnerProjectBranchBuildTime(json) {
     let created_date = json.created;
     let branch = json.branch;
     let number = json._number;
+    let ownerId = json.owner._account_id;
+    let project = json.project;
     let match = {
         $match: {
             _number: {$lt: number},
@@ -1148,6 +1162,8 @@ function getBranchBuildTime(json) {
             updated: {$lte: created_date},
             status: {$in: ['MERGED', 'ABANDONED']},
             branch: branch,
+            project: project,
+            "owner._account_id": ownerId,
         }
     }
     let pipeline = [
@@ -2089,7 +2105,7 @@ function getDirectoriesExtensionNumberChangesBuilt(json) {
 function agePipeline(match, created_date) {
     let pipeline = [
         match,
-        {$sort: {_number: 1}},
+        {$sort: {created:1, _number: 1}},
         {$limit: 1},
         {
             $project: {
@@ -2151,12 +2167,12 @@ function getSubsystemAge(json) {
 function getBranchAge(json) {
     let created = json.created;
     let branch = json.branch;
-    let number = json._number;
-    let created_date = json.created;
+    //let number = json._number;
+    //let created_date = json.created;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
+            //_number: {$lt: number},
+            //created: {$lt: created_date},
             branch: branch,
             //updated: {$lte: created},
         }
@@ -2167,12 +2183,12 @@ function getBranchAge(json) {
 function getOwnerAge(json) {
     let created = json.created;
     let ownerId = json.owner._account_id;
-    let number = json._number;
-    let created_date = json.created;
+    //let number = json._number;
+    //let created_date = json.created;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
+            //_number: {$lt: number},
+            //created: {$lt: created_date},
             //updated: {$lte: created},
             $or: [{'owner._account_id': ownerId}, {"reviewers.REVIEWER._account_id": ownerId}]
         }
@@ -2247,19 +2263,20 @@ function getFilesNumberOfRecentChangesOnBranch(json, number_of_days) {
     let files_list = json.files_list ? json.files_list : [];
     let dateFromNumberOfDaysAgo = Moment(json.created).subtract(number_of_days, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
     let pipeline = [
-        {
+        /*{
             $match: {
-                _number: {$lt: number},
-                created: {$lt: created_date},
+
             }
-        },
+        },*/
         {
             $match: {
                 //status: "MERGED",
                 branch: branch,
+                _number: {$lt: number},
+                created: {$gte: dateFromNumberOfDaysAgo, $lt: created_date},
                 updated: {$lte: created_date},
                 files_list: {$in: files_list},
-                $or: [{created: {$gte: dateFromNumberOfDaysAgo}}, {updated: {$gte: dateFromNumberOfDaysAgo}}]
+                //$or: [{created: {$gte: dateFromNumberOfDaysAgo}}, {updated: {$gte: dateFromNumberOfDaysAgo}}]
             }
         },
         {$count: "count"},
