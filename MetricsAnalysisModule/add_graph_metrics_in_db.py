@@ -27,7 +27,6 @@ def start(json):
     
     count = Database.get_changes_count()    
     global bar
-    bar = SlowBar('Adding graph metrics to DB', max=count)
 
     global GRAPHS_METRICS_PATH
     GRAPHS_METRICS_PATH = os.path.join(DATA_DIR_NAME,PROJET_NAME, PROJET_NAME + "-graph-metrics")
@@ -38,10 +37,14 @@ def start(json):
     global CHANGES_GRAPHS_LIST_PATH
     CHANGES_GRAPHS_LIST_PATH = os.path.join(DATA_DIR_NAME, PROJET_NAME, PROJET_NAME + "-changes-graph-list.json")
 
-    collect_metric(GRAPHS_METRICS_PATH, prefix="")
+    if os.path.exists(GRAPHS_METRICS_PATH):
+        bar = SlowBar('Adding graph metrics to DB', max=count)
+        collect_metric(GRAPHS_METRICS_PATH, prefix="")
 
-    bar = SlowBar('Adding full graph metrics to DB', max=count)
-    collect_metric(GRAPHS_FULL_METRICS_PATH, prefix="fg_")
+    if os.path.exists(GRAPHS_FULL_METRICS_PATH):
+        bar = SlowBar('Adding full graph metrics to DB', max=count)
+        collect_metric(GRAPHS_FULL_METRICS_PATH, prefix="fg_")
+        
     return 0
 
 
