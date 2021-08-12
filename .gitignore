@@ -1,11 +1,11 @@
-Data/
+_Data/
 DownloadModule/node_modules/
 DownloadModule/data/
+DownloadModule/.idea/
+DownloadModule/config.json
 MetricsAnalysisModule/__pycache__/
 MetricsAnalysisModule/venv/
 MetricsAnalysisModule/.idea/
 MetricsAnalysisModule/.vscode/
 MetricsAnalysisModule/data/
 .idea/
-DownloadModule/.idea/
-DownloadModule/config.json
