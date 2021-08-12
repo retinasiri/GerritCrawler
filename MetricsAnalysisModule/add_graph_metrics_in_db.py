@@ -40,10 +40,14 @@ def start(json):
     if os.path.exists(GRAPHS_METRICS_PATH):
         bar = SlowBar('Adding graph metrics to DB', max=count)
         collect_metric(GRAPHS_METRICS_PATH, prefix="")
+    else:
+        print('graph metrics doesn\'t exists in ' + GRAPHS_METRICS_PATH)
 
     if os.path.exists(GRAPHS_FULL_METRICS_PATH):
         bar = SlowBar('Adding full graph metrics to DB', max=count)
         collect_metric(GRAPHS_FULL_METRICS_PATH, prefix="fg_")
+    else:
+        print('full graph metrics doesn\'t exists in ' + GRAPHS_FULL_METRICS_PATH)
         
     return 0
 
