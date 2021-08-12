@@ -2,6 +2,7 @@ import os
 import sys
 import utils
 import dbutils
+import datetime
 import statistics as st
 from utils import SlowBar as SlowBar
 
@@ -16,6 +17,7 @@ bar = None
 
 
 def start(json):
+    x = datetime.datetime.now()
     global PROJET_NAME
     PROJET_NAME = json["project_name"]
 
@@ -48,7 +50,12 @@ def start(json):
         collect_metric(GRAPHS_FULL_METRICS_PATH, prefix="fg_")
     else:
         print('full graph metrics doesn\'t exists in ' + GRAPHS_FULL_METRICS_PATH)
-        
+    
+    y = datetime.datetime.now()
+    print("End : {}".format(y))
+    elapsedTime = y - x
+    print("Elapsed Time : {}".format(elapsedTime))
+
     return 0
 
 
