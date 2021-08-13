@@ -109,10 +109,9 @@ function loadAllBotAccounts() {
  * @param {String} metricsType The url of the code changes
  * @param {function} collectMetrics The url of the code changes
  */
-function startComputeMetrics(projectName, start, end, metricsType, collectMetrics) {
+function startComputeMetrics(projectName, start, end, collectMetrics) {
 
     let Project = new Utils.Project(projectName)
-    let MetricsJson = new Utils.Metrics(metricsType)
     const progressBar = new cliProgress.SingleBar({
         barCompleteChar: '#',
         barIncompleteChar: '-',
@@ -133,23 +132,10 @@ function startComputeMetrics(projectName, start, end, metricsType, collectMetric
             }
             console.log("Processing changes from " + skip + " to " + (NUM_OF_CHANGES_LIMIT + start));
             progressBar.start(NUM_OF_CHANGES_LIMIT, 0);
-            return getChanges(skip, NUM_OF_CHANGES_LIMIT, Project, MetricsJson, progressBar, collectMetrics);
+            return getChanges(skip, NUM_OF_CHANGES_LIMIT, Project, progressBar, collectMetrics);
         })
         .then(() => {
-            let name = Project.getName + "-" + MetricsJson.getType + "-metrics";
-            //return Utils.saveJSONInFile(Project.getOutputDirectory, name, MetricsJson.getMetricsJSON);
-            return Promise.resolve(true)
-        })
-        .then(() => {
-            //free memory
-            Object.keys(MetricsJson.getMetricsJSON).forEach(function (key) {
-                delete MetricsJson.getMetricsJSON[key];
-            })
             progressBar.stop();
-            //console.log("Finished !!!!");
-            //return Database.freeMemory();
-        })
-        .then(() => {
             return Database.closeConnection();
         })
         .catch(err => {
@@ -158,11 +144,9 @@ function startComputeMetrics(projectName, start, end, metricsType, collectMetric
 }
 
 //get changes id
-function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetrics) {
+function getChanges(skip, step, Project, progressBar, collectMetrics) {
     return Change
         .aggregate([
-            //{$match: {priorChangesCount : {$exists : false}}},
-            //{$sort: {updated: 1, _number: 1}},
             {$sort: {created: 1, _number: 1}},
             {$skip: skip},
             {$limit: step}
@@ -173,7 +157,7 @@ function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetric
             if (!docs)
                 return Promise.resolve(false)
             if (docs.length) {
-                return collectDocs(docs, Project, MetricsJson, progressBar, collectMetrics);
+                return collectDocs(docs, Project, progressBar, collectMetrics);
             } else
                 return Promise.resolve(true);
         })
@@ -183,6 +167,69 @@ function getChanges(skip, step, Project, MetricsJson, progressBar, collectMetric
         .catch(err => {
             console.log(err)
         });
+}
+
+async function collectDocs(docs, Project, progressBar, collectMetrics) {
+    console.time('collectDocs')
+    let CONCURRENT = 25
+    if (!docs)
+        return Promise.resolve(true);
+
+    let queue = [];
+    let ret = [];
+    for (let key in docs) {
+        let p = collectMetrics(docs[key])
+            .then((json) => {
+                queue.splice(queue.indexOf(p), 1);
+                return saveMetrics(json, Project, progressBar);
+            })
+
+        queue.push(p);
+        ret.push(p);
+        // if max concurrent, wait for one to finish
+        if (queue.length >= CONCURRENT) {
+            await Promise.race(queue);
+        }
+    }
+
+    await Promise.all(queue);
+    return Promise.resolve(true);
+}
+
+
+/*async function collectDocs(docs, Project, progressBar, collectMetrics) {
+    console.time('collectDocs')
+    if (!docs)
+        return Promise.resolve(true);
+
+    let tasks = []
+    for (let key in docs) {
+        let t = collectMetrics(docs[key])
+            .then((json) => {
+                return saveMetrics(json, Project, progressBar);
+            })
+
+        tasks.push(t)
+        await delay(300)
+    }
+
+    return Promise.all(tasks).then(result => {
+        console.timeEnd('collectDocs')
+        return Promise.resolve(true);
+    });
+}*/
+
+function saveMetrics(json, Project, progressBar) {
+    return Metrics.updateOne({id: json.id}, json, {upsert: true}).then(() => {
+        return updateProgress(progressBar);
+    })
+}
+
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
+async function updateProgress(progressBar) {
+    progressBar.increment(1);
+    return Promise.resolve(true);
 }
 
 function mixDoc(array) {
@@ -198,39 +245,6 @@ function mixDoc(array) {
 
 function isOdd(num) {
     return num % 2;
-}
-
-async function collectDocs(docs, Project, MetricsJson, progressBar, collectMetrics) {
-    console.time('collectDocs')
-    if (!docs)
-        return Promise.resolve(true);
-    for (let key in docs) {
-        //console.log("docs._number : " + docs[key]._number);
-        await collectMetrics(docs[key])
-            .then((json) => {
-                return saveMetrics(json, Project, MetricsJson, progressBar);
-            })
-    }
-    console.timeEnd('collectDocs')
-    return Promise.resolve(true);
-}
-
-
-function saveMetrics(json, Project, MetricsJson, progressBar) {
-    return Metrics.updateOne({id: json.id}, json, {upsert: true}).then(() => {
-        //MetricsJson.getMetricsJSON[json.id] = json;
-        //let filename = Project.getName + "-" + MetricsJson.getType + "-metrics.csv";
-        //return Utils.add_line_to_file(json, filename, Project.getOutputDirectory);
-        return updateProgress(progressBar);
-    })
-    /*.then(() => {
-        return updateProgress(progressBar);
-    });*/
-}
-
-async function updateProgress(progressBar) {
-    progressBar.increment(1);
-    return Promise.resolve(true);
 }
 
 

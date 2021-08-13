@@ -17,8 +17,7 @@ const progressBar = new cliProgress.SingleBar({
 
 let prefix = "https://android-review.googlesource.com/changes/?q=change:"
 let id = "Ic4d52a8be7cc2f9bbeb260c2506db88712a8d910"
-let suffix = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS" +
-    "&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS&o=CHANGE_ACTIONS&o=REVIEWER_UPDATES&o=COMMIT_FOOTERS&o=PUSH_CERTIFICATES&o=TRACKING_IDS";
+let suffix = "&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS&o=CHANGE_ACTIONS&o=REVIEWER_UPDATES&o=COMMIT_FOOTERS&o=PUSH_CERTIFICATES&o=TRACKING_IDS";
 
 let projectJson = Utils.getProjectParameters("libreoffice");
 let projectDBUrl = projectJson["projectDBUrl"];
