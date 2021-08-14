@@ -435,11 +435,6 @@ async function getChangesInfo(json) {
             ownerChangesMessagesMinPerChanges: getResult(results, values, ownerChangesMessagesCountAndAvgPerChanges).min,
             ownerChangesMessagesStdPerChanges: getResult(results, values, ownerChangesMessagesCountAndAvgPerChanges).std,
 
-            /*changesMessagesSum: getResult(results, values, changesMessagesCountAndAvg).count,
-            changesMessagesAvg: getResult(results, values, changesMessagesCountAndAvg).avg,
-            changesMessagesMax: getResult(results, values, changesMessagesCountAndAvg).max,
-            changesMessagesMin: getResult(results, values, changesMessagesCountAndAvg).min,
-            changesMessagesStd: getResult(results, values, changesMessagesCountAndAvg).std,*/
 
             priorChangesFiles: getResult(results, values, priorChangesFiles).count,
 
@@ -447,16 +442,6 @@ async function getChangesInfo(json) {
             ownerProjectBranchBuildTimeMax: getResult(results, values, ownerProjectBranchBuildTime).max,
             ownerProjectBranchBuildTimeMin: getResult(results, values, ownerProjectBranchBuildTime).min,
             ownerProjectBranchBuildTimeStd: getResult(results, values, ownerProjectBranchBuildTime).std,
-
-            /*revisionTimeAvg: getResult(results, values, revisionTime).avg,
-            revisionTimeMax: getResult(results, values, revisionTime).max,
-            revisionTimeMin: getResult(results, values, revisionTime).min,
-            revisionTimeStd: getResult(results, values, revisionTime).std,
-
-            branchRevisionTimeAvg: getResult(results, values, branchRevisionTime).avg,
-            branchRevisionTimeMax: getResult(results, values, branchRevisionTime).max,
-            branchRevisionTimeMin: getResult(results, values, branchRevisionTime).min,
-            branchRevisionTimeStd: getResult(results, values, branchRevisionTime).std,*/
 
             ownerRevisionTimeAvg: getResult(results, values, ownerRevisionTime).avg,
             ownerRevisionTimeMax: getResult(results, values, ownerRevisionTime).max,
@@ -502,6 +487,41 @@ async function getChangesInfo(json) {
 
             ownerNumberOfCherryPicked: getResult(results, values, ownerNumberOfCherryPicked).count,
 
+            branchAge: convertAsDays(getResult(results, values, branchAge)),
+            ownerAge: convertAsDays(getResult(results, values, ownerAge)),
+
+            priorOwnerRate: getResult(results, values, priorOwnerRate),
+
+            filesNumberOfRecentChangesOnBranch: getResult(results, values, filesNumberOfRecentChangesOnBranch),
+
+            priorProjectBranchOwnerChangesCount: getResult(results, values, priorProjectBranchOwnerChangesCount),//58
+            priorProjectBranchOwnerClosedChangesCount: getResult(results, values, priorProjectBranchOwnerClosedChangesCount),//59
+
+            priorProjectBranchOwnerChangeMeanTimeTypeAvg: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).avg,//61
+            priorProjectBranchOwnerChangeMeanTimeTypeMin: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).min,//61
+            priorProjectBranchOwnerChangeMeanTimeTypeMax: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).max,//61
+            priorProjectBranchOwnerChangeMeanTimeTypeStd: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).std,//61
+
+            ownerProjectBranchNumberChangesBuilt: getResult(results, values, ownerProjectBranchNumberChangesBuilt),//66
+
+            branchNumberChangesBuilt: getResult(results, values, branchNumberChangesBuilt),//72
+
+            /*changesMessagesSum: getResult(results, values, changesMessagesCountAndAvg).count,
+            changesMessagesAvg: getResult(results, values, changesMessagesCountAndAvg).avg,
+            changesMessagesMax: getResult(results, values, changesMessagesCountAndAvg).max,
+            changesMessagesMin: getResult(results, values, changesMessagesCountAndAvg).min,
+            changesMessagesStd: getResult(results, values, changesMessagesCountAndAvg).std,*/
+
+            /*revisionTimeAvg: getResult(results, values, revisionTime).avg,
+            revisionTimeMax: getResult(results, values, revisionTime).max,
+            revisionTimeMin: getResult(results, values, revisionTime).min,
+            revisionTimeStd: getResult(results, values, revisionTime).std,
+
+            branchRevisionTimeAvg: getResult(results, values, branchRevisionTime).avg,
+            branchRevisionTimeMax: getResult(results, values, branchRevisionTime).max,
+            branchRevisionTimeMin: getResult(results, values, branchRevisionTime).min,
+            branchRevisionTimeStd: getResult(results, values, branchRevisionTime).std,*/
+
             //branchNumberOfCherryPicked: getResult(results, values, branchNumberOfCherryPicked).count,
 
             //priorBranchChangesCount: getResult(results, values, priorBranchChangesCount),
@@ -520,15 +540,11 @@ async function getChangesInfo(json) {
 
             //projectAge: convertAsDays(getResult(results, values, projectAge)),
             //subsystemAge: convertAsDays(getResult(results, values, subsystemAge)),
-            branchAge: convertAsDays(getResult(results, values, branchAge)),
-            ownerAge: convertAsDays(getResult(results, values, ownerAge)),
+
 
             //priorRate: getResult(results, values, priorRate),
             //priorBranchRate: getResult(results, values, priorBranchRate),
             //priorSubsystemRate: getResult(results, values, priorSubsystemRate),
-            priorOwnerRate: getResult(results, values, priorOwnerRate),
-
-            filesNumberOfRecentChangesOnBranch: getResult(results, values, filesNumberOfRecentChangesOnBranch),
 
             //priorBranchOwnerChangeMeanTimeTypeAvg: getResult(results, values, priorBranchOwnerChangeMeanTimeType).avg,//53
             //priorBranchOwnerChangeMeanTimeTypeMin: getResult(results, values, priorBranchOwnerChangeMeanTimeType).min,//53
@@ -545,24 +561,16 @@ async function getChangesInfo(json) {
             //priorProjectBranchChangeMeanTimeTypeMax: getResult(results, values, priorProjectBranchChangeMeanTimeType).max,//57
             //priorProjectBranchChangeMeanTimeTypeStd: getResult(results, values, priorProjectBranchChangeMeanTimeType).std,//57
 
-            priorProjectBranchOwnerChangesCount: getResult(results, values, priorProjectBranchOwnerChangesCount),//58
-            priorProjectBranchOwnerClosedChangesCount: getResult(results, values, priorProjectBranchOwnerClosedChangesCount),//59
             //priorProjectBranchOwnerMergedChangesCount: results[59],//59
             //priorProjectBranchOwnerAbandonedChangesCount: results[60],//60
 
-            priorProjectBranchOwnerChangeMeanTimeTypeAvg: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).avg,//61
-            priorProjectBranchOwnerChangeMeanTimeTypeMin: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).min,//61
-            priorProjectBranchOwnerChangeMeanTimeTypeMax: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).max,//61
-            priorProjectBranchOwnerChangeMeanTimeTypeStd: getResult(results, values, priorProjectBranchOwnerChangeMeanTimeType).std,//61
 
             //projectNumberChangesBuilt: getResult(results, values, projectNumberChangesBuilt),//63
             //projectBranchNumberChangesBuilt: getResult(results, values, projectBranchNumberChangesBuilt),//64
             //ownerNumberChangesBuilt: getResult(results, values, ownerNumberChangesBuilt),//65
-            ownerProjectBranchNumberChangesBuilt: getResult(results, values, ownerProjectBranchNumberChangesBuilt),//66
             //filesNumberChangesBuilt: getResult(results, values, filesNumberChangesBuilt),//67
             //filesExtensionNumberChangesCount: getResult(results, values, filesExtensionNumberChangesCount),//68
             //filesExtensionNumberChangesBuilt: getResult(results, values, filesExtensionNumberChangesBuilt),//69
-            branchNumberChangesBuilt: getResult(results, values, branchNumberChangesBuilt),//72
             //numberChangesBuilt: getResult(results, values, numberChangesBuilt),//62
             //ratioBranchNumberChangesBuilt: safeDivision(results[72], results[38] + results[39]),
             //ratioChangeBuilt: safeDivision(results[62], results[1] + results[2]),

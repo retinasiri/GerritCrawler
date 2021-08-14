@@ -106,7 +106,7 @@ async function getChangesInfo(json) {
     let filesExtensionNumberChangesBuilt = getFilesExtensionNumberChangesBuilt(json);//todo remove
 
     let revisionTime = getRevisionTime(json);
-    let ownerProjectBranchBuildTime = getOwnerProjectBranchBuildTime(json);
+    //let ownerProjectBranchBuildTime = getOwnerProjectBranchBuildTime(json);
     let ownerRevisionTime = getOwnerRevisionTime(json);
     let filesRevisionTime = getFilesRevisionTime(json);
 
@@ -129,7 +129,7 @@ async function getChangesInfo(json) {
         filesExtensionNumberChangesBuilt,
 
         revisionTime,
-        ownerProjectBranchBuildTime,
+        //ownerProjectBranchBuildTime,
         ownerRevisionTime,
         filesRevisionTime
 
@@ -162,10 +162,10 @@ async function getChangesInfo(json) {
             revisionTimeMin: getResult(results, values, revisionTime).min,
             revisionTimeStd: getResult(results, values, revisionTime).std,
 
-            ownerProjectBranchBuildTimeAvg: getResult(results, values, ownerProjectBranchBuildTime).avg,
+            /*ownerProjectBranchBuildTimeAvg: getResult(results, values, ownerProjectBranchBuildTime).avg,
             ownerProjectBranchBuildTimeMax: getResult(results, values, ownerProjectBranchBuildTime).max,
             ownerProjectBranchBuildTimeMin: getResult(results, values, ownerProjectBranchBuildTime).min,
-            ownerProjectBranchBuildTimeStd: getResult(results, values, ownerProjectBranchBuildTime).std,
+            ownerProjectBranchBuildTimeStd: getResult(results, values, ownerProjectBranchBuildTime).std,*/
 
             ownerRevisionTimeAvg: getResult(results, values, ownerRevisionTime).avg,
             ownerRevisionTimeMax: getResult(results, values, ownerRevisionTime).max,

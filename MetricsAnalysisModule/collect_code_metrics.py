@@ -51,12 +51,12 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
     bar.max = len(json_data)
     n = 1
     for i in json_data:
-        '''
-        if(n<662540):
+        
+        if(n<663018):
             n+=1
             bar.next()
             continue
-        '''
+        
         metric = get_code_metrics(json_data[i], repo_root_path)
         if(metric is not None):
             Database.save_metrics(metric)
