@@ -154,13 +154,13 @@ async function collectMetadata(json) {
     let time_to_add_human_reviewers = get_time_to_add_human_reviewers(json, metadata["close_time"])
 
     if (time_to_add_human_reviewers.avg_time_to_add_human_reviewers === undefined || time_to_add_human_reviewers.avg_time_to_add_human_reviewers === 0) {
-        metadata["avg_time_to_add_human_reviewers"] = metadata["close_time"];
+        metadata["avg_time_to_add_human_reviewers"] = timeDiff(json.created, metadata["close_time"]);
     } else {
         metadata["avg_time_to_add_human_reviewers"] = time_to_add_human_reviewers.avg_time_to_add_human_reviewers;
     }
 
     if (time_to_add_human_reviewers.avg_time_to_add_human_reviewers_before_close === undefined || time_to_add_human_reviewers.avg_time_to_add_human_reviewers_before_close === 0) {
-        metadata["avg_time_to_add_human_reviewers_before_close"] = metadata["close_time"];
+        metadata["avg_time_to_add_human_reviewers_before_close"] = timeDiff(json.created, metadata["close_time"]);
     } else {
         metadata["avg_time_to_add_human_reviewers_before_close"] = time_to_add_human_reviewers.avg_time_to_add_human_reviewers_before_close;
     }
@@ -215,7 +215,7 @@ function get_time_to_add_human_reviewers(json, close_time) {
         let updated = reviewers_updated[i];
         let reviewer_id = updated["reviewer"]["_account_id"];
         if (!MetricsUtils.isABot(reviewer_id, projectName)) {
-            let date = updated["updated"]; //todo correct
+            let date = updated["updated"];
             dateDiff.push(timeDiff(date_created, date))
             if (date < close_time)
                 dateDiff_before_close.push(timeDiff(date_created, date))

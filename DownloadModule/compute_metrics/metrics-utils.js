@@ -171,7 +171,7 @@ function getChanges(skip, step, Project, progressBar, collectMetrics) {
 
 async function collectDocs(docs, Project, progressBar, collectMetrics) {
     console.time('collectDocs')
-    let CONCURRENT = 500
+    let CONCURRENT = 1000
     if (!docs)
         return Promise.resolve(true);
 
@@ -193,6 +193,7 @@ async function collectDocs(docs, Project, progressBar, collectMetrics) {
     }
 
     await Promise.all(queue);
+    console.timeEnd('collectDocs')
     return Promise.resolve(true);
 }
 
@@ -573,4 +574,5 @@ module.exports = {
     get_timezone_owner: get_timezone_owner,
     get_month: get_month,
     get_month_for_owner: get_month_for_owner,
+    is_self_reviewed_note: is_self_reviewed_note,
 };

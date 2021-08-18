@@ -7,9 +7,6 @@ const Utils = require('../config/utils');
 const fs = require('fs');
 const MetricsUtils = require('./metrics-utils');
 
-//todo correct time betweenRevision
-//todo time of inactivity
-
 const progressBar = new cliProgress.SingleBar({
     format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | skipped : {skipped} ',
     barCompleteChar: '#',
@@ -74,8 +71,8 @@ function getMetrics(skip) {
             {
                 $match: {
                     status: {$in: ['MERGED', 'ABANDONED']},
-                    //"is_a_bot" : false,
-                    //"first_revision" : 1,
+                    //is_a_bot : false,
+                    //first_revision : 1
                 }
             },
             {$sort: {date_created: 1, number: 1}},
@@ -114,12 +111,12 @@ async function collectDocs(docs) {
             continue;
         }
 
-        addMetrics(doc)
+        //addMetrics(doc)
 
         await collectMetrics(doc)
-            .then((json) => {
+            /*.then((json) => {
                 return saveMetrics(json);
-            })
+            })*/
             .then(() => {
                 return updateProgress();
             })
@@ -172,17 +169,6 @@ function check_value_to_ignore(metrics) {
     return bool;
 }
 
-function check_self_review(metrics) {
-    if (metrics["is_owner_the_only_reviewer"])
-        return true;
-    if (metrics["labels_code_review_2_owner"] && metrics["labels_code_review_2_count"] === 1)
-        return true;
-    if (metrics["labels_code_review_minus_2_owner"] && metrics["labels_code_review_minus_2_count"] === 1)
-        return true;
-
-    return false;
-}
-
 async function saveMetrics(json, suffix = "") {
     let path = PathLibrary.join(DATA_PATH, projectName);
     if (!suffix || suffix === "")
@@ -232,21 +218,6 @@ function copy(result, json, key, new_name = "", convert_to_hours = false) {
     return result;
 }
 
-function match_review_kind_value(metric) {
-    let value = 1;
-    if (metric.includes("REWORK")) {
-        value = 1;
-    } else if (metric.includes("TRIVIAL_REBASE")) {
-        value = 2;
-    } else if (metric.includes("MERGE_FIRST_PARENT_UPDATE")) {
-        value = 3;
-    } else if (metric.includes("NO_CODE_CHANGE")) {
-        value = 4;
-    } else if (metric.includes("NO_CHANGE")) {
-        value = 5;
-    }
-    return value;
-}
 
 let i = 1;
 
@@ -254,7 +225,7 @@ String.prototype.camelCaseToDashed = function () {
     return this.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
 }
 
-function addMetrics(json) {
+/*function addMetrics(json) {
     json["prior_branch_owner_ratio"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount"], json["priorBranchChangesCount"])
     json["owner_non_close_changes"] = json["ownerPriorChangesCount"] - json["ownerPriorMergedChangesCount"] - json["ownerPriorAbandonedChangesCount"]
 
@@ -291,67 +262,35 @@ function addMetrics(json) {
         json["owner_non_close_changes_180_days"] = json["ownerPriorChangesCount_180_days"] - json["ownerPriorMergedChangesCount_180_days"] - json["ownerPriorAbandonedChangesCount_180_days"]
     }
 
+}*/
+
+
+function copy_time_metrics(id, metric, result, number_of_days){
+    if (metric.hasOwnProperty(id + number_of_days)) {
+        result = copy(result, metric, id + number_of_days)
+    } else {
+        if (id.includes("eviewer"))
+            result = copy(result, metric, id + number_of_days)
+        else
+            result = copy(result, metric, id)
+    }
+    return result;
 }
 
 async function collectMetrics(metric) {
 
     let result = {};
     let result_all = {};
+    let result_7_days = {};
     let result_14_days = {};
     let result_30_days = {};
-    let result_90_days = {};
-    let result_180_days = {};
-
-    /*if(metric.hasOwnProperty("reviewersPriorChangesAvg_30_days"))
-        console.log(true)*/
-    /*if (metric.hasOwnProperty("reviewersPriorChangesSum" + "_30_days"))
-        console.log(true)
-    else {
-        console.log(false)
-        console.log(Object.keys(metric))
-    }*/
 
     for (let id in metric_to_collect) {
-
         result = copy(result, metric, id);
-
-        if (metric.hasOwnProperty(id + "_14_days")) {
-            result_14_days = copy(result_14_days, metric, id + "_14_days")
-        } else {
-            if (id.includes("eviewer"))
-                result_14_days = copy(result_14_days, metric, id + "_14_days")
-            else
-                result_14_days = copy(result_14_days, metric, id)
-        }
-
-        if (metric.hasOwnProperty(id + "_30_days")) {
-            result_30_days = copy(result_30_days, metric, id + "_30_days")
-        } else {
-            if (id.includes("eviewer"))
-                result_30_days = copy(result_30_days, metric, id + "_30_days")
-            else
-                result_30_days = copy(result_30_days, metric, id)
-        }
-
-        if (metric.hasOwnProperty(id + "_90_days"))
-            result_90_days = copy(result_90_days, metric, id + "_90_days");
-        else {
-            if (id.includes("eviewer"))
-                result_90_days = copy(result_90_days, metric, id + "_90_days")
-            else
-                result_90_days = copy(result_90_days, metric, id)
-        }
-
-        if (metric.hasOwnProperty(id + "_180_days"))
-            result_180_days = copy(result_180_days, metric, id + "_180_days");
-        else {
-            if (id.includes("eviewer"))
-                result_180_days = copy(result_180_days, metric, id + "_180_days")
-            else
-                result_180_days = copy(result_180_days, metric, id)
-        }
-
-        result_all = {...result, ...result_30_days, ...result_90_days, ...result_14_days}
+        result_7_days = copy_time_metrics(id, metric, result_7_days, "_7_days")
+        result_14_days = copy_time_metrics(id, metric, result_14_days, "_14_days")
+        result_30_days = copy_time_metrics(id, metric, result_30_days, "_30_days")
+        result_all = {...result, ...result_7_days, ...result_14_days, ...result_30_days}
     }
 
     delete result_all["date_updated_date_created_diff"]
@@ -359,10 +298,10 @@ async function collectMetrics(metric) {
 
     return Promise.all(
         [
+            saveMetrics(result, "metrics"),
+            saveMetrics(result_7_days, "metrics-7-days"),
             saveMetrics(result_14_days, "metrics-14-days"),
             saveMetrics(result_30_days, "metrics-30-days"),
-            saveMetrics(result_90_days, "metrics-90-days"),
-            saveMetrics(result_180_days, "metrics-180-days"),
             saveMetrics(result_all, "metrics-all")
         ]
     ).then(() => {
@@ -622,6 +561,33 @@ let metric_to_collect = {
 module.exports = {
     start: startComputeMetrics
 };
+
+/*function match_review_kind_value(metric) {
+    let value = 1;
+    if (metric.includes("REWORK")) {
+        value = 1;
+    } else if (metric.includes("TRIVIAL_REBASE")) {
+        value = 2;
+    } else if (metric.includes("MERGE_FIRST_PARENT_UPDATE")) {
+        value = 3;
+    } else if (metric.includes("NO_CODE_CHANGE")) {
+        value = 4;
+    } else if (metric.includes("NO_CHANGE")) {
+        value = 5;
+    }
+    return value;
+}*/
+
+/*function check_self_review(metrics) {
+    if (metrics["is_owner_the_only_reviewer"])
+        return true;
+    if (metrics["labels_code_review_2_owner"] && metrics["labels_code_review_2_count"] === 1)
+        return true;
+    if (metrics["labels_code_review_minus_2_owner"] && metrics["labels_code_review_minus_2_count"] === 1)
+        return true;
+
+    return false;
+}*/
 
 /*
     if(metric.hasOwnProperty("priorBranchOwnerChangesCount_30_days") && metric.hasOwnProperty("priorBranchChangesCount_30_days")){

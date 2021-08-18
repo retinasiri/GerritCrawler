@@ -1305,6 +1305,7 @@ function getOwnerTimeBetweenRevision(json) {
     return genericDBRequest(pipeline);
 }
 
+//todo correct when no review
 function getOwnerTimeToAddReviewer(json) {
     let created_date = json.created;
     let ownerId = json.owner._account_id;

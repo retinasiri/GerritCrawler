@@ -61,7 +61,7 @@ function startComputeMetadata(json) {
 function getChanges(skip, NUM_OF_CHANGES_LIMIT = 20000) {
     return Change
         .aggregate([
-            {$sort: {_number: 1}},
+            {$sort: {created: 1, _number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
         ])
@@ -110,10 +110,13 @@ async function updateProgress() {
     return Promise.resolve(true);
 }
 
+let i = 1;
 
 async function collectMetadata(json) {
     let metadata = {};
     metadata["id"] = json.id
+
+    /*
     metadata["owner_timezone"] = MetricsUtils.get_timezone_owner(json)
     metadata["month_date_created"] = MetricsUtils.get_month(json.created);
     metadata["month_date_created_for_owner"] = MetricsUtils.get_month_for_owner(json.created, MetricsUtils.get_timezone(json).author);
@@ -125,8 +128,78 @@ async function collectMetadata(json) {
     metadata["extensions_list"] = extension_info.extensions;
     metadata["directories_list"] = extension_info.directories;
     metadata["base_directories_list"] = extension_info.base_directories;
+    */
+
+    //metadata["n"] = i++
+
+    metadata["num_files"] = Object.keys(json.files_list).length;
+    metadata["has_reviewers"] = has_human_reviewers(json)
+    metadata["num_human_reviewer"] = MetricsUtils.getHumanReviewersCount(json, projectName);
+
+    //if(json.close_time === json.avg_time_to_add_human_reviewers){}
+    let close_time = json["close_time"]
+    let time_to_add_human_reviewers = get_time_to_add_human_reviewers(json, close_time);
+    metadata["avg_time_to_add_human_reviewers"] = time_to_add_human_reviewers.avg_time_to_add_human_reviewers;
+    metadata["avg_time_to_add_human_reviewers_before_close"] = time_to_add_human_reviewers.avg_time_to_add_human_reviewers_before_close;
+
+    let self_review = MetricsUtils.is_self_reviewed_note(json, projectName);
+    metadata["num_code_review_minus_2"] = self_review.check_code_review_minus_2_count;
+    metadata["num_code_review_2"] = self_review.check_code_review_2_count;
+    metadata["num_code_review"] = self_review.check_code_review_length;
 
     return metadata;
+}
+
+function timeDiff(time1, time2) {
+    let createdTime = Moment.utc(time1);
+    let updatedTime = Moment.utc(time2);
+    let time = Math.abs(createdTime.toDate() - updatedTime.toDate());
+    return Moment.duration(time).asHours()
+}
+
+function get_time_to_add_human_reviewers(json, close_time) {
+    let reviewers_updated = json["reviewer_updates"]; //todo correct
+    let date_created = json["created"]
+    let dateDiff = []
+    let dateDiff_before_close = []
+    if (!reviewers_updated)
+        return {
+            avg_time_to_add_human_reviewers: undefined,
+            avg_time_to_add_human_reviewers_before_close: undefined
+        };
+
+    for (let i = 0; i < reviewers_updated.length; i++) {
+        let updated = reviewers_updated[i];
+        let reviewer_id = updated["reviewer"]["_account_id"];
+        if (!MetricsUtils.isABot(reviewer_id, projectName)) {
+            let date = updated["updated"];
+            dateDiff.push(timeDiff(date_created, date))
+            if (date < close_time)
+                dateDiff_before_close.push(timeDiff(date_created, date))
+        }
+    }
+    return {
+        avg_time_to_add_human_reviewers: avg(dateDiff),
+        avg_time_to_add_human_reviewers_before_close: avg(dateDiff_before_close)
+    }
+}
+
+function avg(num_array) {
+    return num_array.length > 0 ? MathJs.mean(num_array) : 0;
+}
+
+function has_human_reviewers(json) {
+    let reviewers_updated = json["reviewer_updates"];
+    if (!reviewers_updated)
+        return false
+    for (let i = 0; i < reviewers_updated.length; i++) {
+        let updated = reviewers_updated[i];
+        let reviewer_id = updated["reviewer"]["_account_id"];
+        if (!MetricsUtils.isABot(reviewer_id, projectName)) {
+            return true
+        }
+    }
+    return false
 }
 
 function get_extension_list(json) {
@@ -149,9 +222,9 @@ function get_extension_list(json) {
     let base_directories = Array.from(base_directories_set);
 
     return {
-        extensions : extensions,
-        directories : directories,
-        base_directories : base_directories,
+        extensions: extensions,
+        directories: directories,
+        base_directories: base_directories,
     }
 }
 
