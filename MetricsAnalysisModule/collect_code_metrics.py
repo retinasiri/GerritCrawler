@@ -52,7 +52,7 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
     n = 1
     for i in json_data:
         
-        if(n<663018):
+        if(n<666233):
             n+=1
             bar.next()
             continue
@@ -61,6 +61,7 @@ def processData(list_of_commit, repo_root_path, data_dir_path):
         if(metric is not None):
             Database.save_metrics(metric)
         bar.next()
+
     save_json_in_file(error_list, data_dir_path, "-code-metrics-error.json")
     bar.finish()
     print("Finished with code metrics !!!!!")

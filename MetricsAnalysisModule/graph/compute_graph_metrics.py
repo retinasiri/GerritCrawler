@@ -40,7 +40,7 @@ def compute_graph_metrics(G) :
         'closeness_centrality' : nx.closeness_centrality(G),
         'betweenness_centrality' : nx.betweenness_centrality(G, weight='weight'),
         'eigenvector_centrality' : nx.eigenvector_centrality(G, max_iter=700, weight='weight'),
-        'clustering_coefficient': nx.clustering(G), 
+        'clustering_coefficient': nx.clustering(G, weight='weight'), 
         'core_number' : nx.core_number(G) 
     }
 
