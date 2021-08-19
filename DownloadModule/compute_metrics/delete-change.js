@@ -101,9 +101,9 @@ async function deleteAllDocs() {
     //let CONCURRENT = 3000;
     //let deleted =0;
 
-    return Change.deleteMany({id: { $in:delete_id_list}})
+    return Change.deleteMany({id: {$in: delete_id_list}})
         .then(() => {
-            return Metrics.deleteMany({id: { $in:delete_id_list}})
+            return Metrics.deleteMany({id: {$in: delete_id_list}})
         })
         .catch(err => {
             console.log(err)
@@ -143,7 +143,7 @@ async function collectDocs(docs) {
                     if (toDelete) {
                         deleted_change_nums += 1;
                         delete_id_list.push(docs[key].id)
-                    }else {
+                    } else {
                         kept_change_nums += 1;
                     }
                 }
@@ -166,7 +166,7 @@ function deleteChange(id) {
 }
 
 async function updateProgress(bar, deleted, kept, added) {
-    bar.increment(1, {deleted: deleted,  kept: kept, added: added});
+    bar.increment(1, {deleted: deleted, kept: kept, added: added});
     return Promise.resolve(true);
 }
 
@@ -182,16 +182,16 @@ async function collectMetadata(json) {
     let first_revision = json["first_revision"]
 
     let status = json["status"]
-    if(status === "NEW"){
+    if (status === "NEW") {
         if (inactive_time_before_review > 336)
             return true;
         if (time_diff > 730)
             return true;
-        if(is_a_cherry_pick === true)
+        if (is_a_cherry_pick === true)
             return true;
         if (first_revision !== 1)
             return true;
-        if(num_files === 0)
+        if (num_files === 0)
             return true;
         return false;
     } else {
@@ -205,14 +205,15 @@ async function collectMetadata(json) {
             return true;
         if (messages_count <= 1)
             return true;
-        if (has_reviewers === false)
+        if (num_files === 0)
             return true;
-        if(num_files === 0)
-            return true;
-        if(is_a_cherry_pick === true)
+        if (is_a_cherry_pick === true)
             return true;
         if (first_revision !== 1)
             return true;
+        if (json.hasOwnProperty("has_reviewers"))
+            if (has_reviewers === false)
+                return true;
         return false;
     }
 }
