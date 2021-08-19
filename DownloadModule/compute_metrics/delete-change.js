@@ -45,7 +45,7 @@ function startComputeMetadata(json) {
         .then((count) => {
             let NUM_OF_CHANGES_LIMIT = 10000;
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
-            progressBar.start(count, 0, {deleted: 0, added: 0});
+            progressBar.start(count, 0, {deleted: 0, kept: 0});
             return getChanges(STARTING_POINT, NUM_OF_CHANGES_LIMIT);
         })
         .then(() => {
@@ -89,11 +89,11 @@ async function collectDocs(docs) {
             .then((toDelete) => {
                 if (typeof toDelete === 'boolean') {
                     if (toDelete) {
+                        deleted_change_nums += 1;
                         return deleteChange(docs[key])
-                    } else{
-                        kept_change_nums += 1;
                     }
                 }
+                kept_change_nums += 1;
                 updateProgress();
                 Promise.resolve(true);
             })
@@ -104,7 +104,6 @@ async function collectDocs(docs) {
 function deleteChange(json) {
     return Change.deleteOne({id: json.id})
         .then(() => {
-            deleted_change_nums += 1;
             return updateProgress();
         })
         .then(() => {
@@ -115,37 +114,10 @@ function deleteChange(json) {
         });
 }
 
-function replaceDocuments(json) {
-    //return Change.replaceOne({id: json.id}, json)
-    return Change.updateOne({id: json.id}, json)
-        .then(() => {
-            return updateProgress();
-        }).catch(err => {
-            console.log(err)
-        });
-}
-
 async function updateProgress() {
     progressBar.increment(1, {deleted: deleted_change_nums,  kept: kept_change_nums, added: added_change_nums});
     return Promise.resolve(true);
 }
-
-function deleteUnnecessary(json) {
-    delete json["actions"]
-    delete json["hashtags"]
-    //delete json["labels"]
-    delete json["messages"]
-    delete json["pending_reviewers"]
-    delete json["removable_reviewers"]
-    delete json["requirements"]
-    delete json["reviewer_updates"]
-    delete json["total_comment_count"]
-    delete json["unresolved_comment_count"]
-    delete json["mergeable"]
-    delete json["submitter"]
-    return json
-}
-
 
 async function collectMetadata(json) {
     let toDelete = false;
@@ -191,6 +163,33 @@ async function collectMetadata(json) {
         return toDelete
     }
 }
+
+
+/*function deleteUnnecessary(json) {
+    delete json["actions"]
+    delete json["hashtags"]
+    //delete json["labels"]
+    delete json["messages"]
+    delete json["pending_reviewers"]
+    delete json["removable_reviewers"]
+    delete json["requirements"]
+    delete json["reviewer_updates"]
+    delete json["total_comment_count"]
+    delete json["unresolved_comment_count"]
+    delete json["mergeable"]
+    delete json["submitter"]
+    return json
+}
+
+function replaceDocuments(json) {
+    //return Change.replaceOne({id: json.id}, json)
+    return Change.updateOne({id: json.id}, json)
+        .then(() => {
+            return updateProgress();
+        }).catch(err => {
+            console.log(err)
+        });
+}*/
 
 /*metadata["id"] = json["id"];
    metadata["updated_original"] = json["updated"]
