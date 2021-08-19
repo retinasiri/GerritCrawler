@@ -98,8 +98,6 @@ function getChanges(skip, NUM_OF_CHANGES_LIMIT = 20000) {
 async function deleteAllDocs() {
     const bar2 = multibar.create(0, 0, {type: 'Deleting changes'});
     bar2.setTotal(delete_id_list.length);
-    //let CONCURRENT = 3000;
-    //let deleted =0;
 
     return Change.deleteMany({id: {$in: delete_id_list}})
         .then(() => {
@@ -108,26 +106,6 @@ async function deleteAllDocs() {
         .catch(err => {
             console.log(err)
         });
-
-    /*let queue = [];
-    let ret = [];
-    for (let key in delete_id_list) {
-        let p = deleteChange(key)
-            .then(() => {
-                queue.splice(queue.indexOf(p), 1);
-                deleted +=1;
-                return updateProgress(bar2, deleted);
-            })
-
-        queue.push(p);
-        ret.push(p);
-        // if max concurrent, wait for one to finish
-        if (queue.length >= CONCURRENT) {
-            await Promise.race(queue);
-        }
-    }
-
-    await Promise.all(queue);*/
 
     return Promise.resolve(true);
 }
