@@ -118,9 +118,10 @@ async function collectDocs(docs) {
                     if (toDelete) {
                         deleted_change_nums += 1;
                         delete_id_list.push(key)
+                    }else {
+                        kept_change_nums += 1;
                     }
                 }
-                kept_change_nums += 1;
             })
             .then(() => {
                 return updateProgress(bar1, deleted_change_nums, kept_change_nums, added_change_nums);
