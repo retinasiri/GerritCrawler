@@ -93,7 +93,8 @@ async function collectDocs(docs) {
                         return deleteChange(docs[key])
                     }
                 }
-                return replaceDocuments(json);
+                //return replaceDocuments(json);
+                Promise.resolve(true);
             })
     }
     return Promise.resolve(true);
@@ -149,19 +150,57 @@ async function collectMetadata(json) {
     let metadata = json;
     let keep = true;
 
-    metadata["id"] = json["id"];
-    metadata["updated_original"] = json["updated"]
-    metadata["updated"] = json["close_time"]
-    metadata["status_original"] = json["status"]
-    metadata["status"] = json["new_status"]
-    metadata["date_updated_date_created_diff_original"] = json["date_updated_date_created_diff"]
-    metadata["date_updated_date_created_diff"] = json["diff_created_close_time"]
+    let status = json["status"]
+    if(status === "NEW")
+        return true;
+
+    let time_diff = json["date_updated_date_created_diff"]
+    let inactive_time_before_review = json["max_inactive_time_before_close"]
+    let messages_count = json["messages_count"]
+    let has_reviewers = json["has_reviewers"]
+    let num_files = json["num_files"]
+    let is_a_cherry_pick = json["is_a_cherry_pick"]
+    let first_revision = json["first_revision"]
+
+    //duration > 1h
+    if (time_diff < 1)
+        keep = false;
+
+    if (time_diff > 730)
+        keep = false;
+
+    //inactive time > 336H (2 weeks) - 3 months //2190 //1460 //730
+    if (inactive_time_before_review > 336)
+        keep = false;
+
+    if (messages_count <= 1)
+        keep = false;
+
+    if (has_reviewers === false)
+        keep = false;
+
+    if(num_files <= 0)
+        keep = false;
+
+    if(is_a_cherry_pick === true)
+        keep = false;
+
+    if (first_revision !== 1)
+        keep = false;
 
     return {
         data: json,
         keep: keep,
     };
 }
+
+/*metadata["id"] = json["id"];
+   metadata["updated_original"] = json["updated"]
+   metadata["updated"] = json["close_time"]
+   metadata["status_original"] = json["status"]
+   metadata["status"] = json["new_status"]
+   metadata["date_updated_date_created_diff_original"] = json["date_updated_date_created_diff"]
+   metadata["date_updated_date_created_diff"] = json["diff_created_close_time"]*/
 
 /*
 async function collectMetadata(json) {

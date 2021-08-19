@@ -337,3 +337,57 @@ db.getCollection('changes').aggregate([
         }
     }
 ])
+
+
+db.getCollection('changes').aggregate([
+    {$match : {
+            status: {$in: ['MERGED', 'ABANDONED']},
+            date_updated_date_created_diff: {$gte: 24, $lte:336},
+            max_inactive_time: {$lte: 168},
+            messages_count: {$gt: 1},
+            has_reviewers: true,
+            num_files: {$gt: 0},
+            is_a_cherry_pick: false,
+            first_revision: 1
+        }
+    },
+    //{$count: 'count'}
+    {$sort: {created:1, _number: 1}},
+    {
+        $group: {
+            _id: 1,
+            count: { $sum: 1 },
+            time_avg: {$avg: "$date_updated_date_created_diff"},
+            time_max: {$max: "$date_updated_date_created_diff"},
+            time_min: {$min: "$date_updated_date_created_diff"},
+            time_std: {$stdDevPop: "$date_updated_date_created_diff"},
+            first_created_date: {$first: "$created"},
+            first_updated_date: {$first: "$updated"},
+            last_created_date: {$last: "$created"},
+            last_updated_date: {$last: "$updated"},
+        }
+    }
+])
+
+db.getCollection('changes').aggregate([
+    {$match : {
+            created: {$lte: "2021-06-16"},
+            date_updated_date_created_diff: {$gte: 1, $lte:730},
+            max_inactive_time: {$lte: 336},
+            messages_count: {$gt: 1},
+            has_reviewers: true,
+            num_files: {$gt: 0},
+            is_a_cherry_pick: false
+        }
+    },
+    {
+        $group: {
+            _id: "ALL",
+            count: { $sum: 1 },
+            time_avg: {$avg: "$date_updated_date_created_diff"},
+            time_max: {$max: "$date_updated_date_created_diff"},
+            time_min: {$min: "$date_updated_date_created_diff"},
+            time_std: {$stdDevPop: "$date_updated_date_created_diff"},
+        }
+    }
+])

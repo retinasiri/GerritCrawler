@@ -129,22 +129,21 @@ function prepareCommand(argv) {
     let end = argv.end;
     let days = argv.days;
     let json = {}
-    if (Config.project[projectName]){
-        if(start !== undefined && end !== undefined ){
-            if(start < end){
+    if (Config.project[projectName]) {
+        if (start !== undefined && end !== undefined) {
+            if (start < end) {
                 json = Utils.getProjectParameters(projectName);
                 json["start"] = start;
                 json["end"] = end;
-            } else{
+            } else {
                 console.log("the end should be greater than the start");
             }
-        } else{
+        } else {
             json = Utils.getProjectParameters(projectName);
         }
-        if(days !== undefined)
+        if (days !== undefined)
             json["NUM_DAYS_FOR_RECENT"] = days
-    }
-    else {
+    } else {
         console.log("The project you request hasn't been found on the config file. You can edit the Config.json file and add information about this project")
         return
     }
@@ -218,10 +217,14 @@ function computeChangesMetrics(argv) {
 function computeMetadata(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
-        return ComputeMetadata_2.start(projectJson)
+        return ComputeMetadata.start(projectJson)
             .catch(err => {
                 console.log(err)
             });
+    /*return ComputeMetadata_2.start(projectJson)
+        .catch(err => {
+            console.log(err)
+        });*/
 }
 
 function deleteCodeChanges(argv) {
