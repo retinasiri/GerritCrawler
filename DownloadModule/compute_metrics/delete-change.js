@@ -9,7 +9,7 @@ const MetricsUtils = require('./metrics-utils');
 
 const progressBar = new cliProgress.SingleBar({
     //format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | added: {added} | deleted: {deleted}',
-    format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | deleted: {deleted}',
+    format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | deleted: {deleted} | kept: {kept}',
     barCompleteChar: '#',
     barIncompleteChar: '-',
 }, cliProgress.Presets.shades_classic);
@@ -22,6 +22,7 @@ let DATA_PATH = "data/"
 let STARTING_POINT = 0;
 let deleted_change_nums = 0;
 let added_change_nums = 0;
+let kept_change_nums = 0;
 
 if (typeof require !== 'undefined' && require.main === module) {
     startComputeMetadata(libreOfficeJson).catch(err => {
@@ -85,15 +86,15 @@ async function collectDocs(docs) {
         return Promise.resolve(true);
     for (let key in docs) {
         await collectMetadata(docs[key])
-            .then((data) => {
-                let json = data.data;
-                let keep = data.keep;
-                if (typeof keep === 'boolean') {
-                    if (!keep) {
+            .then((toDelete) => {
+                if (typeof toDelete === 'boolean') {
+                    if (toDelete) {
                         return deleteChange(docs[key])
+                    } else{
+                        kept_change_nums += 1;
                     }
                 }
-                //return replaceDocuments(json);
+                updateProgress();
                 Promise.resolve(true);
             })
     }
@@ -125,7 +126,7 @@ function replaceDocuments(json) {
 }
 
 async function updateProgress() {
-    progressBar.increment(1, {deleted: deleted_change_nums, added: added_change_nums});
+    progressBar.increment(1, {deleted: deleted_change_nums,  kept: kept_change_nums, added: added_change_nums});
     return Promise.resolve(true);
 }
 
@@ -147,12 +148,7 @@ function deleteUnnecessary(json) {
 
 
 async function collectMetadata(json) {
-    let metadata = json;
-    let keep = true;
-
-    let status = json["status"]
-    if(status === "NEW")
-        return true;
+    let toDelete = false;
 
     let time_diff = json["date_updated_date_created_diff"]
     let inactive_time_before_review = json["max_inactive_time_before_close"]
@@ -162,36 +158,38 @@ async function collectMetadata(json) {
     let is_a_cherry_pick = json["is_a_cherry_pick"]
     let first_revision = json["first_revision"]
 
-    //duration > 1h
-    if (time_diff < 1)
-        keep = false;
-
-    if (time_diff > 730)
-        keep = false;
-
-    //inactive time > 336H (2 weeks) - 3 months //2190 //1460 //730
-    if (inactive_time_before_review > 336)
-        keep = false;
-
-    if (messages_count <= 1)
-        keep = false;
-
-    if (has_reviewers === false)
-        keep = false;
-
-    if(num_files <= 0)
-        keep = false;
-
-    if(is_a_cherry_pick === true)
-        keep = false;
-
-    if (first_revision !== 1)
-        keep = false;
-
-    return {
-        data: json,
-        keep: keep,
-    };
+    let status = json["status"]
+    if(status === "NEW"){
+        if (inactive_time_before_review > 336)
+            return true;
+        if (time_diff > 730)
+            return true;
+        if(is_a_cherry_pick === true)
+            return true;
+        if (first_revision !== 1)
+            return true;
+        return false;
+    } else {
+        //duration > 1h
+        if (time_diff < 1)
+            return true;
+        if (time_diff > 730)
+            return true;
+        //inactive time > 336H (2 weeks) - 3 months //2190 //1460 //730
+        if (inactive_time_before_review > 336)
+            return true;
+        if (messages_count <= 1)
+            return true;
+        if (has_reviewers === false)
+            return true;
+        if(num_files <= 0)
+            return true;
+        if(is_a_cherry_pick === true)
+            return true;
+        if (first_revision !== 1)
+            return true;
+        return toDelete
+    }
 }
 
 /*metadata["id"] = json["id"];
