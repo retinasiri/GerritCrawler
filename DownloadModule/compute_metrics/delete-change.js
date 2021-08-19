@@ -94,8 +94,10 @@ async function collectDocs(docs) {
                     }
                 }
                 kept_change_nums += 1;
-                updateProgress();
-                Promise.resolve(true);
+                return Promise.resolve(true);
+            })
+            .then(() => {
+                return updateProgress();
             })
     }
     return Promise.resolve(true);
@@ -103,9 +105,6 @@ async function collectDocs(docs) {
 
 function deleteChange(json) {
     return Change.deleteOne({id: json.id})
-        .then(() => {
-            return updateProgress();
-        })
         .then(() => {
             return Metrics.deleteOne({id: json.id})
         })
