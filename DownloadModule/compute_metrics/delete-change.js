@@ -98,7 +98,7 @@ function getChanges(skip, NUM_OF_CHANGES_LIMIT = 20000) {
 async function deleteAllDocs() {
     const bar2 = multibar.create(0, 0, {type: 'Deleting changes'});
     bar2.setTotal(delete_id_list.length);
-    let CONCURRENT = 1000;
+    let CONCURRENT = 3000;
 
     let queue = [];
     let ret = [];
@@ -132,7 +132,7 @@ async function collectDocs(docs) {
                 if (typeof toDelete === 'boolean') {
                     if (toDelete) {
                         deleted_change_nums += 1;
-                        delete_id_list.push(key)
+                        delete_id_list.push(docs[key].id)
                     }else {
                         kept_change_nums += 1;
                     }
