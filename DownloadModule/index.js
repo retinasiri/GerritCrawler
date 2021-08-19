@@ -217,11 +217,11 @@ function computeChangesMetrics(argv) {
 function computeMetadata(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
-        return ComputeMetadata.start(projectJson)
+        return ComputeMetadata_2.start(projectJson)
             .catch(err => {
                 console.log(err)
             });
-    /*return ComputeMetadata_2.start(projectJson)
+    /*return ComputeMetadata.start(projectJson)
         .catch(err => {
             console.log(err)
         });*/
