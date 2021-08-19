@@ -101,9 +101,9 @@ async function deleteAllDocs() {
     //let CONCURRENT = 3000;
     //let deleted =0;
 
-    return Change.deleteMany({id: delete_id_list})
+    return Change.deleteMany({id: { $in:delete_id_list}})
         .then(() => {
-            return Metrics.deleteMany({id: delete_id_list})
+            return Metrics.deleteMany({id: { $in:delete_id_list}})
         })
         .catch(err => {
             console.log(err)
@@ -191,6 +191,8 @@ async function collectMetadata(json) {
             return true;
         if (first_revision !== 1)
             return true;
+        if(num_files === 0)
+            return true;
         return false;
     } else {
         //duration > 1h
@@ -205,7 +207,7 @@ async function collectMetadata(json) {
             return true;
         if (has_reviewers === false)
             return true;
-        if(num_files <= 0)
+        if(num_files === 0)
             return true;
         if(is_a_cherry_pick === true)
             return true;
