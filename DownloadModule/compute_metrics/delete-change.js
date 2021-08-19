@@ -7,12 +7,22 @@ const Metrics = require('../models/metrics');
 const Utils = require('../config/utils');
 const MetricsUtils = require('./metrics-utils');
 
-const progressBar = new cliProgress.SingleBar({
+/*const progressBar = new cliProgress.SingleBar({
     //format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | added: {added} | deleted: {deleted}',
     format: '[{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | deleted: {deleted} | kept: {kept}',
     barCompleteChar: '#',
     barIncompleteChar: '-',
+}, cliProgress.Presets.shades_classic);*/
+
+const multibar = new cliProgress.MultiBar({
+    format: '{type} [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | {name}',
+    barCompleteChar: '#',
+    barIncompleteChar: '-',
+    clearOnComplete: false,
+    hideCursor: true
 }, cliProgress.Presets.shades_classic);
+const bar1 = multibar.create(0, 0, {type: 'Counting changes'});
+const bar2 = multibar.create(0, 0, {type: 'Deleting changes'});
 
 let libreOfficeJson = Utils.getProjectParameters("libreoffice");
 let projectDBUrl = libreOfficeJson["projectDBUrl"];
@@ -23,6 +33,7 @@ let STARTING_POINT = 0;
 let deleted_change_nums = 0;
 let added_change_nums = 0;
 let kept_change_nums = 0;
+let delete_id_list = [];
 
 if (typeof require !== 'undefined' && require.main === module) {
     startComputeMetadata(libreOfficeJson).catch(err => {
@@ -45,11 +56,12 @@ function startComputeMetadata(json) {
         .then((count) => {
             let NUM_OF_CHANGES_LIMIT = 10000;
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
-            progressBar.start(count, 0, {deleted: 0, kept: 0});
+            //bar1.start(count, 0, {deleted: 0, kept: 0});
+            bar1.setTotal(count)
             return getChanges(STARTING_POINT, NUM_OF_CHANGES_LIMIT);
         })
         .then(() => {
-            progressBar.stop();
+            multibar.stop();
             console.log("Finished !!!!");
             return Database.closeConnection();
         })
@@ -90,31 +102,40 @@ async function collectDocs(docs) {
                 if (typeof toDelete === 'boolean') {
                     if (toDelete) {
                         deleted_change_nums += 1;
-                        return deleteChange(docs[key])
+                        delete_id_list.push(key)
+                        //return deleteChange(docs[key])
                     }
                 }
                 kept_change_nums += 1;
-                return Promise.resolve(true);
+                //return Promise.resolve(true);
             })
             .then(() => {
-                return updateProgress();
+                return updateProgress(bar1, deleted_change_nums, kept_change_nums, added_change_nums);
+            })
+    }
+
+    bar2.setTotal(delete_id_list.length)
+    for (let key in delete_id_list) {
+        await deleteChange(key)
+            .then(() => {
+                return updateProgress(bar2);
             })
     }
     return Promise.resolve(true);
 }
 
-function deleteChange(json) {
-    return Change.deleteOne({id: json.id})
+function deleteChange(id) {
+    return Change.deleteOne({id: id})
         .then(() => {
-            return Metrics.deleteOne({id: json.id})
+            return Metrics.deleteOne({id: id})
         })
         .catch(err => {
             console.log(err)
         });
 }
 
-async function updateProgress() {
-    progressBar.increment(1, {deleted: deleted_change_nums,  kept: kept_change_nums, added: added_change_nums});
+async function updateProgress(bar, deleted, kept, added) {
+    bar.increment(1, {deleted: deleted,  kept: kept, added: added});
     return Promise.resolve(true);
 }
 
@@ -159,7 +180,7 @@ async function collectMetadata(json) {
             return true;
         if (first_revision !== 1)
             return true;
-        return toDelete
+        return false;
     }
 }
 
