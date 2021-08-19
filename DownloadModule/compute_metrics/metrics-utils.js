@@ -171,7 +171,7 @@ function getChanges(skip, step, Project, progressBar, collectMetrics) {
 
 async function collectDocs(docs, Project, progressBar, collectMetrics) {
     console.time('collectDocs')
-    let CONCURRENT = 1000
+    let CONCURRENT = 500
     if (!docs)
         return Promise.resolve(true);
 
