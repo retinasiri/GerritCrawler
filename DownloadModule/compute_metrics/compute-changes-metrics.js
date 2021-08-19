@@ -217,9 +217,11 @@ async function getChangesInfo(json) {
     let ownerNumberOfAutoReview = getOwnerNumberOfAutoReview(json);
     let ownerInactiveTime = getOwnerInactiveTime(json);
     let ownerTimeBetweenMessage = getOwnerTimeBetweenMessage(json);
-    let ownerNumberOfCherryPicked = getOwnerNumberOfCherryPicked(json); //ratio of cherry pick
+    //let ownerNumberOfCherryPicked = getOwnerNumberOfCherryPicked(json); //ratio of cherry pick
+   // let projectAge = getProjectAge(json);
     let branchAge = getBranchAge(json);
     let ownerAge = getOwnerAge(json);
+    let subsystemAge = getSubsystemAge(json);
     let priorOwnerRate = getPriorOwnerRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
     let filesNumberOfRecentChangesOnBranch = getFilesNumberOfRecentChangesOnBranch(json, NUMBER_OF_DAYS_FOR_RECENT_CHANGES_OF_FILES);
     let priorProjectBranchOwnerChangesCount = getPriorProjectBranchOwnerChangesCount(json);
@@ -297,7 +299,6 @@ async function getChangesInfo(json) {
         filesRevisionTime,//18
         filesNumFails,//219
         filesNumberOfRecentChangesOnBranch,//20
-        branchAge,//21
 
         ownerProjectBranchBuildTime,//22
         priorOwnerChangesDuration, //23
@@ -311,8 +312,11 @@ async function getChangesInfo(json) {
         ownerNumberOfAutoReview,//31
         ownerInactiveTime,//32
         ownerTimeBetweenMessage,//33
-        ownerNumberOfCherryPicked,//34
+        //ownerNumberOfCherryPicked,//34
+        //projectAge,//37
         ownerAge,//35
+        subsystemAge,//38
+        branchAge,//21
         priorOwnerRate,//36
         priorProjectBranchOwnerChangesCount,//37
         priorProjectBranchOwnerClosedChangesCount,//38
@@ -324,8 +328,8 @@ async function getChangesInfo(json) {
         //priorBranchOwnerClosedChangesCount,//35
         //priorBranchChangeMeanTimeType,//36
 
-        //projectAge,//37
-        //subsystemAge,//38
+        //
+        //
 
 
         //nonBotAccountPreviousMessageCount,
@@ -485,12 +489,14 @@ async function getChangesInfo(json) {
             ownerTimeBetweenMessageMin: getResult(results, values, ownerTimeBetweenMessage).min,
             ownerTimeBetweenMessageStd: getResult(results, values, ownerTimeBetweenMessage).std,
 
-            ownerNumberOfCherryPicked: getResult(results, values, ownerNumberOfCherryPicked).count,
+            //ownerNumberOfCherryPicked: getResult(results, values, ownerNumberOfCherryPicked).count,
 
             branchAge: convertAsDays(getResult(results, values, branchAge)),
             ownerAge: convertAsDays(getResult(results, values, ownerAge)),
+            subsystemAge: convertAsDays(getResult(results, values, subsystemAge)),
 
             priorOwnerRate: getResult(results, values, priorOwnerRate),
+
 
             filesNumberOfRecentChangesOnBranch: getResult(results, values, filesNumberOfRecentChangesOnBranch),
 
@@ -539,7 +545,7 @@ async function getChangesInfo(json) {
             //priorBranchChangeMeanTimeTypeStd: getResult(results, values, priorBranchChangeMeanTimeType).std,
 
             //projectAge: convertAsDays(getResult(results, values, projectAge)),
-            //subsystemAge: convertAsDays(getResult(results, values, subsystemAge)),
+            //
 
 
             //priorRate: getResult(results, values, priorRate),
