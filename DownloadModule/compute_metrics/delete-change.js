@@ -15,14 +15,13 @@ const MetricsUtils = require('./metrics-utils');
 }, cliProgress.Presets.shades_classic);*/
 
 const multibar = new cliProgress.MultiBar({
-    format: '{type} [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | {name}',
+    format: '{type} [{bar}] {percentage}% | ETA: {eta}s | {value}/{total} | deleted: {deleted} | kept: {kept}',
     barCompleteChar: '#',
     barIncompleteChar: '-',
     clearOnComplete: false,
     hideCursor: true
 }, cliProgress.Presets.shades_classic);
-const bar1 = multibar.create(0, 0, {type: 'Counting changes'});
-const bar2 = multibar.create(0, 0, {type: 'Deleting changes'});
+let bar1 = null;
 
 let libreOfficeJson = Utils.getProjectParameters("libreoffice");
 let projectDBUrl = libreOfficeJson["projectDBUrl"];
@@ -56,7 +55,7 @@ function startComputeMetadata(json) {
         .then((count) => {
             let NUM_OF_CHANGES_LIMIT = 10000;
             console.log("Processing data by slice of " + NUM_OF_CHANGES_LIMIT);
-            //bar1.start(count, 0, {deleted: 0, kept: 0});
+            bar1 = multibar.create(0, 0, {type: 'Counting changes'});
             bar1.setTotal(count)
             return getChanges(STARTING_POINT, NUM_OF_CHANGES_LIMIT);
         })
@@ -88,10 +87,26 @@ function getChanges(skip, NUM_OF_CHANGES_LIMIT = 20000) {
         .then(result => {
             return result ? getChanges(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
         })
+        .then(result => {
+            return deleteAllDocs();
+        })
         .catch(err => {
             console.log(err)
         });
 }
+
+async function deleteAllDocs() {
+    const bar2 = multibar.create(0, 0, {type: 'Deleting changes'});
+    bar2.setTotal(delete_id_list.length)
+    for (let key in delete_id_list) {
+        await deleteChange(key)
+            .then(() => {
+                return updateProgress(bar2);
+            })
+    }
+    return Promise.resolve(true);
+}
+
 
 async function collectDocs(docs) {
     if (!docs)
@@ -103,22 +118,12 @@ async function collectDocs(docs) {
                     if (toDelete) {
                         deleted_change_nums += 1;
                         delete_id_list.push(key)
-                        //return deleteChange(docs[key])
                     }
                 }
                 kept_change_nums += 1;
-                //return Promise.resolve(true);
             })
             .then(() => {
                 return updateProgress(bar1, deleted_change_nums, kept_change_nums, added_change_nums);
-            })
-    }
-
-    bar2.setTotal(delete_id_list.length)
-    for (let key in delete_id_list) {
-        await deleteChange(key)
-            .then(() => {
-                return updateProgress(bar2);
             })
     }
     return Promise.resolve(true);
