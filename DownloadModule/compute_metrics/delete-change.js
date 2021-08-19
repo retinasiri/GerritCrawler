@@ -99,14 +99,18 @@ async function deleteAllDocs() {
     const bar2 = multibar.create(0, 0, {type: 'Deleting changes'});
     bar2.setTotal(delete_id_list.length);
     let CONCURRENT = 3000;
+    let deleted =0;
 
     let queue = [];
     let ret = [];
+    console.log(delete_id_list[0])
+    console.log(delete_id_list[1])
     for (let key in delete_id_list) {
         let p = deleteChange(key)
             .then(() => {
                 queue.splice(queue.indexOf(p), 1);
-                return updateProgress(bar2);
+                deleted +=1;
+                return updateProgress(bar2, deleted);
             })
 
         queue.push(p);
