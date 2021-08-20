@@ -219,7 +219,7 @@ async function getChangesInfo(json) {
     let ownerInactiveTime = getOwnerInactiveTime(json);
     let ownerTimeBetweenMessage = getOwnerTimeBetweenMessage(json);
 
-    let priorOwnerProjectBranchRate = getPriorOwnerProjectBranchRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
+    //let priorOwnerProjectBranchRate = getPriorOwnerProjectBranchRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
     let ownerProjectBranchNumberOfRevision = getOwnerProjectBranchNumberOfRevision(json);
     let ownerProjectBranchInactiveTime = getOwnerProjectBranchInactiveTime(json);
     let ownerProjectBranchTimeBetweenMessage = getOwnerProjectBranchTimeBetweenMessage(json);
@@ -322,7 +322,7 @@ async function getChangesInfo(json) {
         ownerInactiveTime,//32
         ownerTimeBetweenMessage,//33
 
-        priorOwnerProjectBranchRate,
+        //priorOwnerProjectBranchRate,
         ownerProjectBranchNumberOfAutoReview,
 
         ownerProjectBranchBuildTime,//22
@@ -492,7 +492,7 @@ async function getChangesInfo(json) {
             ownerTimeBetweenMessageMin: getResult(results, values, ownerTimeBetweenMessage).min,
             ownerTimeBetweenMessageStd: getResult(results, values, ownerTimeBetweenMessage).std,
 
-            priorOwnerProjectBranchRate: getResult(results, values, priorOwnerProjectBranchRate),
+            //priorOwnerProjectBranchRate: getResult(results, values, priorOwnerProjectBranchRate),
             ownerProjectBranchNumberOfAutoReview: getResult(results, values, ownerProjectBranchNumberOfAutoReview).count,
 
             ownerProjectBranchBuildTimeAvg: getResult(results, values, ownerProjectBranchBuildTime).avg,
@@ -691,7 +691,7 @@ async function getChangesInfo(json) {
         //data["ratioProjectNumberChangesBuilt"] = safeDivision(data["projectNumberChangesBuilt"], data["priorSubsystemMergedChangesCount"] + data["priorSubsystemAbandonedChangesCount"])
         //data["ratioProjectBranchNumberChangesBuilt"] = safeDivision(data["projectBranchNumberChangesBuilt"], data["getPriorProjectBranchClosedChangesCount"])
         //data["ratioOwnerNumberChangesBuilt"] = safeDivision(data["ownerNumberChangesBuilt"], data["ownerPriorMergedChangesCount"] + data["ownerPriorAbandonedChangesCount"])
-        data["ratioOwnerProjectBranchNumberChangesBuilt"] = safeDivision(data["ownerProjectBranchNumberChangesBuilt"], data["priorProjectBranchOwnerClosedChangesCount"])
+        data["ratioOwnerProjectBranchNumberChangesBuilt"] = safeDivision(data["ownerProjectBranchNumberChangesBuilt"], data["ownerProjectBranchClosedChangesCount"])
         //data["ratioFilesExtensionNumberChangesBuilt"] = safeDivision(data["filesExtensionNumberChangesBuilt"], data["filesExtensionNumberChangesCount"])
         //data["ratioBranchNumberChangesBuilt"] = safeDivision(data["branchNumberChangesBuilt"], data["priorBranchClosedChangesCount"])
 
@@ -2601,19 +2601,11 @@ function getPriorOwnerRate(json, number_of_days) {
 }
 
 function getPriorOwnerProjectBranchRate(json, number_of_days) {
-    let property = "$or";
-    let ownerId = json.owner._account_id;
-    let value = [{'owner._account_id': ownerId}, {"reviewers.REVIEWER._account_id": ownerId}]
-    return getPriorRate(json, number_of_days, property, value)
-}
-
-function getPriorOwnerProjectBranchRate(json, number_of_days) {
 
     if (NUM_DAYS_FOR_RECENT != null)
         number_of_days = NUM_DAYS_FOR_RECENT;
 
     let number = json._number;
-    let created = json.created;
     let created_date = json.created;
     let ownerId = json.owner._account_id;
     let dateFromNumberOfDaysAgo = Moment(json.created).subtract(number_of_days, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
@@ -2623,7 +2615,7 @@ function getPriorOwnerProjectBranchRate(json, number_of_days) {
                 //_number: {$lt: number},
                 status: {$in: ['MERGED', 'ABANDONED']},
                 created: {$lt: created_date, $gte: dateFromNumberOfDaysAgo},
-                updated: {$lt: created},
+                updated: {$lt: created_date},
                 $or: [
                     {'owner._account_id': ownerId},
                     {"reviewers.REVIEWER._account_id": ownerId}

@@ -147,7 +147,9 @@ function startComputeMetrics(projectName, start, end, collectMetrics) {
 function getChanges(skip, step, Project, progressBar, collectMetrics) {
     return Change
         .aggregate([
-            {$sort: {created: 1, _number: 1}},
+            {$sort: {created: 1}},
+            //{$sort: {_number: 1}},
+            //{$sort: {created: 1, _number: 1}},
             {$skip: skip},
             {$limit: step}
         ])
