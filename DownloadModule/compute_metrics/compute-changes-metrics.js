@@ -685,7 +685,7 @@ function getPriorChangesCount(json) {
     let pipeline = [
         {
             $match: {
-                _number: {$lt: number},
+                //_number: {$lt: number},
                 created: {$lt: created_date}
             }
         },
@@ -702,9 +702,9 @@ function getPriorTypeChangesCount(json, TYPE) {
         {
             $match: {
                 status: TYPE,
-                _number: {$lt: number},
-                updated: {$lte: created_date},
-                created: {$lt: created_date}
+                //created: {$lt: created_date},
+                updated: {$lt: created_date},
+                //_number: {$lt: number},
             }
         },
         {$count: "count"}
@@ -720,9 +720,9 @@ function getOwnerPriorChangesCount(json) {
     let pipeline = [
         {
             $match: {
-                _number: {$lt: number},
-                created: {$lt: created_date},
+                //_number: {$lt: number},
                 'owner._account_id': ownerId,
+                created: {$lt: created_date},
             }
         },
         {$count: "count"}
@@ -737,11 +737,11 @@ function getOwnerPriorTypeChangesCount(json, TYPE) {
     let ownerId = json.owner._account_id;
     let pipeline = [{
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: TYPE,
             'owner._account_id': ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     },
         {$count: "count"}
@@ -756,9 +756,9 @@ function getPriorSubsystemChangesCount(json) {
     let created_date = json.created;
     let pipeline = [{
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
+            //_number: {$lt: number},
             project: project,
+            created: {$lt: created_date},
         }
     },
         {$count: "count"}
@@ -773,11 +773,11 @@ function getPriorSubsystemTypeChangesCount(json, TYPE) {
     let created_date = json.created;
     let pipeline = [{
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: TYPE,
             project: project,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     },
         {$count: "count"}
@@ -793,10 +793,10 @@ function getPriorSubsystemOwnerChangesCount(json) {
     let ownerId = json.owner._account_id;
     let pipeline = [{
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
+            //_number: {$lt: number},
             project: project,
             'owner._account_id': ownerId,
+            created: {$lt: created_date},
         }
     },
         {$count: "count"}
@@ -812,12 +812,12 @@ function getPriorSubsystemOwnerTypeChangesCount(json, TYPE) {
     let ownerId = json.owner._account_id;
     let pipeline = [{
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: TYPE,
             project: project,
             'owner._account_id': ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     },
         {$count: "count"}
@@ -861,10 +861,10 @@ function getPriorChangeMeanTimeType(json, TYPE) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: TYPE,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     };
     let pipeline = [
@@ -891,11 +891,11 @@ function getPriorOwnerChangesMeanTimeType(json, TYPE) {
     let project = getProject();
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: TYPE,
             'owner._account_id': ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     };
     let pipeline = [
@@ -943,11 +943,11 @@ function getFileTimeAndCount(json, TYPE) {
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: TYPE,
             files_list: {$in: files_list},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     };
     if (TYPE == null) delete match.$match.status;
@@ -959,12 +959,12 @@ function getFileTimeAndCount(json, TYPE) {
 function getFileTimeAndCountForOwner(number, ownerId, created_date, files_list, TYPE) {
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: TYPE,
-            files_list: {$in: files_list},
             'owner._account_id': ownerId,
+            files_list: {$in: files_list},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     };
     if (TYPE == null) delete match.$match.status;
@@ -980,11 +980,11 @@ function getOwnerNumberOfRevision(json) {
     let ownerId = json.owner._account_id;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             "owner._account_id": ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1007,11 +1007,11 @@ function getOwnerNumberOfRevision(json) {
 function getOwnerNumberOfReview(number, ownerId, created_date) {
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             "reviewers.REVIEWER._account_id": ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1029,11 +1029,11 @@ function getFileDeveloperNumber(json) {
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
+            //created: {$lt: created_date},
             files_list: {$in: files_list},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1059,11 +1059,11 @@ function getPriorChangesFiles(json) {
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             files_list: {$in: files_list},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1081,11 +1081,11 @@ function getPriorChangesFiles(json) {
 function getOwnerPreviousMessageCount(number, ownerId, created_date) {
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             "messages_per_account_before_close.account": ownerId, //todo convert to Int or String
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1110,11 +1110,11 @@ function getOwnerChangesMessagesCountAndAvgPerChanges(json) {
     let ownerId = json.owner._account_id;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             "owner._account_id": ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1140,10 +1140,10 @@ function getChangesMessagesCountAndAvg(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1172,13 +1172,13 @@ function getOwnerProjectBranchBuildTime(json) {
     let project = json.project;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
-            branch: branch,
             project: project,
+            branch: branch,
             "owner._account_id": ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1202,10 +1202,10 @@ function getRevisionTime(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1230,11 +1230,11 @@ function getBranchRevisionTime(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             branch: branch,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1259,11 +1259,11 @@ function getOwnerRevisionTime(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             "owner._account_id": ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1288,11 +1288,11 @@ function getOwnerTimeBetweenRevision(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             "owner._account_id": ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1318,11 +1318,11 @@ function getOwnerTimeToAddReviewer(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             "owner._account_id": ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1347,11 +1347,11 @@ function getFilesBuildTime(json) {
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             files_list: {$in: files_list},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1376,11 +1376,11 @@ function getFilesRevisionTime(json) {
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             files_list: {$in: files_list},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1405,10 +1405,10 @@ function getFilesNumFails(json) {
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1439,11 +1439,11 @@ function getOwnerNumberOfAutoReview(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             "owner._account_id": ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1466,11 +1466,11 @@ function getOwnerInactiveTime(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             "owner._account_id": ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1495,11 +1495,11 @@ function getOwnerTimeBetweenMessage(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             "owner._account_id": ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1524,11 +1524,11 @@ function getOwnerNumberOfCherryPicked(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             "owner._account_id": ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1550,11 +1550,11 @@ function getBranchNumberOfCherryPicked(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             branch: branch,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1576,10 +1576,10 @@ function getPriorBranchChangesCount(json) {
     let created_date = json.created;
     let pipeline = [{
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             branch: branch,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     },
         {$count: "count"}
@@ -1594,11 +1594,11 @@ function getPriorBranchTypeChangesCount(json, TYPE) {
     let branch = json.branch;
     let pipeline = [{
         $match: {
-            _number: {$lt: number},
-            updated: {$lte: created_date},
-            created: {$lt: created_date},
+            //_number: {$lt: number},
             status: TYPE,
             branch: branch,
+            updated: {$lt: created_date},
+            //created: {$lt: created_date},
         }
     },
         {$count: "count"}
@@ -1614,11 +1614,11 @@ function getPriorBranchOwnerChangesCount(json) {
     let created_date = json.created;
     let pipeline = [{
         $match: {
-            _number: {$lt: number},
-            updated: {$lte: created_date},
-            created: {$lt: created_date},
+            //_number: {$lt: number},
             branch: branch,
             'owner._account_id': ownerId,
+            updated: {$lt: created_date},
+            //created: {$lt: created_date},
         }
     },
         {$count: "count"}
@@ -1634,12 +1634,12 @@ function getPriorBranchOwnerTypeChangesCount(json, TYPE) {
     let ownerId = json.owner._account_id;
     let pipeline = [{
         $match: {
-            _number: {$lt: number},
-            updated: {$lte: created_date},
-            created: {$lt: created_date},
+            //_number: {$lt: number},
             status: TYPE,
             branch: branch,
             'owner._account_id': ownerId,
+            updated: {$lt: created_date},
+            //created: {$lt: created_date},
         }
     },
         {$count: "count"}
@@ -1654,11 +1654,11 @@ function getPriorBranchChangeMeanTimeType(json) {
     let branch = json.branch;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             branch: branch,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     };
     let pipeline = [
@@ -1685,12 +1685,12 @@ function getPriorBranchOwnerChangeMeanTimeType(json) {
     let ownerId = json.owner._account_id;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             branch: branch,
             'owner._account_id': ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     };
     let pipeline = [
@@ -1717,11 +1717,11 @@ function getPriorProjectBranchChangesCount(json) {
     let created_date = json.created;
     let pipeline = [{
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
-            branch: branch,
+            //_number: {$lt: number},
             project: project,
+            branch: branch,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     },
         {$count: "count"}
@@ -1737,12 +1737,12 @@ function getPriorProjectBranchTypeChangesCount(json, TYPE) {
     let project = json.project;
     let pipeline = [{
         $match: {
-            _number: {$lt: number},
-            updated: {$lte: created_date},
-            created: {$lt: created_date},
+            //_number: {$lt: number},
             status: TYPE,
-            branch: branch,
             project: project,
+            branch: branch,
+            updated: {$lt: created_date},
+            //created: {$lt: created_date},
         }
     },
         {$count: "count"}
@@ -1758,12 +1758,12 @@ function getPriorProjectBranchChangeMeanTimeType(json) {
     let project = json.project;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
-            branch: branch,
             project: project,
+            branch: branch,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     };
     let pipeline = [
@@ -1790,12 +1790,12 @@ function getPriorProjectBranchOwnerChangesCount(json) {
     let created_date = json.created;
     let pipeline = [{
         $match: {
-            _number: {$lt: number},
-            updated: {$lte: created_date},
-            created: {$lt: created_date},
-            branch: branch,
+            //_number: {$lt: number},
             project: project,
+            branch: branch,
             'owner._account_id': ownerId,
+            updated: {$lt: created_date},
+            //created: {$lt: created_date},
         }
     },
         {$count: "count"}
@@ -1812,13 +1812,13 @@ function getPriorProjectBranchOwnerTypeChangesCount(json, TYPE) {
     let ownerId = json.owner._account_id;
     let pipeline = [{
         $match: {
-            _number: {$lt: number},
-            updated: {$lte: created_date},
-            created: {$lt: created_date},
+            //_number: {$lt: number},
             status: TYPE,
-            branch: branch,
             project: project,
+            branch: branch,
             'owner._account_id': ownerId,
+            updated: {$lt: created_date},
+            //created: {$lt: created_date},
         }
     },
         {$count: "count"}
@@ -1835,13 +1835,13 @@ function getPriorProjectBranchOwnerChangeMeanTimeType(json) {
     let ownerId = json.owner._account_id;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             branch: branch,
             project: project,
             'owner._account_id': ownerId,
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     };
     let pipeline = [
@@ -1868,11 +1868,11 @@ function getNumberChangesBuilt(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
-            avg_build_time: {$gt: 0}
+            avg_build_time: {$gt: 0},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1890,12 +1890,12 @@ function getProjectNumberChangesBuilt(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             project: project,
-            avg_build_time: {$gt: 0}
+            avg_build_time: {$gt: 0},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1914,13 +1914,13 @@ function getProjectBranchNumberChangesBuilt(json) {
     let branch = json.branch;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             project: project,
             branch: branch,
-            avg_build_time: {$gt: 0}
+            avg_build_time: {$gt: 0},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1938,12 +1938,12 @@ function getBranchNumberChangesBuilt(json) {
     let number = json._number;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             branch: branch,
-            avg_build_time: {$gt: 0}
+            avg_build_time: {$gt: 0},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1961,12 +1961,12 @@ function getOwnerNumberChangesBuilt(json) {
     let ownerId = json.owner._account_id;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             'owner._account_id': ownerId,
-            avg_build_time: {$gt: 0}
+            avg_build_time: {$gt: 0},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -1986,14 +1986,14 @@ function getOwnerProjectBranchNumberChangesBuilt(json) {
     let branch = json.branch;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             project: project,
             branch: branch,
             'owner._account_id': ownerId,
-            avg_build_time: {$gt: 0}
+            avg_build_time: {$gt: 0},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -2012,12 +2012,12 @@ function getFilesNumberChangesBuilt(json) {
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             files_list: {$in: files_list},
-            avg_build_time: {$gt: 0}
+            avg_build_time: {$gt: 0},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -2034,11 +2034,11 @@ function getFilesExtensionNumberChangesCount(json) {
     let extensions_list = json.extensions_list ? json.extensions_list : [];
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             extensions_list: {$in: extensions_list},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -2055,12 +2055,12 @@ function getFilesExtensionNumberChangesBuilt(json) {
     let extensions_list = json.extensions_list ? json.extensions_list : [];
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             extensions_list: {$in: extensions_list},
-            avg_build_time: {$gt: 0}
+            avg_build_time: {$gt: 0},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -2077,11 +2077,11 @@ function getDirectoriesExtensionNumberChangesCount(json) {
     let directories_list = json.directories_list ? json.directories_list : [];
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             base_directories: {$in: directories_list},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -2098,12 +2098,12 @@ function getDirectoriesExtensionNumberChangesBuilt(json) {
     let directories_list = json.directories_list ? json.directories_list : [];
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
             base_directories: {$in: directories_list},
-            avg_build_time: {$gt: 0}
+            avg_build_time: {$gt: 0},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -2156,8 +2156,8 @@ function getProjectAge(json) {
     let created_date = json.created;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date}
+            //_number: {$lt: number},
+            //created: {$lt: created_date}
             //updated: {$lte: created},
         }
     }
@@ -2171,9 +2171,9 @@ function getSubsystemAge(json) {
     let created_date = json.created;
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
+            //_number: {$lt: number},
             project: project,
+            //created: {$lt: created_date},
             //updated: {$lte: created},
         }
     }
@@ -2187,9 +2187,9 @@ function getBranchAge(json) {
     //let created_date = json.created;
     let match = {
         $match: {
+            branch: branch,
             //_number: {$lt: number},
             //created: {$lt: created_date},
-            branch: branch,
             //updated: {$lte: created},
         }
     }
@@ -2227,10 +2227,10 @@ function getPriorRate(json, number_of_days, property = null, value = null) {
     let pipeline = [
         {
             $match: {
-                _number: {$lt: number},
-                created: {$lt: created_date, $gte: dateFromNumberOfDaysAgo},
-                updated: {$lte: created},
+                //_number: {$lt: number},
                 status: {$in: ['MERGED', 'ABANDONED']},
+                created: {$lt: created_date, $gte: dateFromNumberOfDaysAgo},
+                updated: {$lt: created},
             }
         },
         {$count: "count"},
@@ -2287,12 +2287,12 @@ function getFilesNumberOfRecentChangesOnBranch(json, number_of_days) {
         {
             $match: {
                 //status: "MERGED",
-                branch: branch,
-                _number: {$lt: number},
-                created: {$gte: dateFromNumberOfDaysAgo, $lt: created_date},
-                updated: {$lte: created_date},
-                files_list: {$in: files_list},
+                //_number: {$lt: number},
                 //$or: [{created: {$gte: dateFromNumberOfDaysAgo}}, {updated: {$gte: dateFromNumberOfDaysAgo}}]
+                branch: branch,
+                files_list: {$in: files_list},
+                created: {$gte: dateFromNumberOfDaysAgo, $lt: created_date},
+                updated: {$lt: created_date},
             }
         },
         {$count: "count"},
@@ -2310,11 +2310,11 @@ function getBestReviewer(json) {
     let pipeline = [
         {
             $match: {
-                _number: {$lt: number},
-                created: {$lt: created_date},
-                updated: {$lte: created_date},
+                //_number: {$lt: number},
                 status: {$in: ['MERGED', 'ABANDONED']},
-                'owner._account_id': ownerId
+                'owner._account_id': ownerId,
+                //created: {$lt: created_date},
+                updated: {$lt: created_date},
             }
         },
         {$unwind: "$reviewers.REVIEWER"},
@@ -2541,9 +2541,9 @@ function getReviewerTimezone(number, reviewersId, created_date) {
     let pipeline = [
         {
             $match: {
-                _number: {$lt: number},
-                created: {$lt: created_date},
+                //_number: {$lt: number},
                 'owner._account_id': {$in: reviewersId},
+                created: {$lt: created_date},
             }
         },
         {
@@ -2571,9 +2571,9 @@ function getReviewerLastChange(number, reviewersId, created_date) {
         {
             $match:
                 {
-                    _number: {$lt: number},
-                    created: {$lt: created_date},
+                    //_number: {$lt: number},
                     "owner._account_id": {$in: reviewersId},
+                    created: {$lt: created_date},
                 }
         },
         {$sort: {created: -1}},
@@ -2594,7 +2594,7 @@ function getReviewerLastMessage(number, reviewersId, created_date, ownerId) {
         {
             $match:
                 {
-                    _number: {$lt: number},
+                    //_number: {$lt: number},
                     created: {$lt: created_date},
                     $and:
                         [
@@ -2631,11 +2631,11 @@ function getReviewerLastReview(number, reviewersId, created_date, ownerId) {
         {
             $match:
                 {
-                    _number: {$lt: number},
-                    created: {$lt: created_date},
-                    updated: {$lt: created_date},
+                    //_number: {$lt: number},
                     status: {$in: ['MERGED', 'ABANDONED']},
-                    "labels.Code-Review.all._account_id": ownerId
+                    "labels.Code-Review.all._account_id": ownerId,
+                    //created: {$lt: created_date},
+                    updated: {$lt: created_date},
                 }
         },
         {$sort: {created: -1}},
@@ -2673,9 +2673,9 @@ function getReviewersPriorChangesCount(reviewersId, number, created_date) {
     let pipeline = [
         {
             $match: {
-                _number: {$lt: number},
-                created: {$lt: created_date},
+                //_number: {$lt: number},
                 'owner._account_id': {$in: reviewersId},
+                created: {$lt: created_date},
             }
         },
         {
@@ -2703,11 +2703,11 @@ function getReviewersPriorTypeChangesCount(number, reviewersId, created_date, TY
     let pipeline = [
         {
             $match: {
-                _number: {$lt: number},
-                created: {$lt: created_date},
-                updated: {$lte: created_date},
+                //_number: {$lt: number},
                 status: TYPE,
                 'owner._account_id': {$in: reviewersId},
+                //created: {$lt: created_date},
+                updated: {$lt: created_date},
             }
         },
         {
@@ -2735,10 +2735,10 @@ function getReviewersPriorUnCloseChangesCount(number, reviewersId, created_date)
     let pipeline = [
         {
             $match: {
-                _number: {$lt: number},
-                updated: {$gt: created_date},
-                created: {$lt: created_date},
+                //_number: {$lt: number},
                 'owner._account_id': {$in: reviewersId},
+                updated: {$gt: created_date},
+                //created: {$lt: created_date},
             }
         },
         {
@@ -2765,10 +2765,10 @@ function getReviewersPriorUnCloseChangesCount(number, reviewersId, created_date)
 function getReviewersNumberOfReview(number, reviewersId, created_date) {
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -2808,10 +2808,10 @@ function getReviewersNumberOfReview(number, reviewersId, created_date) {
 function getReviewersPreviousMessageCount(number, reviewersId, created_date) {
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     }
     let pipeline = [
@@ -2852,12 +2852,12 @@ function getReviewersPreviousMessageCount(number, reviewersId, created_date) {
 function getFileTimeAndCountForReviewers(number, reviewersId, created_date, files_list, TYPE) {
     let match = {
         $match: {
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //_number: {$lt: number},
             status: TYPE,
             'reviewers.REVIEWER._account_id': {$in: reviewersId},
-            files_list: {$in: files_list}
+            files_list: {$in: files_list},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
         }
     };
     if (TYPE == null) delete match.$match.status;
@@ -2891,10 +2891,10 @@ function getOwnerAndReviewerCommonsChangesSumAndMessagesSum(json, reviewersId) {
     let pipeline = [
         {
             $match: {
-                _number: {$lt: number},
-                created: {$lt: created_date},
-                updated: {$lte: created_date},
+                //_number: {$lt: number},
                 status: {$in: ['MERGED', 'ABANDONED']},
+                //created: {$lt: created_date},
+                updated: {$lt: created_date},
             }
         },
         match,
@@ -2916,10 +2916,10 @@ function getOwnerAndReviewerCommonsMessagesAvg(json, reviewersId) {
     let ownerId = json.owner._account_id;
     let match = {
         $match: {
+            //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
-            _number: {$lt: number},
-            created: {$lt: created_date},
-            updated: {$lte: created_date},
+            //created: {$lt: created_date},
+            updated: {$lt: created_date},
             $or: [
                 {
                     $and: [

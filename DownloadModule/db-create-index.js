@@ -17,6 +17,49 @@ db.getCollection('changes').createIndex({'owner._account_id': 1})
 db.getCollection('changes').createIndex({'reviewers.REVIEWER._account_id':1})
 db.getCollection('changes').createIndex({_number: 1, created: 1})
 db.getCollection('changes').createIndex({created: 1, _number: 1})
+db.getCollection('changes').createIndex({branch:1, updated:1})
+db.getCollection('changes').createIndex({status: 1, updated: 1})
+db.getCollection('changes').createIndex({status:1, created:1, updated:1})
+db.getCollection('changes').createIndex({status:1, branch:1, updated:1})
+db.getCollection('changes').createIndex({status:1, project:1, updated:1})
+db.getCollection('changes').createIndex({status:1, files_list:1, updated:1})
+db.getCollection('changes').createIndex({status:1, 'owner._account_id': 1, updated:1})
+db.getCollection('changes').createIndex({status:1, 'reviewers.REVIEWER._account_id': 1, updated:1})
+db.getCollection('changes').createIndex({status:1, 'messages_per_account_before_close.account': 1, updated:1})
+db.getCollection('changes').createIndex({status:1, project:1, branch:1, 'owner._account_id': 1, updated:1})
+db.getCollection('changes').createIndex({status:1, project:1, 'owner._account_id': 1, updated:1})
+db.getCollection('changes').createIndex({'owner._account_id': 1, created:1})
+db.getCollection('changes').createIndex({project:1, created:1})
+db.getCollection('changes').createIndex({project:1, 'owner._account_id': 1, created:1})
+db.getCollection('changes').createIndex({project:1, branch:1, 'owner._account_id': 1, updated:1})
+
+db.getCollection('changes').createIndex({status:1, avg_build_time:1, updated:1})
+db.getCollection('changes').createIndex({status:1, project:1, avg_build_time:1, updated:1})
+db.getCollection('changes').createIndex({status:1, project:1, branch:1, avg_build_time:1, updated:1})
+db.getCollection('changes').createIndex({status:1, branch:1, avg_build_time:1, updated:1})
+db.getCollection('changes').createIndex({status:1, 'owner._account_id':1, avg_build_time:1, updated:1})
+db.getCollection('changes').createIndex({status:1, project:1, branch:1, 'owner._account_id':1, avg_build_time:1, updated:1})
+db.getCollection('changes').createIndex({status:1, files_list:1, avg_build_time:1, updated:1})
+db.getCollection('changes').createIndex({status:1, extensions_list:1, updated:1})
+db.getCollection('changes').createIndex({status:1, extensions_list:1, avg_build_time:1, updated:1})
+db.getCollection('changes').createIndex({status:1, base_directories:1, updated:1})
+db.getCollection('changes').createIndex({status:1, base_directories:1, avg_build_time:1, updated:1})
+
+db.getCollection('changes').createIndex({branch:1, files_list:1, created:1, updated:1})
+db.getCollection('changes').createIndex({status:1, project:1, branch:1, updated:1})
+db.getCollection('changes').createIndex({status:1, project:1, branch:1, 'owner._account_id':1, updated:1})
+db.getCollection('changes').createIndex({project:1, branch:1, updated:1})
+db.getCollection('changes').createIndex({status:1, 'owner._account_id': 1, updated:1})
+db.getCollection('changes').createIndex({branch:1, 'owner._account_id': 1, updated:1})
+db.getCollection('changes').createIndex({status:1, branch:1, 'owner._account_id': 1, updated:1})
+
+db.getCollection('changes').createIndex({status:1, "labels.Code-Review.all._account_id": 1, updated:1})
+
+
+
+
+
+
 db.getCollection('changes').createIndex({_number: 1, created: 1, updated: 1})
 db.getCollection('changes').createIndex({status: 1, _number: 1, created: 1, updated: 1})
 
