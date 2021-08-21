@@ -422,3 +422,18 @@ db.getCollection('changes_with_metadata').aggregate([
         }
     }
 ])
+/*
+{
+    $group: {
+        _id: "$messages.author._account_id",
+            count: { $sum: 1 },
+        time_avg: {$avg: "$date_updated_date_created_diff"},
+        time_max: {$max: "$date_updated_date_created_diff"},
+        time_min: {$min: "$date_updated_date_created_diff"},
+        time_std: {$stdDevPop: "$date_updated_date_created_diff"},
+        first_created_date: {$first: "$created"},
+        first_updated_date: {$first: "$updated"},
+        last_created_date: {$last: "$created"},
+        last_updated_date: {$last: "$updated"},
+    }
+}*/

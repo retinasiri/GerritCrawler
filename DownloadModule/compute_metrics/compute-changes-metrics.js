@@ -20,7 +20,7 @@ let date_for_recent = null;
 let NUM_DAYS_FOR_RECENT = null;
 let NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE = 30;
 let NUMBER_OF_DAYS_FOR_RECENT_CHANGES_OF_FILES = 30;
-let NUMBER_OF_BEST_REVIEWER = 5;
+let NUMBER_OF_BEST_REVIEWER = 3;
 
 
 if (typeof require !== 'undefined' && require.main === module) {
@@ -2797,9 +2797,9 @@ async function getReviewersMetrics(json, reviewersDocs) {
     let reviewersChangesCount = Promise.resolve(getSumMeanMaxMinStd(allCount));
 
     let reviewerTimezone = getReviewerTimezone(number, reviewersId, created_date);
-    let reviewerLastChange = getReviewerLastChange(number, reviewersId, created_date);
     let reviewerLastMessage = getReviewerLastMessage(number, reviewersId, created_date, ownerId);
-    let reviewerLastReview = getReviewerLastReview(number, reviewersId, created_date, ownerId);
+    //let reviewerLastChange = getReviewerLastChange(number, reviewersId, created_date);
+    //let reviewerLastReview = getReviewerLastReview(number, reviewersId, created_date, ownerId);
     //console.log(reviewerLastReview)
 
     return Promise.all([
@@ -2814,9 +2814,9 @@ async function getReviewersMetrics(json, reviewersDocs) {
         ownerAndReviewerCommonsMessagesAvg,//8
         reviewersChangesCount,//9
         reviewerTimezone,//10
-        reviewerLastChange,//11
         reviewerLastMessage,//12
-        reviewerLastReview,//13
+        //reviewerLastChange,//11
+        //reviewerLastReview,//13
     ]).then((results) => {
         let metadata = {
             reviewersPriorChangesSum: results[0].sum,
@@ -2884,23 +2884,24 @@ async function getReviewersMetrics(json, reviewersDocs) {
             reviewerTimezoneMin: results[10].length > 0 ? results[10].min : 0,
             reviewerTimezoneStd: results[10].length > 0 ? results[10].std : 0,
 
-            reviewerLastChangeDate: results[11].length > 0 ? results[11].date : 0,
             reviewerLastMessageDate: results[12].length > 0 ? results[12].date : 0,
-            reviewerLastReviewDate: results[13].length > 0 ? results[13].date : 0,
+            //reviewerLastChangeDate: results[11].length > 0 ? results[11].date : 0,
+            //reviewerLastReviewDate: results[13].length > 0 ? results[13].date : 0,
 
             //reviewerLastChangeDateDiff: MetricsUtils.timeDiff(results[11].length > 0 ? results[11].date : 0 , created_date),
             //reviewerLastMessageDateDiff: MetricsUtils.timeDiff(results[12].length > 0 ? results[12].date : 0, created_date),
             //reviewerLastReviewDateDiff: MetricsUtils.timeDiff(results[13].length > 0 ? results[13].date : 0, created_date),
         }
 
-        metadata["reviewerLastChangeDateDiff"] = metadata["reviewerLastChangeDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastChangeDate"], created_date) : undefined;
         metadata["reviewerLastMessageDateDiff"] = metadata["reviewerLastMessageDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastMessageDate"], created_date) : undefined;
-        metadata["reviewerLastReviewDateDiff"] = metadata["reviewerLastReviewDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastReviewDate"], created_date) : undefined;
+        //metadata["reviewerLastChangeDateDiff"] = metadata["reviewerLastChangeDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastChangeDate"], created_date) : undefined;
+        //metadata["reviewerLastReviewDateDiff"] = metadata["reviewerLastReviewDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastReviewDate"], created_date) : undefined;
 
-        if (!metadata["reviewerLastChangeDateDiff"] && !metadata["reviewerLastMessageDateDiff"] && !metadata["reviewerLastReviewDateDiff"])
+        /*if (!metadata["reviewerLastChangeDateDiff"] && !metadata["reviewerLastMessageDateDiff"] && !metadata["reviewerLastReviewDateDiff"])
             metadata["reviewerLastActivity"] = undefined
         else
             metadata["reviewerLastActivity"] = MathJs.min([metadata["reviewerLastChangeDateDiff"], metadata["reviewerLastMessageDateDiff"], metadata["reviewerLastReviewDateDiff"]]);
+        */
 
         return metadata;
     })
@@ -2919,7 +2920,7 @@ function getReviewerTimezone(number, reviewersId, created_date) {
         {
             $group: {
                 _id: "$owner._account_id",
-                avg: {$avg: "$owner_timezone"},
+                owner_timezone: {$avg: "$owner_timezone"},
             }
         },
         {
@@ -2968,7 +2969,7 @@ function getReviewerLastMessage(number, reviewersId, created_date, ownerId) {
                     created: {$lt: created_date},
                     $and:
                         [
-                            {"messages.author._account_id": ownerId},
+                            {"messages.author._account_id": {$in: reviewersId}},
                             {"messages.date": {$lt: created_date}},
                         ]
                 }
@@ -2979,18 +2980,25 @@ function getReviewerLastMessage(number, reviewersId, created_date, ownerId) {
         {
             $match:
                 {
-                    "messages.author._account_id": ownerId,
+                    "messages.author._account_id": {$in: reviewersId},
                     "messages.date": {$lt: created_date}
                 }
         },
-        {$sort: {"messages.date": -1}},
+        {
+            $group: {
+                _id: 0,
+                //first_messages_date: {$first: "$messages.date"},
+                date: {$last: "$messages.date"},
+            }
+        },
+        /*{$sort: {"messages.date": -1}},
         {$limit: 1},
         {
             $project: {
                 _id: 0,
                 date: "$messages.date",
             }
-        },
+        },*/
     ]
     pipeline = addRecentDateToPipeline(pipeline);
     return genericDBRequest(pipeline);

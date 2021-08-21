@@ -66,6 +66,7 @@ function save_other_file(filename, path, suffix, json) {
 }
 
 function getMetrics(skip) {
+    console.log('getMetrics')
     return Metrics
         .aggregate([
             {
@@ -82,6 +83,7 @@ function getMetrics(skip) {
         .allowDiskUse(true)
         .exec()
         .then(docs => {
+            console.log('getMetrics then')
             if (!docs)
                 return Promise.resolve(false)
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
@@ -236,6 +238,7 @@ function copy_time_metrics(id, metric, result, number_of_days) {
 }
 
 async function collectMetrics(metric) {
+    console.log('collectMetrics')
 
     let result = {};
     let result_all = {};
@@ -464,7 +467,7 @@ let metric_to_collect = {
     reviewerTimezoneMin: true,
     reviewerTimezoneStd: true,
 
-    reviewerLastActivity: true,
+    //reviewerLastActivity: true,
     reviewerLastMessageDateDiff: true,
 
     date_updated_date_created_diff: true,
