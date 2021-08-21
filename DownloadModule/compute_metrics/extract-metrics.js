@@ -18,7 +18,7 @@ let libreOfficeJson = Utils.getProjectParameters("libreoffice");
 let projectDBUrl = libreOfficeJson["projectDBUrl"];
 let projectName = libreOfficeJson["projectName"];
 let DATA_PATH = "data/"
-let NUM_OF_CHANGES_LIMIT = 10000;
+let NUM_OF_CHANGES_LIMIT = 1000;
 let skipped = 0;
 
 
@@ -66,7 +66,6 @@ function save_other_file(filename, path, suffix, json) {
 }
 
 function getMetrics(skip) {
-    console.log('getMetrics')
     return Metrics
         .aggregate([
             {
@@ -83,7 +82,6 @@ function getMetrics(skip) {
         .allowDiskUse(true)
         .exec()
         .then(docs => {
-            console.log('getMetrics then')
             if (!docs)
                 return Promise.resolve(false)
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
@@ -177,6 +175,7 @@ async function saveMetrics(json, suffix = "") {
     return Utils.add_line_to_file(json, filename, path)
 }
 
+//todo delete all file
 function delete_metrics_file() {
     try {
         let filename = projectName + "-metrics.csv";
@@ -486,21 +485,27 @@ function addMetrics(json) {
     add_non_close(json, "non_close_changes", "priorChangesCount", "priorMergedChangesCount", "priorAbandonedChangesCount")
     add_non_close(json, "project_non_close_changes", "priorSubsystemChangesCount", "priorSubsystemMergedChangesCount", "priorSubsystemAbandonedChangesCount")
     add_ratio(json, "ownerProjectBranchNumberOfAutoReviewRate", "ownerProjectBranchNumberOfAutoReview", "ownerProjectBranchChangesCount")
-
 }
 
 function add_non_close(json, result_name, first, second, third) {
-    for (let i = 0; i < date_suffix.length; i) {
+    for (let i = 0; i < date_suffix.length; i++) {
         let suffix = date_suffix[i];
-        json[result_name + suffix] = json[first + suffix] - json[second + suffix] - json[third + suffix];
+        let n_result_name = result_name + suffix
+        let n_first = first + suffix
+        let n_second = second + suffix
+        let n_third = third + suffix
+        json[n_result_name] = json[n_first] - json[n_second] - json[n_third];
     }
     //return json
 }
 
 function add_ratio(json, result_name, first, second) {
-    for (let i = 0; i < date_suffix.length; i) {
+    for (let i = 0; i < date_suffix.length; i++) {
         let suffix = date_suffix[i];
-        json[result_name + suffix] = MetricsUtils.safeDivision(json[first + suffix], json[second + suffix])
+        let n_result_name = result_name + suffix
+        let n_first = first + suffix
+        let n_second = second + suffix
+        json[n_result_name] = MetricsUtils.safeDivision(json[n_first], json[n_second])
     }
     //return json
 }
