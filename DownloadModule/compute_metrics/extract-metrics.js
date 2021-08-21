@@ -104,14 +104,13 @@ async function collectDocs(docs) {
         let check = await Changes.exists({id: id});
         if (!check)
             continue;
-        //todo
 
         if (check_value_to_ignore(doc)) {
             skipped += 1;
             continue;
         }
 
-        //addMetrics(doc)
+        addMetrics(doc)
 
         await collectMetrics(doc)
             /*.then((json) => {
@@ -131,14 +130,13 @@ function check_value_to_ignore(metrics) {
     if (metrics["status"])
         if (metrics["status"].includes("NEW"))
             return true;
-    if (metrics["first_revision_number"] !== 1)
-        return true;
     if (metrics["is_a_bot"] === true)
         return true;
 
+    /*if (metrics["first_revision_number"] !== 1)
+        return true;*/
     /*if (check_self_review(metrics))
         return true;*/
-
     /*if(metrics["is_self_review"])
         return true;*/
 
@@ -330,8 +328,12 @@ let metric_to_collect = {
 
     //todo add unclose change
     //todo add unclose owner change
-    //todo add subsytem unclose change
+    //todo add subsystem unclose change
     //todo owner merged ratio
+
+    owner_non_close_changes: true,
+    non_close_changes: true,
+    project_non_close_changes: true,
 
     priorChangesCount: true,
     priorSubsystemChangesCount: true,
@@ -385,7 +387,6 @@ let metric_to_collect = {
     ownerProjectBranchChangeMeanTimeTypeAvg: true,
 
     ownerProjectBranchNumberChangesBuilt: true,
-
 
     ownerMergedRatio: true,
     ownerRateOfAutoReview: true,
@@ -474,6 +475,33 @@ let metric_to_collect = {
 module.exports = {
     start: startComputeMetrics
 };
+
+let date_suffix = ['', '_7_days', '_14_days', '_30_days']
+
+function addMetrics(json) {
+    add_non_close(json, "owner_non_close_changes", "ownerPriorChangesCount", "ownerPriorMergedChangesCount", "ownerPriorAbandonedChangesCount")
+    add_non_close(json, "non_close_changes", "priorChangesCount", "priorMergedChangesCount", "priorAbandonedChangesCount")
+    add_non_close(json, "project_non_close_changes", "priorSubsystemChangesCount", "priorSubsystemMergedChangesCount", "priorSubsystemAbandonedChangesCount")
+    add_ratio(json, "ownerProjectBranchNumberOfAutoReviewRate", "ownerProjectBranchNumberOfAutoReview", "ownerProjectBranchChangesCount")
+
+}
+
+function add_non_close(json, result_name, first, second, third) {
+    for (let i = 0; i < date_suffix.length; i) {
+        let suffix = date_suffix[i];
+        json[result_name + suffix] = json[first + suffix] - json[second + suffix] - json[third + suffix];
+    }
+    //return json
+}
+
+function add_ratio(json, result_name, first, second) {
+    for (let i = 0; i < date_suffix.length; i) {
+        let suffix = date_suffix[i];
+        json[result_name + suffix] = MetricsUtils.safeDivision(json[first + suffix], json[second + suffix])
+    }
+    //return json
+}
+
 
 /*/////////
     //ownerPriorMergedChangesCount: true,
