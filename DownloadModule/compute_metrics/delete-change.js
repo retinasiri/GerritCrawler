@@ -112,7 +112,7 @@ async function deleteAllDocs() {
 
     for (let i = 0; i < delete_id_list_chunk.length; i++){
         let toDelete = delete_id_list_chunk[i];
-        return Change.deleteMany({id: {$in: toDelete}})
+        await Change.deleteMany({id: {$in: toDelete}})
             .then(() => {
                 return Metrics.deleteMany({id: {$in: toDelete}})
             })

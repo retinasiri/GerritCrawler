@@ -254,6 +254,25 @@ function get_code_churn_size(churn) {
  * @param {JSON} json Input Json
  * @param {JSON} metric Output Json
  */
+function collectMsgMetrics(json, metric) {
+    metric["subject_length"] = countSubjectLength(json);
+    metric["subject_word_count"] = numberOfWordInSubject(json);
+    metric["msg_length"] = get_msg_length(json);
+    metric["msg_word_count"] = get_msg_word_count(json);
+    metric["is_corrective"] = msg_is_corrective(json);
+    metric["is_merge"] = msg_is_merge(json);
+    metric["is_non_fonctional"] = msg_is_non_fonctional(json);
+    metric["is_perfective"] = msg_is_perfective(json);
+    metric["is_preventive"] = msg_is_preventive(json);
+    metric["is_refactoring"] = msg_is_refactoring(json);
+    metric["has_feature_addition"] = msg_has_feature_addition(json);
+    //metric["is_refactoring"] = msg_is_refactoring(json);
+}
+
+/**
+ * @param {JSON} json Input Json
+ * @param {JSON} metric Output Json
+ */
 function collectOwnerMetrics(json, metric) {
     if (json.owner)
         metric["is_a_bot"] = MetricsUtils.isABot(json.owner._account_id, projectName);
@@ -418,24 +437,6 @@ function check_review_count(code_review, VALUE) {
     return count;
 }
 
-/**
- * @param {JSON} json Input Json
- * @param {JSON} metric Output Json
- */
-function collectMsgMetrics(json, metric) {
-    metric["subject_length"] = countSubjectLength(json);
-    metric["subject_word_count"] = numberOfWordInSubject(json);
-    metric["msg_length"] = get_msg_length(json);
-    metric["msg_word_count"] = get_msg_word_count(json);
-    metric["is_corrective"] = msg_is_corrective(json);
-    metric["is_merge"] = msg_is_merge(json);
-    metric["is_non_fonctional"] = msg_is_non_fonctional(json);
-    metric["is_perfective"] = msg_is_perfective(json);
-    metric["is_preventive"] = msg_is_preventive(json);
-    metric["is_refactoring"] = msg_is_refactoring(json);
-    metric["has_feature_addition"] = msg_has_feature_addition(json);
-    //metric["is_refactoring"] = msg_is_refactoring(json);
-}
 
 // date
 function get_date_submitted(json) {

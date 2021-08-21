@@ -156,9 +156,9 @@ function check_value_to_ignore(metrics) {
         return true;
     */
 
-    let keys = ['fg_degree_centrality', 'num_segs_added', 'filesBuildTimeAvg']
+    //let keys = ['fg_degree_centrality', 'num_segs_added', 'filesBuildTimeAvg']
     //let keys = ['fg_degree_centrality', 'num_segs_added', 'revisionTimeAvg']
-    //let keys = ['fg_degree_centrality', 'num_segs_added']
+    let keys = ['fg_degree_centrality', 'num_segs_added']
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i]
         if (metrics[key] == null || !metrics.hasOwnProperty(key) || !(key in metrics)) {
@@ -225,47 +225,7 @@ String.prototype.camelCaseToDashed = function () {
     return this.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
 }
 
-/*function addMetrics(json) {
-    json["prior_branch_owner_ratio"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount"], json["priorBranchChangesCount"])
-    json["owner_non_close_changes"] = json["ownerPriorChangesCount"] - json["ownerPriorMergedChangesCount"] - json["ownerPriorAbandonedChangesCount"]
-
-    if (json.hasOwnProperty("priorBranchOwnerChangesCount_14_days") && json.hasOwnProperty("priorBranchChangesCount_14_days")) {
-        json["prior_branch_owner_ratio_14_days"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount_14_days"], json["priorBranchChangesCount_14_days"])
-    }
-
-    if (json.hasOwnProperty("priorBranchOwnerChangesCount_30_days") && json.hasOwnProperty("priorBranchChangesCount_30_days")) {
-        json["prior_branch_owner_ratio_30_days"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount_30_days"], json["priorBranchChangesCount_30_days"])
-    }
-
-    if (json.hasOwnProperty("priorBranchOwnerChangesCount_90_days") && json.hasOwnProperty("priorBranchChangesCount_90_days")) {
-        json["prior_branch_owner_ratio_90_days"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount_90_days"], json["priorBranchChangesCount_90_days"])
-    }
-
-    if (json.hasOwnProperty("priorBranchOwnerChangesCount_180_days") && json.hasOwnProperty("priorBranchChangesCount_180_days")) {
-        json["prior_branch_owner_ratio_180_days"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount_180_days"], json["priorBranchChangesCount_180_days"])
-    }
-
-
-    if (json.hasOwnProperty("ownerPriorChangesCount_14_days") && json.hasOwnProperty("ownerPriorMergedChangesCount_14_days") && json.hasOwnProperty("ownerPriorAbandonedChangesCount_14_days")) {
-        json["owner_non_close_changes_14_days"] = json["ownerPriorChangesCount_14_days"] - json["ownerPriorMergedChangesCount_14_days"] - json["ownerPriorAbandonedChangesCount_14_days"]
-    }
-
-    if (json.hasOwnProperty("ownerPriorChangesCount_30_days") && json.hasOwnProperty("ownerPriorMergedChangesCount_30_days") && json.hasOwnProperty("ownerPriorAbandonedChangesCount_30_days")) {
-        json["owner_non_close_changes_30_days"] = json["ownerPriorChangesCount_30_days"] - json["ownerPriorMergedChangesCount_30_days"] - json["ownerPriorAbandonedChangesCount_30_days"]
-    }
-
-    if (json.hasOwnProperty("ownerPriorChangesCount_90_days") && json.hasOwnProperty("ownerPriorMergedChangesCount_90_days") && json.hasOwnProperty("ownerPriorAbandonedChangesCount_90_days")) {
-        json["owner_non_close_changes_90_days"] = json["ownerPriorChangesCount_90_days"] - json["ownerPriorMergedChangesCount_90_days"] - json["ownerPriorAbandonedChangesCount_90_days"]
-    }
-
-    if (json.hasOwnProperty("ownerPriorChangesCount_180_days") && json.hasOwnProperty("ownerPriorMergedChangesCount_180_days") && json.hasOwnProperty("ownerPriorAbandonedChangesCount_180_days")) {
-        json["owner_non_close_changes_180_days"] = json["ownerPriorChangesCount_180_days"] - json["ownerPriorMergedChangesCount_180_days"] - json["ownerPriorAbandonedChangesCount_180_days"]
-    }
-
-}*/
-
-
-function copy_time_metrics(id, metric, result, number_of_days){
+function copy_time_metrics(id, metric, result, number_of_days) {
     if (metric.hasOwnProperty(id + number_of_days)) {
         result = copy(result, metric, id + number_of_days)
     } else {
@@ -312,11 +272,15 @@ async function collectMetrics(metric) {
 let metric_to_collect = {
     id: true,
 
-    author_timezone: true,
-    days_of_the_weeks_date_created_precise: true,
-    hours_of_the_days_date_created: true,
+    days_of_the_weeks_of_date_created: true,
     days_of_the_weeks_of_date_created_for_owner_timezone: true,
+    hours_of_the_days_date_created: true,
+    hours_of_the_days_date_created_for_owner: true,
+    is_created_date_a_weekend: true,
     is_created_date_a_weekend_for_owner_timezone: true,
+    author_timezone: true,
+    month_date_created: true,
+    month_date_created_for_owner: true,
     //is_created_date_a_weekend: true,
 
     fg_degree_centrality: true,
@@ -329,36 +293,189 @@ let metric_to_collect = {
     first_revision_insertions: true,
     first_revision_deletions: true,
     num_files: true,
+    num_files_type: true,
+    num_directory: true,
+    num_binary_file: true,
     num_programming_language: true,
+    num_data_language: true,
+    num_prose_language: true,
+    num_markup_language: true,
     modify_entropy: true,
     num_segs_added: true,
     num_segs_deleted: true,
     num_segs_modify: true,
-    is_a_cherry_pick: true,
-    first_revision_code_churn_size: true,
     first_revision_code_churn: true,
+    first_revision_code_churn_size: true,
+    //is_a_cherry_pick: true,
     //num_files_type: true,
     //num_directory: true,
     //sum_loc: true,
     //sum_complexity: true,
 
+    subject_length: true,
+    subject_word_count: true,
     msg_length: true,
+    msg_word_count: true,
     is_non_fonctional: true,
     is_refactoring: true,
     is_corrective: true,
     is_preventive: true,
     has_feature_addition: true,
+    is_merge: true,
+    is_a_bot: true,
     //is_perfective: true,
-    //is_merge: true,
     //msg_word_count: true,
     //subject_word_count: true,
     //subject_length: true,
 
-    prior_branch_owner_ratio: true,
-    owner_non_close_changes: true,
+    //todo add unclose change
+    //todo add unclose owner change
+    //todo add subsytem unclose change
+    //todo owner merged ratio
 
+    priorChangesCount: true,
+    priorSubsystemChangesCount: true,
     ownerPriorChangesCount: true,
+
+    ownerFileCountAvg: true,
+    ownerFileTimeAvg: true,
+    AvgNumberOfDeveloperWhoModifiedFiles: true,
+    priorChangesFiles: true,
+
+    fileCountAvg: true,
+    fileTimeAvg: true,
+    filesBuildTimeAvg: true,
+    filesRevisionTimeAvg: true,
+    filesNumFailsAvg: true,
+
+    filesNumberOfRecentChangesOnBranch: true,
+
+    ownerAge: true,
+    subsystemAge: true,
+    branchAge: true,
+    priorOwnerRate: true,
+
+    ownerNumberOfReview: true,
+    ownerPreviousMessageCount: true,
+
+    ownerChangesMessagesSum: true,
+    ownerChangesMessagesAvgPerChanges: true,
+
+    priorChangeDurationMean: true,
+
+    //ownerNumberOfAutoReview: true, //todo change for autoreview rate
+
+    ownerInactiveTimeAvg: true,
+    ownerTimeBetweenMessageAvg: true,
+
+    ownerProjectBranchNumberOfAutoReview: true, //todo change for autoreview rate
+
+    ownerProjectBranchBuildTimeAvg: true,
+    ownerProjectBranchNumberOfRevisionAvg: true,
+    ownerProjectBranchInactiveTimeAvg: true,
+    ownerProjectBranchTimeBetweenMessageAvg: true,
+    ownerProjectBranchChangesDurationAvg: true,
+    ownerProjectBranchRevisionTimeAvg: true,
+    ownerProjectBranchTimeBetweenRevisionAvg: true,
+    ownerProjectBranchTimeToAddReviewerAvg: true,
+
+    ownerProjectBranchChangesCount: true,
+    ownerProjectBranchClosedChangesCount: true,
+
+    ownerProjectBranchChangeMeanTimeTypeAvg: true,
+
+    ownerProjectBranchNumberChangesBuilt: true,
+
+
     ownerMergedRatio: true,
+    ownerRateOfAutoReview: true,
+    ratioOwnerProjectBranchNumberChangesBuilt: true,
+
+    priorOwnerSubsystemChangesCount: true,
+    priorOwnerSubsystemChangesRatio: true,
+
+    //prior_branch_owner_ratio: true,
+    //owner_non_close_changes: true,
+
+    reviewersPriorChangesSum: true,
+    reviewersPriorChangesAvg: true,
+    //reviewersPriorChangesMax: true,
+    //reviewersPriorChangesMin: true,
+    //reviewersPriorChangesStd: true,
+
+    reviewersPriorMergedChangesSum: true,
+    reviewersPriorMergedChangesAvg: true,
+    //reviewersPriorMergedChangesMax: true,
+    //reviewersPriorMergedChangesMin: true,
+    //reviewersPriorMergedChangesStd: true,
+
+    reviewersPriorAbandonedChangesSum: true,
+    reviewersPriorAbandonedChangesAvg: true,
+    //reviewersPriorAbandonedChangesMax: true,
+    //reviewersPriorAbandonedChangesMin: true,
+    //reviewersPriorAbandonedChangesStd: true,
+
+    reviewersPriorUnCloseChangesSum: true,
+    reviewersPriorUnCloseChangesAvg: true,
+    //reviewersPriorUnCloseChangesMax: true,
+    //reviewersPriorUnCloseChangesMin: true,
+    //reviewersPriorUnCloseChangesStd: true,
+
+    reviewersNumberOfReviewSum: true,
+    reviewersNumberOfReviewAvg: true,
+    //reviewersNumberOfReviewMax: true,
+    //reviewersNumberOfReviewMin: true,
+    //reviewersNumberOfReviewStd: true,
+
+    reviewersPreviousMessageSum: true,
+    reviewersPreviousMessageAvg: true,
+    //reviewersPreviousMessageMax: true,
+    //reviewersPreviousMessageMin: true,
+    //reviewersPreviousMessageStd: true,
+
+    fileCountForReviewersCountAvg: true,
+    //fileCountForReviewersCountMax: true,
+    //fileCountForReviewersCountMin: true,
+    //fileCountForReviewersCountStd: true,
+
+    fileTimeForReviewersCountAvg: true,
+    //fileTimeForReviewersCountMax: true,
+    //fileTimeForReviewersCountMin: true,
+    //fileTimeForReviewersCountStd: true,
+
+    ownerAndReviewerCommonsChangesSum: true,
+    ownerAndReviewerCommonsMessagesSum: true,
+
+    ownerAndReviewerCommonsMessagesSumForRev: true,
+    ownerAndReviewerCommonsMessagesAvg: true,
+    //ownerAndReviewerCommonsMessagesMax: true,
+    //ownerAndReviewerCommonsMessagesMin: true,
+    //ownerAndReviewerCommonsMessagesStd: true,
+
+    reviewersChangesSum: true,
+    reviewersChangesAvg: true,
+    //reviewersChangesMax: true,
+    //reviewersChangesMin: true,
+    //reviewersChangesStd: true,
+
+    reviewerTimezoneAvg: true,
+    reviewerTimezoneMax: true,
+    reviewerTimezoneMin: true,
+    reviewerTimezoneStd: true,
+
+    reviewerLastActivity: true,
+    reviewerLastMessageDateDiff: true,
+
+    date_updated_date_created_diff: true,
+
+}
+
+
+module.exports = {
+    start: startComputeMetrics
+};
+
+/*/////////
     //ownerPriorMergedChangesCount: true,
     //ownerPriorAbandonedChangesCount: true,
     //mergedRatio: true,
@@ -374,8 +491,7 @@ let metric_to_collect = {
     //priorOwnerChangesDurationMin: true,
     //priorOwnerChangesDurationStd: true,
 
-    priorOwnerSubsystemChangesCount: true,
-    priorOwnerSubsystemChangesRatio: true,
+
     ownerNumberOfReview: true,
     ownerPreviousMessageCount: true,
     ownerChangesMessagesSum: true,
@@ -489,78 +605,47 @@ let metric_to_collect = {
     priorSubsystemRateFromCount: true,
     priorOwnerRateFromCount: true,
 
-    filesNumberOfRecentChangesOnBranch: true,
+    filesNumberOfRecentChangesOnBranch: true,*/
 
-    reviewersPriorChangesSum: true,
-    reviewersPriorChangesAvg: true,
-    //reviewersPriorChangesMax: true,
-    //reviewersPriorChangesMin: true,
-    //reviewersPriorChangesStd: true,
+/*function addMetrics(json) {
+    json["prior_branch_owner_ratio"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount"], json["priorBranchChangesCount"])
+    json["owner_non_close_changes"] = json["ownerPriorChangesCount"] - json["ownerPriorMergedChangesCount"] - json["ownerPriorAbandonedChangesCount"]
 
-    reviewersPriorMergedChangesSum: true,
-    reviewersPriorMergedChangesAvg: true,
-    //reviewersPriorMergedChangesMax: true,
-    //reviewersPriorMergedChangesMin: true,
-    //reviewersPriorMergedChangesStd: true,
+    if (json.hasOwnProperty("priorBranchOwnerChangesCount_14_days") && json.hasOwnProperty("priorBranchChangesCount_14_days")) {
+        json["prior_branch_owner_ratio_14_days"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount_14_days"], json["priorBranchChangesCount_14_days"])
+    }
 
-    reviewersPriorAbandonedChangesSum: true,
-    reviewersPriorAbandonedChangesAvg: true,
-    //reviewersPriorAbandonedChangesMax: true,
-    //reviewersPriorAbandonedChangesMin: true,
-    //reviewersPriorAbandonedChangesStd: true,
+    if (json.hasOwnProperty("priorBranchOwnerChangesCount_30_days") && json.hasOwnProperty("priorBranchChangesCount_30_days")) {
+        json["prior_branch_owner_ratio_30_days"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount_30_days"], json["priorBranchChangesCount_30_days"])
+    }
 
-    reviewersPriorUnCloseChangesSum: true,
-    reviewersPriorUnCloseChangesAvg: true,
-    //reviewersPriorUnCloseChangesMax: true,
-    //reviewersPriorUnCloseChangesMin: true,
-    //reviewersPriorUnCloseChangesStd: true,
+    if (json.hasOwnProperty("priorBranchOwnerChangesCount_90_days") && json.hasOwnProperty("priorBranchChangesCount_90_days")) {
+        json["prior_branch_owner_ratio_90_days"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount_90_days"], json["priorBranchChangesCount_90_days"])
+    }
 
-    reviewersNumberOfReviewSum: true,
-    reviewersNumberOfReviewAvg: true,
-    //reviewersNumberOfReviewMax: true,
-    //reviewersNumberOfReviewMin: true,
-    //reviewersNumberOfReviewStd: true,
-
-    reviewersPreviousMessageSum: true,
-    reviewersPreviousMessageAvg: true,
-    //reviewersPreviousMessageMax: true,
-    //reviewersPreviousMessageMin: true,
-    //reviewersPreviousMessageStd: true,
-
-    fileCountForReviewersCountAvg: true,
-    //fileCountForReviewersCountMax: true,
-    //fileCountForReviewersCountMin: true,
-    //fileCountForReviewersCountStd: true,
-
-    fileTimeForReviewersCountAvg: true,
-    //fileTimeForReviewersCountMax: true,
-    //fileTimeForReviewersCountMin: true,
-    //fileTimeForReviewersCountStd: true,
-
-    ownerAndReviewerCommonsChangesSum: true,
-    ownerAndReviewerCommonsMessagesSum: true,
-
-    ownerAndReviewerCommonsMessagesSumForRev: true,
-    ownerAndReviewerCommonsMessagesAvg: true,
-    //ownerAndReviewerCommonsMessagesMax: true,
-    //ownerAndReviewerCommonsMessagesMin: true,
-    //ownerAndReviewerCommonsMessagesStd: true,
-
-    reviewersChangesSum: true,
-    reviewersChangesAvg: true,
-    //reviewersChangesMax: true,
-    //reviewersChangesMin: true,
-    //reviewersChangesStd: true,
-
-    date_updated_date_created_diff: true,
+    if (json.hasOwnProperty("priorBranchOwnerChangesCount_180_days") && json.hasOwnProperty("priorBranchChangesCount_180_days")) {
+        json["prior_branch_owner_ratio_180_days"] = MetricsUtils.safeDivision(json["priorBranchOwnerChangesCount_180_days"], json["priorBranchChangesCount_180_days"])
+    }
 
 
-}
+    if (json.hasOwnProperty("ownerPriorChangesCount_14_days") && json.hasOwnProperty("ownerPriorMergedChangesCount_14_days") && json.hasOwnProperty("ownerPriorAbandonedChangesCount_14_days")) {
+        json["owner_non_close_changes_14_days"] = json["ownerPriorChangesCount_14_days"] - json["ownerPriorMergedChangesCount_14_days"] - json["ownerPriorAbandonedChangesCount_14_days"]
+    }
 
+    if (json.hasOwnProperty("ownerPriorChangesCount_30_days") && json.hasOwnProperty("ownerPriorMergedChangesCount_30_days") && json.hasOwnProperty("ownerPriorAbandonedChangesCount_30_days")) {
+        json["owner_non_close_changes_30_days"] = json["ownerPriorChangesCount_30_days"] - json["ownerPriorMergedChangesCount_30_days"] - json["ownerPriorAbandonedChangesCount_30_days"]
+    }
 
-module.exports = {
-    start: startComputeMetrics
-};
+    if (json.hasOwnProperty("ownerPriorChangesCount_90_days") && json.hasOwnProperty("ownerPriorMergedChangesCount_90_days") && json.hasOwnProperty("ownerPriorAbandonedChangesCount_90_days")) {
+        json["owner_non_close_changes_90_days"] = json["ownerPriorChangesCount_90_days"] - json["ownerPriorMergedChangesCount_90_days"] - json["ownerPriorAbandonedChangesCount_90_days"]
+    }
+
+    if (json.hasOwnProperty("ownerPriorChangesCount_180_days") && json.hasOwnProperty("ownerPriorMergedChangesCount_180_days") && json.hasOwnProperty("ownerPriorAbandonedChangesCount_180_days")) {
+        json["owner_non_close_changes_180_days"] = json["ownerPriorChangesCount_180_days"] - json["ownerPriorMergedChangesCount_180_days"] - json["ownerPriorAbandonedChangesCount_180_days"]
+    }
+
+}*/
+
 
 /*function match_review_kind_value(metric) {
     let value = 1;
