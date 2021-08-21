@@ -95,17 +95,35 @@ function getChanges(skip, NUM_OF_CHANGES_LIMIT = 20000) {
         });
 }
 
+Object.defineProperty(Array.prototype, 'chunk', {
+    value: function(chunkSize) {
+        var R = [];
+        for (var i = 0; i < this.length; i += chunkSize)
+            R.push(this.slice(i, i + chunkSize));
+        return R;
+    }
+});
+
 async function deleteAllDocs() {
     const bar2 = multibar.create(0, 0, {type: 'Deleting changes'});
     bar2.setTotal(delete_id_list.length);
 
-    return Change.deleteMany({id: {$in: delete_id_list}})
-        .then(() => {
-            return Metrics.deleteMany({id: {$in: delete_id_list}})
-        })
-        .catch(err => {
-            console.log(err)
-        });
+    let delete_id_list_chunk = delete_id_list.chunk(100000)
+
+    for (let i = 0; i < delete_id_list_chunk.length; i++){
+        let toDelete = delete_id_list_chunk[i];
+        return Change.deleteMany({id: {$in: toDelete}})
+            .then(() => {
+                return Metrics.deleteMany({id: {$in: toDelete}})
+            })
+            .then(() => {
+                bar2.increment(toDelete.length);
+                return Promise.resolve(true)
+            })
+            .catch(err => {
+                console.log(err)
+            });
+    }
 
     return Promise.resolve(true);
 }

@@ -182,8 +182,10 @@ async function collectDocs(docs, Project, progressBar, collectMetrics) {
     for (let key in docs) {
         let p = collectMetrics(docs[key])
             .then((json) => {
-                queue.splice(queue.indexOf(p), 1);
                 return saveMetrics(json, Project, progressBar);
+            }).then(() => {
+                queue.splice(queue.indexOf(p), 1);
+                return Promise.resolve(true);
             })
 
         queue.push(p);
@@ -509,14 +511,14 @@ function get_timezone(json) {
     return tz;
 }
 
-function stringEqual(string1, string2){
-    if(!string1)
+function stringEqual(string1, string2) {
+    if (!string1)
         return false;
-    if(!string2)
+    if (!string2)
         return false
     let t1 = string1.toLowerCase().trim();
     let t2 = string2.toLowerCase().trim();
-    return(t1 === t2)
+    return (t1 === t2)
 }
 
 function get_timezone_owner(json) {
@@ -526,17 +528,17 @@ function get_timezone_owner(json) {
     for (let id in revisions) {
         let revision = revisions[id]
         if (!!revision["commit"]) {
-            if (!!revision["commit"]["committer"]){
+            if (!!revision["commit"]["committer"]) {
                 let committer_name = revision.commit.committer.name;
                 let committer_email = revision.commit.committer.email;
-                if(stringEqual(committer_name, owner_name) || stringEqual(owner_email, committer_email)){
+                if (stringEqual(committer_name, owner_name) || stringEqual(owner_email, committer_email)) {
                     return revision.commit.committer.tz;
                 }
             }
-            if (!!revision["commit"]["author"]){
+            if (!!revision["commit"]["author"]) {
                 let committer_name = revision.commit.author.name;
                 let committer_email = revision.commit.author.email;
-                if(stringEqual(committer_name, owner_name) || stringEqual(owner_email, committer_email)){
+                if (stringEqual(committer_name, owner_name) || stringEqual(owner_email, committer_email)) {
                     return revision.commit.author.tz;
                 }
             }

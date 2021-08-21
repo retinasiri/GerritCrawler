@@ -6,7 +6,7 @@ var ReviewerUpdate = require('./reviewerUpdate').schema;
 var Schema = mongoose.Schema;
 
 var ChangeSchema = new Schema({
-    id: {type: String, index: true},
+    id: String,
     project: String,
     branch: String,
     topic: String,
