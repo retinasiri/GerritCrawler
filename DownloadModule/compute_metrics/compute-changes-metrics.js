@@ -45,14 +45,15 @@ function startComputeMetrics(projectJson) {
 }
 
 async function collectMetrics(json) {
-    let t1 = getChangesInfo(json).then((values) => {
+    /*let t1 = getChangesInfo(json).then((values) => {
         return getMetrics(json, values);
-    })
+    })*/
     let t2 = getBestReviewer(json).then((values) => {
         return getMetrics(json, values);
     })
 
-    return Promise.all([t1, t2]).then((results) => {
+    //return Promise.all([t1, t2]).then((results) => {
+    return Promise.all([t2]).then((results) => {
         let metrics = {...results[0], ...results[1]};
         if (NUM_DAYS_FOR_RECENT !== null) {
             let suffix = '_' + NUM_DAYS_FOR_RECENT + '_days'
