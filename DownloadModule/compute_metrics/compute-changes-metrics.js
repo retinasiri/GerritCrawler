@@ -49,6 +49,7 @@ async function collectMetrics(json) {
         return getMetrics(json, values);
     })*/
     let t2 = getBestReviewer(json).then((values) => {
+        //console.log(values)
         return getMetrics(json, values);
     })
 
@@ -2899,6 +2900,7 @@ async function getReviewersMetrics(json, reviewersDocs) {
         metadata["reviewerLastMessageDateDiff"] = metadata["reviewerLastMessageDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastMessageDate"], created_date) : undefined;
         //metadata["reviewerLastChangeDateDiff"] = metadata["reviewerLastChangeDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastChangeDate"], created_date) : undefined;
         //metadata["reviewerLastReviewDateDiff"] = metadata["reviewerLastReviewDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastReviewDate"], created_date) : undefined;
+        //console.log(metadata["reviewerLastMessageDateDiff"])
 
         /*if (!metadata["reviewerLastChangeDateDiff"] && !metadata["reviewerLastMessageDateDiff"] && !metadata["reviewerLastReviewDateDiff"])
             metadata["reviewerLastActivity"] = undefined
