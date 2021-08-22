@@ -2815,77 +2815,77 @@ async function getReviewersMetrics(json, reviewersDocs) {
         ownerAndReviewerCommonsMessagesAvg,//8
         reviewersChangesCount,//9
         reviewerTimezone,//10
-        reviewerLastMessage,//12
+        reviewerLastMessage,//11
         //reviewerLastChange,//11
         //reviewerLastReview,//13
     ]).then((results) => {
         let metadata = {
-            reviewersPriorChangesSum: results[0] ? results[0].sum : 0,
-            reviewersPriorChangesAvg: results[0] ? results[0].avg : 0,
-            reviewersPriorChangesMax: results[0] ? results[0].max : 0,
-            reviewersPriorChangesMin: results[0] ? results[0].min : 0,
-            reviewersPriorChangesStd: results[0] ? results[0].std : 0,
+            reviewersPriorChangesSum: results[0].sum,
+            reviewersPriorChangesAvg: results[0].avg,
+            reviewersPriorChangesMax: results[0].max,
+            reviewersPriorChangesMin: results[0].min,
+            reviewersPriorChangesStd: results[0].std,
 
-            reviewersPriorMergedChangesSum: results[1] ? results[1].sum : 0,
-            reviewersPriorMergedChangesAvg: results[1] ? results[1].avg : 0,
-            reviewersPriorMergedChangesMax: results[1] ? results[1].max : 0,
-            reviewersPriorMergedChangesMin: results[1] ? results[1].min : 0,
-            reviewersPriorMergedChangesStd: results[1] ? results[1].std : 0,
+            reviewersPriorMergedChangesSum: results[1].sum,
+            reviewersPriorMergedChangesAvg: results[1].avg,
+            reviewersPriorMergedChangesMax: results[1].max,
+            reviewersPriorMergedChangesMin: results[1].min,
+            reviewersPriorMergedChangesStd: results[1].std,
 
-            reviewersPriorAbandonedChangesSum: results[2] ? results[2].sum : 0,
-            reviewersPriorAbandonedChangesAvg: results[2] ? results[2].avg : 0,
-            reviewersPriorAbandonedChangesMax: results[2] ? results[2].max : 0,
-            reviewersPriorAbandonedChangesMin: results[2] ? results[2].min : 0,
-            reviewersPriorAbandonedChangesStd: results[2] ? results[2].std : 0,
+            reviewersPriorAbandonedChangesSum: results[2].sum,
+            reviewersPriorAbandonedChangesAvg: results[2].avg,
+            reviewersPriorAbandonedChangesMax: results[2].max,
+            reviewersPriorAbandonedChangesMin: results[2].min,
+            reviewersPriorAbandonedChangesStd: results[2].std,
 
-            reviewersPriorUnCloseChangesSum: results[3] ? results[3].sum : 0,
-            reviewersPriorUnCloseChangesAvg: results[3] ? results[3].avg : 0,
-            reviewersPriorUnCloseChangesMax: results[3] ? results[3].max : 0,
-            reviewersPriorUnCloseChangesMin: results[3] ? results[3].min : 0,
-            reviewersPriorUnCloseChangesStd: results[3] ? results[3].std : 0,
+            reviewersPriorUnCloseChangesSum: results[3].sum,
+            reviewersPriorUnCloseChangesAvg: results[3].avg,
+            reviewersPriorUnCloseChangesMax: results[3].max,
+            reviewersPriorUnCloseChangesMin: results[3].min,
+            reviewersPriorUnCloseChangesStd: results[3].std,
 
-            reviewersNumberOfReviewSum: results[4] ? results[4].sum : 0,
-            reviewersNumberOfReviewAvg: results[4] ? results[4].avg : 0,
-            reviewersNumberOfReviewMax: results[4] ? results[4].max : 0,
-            reviewersNumberOfReviewMin: results[4] ? results[4].min : 0,
-            reviewersNumberOfReviewStd: results[4] ? results[4].std : 0,
+            reviewersNumberOfReviewSum: results[4].sum,
+            reviewersNumberOfReviewAvg: results[4].avg,
+            reviewersNumberOfReviewMax: results[4].max,
+            reviewersNumberOfReviewMin: results[4].min,
+            reviewersNumberOfReviewStd: results[4].std,
 
-            reviewersPreviousMessageSum: results[5] ? results[5].sum : 0,
-            reviewersPreviousMessageAvg: results[5] ? results[5].avg : 0,
-            reviewersPreviousMessageMax: results[5] ? results[5].max : 0,
-            reviewersPreviousMessageMin: results[5] ? results[5].min : 0,
-            reviewersPreviousMessageStd: results[5] ? results[5].std : 0,
+            reviewersPreviousMessageSum: results[5].sum,
+            reviewersPreviousMessageAvg: results[5].avg,
+            reviewersPreviousMessageMax: results[5].max,
+            reviewersPreviousMessageMin: results[5].min,
+            reviewersPreviousMessageStd: results[5].std,
 
-            fileCountForReviewersCountAvg: results[6] ? results[6].count_avg : 0,
-            fileCountForReviewersCountMax: results[6] ? results[6].count_max : 0,
-            fileCountForReviewersCountMin: results[6] ? results[6].count_min : 0,
-            fileCountForReviewersCountStd: results[6] ? results[6].count_std : 0,
-            fileTimeForReviewersCountAvg: results[6] ? results[6].time_avg : 0,
-            fileTimeForReviewersCountMax: results[6] ? results[6].time_max : 0,
-            fileTimeForReviewersCountMin: results[6] ? results[6].time_min : 0,
-            fileTimeForReviewersCountStd: results[6] ? results[6].time_std : 0,
+            fileCountForReviewersCountAvg: results[6].count_avg,
+            fileCountForReviewersCountMax: results[6].count_max,
+            fileCountForReviewersCountMin: results[6].count_min,
+            fileCountForReviewersCountStd: results[6].count_std,
+            fileTimeForReviewersCountAvg: results[6].time_avg,
+            fileTimeForReviewersCountMax: results[6].time_max,
+            fileTimeForReviewersCountMin: results[6].time_min,
+            fileTimeForReviewersCountStd: results[6].time_std,
 
-            ownerAndReviewerCommonsChangesSum: results[7] ? results[7].changes_sum : 0,
-            ownerAndReviewerCommonsMessagesSum: results[7] ? results[7].messages_sum : 0,
+            ownerAndReviewerCommonsChangesSum: results[7].changes_sum ,
+            ownerAndReviewerCommonsMessagesSum: results[7].messages_sum,
 
-            ownerAndReviewerCommonsMessagesSumForRev: results[8] ? results[8].sum : 0,
-            ownerAndReviewerCommonsMessagesAvg: results[8] ? results[8].avg : 0,
-            ownerAndReviewerCommonsMessagesMax: results[8] ? results[8].max : 0,
-            ownerAndReviewerCommonsMessagesMin: results[8] ? results[8].min : 0,
-            ownerAndReviewerCommonsMessagesStd: results[8] ? results[8].std : 0,
+            ownerAndReviewerCommonsMessagesSumForRev: results[8].sum,
+            ownerAndReviewerCommonsMessagesAvg: results[8].avg,
+            ownerAndReviewerCommonsMessagesMax: results[8].max,
+            ownerAndReviewerCommonsMessagesMin: results[8].min,
+            ownerAndReviewerCommonsMessagesStd: results[8].std,
 
-            reviewersChangesSum: results[9] ? results[9].sum : 0,
-            reviewersChangesAvg: results[9] ? results[9].avg : 0,
-            reviewersChangesMax: results[9] ? results[9].max : 0,
-            reviewersChangesMin: results[9] ? results[9].min : 0,
-            reviewersChangesStd: results[9] ? results[9].std : 0,
+            reviewersChangesSum: results[9].sum,
+            reviewersChangesAvg: results[9].avg,
+            reviewersChangesMax: results[9].max,
+            reviewersChangesMin: results[9].min,
+            reviewersChangesStd: results[9].std,
 
-            reviewerTimezoneAvg: results[10] ? results[10].avg : 0,
-            reviewerTimezoneMax: results[10] ? results[10].max : 0,
-            reviewerTimezoneMin: results[10] ? results[10].min : 0,
-            reviewerTimezoneStd: results[10] ? results[10].std : 0,
+            reviewerTimezoneAvg: results[10].avg,
+            reviewerTimezoneMax: results[10].max,
+            reviewerTimezoneMin: results[10].min,
+            reviewerTimezoneStd: results[10].std,
 
-            reviewerLastMessageDate: results[12] ? results[12].date : 0,
+            reviewerLastMessageDate: results[11].date,
             //reviewerLastChangeDate: results[11].length > 0 ? results[11].date : 0,
             //reviewerLastReviewDate: results[13].length > 0 ? results[13].date : 0,
 
@@ -2894,6 +2894,8 @@ async function getReviewersMetrics(json, reviewersDocs) {
             //reviewerLastReviewDateDiff: MetricsUtils.timeDiff(results[13].length > 0 ? results[13].date : 0, created_date),
         }
 
+        //console.log(results[10].avg)
+        //console.log(results[11].date)
         metadata["reviewerLastMessageDateDiff"] = metadata["reviewerLastMessageDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastMessageDate"], created_date) : undefined;
         //metadata["reviewerLastChangeDateDiff"] = metadata["reviewerLastChangeDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastChangeDate"], created_date) : undefined;
         //metadata["reviewerLastReviewDateDiff"] = metadata["reviewerLastReviewDate"] ? MetricsUtils.timeDiff(metadata["reviewerLastReviewDate"], created_date) : undefined;
