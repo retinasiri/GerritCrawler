@@ -237,8 +237,6 @@ function copy_time_metrics(id, metric, result, number_of_days) {
 }
 
 async function collectMetrics(metric) {
-    console.log('collectMetrics')
-
     let result = {};
     let result_all = {};
     let result_7_days = {};
@@ -505,7 +503,10 @@ function add_ratio(json, result_name, first, second) {
         let n_result_name = result_name + suffix
         let n_first = first + suffix
         let n_second = second + suffix
-        json[n_result_name] = MetricsUtils.safeDivision(json[n_first], json[n_second])
+        if (json[n_first] === undefined || json[n_second] === undefined)
+            json[n_result_name] = 0
+        else
+            json[n_result_name] = MetricsUtils.safeDivision(json[n_first], json[n_second])
     }
     //return json
 }
