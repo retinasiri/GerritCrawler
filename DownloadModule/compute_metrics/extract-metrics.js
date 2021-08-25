@@ -130,8 +130,9 @@ function check_value_to_ignore(metrics) {
     if (metrics["status"])
         if (metrics["status"].includes("NEW"))
             return true;
-    if (metrics["is_a_bot"] === true)
-        return true;
+
+        /*if (metrics["is_a_bot"] === true)
+        return true;*/
 
     /*if (metrics["first_revision_number"] !== 1)
         return true;*/
