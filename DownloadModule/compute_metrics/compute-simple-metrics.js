@@ -63,7 +63,8 @@ function getChanges(skip, NUM_OF_CHANGES_LIMIT = 20000) {
         .aggregate([
             {$sort: {_number: 1}},
             {$skip: skip},
-            {$limit: NUM_OF_CHANGES_LIMIT}
+            {$limit: NUM_OF_CHANGES_LIMIT},
+            //{$project: {id: 1, branch: 1}}
         ])
         .allowDiskUse(true)
         .exec()
@@ -117,14 +118,24 @@ async function updateProgress() {
  */
 async function collectMetrics(json) {
     let metric = {};
+    metric["id"] = json.id;
     collectIdentityMetrics(json, metric);
     collectTimeMetrics(json, metric);
     collectCodeMetrics(json, metric);
     collectFileMetrics(json, metric);
     collectOwnerMetrics(json, metric);
     collectMsgMetrics(json, metric);
+
+    collectBranchMetrics(json, metric)
     return metric;
 }
+
+function collectBranchMetrics(json, metric) {
+    let branch = json.branch;
+    let txt = branch? branch.toLowerCase(): branch;
+    metric["is_master_branch"] = (txt === "master");
+}
+
 
 /**
  * @param {JSON} json Input Json

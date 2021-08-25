@@ -168,7 +168,8 @@ function check_value_to_ignore(metrics) {
 }
 
 async function saveMetrics(json, suffix = "") {
-    let path = PathLibrary.join(DATA_PATH, projectName);
+    //let path = PathLibrary.join(DATA_PATH, projectName, projectName + "-metrics");
+    let path = PathLibrary.join(DATA_PATH, "metrics", projectName + "-metrics");
     if (!suffix || suffix === "")
         suffix = "metrics"
     let filename = projectName + "-" + suffix + ".csv";
@@ -224,14 +225,14 @@ String.prototype.camelCaseToDashed = function () {
     return this.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
 }
 
-function copy_time_metrics(id, metric, result, number_of_days) {
+function copy_time_metrics(id, metric, result, number_of_days, name = "") {
     if (metric.hasOwnProperty(id + number_of_days)) {
-        result = copy(result, metric, id + number_of_days)
+        result = copy(result, metric, id + number_of_days, name)
     } else {
         if (id.includes("eviewer"))
-            result = copy(result, metric, id + number_of_days)
+            result = copy(result, metric, id + number_of_days, name)
         else
-            result = copy(result, metric, id)
+            result = copy(result, metric, id, name)
     }
     return result;
 }
@@ -244,10 +245,18 @@ async function collectMetrics(metric) {
     let result_30_days = {};
 
     for (let id in metric_to_collect) {
-        result = copy(result, metric, id);
-        result_7_days = copy_time_metrics(id, metric, result_7_days, "_7_days")
-        result_14_days = copy_time_metrics(id, metric, result_14_days, "_14_days")
-        result_30_days = copy_time_metrics(id, metric, result_30_days, "_30_days")
+        let name = metric_to_collect[id];
+        if (typeof name === 'string' || name instanceof String){
+            result = copy(result, metric, id);
+            result_7_days = copy_time_metrics(id, metric, result_7_days, "_7_days", name)
+            result_14_days = copy_time_metrics(id, metric, result_14_days, "_14_days", name)
+            result_30_days = copy_time_metrics(id, metric, result_30_days, "_30_days", name)
+        } else{
+            result = copy(result, metric, id);
+            result_7_days = copy_time_metrics(id, metric, result_7_days, "_7_days")
+            result_14_days = copy_time_metrics(id, metric, result_14_days, "_14_days")
+            result_30_days = copy_time_metrics(id, metric, result_30_days, "_30_days")
+        }
         result_all = {...result, ...result_7_days, ...result_14_days, ...result_30_days}
     }
 
@@ -270,6 +279,7 @@ async function collectMetrics(metric) {
 let metric_to_collect = {
     id: true,
 
+    //Time
     days_of_the_weeks_of_date_created: true,
     days_of_the_weeks_of_date_created_for_owner_timezone: true,
     hours_of_the_days_date_created: true,
@@ -279,17 +289,24 @@ let metric_to_collect = {
     author_timezone: true,
     month_date_created: true,
     month_date_created_for_owner: true,
-    //is_created_date_a_weekend: true,
 
+    //Graph
     fg_degree_centrality: true,
     fg_closeness_centrality: true,
     fg_betweenness_centrality: true,
     fg_eigenvector_centrality: true,
     fg_clustering_coefficient: true,
     fg_core_number: true,
+    degree_centrality: true,
+    closeness_centrality: true,
+    betweenness_centrality: true,
+    eigenvector_centrality: true,
+    clustering_coefficient: true,
+    core_number: true,
 
-    first_revision_insertions: true,
-    first_revision_deletions: true,
+    //File
+    first_revision_insertions: "insertions",
+    first_revision_deletions: "deletions",
     num_files: true,
     num_files_type: true,
     num_directory: true,
@@ -302,14 +319,14 @@ let metric_to_collect = {
     num_segs_added: true,
     num_segs_deleted: true,
     num_segs_modify: true,
-    first_revision_code_churn: true,
-    first_revision_code_churn_size: true,
+    first_revision_code_churn: "code_churn",
+    first_revision_code_churn_size: "code_churn_size",
+    sum_loc: true,
+    sum_complexity: true,
     //is_a_cherry_pick: true,
-    //num_files_type: true,
-    //num_directory: true,
-    //sum_loc: true,
-    //sum_complexity: true,
 
+    //Change
+    is_master_branch: true,
     subject_length: true,
     subject_word_count: true,
     msg_length: true,
@@ -322,35 +339,57 @@ let metric_to_collect = {
     is_merge: true,
     is_a_bot: true,
     //is_perfective: true,
-    //msg_word_count: true,
-    //subject_word_count: true,
-    //subject_length: true,
 
-    //todo add unclose change
-    //todo add unclose owner change
-    //todo add subsystem unclose change
-    //todo owner merged ratio
 
-    owner_non_close_changes: true,
-    non_close_changes: true,
-    project_non_close_changes: true,
-
-    priorChangesCount: true,
-    priorSubsystemChangesCount: true,
-    ownerPriorChangesCount: true,
-
-    ownerFileCountAvg: true,
-    ownerFileTimeAvg: true,
+    //File
     AvgNumberOfDeveloperWhoModifiedFiles: true,
     priorChangesFiles: true,
 
     fileCountAvg: true,
+    fileCountMax: true,
+    fileCountMin: true,
+    fileCountStd: true,
+
     fileTimeAvg: true,
+    fileTimeMax: true,
+    fileTimeMin: true,
+    fileTimeStd: true,
+
     filesBuildTimeAvg: true,
+    filesBuildTimeMax: true,
+    filesBuildTimeMin: true,
+    filesBuildTimeStd: true,
+
     filesRevisionTimeAvg: true,
+    filesRevisionTimeMax:true,
+    filesRevisionTimeMin:true,
+    filesRevisionTimeStd:true,
+
     filesNumFailsAvg: true,
+    filesNumFailsMax:true,
+    filesNumFailsMin:true,
+    filesNumFailsStd:true,
 
     filesNumberOfRecentChangesOnBranch: true,
+
+    //owner
+    priorChangesCount: true,
+    priorSubsystemChangesCount: true,
+    non_close_changes: true,
+    project_non_close_changes: true,
+
+    ownerPriorChangesCount: true,
+    owner_non_close_changes: true,
+
+    ownerFileCountAvg: true,
+    ownerFileCountMax:true,
+    ownerFileCountMin:true,
+    ownerFileCountStd:true,
+
+    ownerFileTimeAvg: true,
+    ownerFileTimeMax:true,
+    ownerFileTimeMin:true,
+    ownerFileTimeStd:true,
 
     ownerAge: true,
     subsystemAge: true,
@@ -362,29 +401,76 @@ let metric_to_collect = {
 
     ownerChangesMessagesSum: true,
     ownerChangesMessagesAvgPerChanges: true,
+    ownerChangesMessagesMaxPerChanges: true,
+    ownerChangesMessagesMinPerChanges: true,
+    ownerChangesMessagesStdPerChanges: true,
 
     priorChangeDurationMean: true,
+    priorChangeDurationMax: true,
+    priorChangeDurationMin: true,
+    priorChangeDurationStd: true,
 
     //ownerNumberOfAutoReview: true, //todo change for autoreview rate
 
     ownerInactiveTimeAvg: true,
+    ownerInactiveTimeMax: true,
+    ownerInactiveTimeMin: true,
+    ownerInactiveTimeStd: true,
+
     ownerTimeBetweenMessageAvg: true,
+    ownerTimeBetweenMessageMax: true,
+    ownerTimeBetweenMessageMin: true,
+    ownerTimeBetweenMessageStd: true,
 
     ownerProjectBranchNumberOfAutoReview: true, //todo change for autoreview rate
+    ownerProjectBranchNumberOfAutoReviewRate: true,
 
     ownerProjectBranchBuildTimeAvg: true,
+    ownerProjectBranchBuildTimeMax: true,
+    ownerProjectBranchBuildTimeMin: true,
+    ownerProjectBranchBuildTimeStd: true,
+
     ownerProjectBranchNumberOfRevisionAvg: true,
+    ownerProjectBranchNumberOfRevisionMax:true,
+    ownerProjectBranchNumberOfRevisionMin:true,
+    ownerProjectBranchNumberOfRevisionStd:true,
+
     ownerProjectBranchInactiveTimeAvg: true,
+    ownerProjectBranchInactiveTimeMax: true,
+    ownerProjectBranchInactiveTimeMin: true,
+    ownerProjectBranchInactiveTimeStd: true,
+
     ownerProjectBranchTimeBetweenMessageAvg: true,
+    ownerProjectBranchTimeBetweenMessageMax: true,
+    ownerProjectBranchTimeBetweenMessageMin: true,
+    ownerProjectBranchTimeBetweenMessageStd: true,
+
     ownerProjectBranchChangesDurationAvg: true,
+    ownerProjectBranchChangesDurationMax: true,
+    ownerProjectBranchChangesDurationMin: true,
+    ownerProjectBranchChangesDurationStd: true,
+
     ownerProjectBranchRevisionTimeAvg: true,
+    ownerProjectBranchRevisionTimeMax: true,
+    ownerProjectBranchRevisionTimeMin: true,
+    ownerProjectBranchRevisionTimeStd: true,
+
     ownerProjectBranchTimeBetweenRevisionAvg: true,
+    ownerProjectBranchTimeBetweenRevisionMax:true,
+    ownerProjectBranchTimeBetweenRevisionMin:true,
+    ownerProjectBranchTimeBetweenRevisionStd:true,
+
     ownerProjectBranchTimeToAddReviewerAvg: true,
+    ownerProjectBranchTimeToAddReviewerMax: true,
+    ownerProjectBranchTimeToAddReviewerMin: true,
+    ownerProjectBranchTimeToAddReviewerStd: true,
 
     ownerProjectBranchChangesCount: true,
     ownerProjectBranchClosedChangesCount: true,
-
     ownerProjectBranchChangeMeanTimeTypeAvg: true,
+    ownerProjectBranchChangeMeanTimeTypeMin: true,
+    ownerProjectBranchChangeMeanTimeTypeMax: true,
+    ownerProjectBranchChangeMeanTimeTypeStd: true,
 
     ownerProjectBranchNumberChangesBuilt: true,
 
@@ -395,69 +481,66 @@ let metric_to_collect = {
     priorOwnerSubsystemChangesCount: true,
     priorOwnerSubsystemChangesRatio: true,
 
-    //prior_branch_owner_ratio: true,
-    //owner_non_close_changes: true,
-
     reviewersPriorChangesSum: true,
     reviewersPriorChangesAvg: true,
-    //reviewersPriorChangesMax: true,
-    //reviewersPriorChangesMin: true,
-    //reviewersPriorChangesStd: true,
+    reviewersPriorChangesMax: true,
+    reviewersPriorChangesMin: true,
+    reviewersPriorChangesStd: true,
 
     reviewersPriorMergedChangesSum: true,
     reviewersPriorMergedChangesAvg: true,
-    //reviewersPriorMergedChangesMax: true,
-    //reviewersPriorMergedChangesMin: true,
-    //reviewersPriorMergedChangesStd: true,
+    reviewersPriorMergedChangesMax: true,
+    reviewersPriorMergedChangesMin: true,
+    reviewersPriorMergedChangesStd: true,
 
     reviewersPriorAbandonedChangesSum: true,
     reviewersPriorAbandonedChangesAvg: true,
-    //reviewersPriorAbandonedChangesMax: true,
-    //reviewersPriorAbandonedChangesMin: true,
-    //reviewersPriorAbandonedChangesStd: true,
+    reviewersPriorAbandonedChangesMax: true,
+    reviewersPriorAbandonedChangesMin: true,
+    reviewersPriorAbandonedChangesStd: true,
 
     reviewersPriorUnCloseChangesSum: true,
     reviewersPriorUnCloseChangesAvg: true,
-    //reviewersPriorUnCloseChangesMax: true,
-    //reviewersPriorUnCloseChangesMin: true,
-    //reviewersPriorUnCloseChangesStd: true,
+    reviewersPriorUnCloseChangesMax: true,
+    reviewersPriorUnCloseChangesMin: true,
+    reviewersPriorUnCloseChangesStd: true,
 
     reviewersNumberOfReviewSum: true,
     reviewersNumberOfReviewAvg: true,
-    //reviewersNumberOfReviewMax: true,
-    //reviewersNumberOfReviewMin: true,
-    //reviewersNumberOfReviewStd: true,
+    reviewersNumberOfReviewMax: true,
+    reviewersNumberOfReviewMin: true,
+    reviewersNumberOfReviewStd: true,
 
     reviewersPreviousMessageSum: true,
     reviewersPreviousMessageAvg: true,
-    //reviewersPreviousMessageMax: true,
-    //reviewersPreviousMessageMin: true,
-    //reviewersPreviousMessageStd: true,
+    reviewersPreviousMessageMax: true,
+    reviewersPreviousMessageMin: true,
+    reviewersPreviousMessageStd: true,
 
     fileCountForReviewersCountAvg: true,
-    //fileCountForReviewersCountMax: true,
-    //fileCountForReviewersCountMin: true,
-    //fileCountForReviewersCountStd: true,
+    fileCountForReviewersCountMax: true,
+    fileCountForReviewersCountMin: true,
+    fileCountForReviewersCountStd: true,
 
     fileTimeForReviewersCountAvg: true,
-    //fileTimeForReviewersCountMax: true,
-    //fileTimeForReviewersCountMin: true,
-    //fileTimeForReviewersCountStd: true,
+    fileTimeForReviewersCountMax: true,
+    fileTimeForReviewersCountMin: true,
+    fileTimeForReviewersCountStd: true,
 
     ownerAndReviewerCommonsChangesSum: true,
     ownerAndReviewerCommonsMessagesSum: true,
 
     ownerAndReviewerCommonsMessagesSumForRev: true,
     ownerAndReviewerCommonsMessagesAvg: true,
-    //ownerAndReviewerCommonsMessagesMax: true,
-    //ownerAndReviewerCommonsMessagesMin: true,
-    //ownerAndReviewerCommonsMessagesStd: true,
+    ownerAndReviewerCommonsMessagesMax: true,
+    ownerAndReviewerCommonsMessagesMin: true,
+    ownerAndReviewerCommonsMessagesStd: true,
 
     reviewersChangesSum: true,
     reviewersChangesAvg: true,
-    //reviewersChangesMax: true,
-    //reviewersChangesMin: true,
-    //reviewersChangesStd: true,
+    reviewersChangesMax: true,
+    reviewersChangesMin: true,
+    reviewersChangesStd: true,
 
     reviewerTimezoneAvg: true,
     reviewerTimezoneMax: true,
@@ -466,6 +549,16 @@ let metric_to_collect = {
 
     //reviewerLastActivity: true,
     reviewerLastMessageDateDiff: true,
+
+    number_of_similar_change_id: true,
+    number_of_related_changes: true,
+    number_of_merged_related_changes: true,
+    number_of_abandoned_related_changes: true,
+    number_of_not_owned_related_changes: true,
+    number_of_not_owned_merged_related_changes: true,
+    number_of_not_owned_abandoned_related_changes: true,
+    number_of_close_related_changes: true,
+    number_of_not_owned_close_related_changes: true,
 
     date_updated_date_created_diff: true,
 

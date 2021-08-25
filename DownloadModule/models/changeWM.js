@@ -62,8 +62,8 @@ var ChangeSchema = new Schema({
 }, {
     versionKey: false,
     strict: false,
-    //collection: 'changes_with_metadata'
+    collection: 'changes_with_metadata'
 });
 
-module.exports = mongoose.model('Change', ChangeSchema);;
+module.exports = mongoose.model('ChangeWM', ChangeSchema);
 
