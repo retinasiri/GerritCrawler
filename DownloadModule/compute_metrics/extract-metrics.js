@@ -252,7 +252,7 @@ async function collectMetrics(metric) {
     let result_7_days = {};
     let result_14_days = {};
     let result_30_days = {};
-    console.log(Object.keys(metric_to_collect).length)
+    //console.log(Object.keys(metric_to_collect).length)
     for (let id in metric_to_collect) {
         let name = metric_to_collect[id];
         if (typeof name === 'string' || name instanceof String) {
@@ -268,7 +268,7 @@ async function collectMetrics(metric) {
         }
         result_all = {...result, ...result_7_days, ...result_14_days, ...result_30_days}
     }
-    console.log(Object.keys(result_all).length + "..." + Object.keys(result).length + "..." + Object.keys(result_7_days).length + "..." + Object.keys(result_14_days).length + "..." + Object.keys(result_30_days).length)
+    //console.log(Object.keys(result_all).length + "..." + Object.keys(result).length + "..." + Object.keys(result_7_days).length + "..." + Object.keys(result_14_days).length + "..." + Object.keys(result_30_days).length)
 
     /*if(Object.keys(result_all).length === 665){
         object665 = {...result_all}
