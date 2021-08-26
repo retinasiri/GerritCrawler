@@ -227,13 +227,14 @@ String.prototype.camelCaseToDashed = function () {
 }
 
 function copy_time_metrics(id, metric, result, number_of_days, name = "") {
+    let exclude = ['ownerAge', 'subsystemAge', 'branchAge']
     if (metric.hasOwnProperty(id + number_of_days)) {
-        result = copy(result, metric, id + number_of_days, name)
-    } else {
-        if (id.includes("eviewer"))
-            result = copy(result, metric, id + number_of_days, name)
-        else
+        if (exclude.includes(id))
             result = copy(result, metric, id, name)
+        else
+            result = copy(result, metric, id + number_of_days, name)
+    } else {
+        result = copy(result, metric, id, name)
     }
     return result;
 }
@@ -543,10 +544,10 @@ let metric_to_collect = {
     //reviewersChangesMin: true,
     //reviewersChangesStd: true,
 
-    reviewerTimezoneAvg: true,
-    reviewerTimezoneMax: true,
-    reviewerTimezoneMin: true,
-    reviewerTimezoneStd: true,
+    reviewerTimezoneAvg: "revrsTimezoneAvg",
+    reviewerTimezoneMax: "revrsTimezoneMax",
+    reviewerTimezoneMin: "revrsTimezoneMin",
+    reviewerTimezoneStd: "revrsTimezoneStd",
 
     //reviewerLastActivity: true,
     reviewerLastMessageDateDiff: "revrsLastMessageDateTime",

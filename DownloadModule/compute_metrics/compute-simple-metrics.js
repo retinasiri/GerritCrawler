@@ -119,14 +119,13 @@ async function updateProgress() {
 async function collectMetrics(json) {
     let metric = {};
     metric["id"] = json.id;
-    //collectIdentityMetrics(json, metric);
+    collectIdentityMetrics(json, metric);
     collectTimeMetrics(json, metric);
-    //collectCodeMetrics(json, metric);
-    //collectFileMetrics(json, metric);
-    //collectOwnerMetrics(json, metric);
-    //collectMsgMetrics(json, metric);
-
-    //collectBranchMetrics(json, metric)
+    collectCodeMetrics(json, metric);
+    collectFileMetrics(json, metric);
+    collectOwnerMetrics(json, metric);
+    collectMsgMetrics(json, metric);
+    collectBranchMetrics(json, metric)
     return metric;
 }
 
