@@ -131,8 +131,8 @@ function check_value_to_ignore(metrics) {
         if (metrics["status"].includes("NEW"))
             return true;
 
-        /*if (metrics["is_a_bot"] === true)
-        return true;*/
+    /*if (metrics["is_a_bot"] === true)
+    return true;*/
 
     /*if (metrics["first_revision_number"] !== 1)
         return true;*/
@@ -204,7 +204,7 @@ function copy(result, json, key, new_name = "", convert_to_hours = false) {
         name = new_name.camelCaseToDashed()
     }
 
-    if (json[key] === null || !(key in json) || !(json.hasOwnProperty(key)))
+    if (json[key] === null || !(key in json) || json[key] === undefined || !(json.hasOwnProperty(key)))
         result[name] = DEFAULT_VALUE;
     else {
         if (typeof (json[key]) === "number") {
@@ -247,12 +247,12 @@ async function collectMetrics(metric) {
 
     for (let id in metric_to_collect) {
         let name = metric_to_collect[id];
-        if (typeof name === 'string' || name instanceof String){
-            result = copy(result, metric, id);
+        if (typeof name === 'string' || name instanceof String) {
+            result = copy(result, metric, id, name);
             result_7_days = copy_time_metrics(id, metric, result_7_days, "_7_days", name)
             result_14_days = copy_time_metrics(id, metric, result_14_days, "_14_days", name)
             result_30_days = copy_time_metrics(id, metric, result_30_days, "_30_days", name)
-        } else{
+        } else {
             result = copy(result, metric, id);
             result_7_days = copy_time_metrics(id, metric, result_7_days, "_7_days")
             result_14_days = copy_time_metrics(id, metric, result_14_days, "_14_days")
@@ -281,29 +281,29 @@ let metric_to_collect = {
     id: true,
 
     //Time
-    days_of_the_weeks_of_date_created: true,
-    days_of_the_weeks_of_date_created_for_owner_timezone: true,
-    hours_of_the_days_date_created: true,
-    hours_of_the_days_date_created_for_owner: true,
-    is_created_date_a_weekend: true,
-    is_created_date_a_weekend_for_owner_timezone: true,
+    days_of_the_weeks_of_date_created: "created_weekday_utc",
+    days_of_the_weeks_of_date_created_for_owner_timezone: "created_weekday_owner_tz",
+    hours_of_the_days_date_created: "created_hours_utc",
+    hours_of_the_days_date_created_for_owner: "created_hours_owner_tz",
+    //is_created_date_a_weekend: true,
+    //is_created_date_a_weekend_for_owner_timezone: true,
     author_timezone: true,
-    month_date_created: true,
-    month_date_created_for_owner: true,
+    month_date_created: "created_month_utc",
+    month_date_created_for_owner: "created_month_owner_tz",
 
     //Graph
-    fg_degree_centrality: true,
-    fg_closeness_centrality: true,
-    fg_betweenness_centrality: true,
-    fg_eigenvector_centrality: true,
-    fg_clustering_coefficient: true,
-    fg_core_number: true,
-    degree_centrality: true,
-    closeness_centrality: true,
-    betweenness_centrality: true,
-    eigenvector_centrality: true,
-    clustering_coefficient: true,
-    core_number: true,
+    fg_degree_centrality: "degree_centrality",
+    fg_closeness_centrality: "closeness_centrality",
+    fg_betweenness_centrality: "betweenness_centrality",
+    fg_eigenvector_centrality: "eigenvector_centrality",
+    fg_clustering_coefficient: "clustering_coefficient",
+    fg_core_number: "core_number",
+    //degree_centrality: true,
+    //closeness_centrality: true,
+    //betweenness_centrality: true,
+    //eigenvector_centrality: true,
+    //clustering_coefficient: true,
+    //core_number: true,
 
     //File
     first_revision_insertions: "insertions",
@@ -311,11 +311,11 @@ let metric_to_collect = {
     num_files: true,
     num_files_type: true,
     num_directory: true,
-    num_binary_file: true,
-    num_programming_language: true,
-    num_data_language: true,
-    num_prose_language: true,
-    num_markup_language: true,
+    num_binary_file: "num_binary_files",
+    num_programming_language: "num_programming_languages",
+    num_data_language: "num_data_languages",
+    num_prose_language: "num_prose_languages",
+    num_markup_language: "num_markup_languages",
     modify_entropy: true,
     num_segs_added: true,
     num_segs_deleted: true,
@@ -343,54 +343,54 @@ let metric_to_collect = {
 
 
     //File
-    AvgNumberOfDeveloperWhoModifiedFiles: true,
+    AvgNumberOfDeveloperWhoModifiedFiles: "AvgNumDevModifiedFiles",
     priorChangesFiles: true,
 
-    fileCountAvg: true,
-    fileCountMax: true,
-    fileCountMin: true,
-    fileCountStd: true,
+    fileCountAvg: "num_files_changes_avg",
+    fileCountMax: "num_files_changes_max",
+    fileCountMin: "num_files_changes_min",
+    fileCountStd: "num_files_changes_std",
 
-    fileTimeAvg: true,
-    fileTimeMax: true,
-    fileTimeMin: true,
-    fileTimeStd: true,
+    fileTimeAvg: "files_changes_duration_avg",
+    fileTimeMax: "files_changes_duration_max",
+    fileTimeMin: "files_changes_duration_min",
+    fileTimeStd: "files_changes_duration_std",
 
-    filesBuildTimeAvg: true,
-    filesBuildTimeMax: true,
-    filesBuildTimeMin: true,
-    filesBuildTimeStd: true,
+    filesBuildTimeAvg: "files_build_duration_avg",
+    filesBuildTimeMax: "files_build_duration_max",
+    filesBuildTimeMin: "files_build_duration_min",
+    filesBuildTimeStd: "files_build_duration_std",
 
-    filesRevisionTimeAvg: true,
-    filesRevisionTimeMax:true,
-    filesRevisionTimeMin:true,
-    filesRevisionTimeStd:true,
+    filesRevisionTimeAvg: "filesRevisionsDurationAvg",
+    filesRevisionTimeMax: "filesRevisionsDurationMax",
+    filesRevisionTimeMin: "filesRevisionsDurationMin",
+    filesRevisionTimeStd: "filesRevisionsDurationStd",
 
     filesNumFailsAvg: true,
-    filesNumFailsMax:true,
-    filesNumFailsMin:true,
-    filesNumFailsStd:true,
+    filesNumFailsMax: true,
+    filesNumFailsMin: true,
+    filesNumFailsStd: true,
 
-    filesNumberOfRecentChangesOnBranch: true,
+    filesNumberOfRecentChangesOnBranch: "filesNumRecentBranchChanges",
 
     //owner
-    priorChangesCount: true,
-    priorSubsystemChangesCount: true,
-    non_close_changes: true,
-    project_non_close_changes: true,
+    priorChangesCount: "NumPriorChanges",
+    priorSubsystemChangesCount: "NumPriorProjectChanges",
+    non_close_changes: "num_non_close_changes",
+    project_non_close_changes: "num_project_non_close_changes",
 
-    ownerPriorChangesCount: true,
-    owner_non_close_changes: true,
+    ownerPriorChangesCount: "ownerNumPriorChanges",
+    owner_non_close_changes: "owner_num_non_close_changes",
 
-    ownerFileCountAvg: true,
-    ownerFileCountMax:true,
-    ownerFileCountMin:true,
-    ownerFileCountStd:true,
+    ownerFileCountAvg: "num_files_changes_owner_Avg",
+    ownerFileCountMax: "num_files_changes_owner_Max",
+    ownerFileCountMin: "num_files_changes_owner_Min",
+    ownerFileCountStd: "num_files_changes_owner_Std",
 
-    ownerFileTimeAvg: true,
-    ownerFileTimeMax:true,
-    ownerFileTimeMin:true,
-    ownerFileTimeStd:true,
+    ownerFileTimeAvg: "files_changes_time_owner_Avg",
+    ownerFileTimeMax: "files_changes_time_owner_Max",
+    ownerFileTimeMin: "files_changes_time_owner_Min",
+    ownerFileTimeStd: "files_changes_time_owner_Std",
 
     ownerAge: true,
     subsystemAge: true,
@@ -401,10 +401,10 @@ let metric_to_collect = {
     ownerPreviousMessageCount: true,
 
     ownerChangesMessagesSum: true,
-    ownerChangesMessagesAvgPerChanges: true,
-    ownerChangesMessagesMaxPerChanges: true,
-    ownerChangesMessagesMinPerChanges: true,
-    ownerChangesMessagesStdPerChanges: true,
+    ownerChangesMessagesAvgPerChanges: "owner_changes_messages_avg",
+    ownerChangesMessagesMaxPerChanges: "owner_changes_messages_max",
+    ownerChangesMessagesMinPerChanges: "owner_changes_messages_min",
+    ownerChangesMessagesStdPerChanges: "owner_changes_messages_std",
 
     priorChangeDurationMean: true,
     priorChangeDurationMax: true,
@@ -413,135 +413,135 @@ let metric_to_collect = {
 
     //ownerNumberOfAutoReview: true, //todo change for autoreview rate
 
-    ownerInactiveTimeAvg: true,
-    ownerInactiveTimeMax: true,
-    ownerInactiveTimeMin: true,
-    ownerInactiveTimeStd: true,
+    ownerInactiveTimeAvg: "ownerInactiveDurationAvg",
+    ownerInactiveTimeMax: "ownerInactiveDurationMax",
+    ownerInactiveTimeMin: "ownerInactiveDurationMin",
+    ownerInactiveTimeStd: "ownerInactiveDurationStd",
 
-    ownerTimeBetweenMessageAvg: true,
-    ownerTimeBetweenMessageMax: true,
-    ownerTimeBetweenMessageMin: true,
-    ownerTimeBetweenMessageStd: true,
+    ownerTimeBetweenMessageAvg: "ownerTimeBetweenMessageAvg",
+    ownerTimeBetweenMessageMax: "ownerTimeBetweenMessageMax",
+    ownerTimeBetweenMessageMin: "ownerTimeBetweenMessageMin",
+    ownerTimeBetweenMessageStd: "ownerTimeBetweenMessageStd",
 
-    ownerProjectBranchNumberOfAutoReview: true, //todo change for autoreview rate
-    ownerProjectBranchNumberOfAutoReviewRate: true,
+    ownerProjectBranchNumberOfAutoReview: "OPBNumberOfAutoReview", //todo competing value
+    ownerProjectBranchNumberOfAutoReviewRate: "OPBAutoReviewRate",
 
-    ownerProjectBranchBuildTimeAvg: true,
-    ownerProjectBranchBuildTimeMax: true,
-    ownerProjectBranchBuildTimeMin: true,
-    ownerProjectBranchBuildTimeStd: true,
+    ownerProjectBranchBuildTimeAvg: "OPBBuildTimeAvg",
+    ownerProjectBranchBuildTimeMax: "OPBBuildTimeMax",
+    ownerProjectBranchBuildTimeMin: "OPBBuildTimeMin",
+    ownerProjectBranchBuildTimeStd: "OPBBuildTimeStd",
 
-    ownerProjectBranchNumberOfRevisionAvg: true,
-    ownerProjectBranchNumberOfRevisionMax:true,
-    ownerProjectBranchNumberOfRevisionMin:true,
-    ownerProjectBranchNumberOfRevisionStd:true,
+    ownerProjectBranchNumberOfRevisionAvg: "OPBNumberOfRevisionAvg",
+    ownerProjectBranchNumberOfRevisionMax: "OPBNumberOfRevisionMax",
+    ownerProjectBranchNumberOfRevisionMin: "OPBNumberOfRevisionMin",
+    ownerProjectBranchNumberOfRevisionStd: "OPBNumberOfRevisionStd",
 
-    ownerProjectBranchInactiveTimeAvg: true,
-    ownerProjectBranchInactiveTimeMax: true,
-    ownerProjectBranchInactiveTimeMin: true,
-    ownerProjectBranchInactiveTimeStd: true,
+    ownerProjectBranchInactiveTimeAvg: "OPBInactiveTimeAvg",
+    ownerProjectBranchInactiveTimeMax: "OPBInactiveTimeMax",
+    ownerProjectBranchInactiveTimeMin: "OPBInactiveTimeMin",
+    ownerProjectBranchInactiveTimeStd: "OPBInactiveTimeStd",
 
-    ownerProjectBranchTimeBetweenMessageAvg: true,
-    ownerProjectBranchTimeBetweenMessageMax: true,
-    ownerProjectBranchTimeBetweenMessageMin: true,
-    ownerProjectBranchTimeBetweenMessageStd: true,
+    ownerProjectBranchTimeBetweenMessageAvg: "OPBTimeBetweenMsgsAvg",
+    ownerProjectBranchTimeBetweenMessageMax: "OPBTimeBetweenMsgsMax",
+    ownerProjectBranchTimeBetweenMessageMin: "OPBTimeBetweenMsgsMin",
+    ownerProjectBranchTimeBetweenMessageStd: "OPBTimeBetweenMsgsStd",
 
-    ownerProjectBranchChangesDurationAvg: true,
-    ownerProjectBranchChangesDurationMax: true,
-    ownerProjectBranchChangesDurationMin: true,
-    ownerProjectBranchChangesDurationStd: true,
+    ownerProjectBranchChangesDurationAvg: "OPBChangesDurationAvg",
+    ownerProjectBranchChangesDurationMax: "OPBChangesDurationMax",
+    ownerProjectBranchChangesDurationMin: "OPBChangesDurationMin",
+    ownerProjectBranchChangesDurationStd: "OPBChangesDurationStd",
 
-    ownerProjectBranchRevisionTimeAvg: true,
-    ownerProjectBranchRevisionTimeMax: true,
-    ownerProjectBranchRevisionTimeMin: true,
-    ownerProjectBranchRevisionTimeStd: true,
+    ownerProjectBranchRevisionTimeAvg: "OPBRevisionsTimeAvg",
+    ownerProjectBranchRevisionTimeMax: "OPBRevisionsTimeMax",
+    ownerProjectBranchRevisionTimeMin: "OPBRevisionsTimeMin",
+    ownerProjectBranchRevisionTimeStd: "OPBRevisionsTimeStd",
 
-    ownerProjectBranchTimeBetweenRevisionAvg: true,
-    ownerProjectBranchTimeBetweenRevisionMax:true,
-    ownerProjectBranchTimeBetweenRevisionMin:true,
-    ownerProjectBranchTimeBetweenRevisionStd:true,
+    ownerProjectBranchTimeBetweenRevisionAvg: "OPBChangesTimeBetweenRevAvg",
+    ownerProjectBranchTimeBetweenRevisionMax: "OPBChangesTimeBetweenRevMax",
+    ownerProjectBranchTimeBetweenRevisionMin: "OPBChangesTimeBetweenRevMin",
+    ownerProjectBranchTimeBetweenRevisionStd: "OPBChangesTimeBetweenRevStd",
 
-    ownerProjectBranchTimeToAddReviewerAvg: true,
-    ownerProjectBranchTimeToAddReviewerMax: true,
-    ownerProjectBranchTimeToAddReviewerMin: true,
-    ownerProjectBranchTimeToAddReviewerStd: true,
+    ownerProjectBranchTimeToAddReviewerAvg: "OPBChangesTimeAddRevrsAvg",
+    ownerProjectBranchTimeToAddReviewerMax: "OPBChangesTimeAddRevrsMax",
+    ownerProjectBranchTimeToAddReviewerMin: "OPBChangesTimeAddRevrsMin",
+    ownerProjectBranchTimeToAddReviewerStd: "OPBChangesTimeAddRevrsStd",
 
     ownerProjectBranchChangesCount: true,
-    ownerProjectBranchClosedChangesCount: true,
-    ownerProjectBranchChangeMeanTimeTypeAvg: true,
-    ownerProjectBranchChangeMeanTimeTypeMin: true,
-    ownerProjectBranchChangeMeanTimeTypeMax: true,
-    ownerProjectBranchChangeMeanTimeTypeStd: true,
+    ownerProjectBranchClosedChangesCount: "OPBClosedChangesNum",
+    ownerProjectBranchChangeMeanTimeTypeAvg: "OPBClosedChangesTimeAvg",
+    ownerProjectBranchChangeMeanTimeTypeMin: "OPBClosedChangesTimeMin",
+    ownerProjectBranchChangeMeanTimeTypeMax: "OPBClosedChangesTimeMax",
+    ownerProjectBranchChangeMeanTimeTypeStd: "OPBClosedChangesTimeStd",
 
-    ownerProjectBranchNumberChangesBuilt: true,
+    ownerProjectBranchNumberChangesBuilt: "OPBNumChangesBuilt", //todo competing value
+    ratioOwnerProjectBranchNumberChangesBuilt: "ratioOPBNumChangesBuilt",
 
     ownerMergedRatio: true,
     ownerRateOfAutoReview: true,
-    ratioOwnerProjectBranchNumberChangesBuilt: true,
 
-    priorOwnerSubsystemChangesCount: true,
-    priorOwnerSubsystemChangesRatio: true,
+    priorOwnerSubsystemChangesCount: "numPriorOwnerProjectChanges",
+    priorOwnerSubsystemChangesRatio: "priorOwnerProjectChangesRatio",
 
-    reviewersPriorChangesSum: true,
-    reviewersPriorChangesAvg: true,
-    reviewersPriorChangesMax: true,
-    reviewersPriorChangesMin: true,
-    reviewersPriorChangesStd: true,
+    reviewersPriorChangesSum: "revrsChangesSum",
+    reviewersPriorChangesAvg: "revrsChangesAvg",
+    reviewersPriorChangesMax: "revrsChangesMax",
+    reviewersPriorChangesMin: "revrsChangesMin",
+    reviewersPriorChangesStd: "revrsChangesStd",
 
-    reviewersPriorMergedChangesSum: true,
-    reviewersPriorMergedChangesAvg: true,
-    reviewersPriorMergedChangesMax: true,
-    reviewersPriorMergedChangesMin: true,
-    reviewersPriorMergedChangesStd: true,
+    reviewersPriorMergedChangesSum: "revrsMergedChangesSum",
+    reviewersPriorMergedChangesAvg: "revrsMergedChangesAvg",
+    reviewersPriorMergedChangesMax: "revrsMergedChangesMax",
+    reviewersPriorMergedChangesMin: "revrsMergedChangesMin",
+    reviewersPriorMergedChangesStd: "revrsMergedChangesStd",
 
-    reviewersPriorAbandonedChangesSum: true,
-    reviewersPriorAbandonedChangesAvg: true,
-    reviewersPriorAbandonedChangesMax: true,
-    reviewersPriorAbandonedChangesMin: true,
-    reviewersPriorAbandonedChangesStd: true,
+    reviewersPriorAbandonedChangesSum: "revrsAbandonedChangesSum",
+    reviewersPriorAbandonedChangesAvg: "revrsAbandonedChangesAvg",
+    reviewersPriorAbandonedChangesMax: "revrsAbandonedChangesMax",
+    reviewersPriorAbandonedChangesMin: "revrsAbandonedChangesMin",
+    reviewersPriorAbandonedChangesStd: "revrsAbandonedChangesStd",
 
-    reviewersPriorUnCloseChangesSum: true,
-    reviewersPriorUnCloseChangesAvg: true,
-    reviewersPriorUnCloseChangesMax: true,
-    reviewersPriorUnCloseChangesMin: true,
-    reviewersPriorUnCloseChangesStd: true,
+    reviewersPriorUnCloseChangesSum: "revrsOpenChangesSum",
+    reviewersPriorUnCloseChangesAvg: "revrsOpenChangesAvg",
+    reviewersPriorUnCloseChangesMax: "revrsOpenChangesMax",
+    reviewersPriorUnCloseChangesMin: "revrsOpenChangesMin",
+    reviewersPriorUnCloseChangesStd: "revrsOpenChangesStd",
 
-    reviewersNumberOfReviewSum: true,
-    reviewersNumberOfReviewAvg: true,
-    reviewersNumberOfReviewMax: true,
-    reviewersNumberOfReviewMin: true,
-    reviewersNumberOfReviewStd: true,
+    reviewersNumberOfReviewSum: "revrsNumReviewSum",
+    reviewersNumberOfReviewAvg: "revrsNumReviewAvg",
+    reviewersNumberOfReviewMax: "revrsNumReviewMax",
+    reviewersNumberOfReviewMin: "revrsNumReviewMin",
+    reviewersNumberOfReviewStd: "revrsNumReviewStd",
 
-    reviewersPreviousMessageSum: true,
-    reviewersPreviousMessageAvg: true,
-    reviewersPreviousMessageMax: true,
-    reviewersPreviousMessageMin: true,
-    reviewersPreviousMessageStd: true,
+    reviewersPreviousMessageSum: "revrsPreviousMsgsSum",
+    reviewersPreviousMessageAvg: "revrsPreviousMsgsAvg",
+    reviewersPreviousMessageMax: "revrsPreviousMsgsMax",
+    reviewersPreviousMessageMin: "revrsPreviousMsgsMin",
+    reviewersPreviousMessageStd: "revrsPreviousMsgsStd",
 
-    fileCountForReviewersCountAvg: true,
-    fileCountForReviewersCountMax: true,
-    fileCountForReviewersCountMin: true,
-    fileCountForReviewersCountStd: true,
+    fileCountForReviewersCountAvg: "numFileChangesForRevrsAvg",
+    fileCountForReviewersCountMax: "numFileChangesForRevrsMax",
+    fileCountForReviewersCountMin: "numFileChangesForRevrsMin",
+    fileCountForReviewersCountStd: "numFileChangesForRevrsStd",
 
-    fileTimeForReviewersCountAvg: true,
-    fileTimeForReviewersCountMax: true,
-    fileTimeForReviewersCountMin: true,
-    fileTimeForReviewersCountStd: true,
+    fileTimeForReviewersCountAvg: "fileChangesTimeRevrsAvg",
+    fileTimeForReviewersCountMax: "fileChangesTimeRevrsMax",
+    fileTimeForReviewersCountMin: "fileChangesTimeRevrsMin",
+    fileTimeForReviewersCountStd: "fileChangesTimeRevrsStd",
 
-    ownerAndReviewerCommonsChangesSum: true,
-    ownerAndReviewerCommonsMessagesSum: true,
+    ownerAndReviewerCommonsChangesSum: "ownerRevrsCommonsChangesSum",
+    ownerAndReviewerCommonsMessagesSum: "ownerRevrsCommonsMsgsSum",
 
-    ownerAndReviewerCommonsMessagesSumForRev: true,
-    ownerAndReviewerCommonsMessagesAvg: true,
-    ownerAndReviewerCommonsMessagesMax: true,
-    ownerAndReviewerCommonsMessagesMin: true,
-    ownerAndReviewerCommonsMessagesStd: true,
+    //ownerAndReviewerCommonsMessagesSumForRev: "ownerRevrsCommonsMsgsSum",
+    ownerAndReviewerCommonsMessagesAvg: "ownerRevrsCommonsMsgsAvg",
+    ownerAndReviewerCommonsMessagesMax: "ownerRevrsCommonsMsgsMax",
+    ownerAndReviewerCommonsMessagesMin: "ownerRevrsCommonsMsgsMin",
+    ownerAndReviewerCommonsMessagesStd: "ownerRevrsCommonsMsgsStd",
 
-    reviewersChangesSum: true,
-    reviewersChangesAvg: true,
-    reviewersChangesMax: true,
-    reviewersChangesMin: true,
-    reviewersChangesStd: true,
+    //reviewersChangesSum: true,
+    //reviewersChangesAvg: true,
+    //reviewersChangesMax: true,
+    //reviewersChangesMin: true,
+    //reviewersChangesStd: true,
 
     reviewerTimezoneAvg: true,
     reviewerTimezoneMax: true,
@@ -549,17 +549,19 @@ let metric_to_collect = {
     reviewerTimezoneStd: true,
 
     //reviewerLastActivity: true,
-    reviewerLastMessageDateDiff: true,
+    reviewerLastMessageDateDiff: "revrsLastMessageDateTime",
 
-    number_of_similar_change_id: true,
-    number_of_related_changes: true,
-    number_of_merged_related_changes: true,
-    number_of_abandoned_related_changes: true,
-    number_of_not_owned_related_changes: true,
-    number_of_not_owned_merged_related_changes: true,
-    number_of_not_owned_abandoned_related_changes: true,
-    number_of_close_related_changes: true,
-    number_of_not_owned_close_related_changes: true,
+    number_of_similar_change_id: "num_similar_change_id",
+
+    number_of_related_changes: "rel_changes_num",
+    number_of_merged_related_changes: "rel_merged_changes_num",
+    number_of_abandoned_related_changes: "rel_abandoned_changes_num",
+    number_of_close_related_changes: "rel_closed_changes_num",
+
+    number_of_not_owned_related_changes: "rel_not_owned_changes_num",
+    number_of_not_owned_merged_related_changes: "rel_not_owned_merged_changes_num",
+    number_of_not_owned_abandoned_related_changes: "rel_not_owned_abandoned_changes_num",
+    number_of_not_owned_close_related_changes: "rel_not_owned_closed_changes_num",
 
     date_updated_date_created_diff: true,
 

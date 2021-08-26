@@ -7,7 +7,7 @@ const MetricsUtils = require('./compute_metrics/metrics-utils');
 
 
 //console.log(MathJs.min([undefined, undefined, undefined]))
-console.log([undefined, undefined, undefined].length)
+//console.log([undefined, undefined, undefined].length)
 
 //let apiEndpoint = "https://android-review.googlesource.com/changes/?q=status:merged+project:platform/system/bt&n=5&o=DETAILED_LABELS&o=ALL_REVISIONS&o=ALL_COMMITS&o=ALL_FILES&o=DETAILED_ACCOUNTS&o=MESSAGES&o=DOWNLOAD_COMMANDS&o=WEB_LINKS&o=CHANGE_ACTIONS&o=REVIEWED&o=REVIEWER_UPDATES&o=COMMIT_FOOTERS&S=10500"
 
@@ -763,12 +763,27 @@ String.prototype.camelCaseToDashed = function(){
 
 //console.log(get_days_of_the_weeks_date_created(json))
 
+let date = "2021-06-14 23:30:00.000000000"
+
+function get_hours_of_the_days(dateString) {
+    let date = Moment.utc(dateString);
+    return Moment.duration(date.format("HH:mm:ss.SSSSSSSSS")).asHours()
+}
+console.log(get_hours_of_the_days(date))
+
+
+function get_month_for_owner(dateString) {
+    return Moment.utc(dateString).format('MMMM')
+}
+console.log(get_month_for_owner(date))
+
+
 let filepath = "basegfx/test/B2DTupleTest.cxx"
 let dir = filepath.substr(0, filepath.lastIndexOf('/') + 1);
 let base_dir = filepath.substr(0, filepath.indexOf('/') + 1);
-console.log(parseInt(1))
+//console.log(parseInt(1))
 
-let date = "2021-06-14 12:00:00.000000000"
+//let date = "2021-06-14 12:00:00.000000000"
 function get_precise_days_of_the_weeks_date_created(json) {
     let date = Moment.utc(json.created);
     return date.isoWeekday() + Moment.duration(date.format("hh:mm:ss.SSSSSSSSS")).asDays()

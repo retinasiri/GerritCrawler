@@ -119,14 +119,14 @@ async function updateProgress() {
 async function collectMetrics(json) {
     let metric = {};
     metric["id"] = json.id;
-    collectIdentityMetrics(json, metric);
+    //collectIdentityMetrics(json, metric);
     collectTimeMetrics(json, metric);
-    collectCodeMetrics(json, metric);
-    collectFileMetrics(json, metric);
-    collectOwnerMetrics(json, metric);
-    collectMsgMetrics(json, metric);
+    //collectCodeMetrics(json, metric);
+    //collectFileMetrics(json, metric);
+    //collectOwnerMetrics(json, metric);
+    //collectMsgMetrics(json, metric);
 
-    collectBranchMetrics(json, metric)
+    //collectBranchMetrics(json, metric)
     return metric;
 }
 
@@ -475,26 +475,26 @@ function get_days_of_the_weeks(dateString) {
 }
 
 function get_month(dateString) {
-    return Moment.utc(dateString, "YYYY-MM-DD hh:mm:ss.SSSSSSSSS").format('MMMM')
+    return Moment.utc(dateString, "YYYY-MM-DD HH:mm:ss.SSSSSSSSS").format('MMMM')
 }
 
 function get_month_for_owner(dateString, offset) {
-    return Moment.utc(dateString, "YYYY-MM-DD hh:mm:ss.SSSSSSSSS").utcOffset(offset).format('MMMM')
+    return Moment.utc(dateString).utcOffset(offset).format('MMMM')
 }
 
 function get_hours_of_the_days(dateString) {
     let date = Moment.utc(dateString);
-    return Moment.duration(date.format("hh:mm:ss.SSSSSSSSS")).asDays()
+    return Moment.duration(date.format("HH:mm:ss.SSSSSSSSS")).asHours()
 }
 
 function get_hours_of_the_days_for_owner_timezone(dateString, offset) {
     let date = Moment.utc(dateString).utcOffset(offset);
-    return Moment.duration(date.format("hh:mm:ss.SSSSSSSSS")).asDays()
+    return Moment.duration(date.format("HH:mm:ss.SSSSSSSSS")).asHours()
 }
 
 function get_precise_days_of_the_weeks(dateString) {
     let date = Moment.utc(dateString);
-    return date.isoWeekday() + Moment.duration(date.format("hh:mm:ss.SSSSSSSSS")).asDays()
+    return date.isoWeekday() + Moment.duration(date.format("HH:mm:ss.SSSSSSSSS")).asDays()
 }
 
 function get_days_of_the_weeks_for_owner_timezone(dateString, offset) {
