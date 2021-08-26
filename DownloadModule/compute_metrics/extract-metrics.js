@@ -204,8 +204,8 @@ function copy(key, result, json, new_name = "", convert_to_hours = false) {
         name = new_name.camelCaseToDashed()
     }
 
-    //json[key] === undefined ||
-    if (json[key] === null || !(key in json) || !(json.hasOwnProperty(key)))
+    //
+    if (json[key] === null || json[key] === undefined || !(key in json) || !(json.hasOwnProperty(key)))
         result[name] = DEFAULT_VALUE;
     else {
         if (typeof (json[key]) === "number") {
@@ -228,19 +228,23 @@ String.prototype.camelCaseToDashed = function () {
 }
 
 function copy_time_metrics(id, result, metric, number_of_days, name = "") {
+    if (!name)
+        name = id
     let exclude = ['ownerAge', 'subsystemAge', 'branchAge']
     if (metric.hasOwnProperty(id + number_of_days)) {
-        if (exclude.includes(id))
-            result = copy(id, result, metric, name)
-        else {
-            //console.log("echo = " + id + number_of_days)
-            result = copy(id + number_of_days, result, metric, name + number_of_days)
-        }
+        result = copy(id + number_of_days, result, metric, name + number_of_days)
     } else {
-        result = copy(id, result, metric, name)
+        if (id.includes("eviewer")){
+            result = copy(id + number_of_days, result, metric, name + number_of_days)
+        } else {
+            result = copy(id, result, metric, name)
+        }
     }
     return result;
 }
+
+let object665={}
+let object650={}
 
 async function collectMetrics(metric) {
     let result = {};
@@ -248,7 +252,7 @@ async function collectMetrics(metric) {
     let result_7_days = {};
     let result_14_days = {};
     let result_30_days = {};
-
+    console.log(Object.keys(metric_to_collect).length)
     for (let id in metric_to_collect) {
         let name = metric_to_collect[id];
         if (typeof name === 'string' || name instanceof String) {
@@ -264,6 +268,20 @@ async function collectMetrics(metric) {
         }
         result_all = {...result, ...result_7_days, ...result_14_days, ...result_30_days}
     }
+    console.log(Object.keys(result_all).length + "..." + Object.keys(result).length + "..." + Object.keys(result_7_days).length + "..." + Object.keys(result_14_days).length + "..." + Object.keys(result_30_days).length)
+
+    /*if(Object.keys(result_all).length === 665){
+        object665 = {...result_all}
+    }
+    if(Object.keys(result_all).length === 650){
+        object650 = {...result_all}
+    }
+    for (let i = 0; i < Object.keys(object665).length; i++) {
+        let key = Object.keys(object665)[i]
+        if(!(object650.hasOwnProperty(key))){
+            console.log(key)
+        }
+    }*/
 
     delete result_all["date_updated_date_created_diff"]
     result_all = copy("date_updated_date_created_diff", result_all, metric);
@@ -380,11 +398,11 @@ let metric_to_collect = {
     //owner
     priorChangesCount: "NumPriorChanges",
     priorSubsystemChangesCount: "NumPriorProjectChanges",
-    non_close_changes: "num_non_close_changes",
-    project_non_close_changes: "num_project_non_close_changes",
+    non_close_changes: "num_open_changes",
+    project_non_close_changes: "num_project_open_changes",
 
-    ownerPriorChangesCount: "ownerNumPriorChanges",
-    owner_non_close_changes: "owner_num_non_close_changes",
+    ownerPriorChangesCount: "NumOwnerPriorChanges",
+    owner_non_close_changes: "num_owner_open_changes",
 
     ownerFileCountAvg: "num_files_changes_owner_Avg",
     ownerFileCountMax: "num_files_changes_owner_Max",
