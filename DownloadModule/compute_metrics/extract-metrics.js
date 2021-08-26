@@ -197,14 +197,15 @@ async function updateProgress() {
 const NUMBER_OF_DECIMAL = 4
 const DEFAULT_VALUE = 0
 
-function copy(result, json, key, new_name = "", convert_to_hours = false) {
+function copy(key, result, json, new_name = "", convert_to_hours = false) {
     let name = key.camelCaseToDashed()
 
     if (new_name !== "") {
         name = new_name.camelCaseToDashed()
     }
 
-    if (json[key] === null || !(key in json) || json[key] === undefined || !(json.hasOwnProperty(key)))
+    //json[key] === undefined ||
+    if (json[key] === null || !(key in json) || !(json.hasOwnProperty(key)))
         result[name] = DEFAULT_VALUE;
     else {
         if (typeof (json[key]) === "number") {
@@ -226,15 +227,17 @@ String.prototype.camelCaseToDashed = function () {
     return this.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
 }
 
-function copy_time_metrics(id, metric, result, number_of_days, name = "") {
+function copy_time_metrics(id, result, metric, number_of_days, name = "") {
     let exclude = ['ownerAge', 'subsystemAge', 'branchAge']
     if (metric.hasOwnProperty(id + number_of_days)) {
         if (exclude.includes(id))
-            result = copy(result, metric, id, name)
-        else
-            result = copy(result, metric, id + number_of_days, name)
+            result = copy(id, result, metric, name)
+        else {
+            //console.log("echo = " + id + number_of_days)
+            result = copy(id + number_of_days, result, metric, name + number_of_days)
+        }
     } else {
-        result = copy(result, metric, id, name)
+        result = copy(id, result, metric, name)
     }
     return result;
 }
@@ -249,21 +252,21 @@ async function collectMetrics(metric) {
     for (let id in metric_to_collect) {
         let name = metric_to_collect[id];
         if (typeof name === 'string' || name instanceof String) {
-            result = copy(result, metric, id, name);
-            result_7_days = copy_time_metrics(id, metric, result_7_days, "_7_days", name)
-            result_14_days = copy_time_metrics(id, metric, result_14_days, "_14_days", name)
-            result_30_days = copy_time_metrics(id, metric, result_30_days, "_30_days", name)
+            result = copy(id, result, metric, name);
+            result_7_days = copy_time_metrics(id, result_7_days, metric, "_7_days", name)
+            result_14_days = copy_time_metrics(id, result_14_days, metric, "_14_days", name)
+            result_30_days = copy_time_metrics(id, result_30_days, metric, "_30_days", name)
         } else {
-            result = copy(result, metric, id);
-            result_7_days = copy_time_metrics(id, metric, result_7_days, "_7_days")
-            result_14_days = copy_time_metrics(id, metric, result_14_days, "_14_days")
-            result_30_days = copy_time_metrics(id, metric, result_30_days, "_30_days")
+            result = copy(id, result, metric);
+            result_7_days = copy_time_metrics(id, result_7_days, metric, "_7_days")
+            result_14_days = copy_time_metrics(id, result_14_days, metric, "_14_days")
+            result_30_days = copy_time_metrics(id, result_30_days, metric, "_30_days")
         }
         result_all = {...result, ...result_7_days, ...result_14_days, ...result_30_days}
     }
 
     delete result_all["date_updated_date_created_diff"]
-    result_all = copy(result_all, metric, "date_updated_date_created_diff");
+    result_all = copy("date_updated_date_created_diff", result_all, metric);
 
     return Promise.all(
         [
@@ -345,8 +348,8 @@ let metric_to_collect = {
 
     //File
     AvgNumberOfDeveloperWhoModifiedFiles: "AvgNumDevModifiedFiles",
-    priorChangesFiles: true,
 
+    priorChangesFiles: "num_files_changes_sum",
     fileCountAvg: "num_files_changes_avg",
     fileCountMax: "num_files_changes_max",
     fileCountMin: "num_files_changes_min",
