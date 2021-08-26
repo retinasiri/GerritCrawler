@@ -488,7 +488,7 @@ let metric_to_collect = {
     ownerProjectBranchTimeToAddReviewerMin: "OPBChangesTimeAddRevrsMin",
     ownerProjectBranchTimeToAddReviewerStd: "OPBChangesTimeAddRevrsStd",
 
-    ownerProjectBranchChangesCount: true,
+    ownerProjectBranchChangesCount: "OPBChangesCount",
     ownerProjectBranchClosedChangesCount: "OPBClosedChangesNum",
     ownerProjectBranchChangeMeanTimeTypeAvg: "OPBClosedChangesTimeAvg",
     ownerProjectBranchChangeMeanTimeTypeMin: "OPBClosedChangesTimeMin",
@@ -496,7 +496,7 @@ let metric_to_collect = {
     ownerProjectBranchChangeMeanTimeTypeStd: "OPBClosedChangesTimeStd",
 
     ownerProjectBranchNumberChangesBuilt: "OPBNumChangesBuilt", //todo competing value
-    ratioOwnerProjectBranchNumberChangesBuilt: "ratioOPBNumChangesBuilt",
+    ratioOwnerProjectBranchNumberChangesBuilt: "OPBRatioChangesBuilt",
 
     ownerMergedRatio: true,
     ownerRateOfAutoReview: true,
