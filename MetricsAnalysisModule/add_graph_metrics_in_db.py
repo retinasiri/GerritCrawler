@@ -39,17 +39,19 @@ def start(json):
     global CHANGES_GRAPHS_LIST_PATH
     CHANGES_GRAPHS_LIST_PATH = os.path.join(DATA_DIR_NAME, PROJET_NAME, PROJET_NAME + "-changes-graph-list.json")
 
+    if os.path.exists(GRAPHS_FULL_METRICS_PATH):
+        bar = SlowBar('Adding full graph metrics to DB', max=count)
+        collect_metric(GRAPHS_FULL_METRICS_PATH, prefix="fg_")
+    else:
+        print('full graph metrics doesn\'t exists in ' + GRAPHS_FULL_METRICS_PATH)
+    
+
     if os.path.exists(GRAPHS_METRICS_PATH):
         bar = SlowBar('Adding graph metrics to DB', max=count)
         collect_metric(GRAPHS_METRICS_PATH, prefix="")
     else:
         print('graph metrics doesn\'t exists in ' + GRAPHS_METRICS_PATH)
 
-    if os.path.exists(GRAPHS_FULL_METRICS_PATH):
-        bar = SlowBar('Adding full graph metrics to DB', max=count)
-        collect_metric(GRAPHS_FULL_METRICS_PATH, prefix="fg_")
-    else:
-        print('full graph metrics doesn\'t exists in ' + GRAPHS_FULL_METRICS_PATH)
     
     y = datetime.datetime.now()
     print("End : {}".format(y))
@@ -76,11 +78,12 @@ def collect_metric(graph_metrics_path, prefix="", suffix=""):
             metrics_json = temp["metrics"]
             changes = get_change(id)
             for change in changes:
+                #check if the exists
                 owner_id = change['owner_id']
                 owner_metrics = get_owner_metrics(metrics_json, id, owner_id, prefix, suffix)
                 Database.save_metrics(owner_metrics)
-                all_account_metrics = get_all_account_metrics(metrics_json, id, prefix, suffix)
-                Database.save_metrics(all_account_metrics)
+                #all_account_metrics = get_all_account_metrics(metrics_json, id, prefix, suffix)
+                #Database.save_metrics(all_account_metrics)
             bar.next()
             del metrics_json
     bar.finish()
