@@ -151,7 +151,23 @@ function getChanges(skip, step, Project, progressBar, collectMetrics) {
             //{$sort: {_number: 1}},
             //{$sort: {created: 1, _number: 1}},
             {$skip: skip},
-            {$limit: step}
+            {$limit: step},
+            {
+                $project: {
+                    revisions: 0,
+                    reviewers: 0,
+                    reviewer_updates: 0,
+                    requirements: 0,
+                    removable_reviewers: 0,
+                    labels: 0,
+                    hashtags: 0,
+                    actions: 0,
+                    pending_reviewers: 0,
+                    meta_messages_per_account: 0,
+                    meta_not_bot_reviewers: 0,
+                    meta_reviewers_ids: 0,
+                }
+            }
         ])
         .allowDiskUse(true)
         .exec()

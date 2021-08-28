@@ -55,6 +55,10 @@ db.getCollection('changes').createIndex({status:1, branch:1, 'owner._account_id'
 
 db.getCollection('changes').createIndex({status:1, "labels.Code-Review.all._account_id": 1, updated:1})
 
+db.getCollection('changes').createIndex({status:1, 'reviewers.REVIEWER._account_id': 1, files_list:1, updated:1})
+db.getCollection('changes').createIndex({'owner._account_id':1, 'reviewers.REVIEWER._account_id': 1})
+db.getCollection('changes').createIndex({status:1,updated:1, 'owner._account_id':1, 'reviewers.REVIEWER._account_id': 1})
+
 
 
 
