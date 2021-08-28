@@ -10,7 +10,7 @@ const Axios = require("axios");
 const RateLimit = require('axios-rate-limit');
 const Metrics = require("./models/metrics");
 const MetricsWM = require("./models/metricsWM");
-const axios = RateLimit(Axios.create(), {maxRPS: 3})
+const axios = RateLimit(Axios.create(), {maxRPS: 10})
 //const changes_graph_list = require("./res/openstack-changes-graph-list.json")
 
 
@@ -19,7 +19,7 @@ const progressBar = new cliProgress.SingleBar({
     barIncompleteChar: '-',
 }, cliProgress.Presets.shades_classic);
 
-let projectJson = Utils.getProjectParameters("scilab");
+let projectJson = Utils.getProjectParameters("androidDB");
 let projectApiUrl = projectJson["projectApiUrl"];
 let projectDBUrl = projectJson["projectDBUrl"];
 let projectName = projectJson["projectName"];
@@ -202,7 +202,7 @@ function processRelatedChanges(json) {
 async function getRelatedChange(id_revisions_list) {
     console.time("getRelatedChange")
 
-    let NUM_CONCURRENCY = 3;
+    let NUM_CONCURRENCY = 100;
     let queue = [];
     let ret = [];
     for (let key in id_revisions_list) {
