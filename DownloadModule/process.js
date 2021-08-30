@@ -34,13 +34,13 @@ let STARTING_POINT = 0;
 let i = 1;
 
 if (typeof require !== 'undefined' && require.main === module) {
-    processIdRevisionList(projectJson).catch(err => {
-        console.log(err)
-    });
-
-    /*processRelatedChanges(projectJson).catch(err => {
+    /*processIdRevisionList(projectJson).catch(err => {
         console.log(err)
     });*/
+
+    processRelatedChanges(projectJson).catch(err => {
+        console.log(err)
+    });
 }
 
 function processIdRevisionList(json) {
