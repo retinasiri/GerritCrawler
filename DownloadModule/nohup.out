@@ -1,0 +1,130 @@
+ssh: Could not resolve hostname newuser:passwordForRyzen6969: nodename nor servname provided, or not known
+[2J[;H
+Remove Banner: [32mremove-banner[39m 		 | 		Change Message: [32mchange-banner[39m
+Remove Display: [32mremove-display[39m 		 | 		Update display: [32mupdate-display[39m
+
+
+        __        __   _                                  
+   _    \ \      / /__| | ___ ___  _ __ ___   ___     _   
+  (_)    \ \ /\ / / _ \ |/ __/ _ \| '_ ` _ \ / _ \   (_)  
+ _ _ _    \ V  V /  __/ | (_| (_) | | | | | |  __/  _ _ _ 
+(_|_|_)    \_/\_/ \___|_|\___\___/|_| |_| |_|\___| (_|_|_)
+                                                          
+
+		[32m* Hostname: dserv2231-mtl8 *[39m
+
+
+		- Ubuntu 18.04.5 LTS
+		- Kernel 4.15.0-143-generic
+
+ 	 System information as of Sun Aug 29 01:05:07 EDT 2021
+
+		[32m24x AMD Ryzen 9 3900X 12-Core Processor[39m
+
+System Load:	60.82, 50.37, 44.05 	System Uptime:	64 Day(s) 23 Hour(s) 57 Min(s)
+Memory Usage:	67.27%		 	Swap Usage:	0.0%
+Usage of /:	41G [32m(19%)[39m of 228G 	Processes: 	343
+Main IP:	173.209.46.162 		User(s):	15 User(s) Logged
+
+		[31m* Update(s) Available:	32 Package(s) *[39m
+		[32mlist-updates[39m to list available update(s)
+
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ 
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ 
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ 
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ channel 8: open failed: connect failed: Connection refused
+channel 9: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+^C
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ ^C
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ ^C
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ 
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ 
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ 
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ dsdssddchannel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+sdsdsddsdsddsdsdsd^C
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ ^C
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ ^C
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ 
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ 
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ 
+]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ [K]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ [K]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ [K]0;newuser@dserv2231-mtl8: ~[01;32mnewuser@dserv2231-mtl8[00m:[01;34m~[00m$ channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+channel 4: open failed: connect failed: Connection refused
+channel 3: open failed: connect failed: Connection refused
+packet_write_wait: Connection to 173.209.46.162 port 22: Broken pipe
+tcsetattr: Bad file descriptor

@@ -19,7 +19,7 @@ const progressBar = new cliProgress.SingleBar({
     barIncompleteChar: '-',
 }, cliProgress.Presets.shades_classic);
 
-let projectJson = Utils.getProjectParameters("androidDB");
+let projectJson = Utils.getProjectParameters("openstack");
 let projectApiUrl = projectJson["projectApiUrl"];
 let projectDBUrl = projectJson["projectDBUrl"];
 let projectName = projectJson["projectName"];
@@ -34,13 +34,13 @@ let STARTING_POINT = 0;
 let i = 1;
 
 if (typeof require !== 'undefined' && require.main === module) {
-    /*processIdRevisionList(projectJson).catch(err => {
-        console.log(err)
-    });*/
-
-    processRelatedChanges(projectJson).catch(err => {
+    processIdRevisionList(projectJson).catch(err => {
         console.log(err)
     });
+
+    /*processRelatedChanges(projectJson).catch(err => {
+        console.log(err)
+    });*/
 }
 
 function processIdRevisionList(json) {
