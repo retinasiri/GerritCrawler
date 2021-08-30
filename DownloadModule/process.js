@@ -19,7 +19,7 @@ const progressBar = new cliProgress.SingleBar({
     barIncompleteChar: '-',
 }, cliProgress.Presets.shades_classic);
 
-let projectJson = Utils.getProjectParameters("android");
+let projectJson = Utils.getProjectParameters("openstack");
 let projectApiUrl = projectJson["projectApiUrl"];
 let projectDBUrl = projectJson["projectDBUrl"];
 let projectName = projectJson["projectName"];
