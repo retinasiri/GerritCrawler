@@ -18,7 +18,7 @@ let libreOfficeJson = Utils.getProjectParameters("libreoffice");
 let projectDBUrl = libreOfficeJson["projectDBUrl"];
 let projectName = libreOfficeJson["projectName"];
 let DATA_PATH = "data/"
-let NUM_OF_CHANGES_LIMIT = 1000;
+let NUM_OF_CHANGES_LIMIT = 5000;
 let skipped = 0;
 
 
@@ -575,15 +575,14 @@ let metric_to_collect = {
 
     number_of_similar_change_id: "num_similar_change_id",
 
-    number_of_related_changes: "rel_changes_num",
-    number_of_merged_related_changes: "rel_merged_changes_num",
-    number_of_abandoned_related_changes: "rel_abandoned_changes_num",
-    number_of_close_related_changes: "rel_closed_changes_num",
-
-    number_of_not_owned_related_changes: "rel_not_owned_changes_num",
-    number_of_not_owned_merged_related_changes: "rel_not_owned_merged_changes_num",
-    number_of_not_owned_abandoned_related_changes: "rel_not_owned_abandoned_changes_num",
-    number_of_not_owned_close_related_changes: "rel_not_owned_closed_changes_num",
+    //number_of_related_changes: "rel_changes_num",
+    //number_of_merged_related_changes: "rel_merged_changes_num",
+    //number_of_abandoned_related_changes: "rel_abandoned_changes_num",
+    //number_of_close_related_changes: "rel_closed_changes_num",
+    //number_of_not_owned_related_changes: "rel_not_owned_changes_num",
+    //number_of_not_owned_merged_related_changes: "rel_not_owned_merged_changes_num",
+    //number_of_not_owned_abandoned_related_changes: "rel_not_owned_abandoned_changes_num",
+    //number_of_not_owned_close_related_changes: "rel_not_owned_closed_changes_num",
 
     date_updated_date_created_diff: true,
 
