@@ -63,10 +63,20 @@ db.getCollection('changes').createIndex({status:1,updated:1, 'owner._account_id'
 
 
 
+db.getCollection('changes').createIndex({_number: 1, updated: 1})
+db.getCollection('changes').createIndex({status: 1, _number: 1, updated: 1})
+db.getCollection('changes').createIndex({'owner._account_id': 1, _number: 1})
+db.getCollection('changes').createIndex({'owner._account_id': 1, _number: 1, updated: 1})
+db.getCollection('changes').createIndex({status: 1, 'owner._account_id': 1, _number: 1,  updated: 1})
+db.getCollection('changes').createIndex({project: 1, _number: 1})
+db.getCollection('changes').createIndex({status: 1, project: 1, _number: 1, updated: 1})
+db.getCollection('changes').createIndex({project: 1, 'owner._account_id': 1, _number: 1, })
+
+
+
 
 db.getCollection('changes').createIndex({_number: 1, created: 1, updated: 1})
 db.getCollection('changes').createIndex({status: 1, _number: 1, created: 1, updated: 1})
-
 db.getCollection('changes').createIndex({'owner._account_id': 1, _number: 1, created: 1})
 db.getCollection('changes').createIndex({'owner._account_id': 1, _number: 1, created: 1, updated: 1})
 db.getCollection('changes').createIndex({status: 1, 'owner._account_id': 1, _number: 1, created: 1, updated: 1})

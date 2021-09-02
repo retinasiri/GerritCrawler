@@ -71,6 +71,7 @@ function getMetrics(skip) {
             {
                 $match: {
                     status: {$in: ['MERGED', 'ABANDONED']},
+                    //max_inactive_time: {$lte: 72},
                     //is_a_bot : false,
                     //first_revision : 1
                 }
@@ -303,6 +304,7 @@ let metric_to_collect = {
     id: true,
 
     //Time
+    max_inactive_time: true,
     days_of_the_weeks_of_date_created: "created_weekday_utc",
     days_of_the_weeks_of_date_created_for_owner_timezone: "created_weekday_owner_tz",
     hours_of_the_days_date_created: "created_hours_utc",
