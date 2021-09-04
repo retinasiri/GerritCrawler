@@ -287,6 +287,9 @@ async function collectMetrics(metric) {
         }
     }*/
 
+    delete result_all["effective_revision_time_diff"]
+    result_all = copy("effective_revision_time_diff", result_all, metric);
+
     delete result_all["date_updated_date_created_diff"]
     result_all = copy("date_updated_date_created_diff", result_all, metric);
 
@@ -590,8 +593,8 @@ let metric_to_collect = {
     //number_of_not_owned_abandoned_related_changes: "rel_not_owned_abandoned_changes_num",
     //number_of_not_owned_close_related_changes: "rel_not_owned_closed_changes_num",
 
-    date_updated_date_created_diff: true,
     effective_revision_time_diff: true,
+    date_updated_date_created_diff: true,
 
 }
 
