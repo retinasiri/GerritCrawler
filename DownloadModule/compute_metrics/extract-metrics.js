@@ -248,6 +248,9 @@ let object665={}
 let object650={}
 
 async function collectMetrics(metric) {
+
+    //metric["date_updated_date_created_diff"]
+
     let result = {};
     let result_all = {};
     let result_7_days = {};
@@ -305,6 +308,7 @@ let metric_to_collect = {
 
     //Time
     max_inactive_time: true,
+
     days_of_the_weeks_of_date_created: "created_weekday_utc",
     days_of_the_weeks_of_date_created_for_owner_timezone: "created_weekday_owner_tz",
     hours_of_the_days_date_created: "created_hours_utc",
@@ -587,6 +591,7 @@ let metric_to_collect = {
     //number_of_not_owned_close_related_changes: "rel_not_owned_closed_changes_num",
 
     date_updated_date_created_diff: true,
+    effective_revision_time_diff: true,
 
 }
 
