@@ -3,6 +3,7 @@ const MathJs = require('mathjs');
 const cliProgress = require('cli-progress');
 const Database = require('../config/databaseConfig');
 const Change = require('../models/change');
+const Metric = require('../models/metrics');
 const Utils = require('../config/utils');
 const MetricsUtils = require('./metrics-utils');
 const ComputeSimpleMetrics = require('./compute-simple-metrics');
@@ -99,6 +100,9 @@ async function collectDocs(docs) {
 
 function saveMetadata(json) {
     return Change.updateOne({id: json.id}, json, {upsert: true})
+        .then(() => {
+            return Metric.updateOne({id: json.id}, json, {upsert: true})
+        })
         .then(() => {
             return updateProgress();
         }).catch(err => {
