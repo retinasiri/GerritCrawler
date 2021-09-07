@@ -253,24 +253,25 @@ async function collectMetrics(metric) {
 
     let result = {};
     let result_all = {};
-    let result_7_days = {};
-    let result_14_days = {};
+    //let result_7_days = {};
+    //let result_14_days = {};
     let result_30_days = {};
     //console.log(Object.keys(metric_to_collect).length)
     for (let id in metric_to_collect) {
         let name = metric_to_collect[id];
         if (typeof name === 'string' || name instanceof String) {
             result = copy(id, result, metric, name);
-            result_7_days = copy_time_metrics(id, result_7_days, metric, "_7_days", name)
-            result_14_days = copy_time_metrics(id, result_14_days, metric, "_14_days", name)
+            //result_7_days = copy_time_metrics(id, result_7_days, metric, "_7_days", name)
+            //result_14_days = copy_time_metrics(id, result_14_days, metric, "_14_days", name)
             result_30_days = copy_time_metrics(id, result_30_days, metric, "_30_days", name)
         } else {
             result = copy(id, result, metric);
-            result_7_days = copy_time_metrics(id, result_7_days, metric, "_7_days")
-            result_14_days = copy_time_metrics(id, result_14_days, metric, "_14_days")
+            //result_7_days = copy_time_metrics(id, result_7_days, metric, "_7_days")
+            //result_14_days = copy_time_metrics(id, result_14_days, metric, "_14_days")
             result_30_days = copy_time_metrics(id, result_30_days, metric, "_30_days")
         }
-        result_all = {...result, ...result_7_days, ...result_14_days, ...result_30_days}
+        //result_all = {...result, ...result_7_days, ...result_14_days, ...result_30_days}
+        result_all = {...result, ...result_30_days}
     }
     //console.log(Object.keys(result_all).length + "..." + Object.keys(result).length + "..." + Object.keys(result_7_days).length + "..." + Object.keys(result_14_days).length + "..." + Object.keys(result_30_days).length)
 
@@ -296,8 +297,8 @@ async function collectMetrics(metric) {
     return Promise.all(
         [
             saveMetrics(result, "metrics"),
-            saveMetrics(result_7_days, "metrics-7-days"),
-            saveMetrics(result_14_days, "metrics-14-days"),
+            //saveMetrics(result_7_days, "metrics-7-days"),
+            //saveMetrics(result_14_days, "metrics-14-days"),
             saveMetrics(result_30_days, "metrics-30-days"),
             saveMetrics(result_all, "metrics-all")
         ]
@@ -593,7 +594,7 @@ let metric_to_collect = {
     //number_of_not_owned_abandoned_related_changes: "rel_not_owned_abandoned_changes_num",
     //number_of_not_owned_close_related_changes: "rel_not_owned_closed_changes_num",
 
-    effective_revision_time_diff: true,
+    //effective_revision_time_diff: true,
     date_updated_date_created_diff: true,
 
 }

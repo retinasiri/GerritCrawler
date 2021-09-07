@@ -100,9 +100,9 @@ async function collectDocs(docs) {
 
 function saveMetadata(json) {
     return Change.updateOne({id: json.id}, json, {upsert: true})
-        .then(() => {
+        /*.then(() => {
             return Metric.updateOne({id: json.id}, json, {upsert: true})
-        })
+        })*/
         .then(() => {
             return updateProgress();
         }).catch(err => {
