@@ -152,7 +152,8 @@ async function collectMetadata(json) {
 
      */
     let avg_time_to_add_human_reviewers_before_close = json["avg_time_to_add_human_reviewers_before_close"] ? json["avg_time_to_add_human_reviewers_before_close"] : 0;
-    metadata["effective_revision_time_diff"] = Math.abs(json["date_updated_date_created_diff"] - avg_time_to_add_human_reviewers_before_close)
+    //metadata["effective_revision_time_diff"] = Math.abs(json["date_updated_date_created_diff"] - avg_time_to_add_human_reviewers_before_close)
+    metadata["effective_revision_time_diff"] = json["date_updated_date_created_diff"] - avg_time_to_add_human_reviewers_before_close
 
     return metadata;
 }
