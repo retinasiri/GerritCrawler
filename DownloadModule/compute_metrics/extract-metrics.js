@@ -254,7 +254,7 @@ async function collectMetrics(metric) {
     let result = {};
     let result_all = {};
     //let result_7_days = {};
-    //let result_14_days = {};
+    let result_14_days = {};
     let result_30_days = {};
     //console.log(Object.keys(metric_to_collect).length)
     for (let id in metric_to_collect) {
@@ -262,16 +262,16 @@ async function collectMetrics(metric) {
         if (typeof name === 'string' || name instanceof String) {
             result = copy(id, result, metric, name);
             //result_7_days = copy_time_metrics(id, result_7_days, metric, "_7_days", name)
-            //result_14_days = copy_time_metrics(id, result_14_days, metric, "_14_days", name)
+            result_14_days = copy_time_metrics(id, result_14_days, metric, "_14_days", name)
             result_30_days = copy_time_metrics(id, result_30_days, metric, "_30_days", name)
         } else {
             result = copy(id, result, metric);
             //result_7_days = copy_time_metrics(id, result_7_days, metric, "_7_days")
-            //result_14_days = copy_time_metrics(id, result_14_days, metric, "_14_days")
+            result_14_days = copy_time_metrics(id, result_14_days, metric, "_14_days")
             result_30_days = copy_time_metrics(id, result_30_days, metric, "_30_days")
         }
         //result_all = {...result, ...result_7_days, ...result_14_days, ...result_30_days}
-        result_all = {...result, ...result_30_days}
+        result_all = {...result, ...result_14_days, ...result_30_days}
     }
     //console.log(Object.keys(result_all).length + "..." + Object.keys(result).length + "..." + Object.keys(result_7_days).length + "..." + Object.keys(result_14_days).length + "..." + Object.keys(result_30_days).length)
 
@@ -298,7 +298,7 @@ async function collectMetrics(metric) {
         [
             saveMetrics(result, "metrics"),
             //saveMetrics(result_7_days, "metrics-7-days"),
-            //saveMetrics(result_14_days, "metrics-14-days"),
+            saveMetrics(result_14_days, "metrics-14-days"),
             saveMetrics(result_30_days, "metrics-30-days"),
             saveMetrics(result_all, "metrics-all")
         ]
@@ -604,7 +604,8 @@ module.exports = {
     start: startComputeMetrics
 };
 
-let date_suffix = ['', '_7_days', '_14_days', '_30_days']
+//let date_suffix = ['', '_7_days', '_14_days', '_30_days']
+let date_suffix = ['', '_14_days', '_30_days']
 
 function addMetrics(json) {
     add_non_close(json, "owner_non_close_changes", "ownerPriorChangesCount", "ownerPriorMergedChangesCount", "ownerPriorAbandonedChangesCount")
