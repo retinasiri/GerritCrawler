@@ -209,8 +209,8 @@ function computeSimpleMetrics(argv) {
 function computeChangesMetrics(argv) {
     let projectJson = prepareCommand(argv);
     if (projectJson)
-        return ComputeChangesMetrics_2.start(projectJson)
-        //return ComputeChangesMetrics.start(projectJson)
+        //return ComputeChangesMetrics_2.start(projectJson)
+        return ComputeChangesMetrics.start(projectJson)
             .catch(err => {
                 console.log(err)
             });
