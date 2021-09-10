@@ -76,7 +76,8 @@ function getMetrics(skip) {
                     //first_revision : 1
                 }
             },
-            {$sort: {date_created: 1, number: 1}},
+            //{$sort: {date_created: 1, number: 1}},
+            {$sort: {date_updated: 1, number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT}
         ])
@@ -246,6 +247,7 @@ function copy_time_metrics(id, result, metric, number_of_days, name = "") {
 
 let object665={}
 let object650={}
+let previous_date_updated_date_created_diff = undefined;
 
 async function collectMetrics(metric) {
 
@@ -287,12 +289,18 @@ async function collectMetrics(metric) {
             console.log(key)
         }
     }*/
+    result["previous_date_updated_date_created_diff"] = previous_date_updated_date_created_diff;
+    result_14_days["previous_date_updated_date_created_diff"] = previous_date_updated_date_created_diff;
+    result_30_days["previous_date_updated_date_created_diff"] = previous_date_updated_date_created_diff;
+    result_all["previous_date_updated_date_created_diff"] = previous_date_updated_date_created_diff;
 
     delete result_all["effective_revision_time_diff"]
     result_all = copy("effective_revision_time_diff", result_all, metric);
 
     delete result_all["date_updated_date_created_diff"]
     result_all = copy("date_updated_date_created_diff", result_all, metric);
+
+    previous_date_updated_date_created_diff = metric["date_updated_date_created_diff"];
 
     return Promise.all(
         [

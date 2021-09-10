@@ -78,6 +78,7 @@ async function getChangesInfo(json) {
 
     let fileTimeAndCount = getFileTimeAndCount(json, {$in: ['MERGED', 'ABANDONED']});
     let fileTimeAndCountForOwner = getFileTimeAndCountForOwner(number, ownerId, created_date, files_list, {$in: ['MERGED', 'ABANDONED']});
+    let ownerProjectBranchChangesDuration = getPriorOwnerProjectBranchChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
     let priorChangesDuration = getPriorChangeMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
     let ownerProjectBranchChangeMeanTimeType = getPriorProjectBranchOwnerChangeMeanTimeType(json);
 
@@ -85,6 +86,7 @@ async function getChangesInfo(json) {
         fileTimeAndCount,
         fileTimeAndCountForOwner,
         priorChangesDuration,
+        ownerProjectBranchChangesDuration,
         ownerProjectBranchChangeMeanTimeType,
     ]
     return Promise.all(values
@@ -109,6 +111,11 @@ async function getChangesInfo(json) {
             ownerFileTimeMax: getResult(results, values, fileTimeAndCountForOwner).time_max,
             ownerFileTimeMin: getResult(results, values, fileTimeAndCountForOwner).time_min,
             ownerFileTimeStd: getResult(results, values, fileTimeAndCountForOwner).time_std,
+
+            ownerProjectBranchChangesDurationAvg: getResult(results, values, ownerProjectBranchChangesDuration).avg,
+            ownerProjectBranchChangesDurationMax: getResult(results, values, ownerProjectBranchChangesDuration).max,
+            ownerProjectBranchChangesDurationMin: getResult(results, values, ownerProjectBranchChangesDuration).min,
+            ownerProjectBranchChangesDurationStd: getResult(results, values, ownerProjectBranchChangesDuration).std,
 
             priorChangeDurationMean: getResult(results, values, priorChangesDuration).avg,
             priorChangeDurationMax: getResult(results, values, priorChangesDuration).max,
