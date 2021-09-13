@@ -166,6 +166,10 @@ async function updateProgress(bar, deleted, kept, added) {
     return Promise.resolve(true);
 }
 
+const MINIMUM_NUM_HOURS = 0.1 //1
+const MAXIMUM_NUM_HOURS = 2190 //336 , 2190 = 3 mois
+const MAXIMUM_INACTIVE_TIME = 336 //336
+
 async function collectMetadata(json) {
     let toDelete = false;
 
@@ -179,37 +183,46 @@ async function collectMetadata(json) {
 
     let status = json["status"]
     if (status === "NEW") {
-        if (inactive_time_before_review > 336)
+        /*if (time_diff > MAXIMUM_NUM_HOURS)
+            return true;*/
+        if (num_files === 0)
             return true;
-        if (time_diff > 730)
-            return true;
+        /*
         if (is_a_cherry_pick === true)
+            return true;
+        if (inactive_time_before_review > MAXIMUM_INACTIVE_TIME)
             return true;
         if (first_revision !== 1)
             return true;
-        if (num_files === 0)
-            return true;
+             */
         return false;
     } else {
         //duration > 1h
-        if (time_diff < 1)
+        if (time_diff === 0)
             return true;
-        if (time_diff > 730)
+        /*if (time_diff < 1 && status === "ABANDONED")
+            return true;*/
+        /*if (time_diff < MINIMUM_NUM_HOURS)
             return true;
+        if (time_diff > MAXIMUM_NUM_HOURS)
+            return true;*/
         //inactive time > 336H (2 weeks) - 3 months //2190 //1460 //730
-        if (inactive_time_before_review > 336)
-            return true;
         if (messages_count <= 1)
             return true;
         if (num_files === 0)
             return true;
+
+        /*
         if (is_a_cherry_pick === true)
             return true;
         if (first_revision !== 1)
             return true;
-        if (json.hasOwnProperty("has_reviewers"))
+        if (inactive_time_before_review > MAXIMUM_INACTIVE_TIME)
+            return true;
+          */
+        /*if (json.hasOwnProperty("has_reviewers"))
             if (has_reviewers === false)
-                return true;
+                return true;*/
         return false;
     }
 }

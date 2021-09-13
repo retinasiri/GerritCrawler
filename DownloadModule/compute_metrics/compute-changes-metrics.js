@@ -225,7 +225,6 @@ async function getChangesInfo(json) {
     let ownerProjectBranchNumberOfRevision = getOwnerProjectBranchNumberOfRevision(json);
     let ownerProjectBranchInactiveTime = getOwnerProjectBranchInactiveTime(json);
     let ownerProjectBranchTimeBetweenMessage = getOwnerProjectBranchTimeBetweenMessage(json);
-    let ownerProjectBranchChangesDuration = getPriorOwnerProjectBranchChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
     let ownerProjectBranchNumberOfAutoReview = getOwnerProjectBranchNumberOfAutoReview(json);
     let ownerProjectBranchBuildTime = getOwnerProjectBranchBuildTime(json);
     let ownerProjectBranchRevisionTime = getOwnerProjectBranchRevisionTime(json);
@@ -234,8 +233,9 @@ async function getChangesInfo(json) {
 
     let ownerProjectBranchChangesCount = getPriorProjectBranchOwnerChangesCount(json);
     let ownerProjectBranchClosedChangesCount = getPriorProjectBranchOwnerTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
-    let ownerProjectBranchChangeMeanTimeType = getPriorProjectBranchOwnerChangeMeanTimeType(json);
     let ownerProjectBranchNumberChangesBuilt = getOwnerProjectBranchNumberChangesBuilt(json);
+    //let ownerProjectBranchChangeMeanTimeType = getPriorProjectBranchOwnerChangeMeanTimeType(json);
+    let ownerProjectBranchChangesDuration = getPriorOwnerProjectBranchChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
 
     //let branchNumberChangesBuilt = getBranchNumberChangesBuilt(json);
 
@@ -339,7 +339,7 @@ async function getChangesInfo(json) {
         ownerProjectBranchChangesCount,//37
         ownerProjectBranchClosedChangesCount,//38
 
-        ownerProjectBranchChangeMeanTimeType,//39
+        //ownerProjectBranchChangeMeanTimeType,//39
 
         ownerProjectBranchNumberChangesBuilt,//40
 
@@ -540,10 +540,10 @@ async function getChangesInfo(json) {
             ownerProjectBranchChangesCount: getResult(results, values, ownerProjectBranchChangesCount),//58
             ownerProjectBranchClosedChangesCount: getResult(results, values, ownerProjectBranchClosedChangesCount),//59
 
-            ownerProjectBranchChangeMeanTimeTypeAvg: getResult(results, values, ownerProjectBranchChangeMeanTimeType).avg,//61
-            ownerProjectBranchChangeMeanTimeTypeMin: getResult(results, values, ownerProjectBranchChangeMeanTimeType).min,//61
-            ownerProjectBranchChangeMeanTimeTypeMax: getResult(results, values, ownerProjectBranchChangeMeanTimeType).max,//61
-            ownerProjectBranchChangeMeanTimeTypeStd: getResult(results, values, ownerProjectBranchChangeMeanTimeType).std,//61
+            //ownerProjectBranchChangeMeanTimeTypeAvg: getResult(results, values, ownerProjectBranchChangeMeanTimeType).avg,//61
+            //ownerProjectBranchChangeMeanTimeTypeMin: getResult(results, values, ownerProjectBranchChangeMeanTimeType).min,//61
+            //ownerProjectBranchChangeMeanTimeTypeMax: getResult(results, values, ownerProjectBranchChangeMeanTimeType).max,//61
+            //ownerProjectBranchChangeMeanTimeTypeStd: getResult(results, values, ownerProjectBranchChangeMeanTimeType).std,//61
 
             ownerProjectBranchNumberChangesBuilt: getResult(results, values, ownerProjectBranchNumberChangesBuilt),//72
 
@@ -2796,7 +2796,7 @@ async function getReviewersMetrics(json, reviewersDocs) {
     let ownerAndReviewerCommonsChangesSumAndMessagesSum = getOwnerAndReviewerCommonsChangesSumAndMessagesSum(json, reviewersId);
     let ownerAndReviewerCommonsMessagesAvg = getOwnerAndReviewerCommonsMessagesAvg(json, reviewersId);
 
-    let reviewersChangesCount = Promise.resolve(getSumMeanMaxMinStd(allCount));
+    //let reviewersChangesCount = Promise.resolve(getSumMeanMaxMinStd(allCount));
 
     let reviewerTimezone = getReviewerTimezone(number, reviewersId, created_date);
     let reviewerLastMessage = getReviewerLastMessage(number, reviewersId, created_date, ownerId);
@@ -2814,9 +2814,9 @@ async function getReviewersMetrics(json, reviewersDocs) {
         fileTimeAndCountForReviewers,//6
         ownerAndReviewerCommonsChangesSumAndMessagesSum,//7
         ownerAndReviewerCommonsMessagesAvg,//8
-        reviewersChangesCount,//9
-        reviewerTimezone,//10
-        reviewerLastMessage,//11
+        //reviewersChangesCount,//9
+        reviewerTimezone,//9
+        reviewerLastMessage,//10
         //reviewerLastChange,//11
         //reviewerLastReview,//13
     ]).then((results) => {
@@ -2875,18 +2875,18 @@ async function getReviewersMetrics(json, reviewersDocs) {
             ownerAndReviewerCommonsMessagesMin: results[8].min,
             ownerAndReviewerCommonsMessagesStd: results[8].std,
 
-            reviewersChangesSum: results[9].sum,
-            reviewersChangesAvg: results[9].avg,
-            reviewersChangesMax: results[9].max,
-            reviewersChangesMin: results[9].min,
-            reviewersChangesStd: results[9].std,
+            //reviewersChangesSum: results[9].sum,
+            //reviewersChangesAvg: results[9].avg,
+            //reviewersChangesMax: results[9].max,
+            //reviewersChangesMin: results[9].min,
+            //reviewersChangesStd: results[9].std,
 
-            reviewerTimezoneAvg: results[10].avg,
-            reviewerTimezoneMax: results[10].max,
-            reviewerTimezoneMin: results[10].min,
-            reviewerTimezoneStd: results[10].std,
+            reviewerTimezoneAvg: results[9].avg,
+            reviewerTimezoneMax: results[9].max,
+            reviewerTimezoneMin: results[9].min,
+            reviewerTimezoneStd: results[9].std,
 
-            reviewerLastMessageDate: results[11].date,
+            reviewerLastMessageDate: results[10].date,
             //reviewerLastChangeDate: results[11].length > 0 ? results[11].date : 0,
             //reviewerLastReviewDate: results[13].length > 0 ? results[13].date : 0,
 

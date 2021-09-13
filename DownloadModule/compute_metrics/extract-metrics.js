@@ -464,14 +464,13 @@ let metric_to_collect = {
     filesNumberOfRecentChangesOnBranch: "filesNumRecentBranchChanges",
 
 
-
     //owner
     priorChangesCount: "NumPriorChanges",
     priorSubsystemChangesCount: "NumPriorProjectChanges",
+    ownerPriorChangesCount: "NumOwnerPriorChanges",
+
     non_close_changes: "num_open_changes",
     project_non_close_changes: "num_project_open_changes",
-
-    ownerPriorChangesCount: "NumOwnerPriorChanges",
     owner_non_close_changes: "num_owner_open_changes",
 
     ownerFileCountAvg: "num_files_changes_owner_Avg",
