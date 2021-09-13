@@ -245,6 +245,43 @@ function copy_time_metrics(id, result, metric, number_of_days, name = "") {
     return result;
 }
 
+let date_suffix = ['', '_1_days', '_3_days', '_7_days', '_14_days', '_30_days']
+//let date_suffix = ['', '_7_days', '_14_days', '_30_days']
+//let date_suffix = ['', '_14_days', '_30_days']
+
+function addMetrics(json) {
+    add_non_close(json, "owner_non_close_changes", "ownerPriorChangesCount", "ownerPriorMergedChangesCount", "ownerPriorAbandonedChangesCount")
+    add_non_close(json, "non_close_changes", "priorChangesCount", "priorMergedChangesCount", "priorAbandonedChangesCount")
+    add_non_close(json, "project_non_close_changes", "priorSubsystemChangesCount", "priorSubsystemMergedChangesCount", "priorSubsystemAbandonedChangesCount")
+    add_ratio(json, "ownerProjectBranchNumberOfAutoReviewRate", "ownerProjectBranchNumberOfAutoReview", "ownerProjectBranchChangesCount")
+}
+
+function add_non_close(json, result_name, first, second, third) {
+    for (let i = 0; i < date_suffix.length; i++) {
+        let suffix = date_suffix[i];
+        let n_result_name = result_name + suffix
+        let n_first = first + suffix
+        let n_second = second + suffix
+        let n_third = third + suffix
+        json[n_result_name] = json[n_first] - json[n_second] - json[n_third];
+    }
+    //return json
+}
+
+function add_ratio(json, result_name, first, second) {
+    for (let i = 0; i < date_suffix.length; i++) {
+        let suffix = date_suffix[i];
+        let n_result_name = result_name + suffix
+        let n_first = first + suffix
+        let n_second = second + suffix
+        if (json[n_first] === undefined || json[n_second] === undefined)
+            json[n_result_name] = 0
+        else
+            json[n_result_name] = MetricsUtils.safeDivision(json[n_first], json[n_second])
+    }
+    //return json
+}
+
 let object665={}
 let object650={}
 let previous_date_updated_date_created_diff = undefined;
@@ -255,7 +292,9 @@ async function collectMetrics(metric) {
 
     let result = {};
     let result_all = {};
-    //let result_7_days = {};
+    let result_1_days = {};
+    let result_3_days = {};
+    let result_7_days = {};
     let result_14_days = {};
     let result_30_days = {};
     //console.log(Object.keys(metric_to_collect).length)
@@ -263,17 +302,22 @@ async function collectMetrics(metric) {
         let name = metric_to_collect[id];
         if (typeof name === 'string' || name instanceof String) {
             result = copy(id, result, metric, name);
-            //result_7_days = copy_time_metrics(id, result_7_days, metric, "_7_days", name)
+            result_1_days = copy_time_metrics(id, result_1_days, metric, "_1_days", name)
+            result_3_days = copy_time_metrics(id, result_3_days, metric, "_3_days", name)
+            result_7_days = copy_time_metrics(id, result_7_days, metric, "_7_days", name)
             result_14_days = copy_time_metrics(id, result_14_days, metric, "_14_days", name)
             result_30_days = copy_time_metrics(id, result_30_days, metric, "_30_days", name)
         } else {
             result = copy(id, result, metric);
-            //result_7_days = copy_time_metrics(id, result_7_days, metric, "_7_days")
+            result_1_days = copy_time_metrics(id, result_1_days, metric, "_1_days")
+            result_3_days = copy_time_metrics(id, result_3_days, metric, "_3_days")
+            result_7_days = copy_time_metrics(id, result_7_days, metric, "_7_days")
             result_14_days = copy_time_metrics(id, result_14_days, metric, "_14_days")
             result_30_days = copy_time_metrics(id, result_30_days, metric, "_30_days")
         }
+        result_all = {...result, ...result_1_days, ...result_3_days, ...result_7_days, ...result_14_days, ...result_30_days}
         //result_all = {...result, ...result_7_days, ...result_14_days, ...result_30_days}
-        result_all = {...result, ...result_14_days, ...result_30_days}
+       // result_all = {...result, ...result_14_days, ...result_30_days}
     }
     //console.log(Object.keys(result_all).length + "..." + Object.keys(result).length + "..." + Object.keys(result_7_days).length + "..." + Object.keys(result_14_days).length + "..." + Object.keys(result_30_days).length)
 
@@ -289,10 +333,10 @@ async function collectMetrics(metric) {
             console.log(key)
         }
     }*/
-    result["previous_date_updated_date_created_diff"] = previous_date_updated_date_created_diff;
-    result_14_days["previous_date_updated_date_created_diff"] = previous_date_updated_date_created_diff;
-    result_30_days["previous_date_updated_date_created_diff"] = previous_date_updated_date_created_diff;
-    result_all["previous_date_updated_date_created_diff"] = previous_date_updated_date_created_diff;
+    //result["previous_date_updated_date_created_diff"] = previous_date_updated_date_created_diff;
+    //result_14_days["previous_date_updated_date_created_diff"] = previous_date_updated_date_created_diff;
+    //result_30_days["previous_date_updated_date_created_diff"] = previous_date_updated_date_created_diff;
+    //result_all["previous_date_updated_date_created_diff"] = previous_date_updated_date_created_diff;
 
     delete result_all["effective_revision_time_diff"]
     result_all = copy("effective_revision_time_diff", result_all, metric);
@@ -305,7 +349,9 @@ async function collectMetrics(metric) {
     return Promise.all(
         [
             saveMetrics(result, "metrics"),
-            //saveMetrics(result_7_days, "metrics-7-days"),
+            saveMetrics(result_7_days, "metrics-1-days"),
+            saveMetrics(result_7_days, "metrics-3-days"),
+            saveMetrics(result_7_days, "metrics-7-days"),
             saveMetrics(result_14_days, "metrics-14-days"),
             saveMetrics(result_30_days, "metrics-30-days"),
             saveMetrics(result_all, "metrics-all")
@@ -317,6 +363,7 @@ async function collectMetrics(metric) {
 
 let metric_to_collect = {
     id: true,
+
 
     //Time
     max_inactive_time: true,
@@ -344,6 +391,7 @@ let metric_to_collect = {
     //eigenvector_centrality: true,
     //clustering_coefficient: true,
     //core_number: true,
+
 
     //File
     first_revision_insertions: "insertions",
@@ -382,6 +430,8 @@ let metric_to_collect = {
     //is_perfective: true,
 
 
+
+
     //File
     AvgNumberOfDeveloperWhoModifiedFiles: "AvgNumDevModifiedFiles",
 
@@ -412,6 +462,8 @@ let metric_to_collect = {
     filesNumFailsStd: true,
 
     filesNumberOfRecentChangesOnBranch: "filesNumRecentBranchChanges",
+
+
 
     //owner
     priorChangesCount: "NumPriorChanges",
@@ -506,12 +558,41 @@ let metric_to_collect = {
     ownerProjectBranchTimeToAddReviewerMin: "opb_ChangesTimeAddRevrsMin",
     ownerProjectBranchTimeToAddReviewerStd: "opb_ChangesTimeAddRevrsStd",
 
-    ownerProjectBranchChangesCount: "opb_ChangesCount",
-    ownerProjectBranchClosedChangesCount: "opb_ClosedChangesNum",
-    ownerProjectBranchChangeMeanTimeTypeAvg: "opb_ClosedChangesTimeAvg",
-    ownerProjectBranchChangeMeanTimeTypeMin: "opb_ClosedChangesTimeMin",
-    ownerProjectBranchChangeMeanTimeTypeMax: "opb_ClosedChangesTimeMax",
-    ownerProjectBranchChangeMeanTimeTypeStd: "opb_ClosedChangesTimeStd",
+    //ownerProjectBranchChangesCount: "opb_ChangesCount",
+    //ownerProjectBranchClosedChangesCount: "opb_ClosedChangesNum",
+    //ownerProjectBranchChangeMeanTimeTypeAvg: "opb_ClosedChangesTimeAvg",
+    //ownerProjectBranchChangeMeanTimeTypeMin: "opb_ClosedChangesTimeMin",
+    //ownerProjectBranchChangeMeanTimeTypeMax: "opb_ClosedChangesTimeMax",
+    //ownerProjectBranchChangeMeanTimeTypeStd: "opb_ClosedChangesTimeStd",
+
+    //'clustering_coefficient',
+    //'core_number',
+    //'degree_centrality',
+    //'num_files_changes_sum',
+    //'num_prior_changes',
+    //'num_prior_project_changes',
+    //'num_owner_prior_changes',
+    //'owner_age',
+    //'subsystem_age',
+    //'branch_age',
+    //'prior_owner_rate',
+    //'owner_number_of_review',
+    //'owner_previous_message_count',
+    //'owner_changes_messages_sum',
+    //'opb_changes_count',
+    //'opb_num_changes_built',
+    //'num_prior_owner_project_changes',
+    //'prior_owner_project_changes_ratio',
+    //'revrs_changes_sum',
+    //'revrs_merged_changes_sum',
+    //'revrs_abandoned_changes_sum',
+    //'revrs_previous_msgs_sum',
+    //'owner_revrs_commons_changes_sum',
+    //'owner_revrs_commons_msgs_sum',
+    //'opb_closed_changes_time_avg',
+    //'opb_closed_changes_time_min',
+    //'opb_closed_changes_time_max',
+    //'opb_closed_changes_time_std',
 
     ownerProjectBranchNumberChangesBuilt: "opb_NumChangesBuilt", //todo competing value
     ratioOwnerProjectBranchNumberChangesBuilt: "opb_RatioChangesBuilt",
@@ -611,42 +692,6 @@ let metric_to_collect = {
 module.exports = {
     start: startComputeMetrics
 };
-
-//let date_suffix = ['', '_7_days', '_14_days', '_30_days']
-let date_suffix = ['', '_14_days', '_30_days']
-
-function addMetrics(json) {
-    add_non_close(json, "owner_non_close_changes", "ownerPriorChangesCount", "ownerPriorMergedChangesCount", "ownerPriorAbandonedChangesCount")
-    add_non_close(json, "non_close_changes", "priorChangesCount", "priorMergedChangesCount", "priorAbandonedChangesCount")
-    add_non_close(json, "project_non_close_changes", "priorSubsystemChangesCount", "priorSubsystemMergedChangesCount", "priorSubsystemAbandonedChangesCount")
-    add_ratio(json, "ownerProjectBranchNumberOfAutoReviewRate", "ownerProjectBranchNumberOfAutoReview", "ownerProjectBranchChangesCount")
-}
-
-function add_non_close(json, result_name, first, second, third) {
-    for (let i = 0; i < date_suffix.length; i++) {
-        let suffix = date_suffix[i];
-        let n_result_name = result_name + suffix
-        let n_first = first + suffix
-        let n_second = second + suffix
-        let n_third = third + suffix
-        json[n_result_name] = json[n_first] - json[n_second] - json[n_third];
-    }
-    //return json
-}
-
-function add_ratio(json, result_name, first, second) {
-    for (let i = 0; i < date_suffix.length; i++) {
-        let suffix = date_suffix[i];
-        let n_result_name = result_name + suffix
-        let n_first = first + suffix
-        let n_second = second + suffix
-        if (json[n_first] === undefined || json[n_second] === undefined)
-            json[n_result_name] = 0
-        else
-            json[n_result_name] = MetricsUtils.safeDivision(json[n_first], json[n_second])
-    }
-    //return json
-}
 
 
 /*/////////
