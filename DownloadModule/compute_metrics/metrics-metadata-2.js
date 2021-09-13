@@ -122,7 +122,7 @@ async function collectMetadata(json) {
     metadata["id"] = json.id
     //metadata["n"] = i++
 
-    /*
+
     metadata["owner_timezone"] = MetricsUtils.get_timezone_owner(json)
     metadata["month_date_created"] = MetricsUtils.get_month(json.created);
     metadata["month_date_created_for_owner"] = MetricsUtils.get_month_for_owner(json.created, MetricsUtils.get_timezone(json).author);
@@ -150,7 +150,7 @@ async function collectMetadata(json) {
     metadata["num_code_review_2"] = self_review.check_code_review_2_count;
     metadata["num_code_review"] = self_review.check_code_review_length;
 
-     */
+
     let avg_time_to_add_human_reviewers_before_close = json["avg_time_to_add_human_reviewers_before_close"] ? json["avg_time_to_add_human_reviewers_before_close"] : 0;
     //metadata["effective_revision_time_diff"] = Math.abs(json["date_updated_date_created_diff"] - avg_time_to_add_human_reviewers_before_close)
     metadata["effective_revision_time_diff"] = json["date_updated_date_created_diff"] - avg_time_to_add_human_reviewers_before_close
