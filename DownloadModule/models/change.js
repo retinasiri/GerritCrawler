@@ -50,15 +50,15 @@ var ChangeSchema = new Schema({
         _id: false,
         type: Message
     }],
-    /*messages: [{
-        //_id: false,
-        type: { type: Schema.Types.ObjectId, ref: 'Message' }
-    }],*/
     requirements: [],
     current_revision: String,
     revisions: {},
     _more_changes: Boolean,
-    files_list: []
+    files_list: [],
+    /*messages: [{
+        //_id: false,
+        type: { type: Schema.Types.ObjectId, ref: 'Message' }
+    }],*/
 }, {
     versionKey: false,
     strict: false,
