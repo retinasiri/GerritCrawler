@@ -59,13 +59,13 @@ function startComputeMetadata(json) {
 }
 
 //get changes id
-function getChanges(skip, NUM_OF_CHANGES_LIMIT = 20000) {
+function getChanges(skip, NUM_OF_CHANGES_LIMIT = 10000) {
     return Change
         .aggregate([
             {$sort: {created: 1, _number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT},
-            {$project: {id: 1, date_updated_date_created_diff: 1, avg_time_to_add_human_reviewers_before_close: 1}}
+            //{$project: {id: 1, date_updated_date_created_diff: 1, avg_time_to_add_human_reviewers_before_close: 1}}
         ])
         .allowDiskUse(true)
         .exec()
