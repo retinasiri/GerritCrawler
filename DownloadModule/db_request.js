@@ -437,3 +437,32 @@ db.getCollection('changes_with_metadata').aggregate([
         last_updated_date: {$last: "$updated"},
     }
 }*/
+
+db.getCollection('changes').aggregate([
+    {$match : {
+            //status: {$in: ['MERGED', 'ABANDONED']},
+            //date_updated_date_created_diff: {$gte: 24, $lte:336},
+        }
+    },
+    //{$count: 'count'}
+    {
+        $group: {
+            _id: "$date_updated_date_created_diff",
+            count: { $sum: 1 },
+            id: {$addToSet: "$id"}
+        }
+    },
+    {$match : {
+            count: {$gt: 1}
+        }
+    },
+    {$sort: {count: -1}},
+    {$unwind: '$id' },
+    {
+        $group: {
+            _id: 1,
+            id_list: {$addToSet: "$id"}
+        }
+    },
+
+])

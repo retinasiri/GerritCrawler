@@ -150,11 +150,9 @@ async function collectMetadata(json) {
     metadata["num_code_review_2"] = self_review.check_code_review_2_count;
     metadata["num_code_review"] = self_review.check_code_review_length;
 
-
     let avg_time_to_add_human_reviewers_before_close = json["avg_time_to_add_human_reviewers_before_close"] ? json["avg_time_to_add_human_reviewers_before_close"] : 0;
     //metadata["effective_revision_time_diff"] = Math.abs(json["date_updated_date_created_diff"] - avg_time_to_add_human_reviewers_before_close)
     metadata["effective_revision_time_diff"] = json["date_updated_date_created_diff"] - avg_time_to_add_human_reviewers_before_close
-
 
     return metadata;
 }

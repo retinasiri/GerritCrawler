@@ -4,6 +4,7 @@ db.getCollection('metrics').createIndex({id: 1})
 db.getCollection('metrics').createIndex({number: 1})
 db.getCollection('metrics').createIndex({created_date: 1})
 db.getCollection('metrics').createIndex({number: 1, created_date: 1})
+db.getCollection('metrics').createIndex({date_updated: 1, number: 1})
 
 db.getCollection('changes').createIndex({id: 1})
 db.getCollection('changes').createIndex({_number: 1})

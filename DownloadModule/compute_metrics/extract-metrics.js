@@ -101,11 +101,11 @@ async function collectDocs(docs) {
         return Promise.resolve(true);
     for (let key in docs) {
         let doc = docs[key];
-        let id = doc.id;
+        //let id = doc.id;
 
-        let check = await Changes.exists({id: id});
+        /*let check = await Changes.exists({id: id});
         if (!check)
-            continue;
+            continue;*/
 
         if (check_value_to_ignore(doc)) {
             skipped += 1;
@@ -349,8 +349,8 @@ async function collectMetrics(metric) {
     return Promise.all(
         [
             saveMetrics(result, "metrics"),
-            saveMetrics(result_7_days, "metrics-1-days"),
-            saveMetrics(result_7_days, "metrics-3-days"),
+            saveMetrics(result_1_days, "metrics-1-days"),
+            saveMetrics(result_3_days, "metrics-3-days"),
             saveMetrics(result_7_days, "metrics-7-days"),
             saveMetrics(result_14_days, "metrics-14-days"),
             saveMetrics(result_30_days, "metrics-30-days"),
