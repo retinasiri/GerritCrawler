@@ -49,8 +49,6 @@ function startComputeMetrics(json) {
         .then(() => {
             progressBar.stop();
             console.log("Finished !!!!");
-        })
-        .then(() => {
             return Database.closeConnection();
         })
         .catch(err => {
@@ -73,7 +71,7 @@ function getMetrics(skip) {
                     status: {$in: ['MERGED', 'ABANDONED']},
                     //max_inactive_time: {$lte: 72},
                     //is_a_bot : false,
-                    //first_revision : 1
+                    //first_revision_number : 1
                 }
             },
             //{$sort: {date_created: 1, number: 1}},
@@ -112,12 +110,12 @@ async function collectDocs(docs) {
             continue;
         }
 
-        addMetrics(doc)
+        await addMetrics(doc);
 
         await collectMetrics(doc)
-            /*.then((json) => {
+            .then((json) => {
                 return saveMetrics(json);
-            })*/
+            })
             .then(() => {
                 return updateProgress();
             })
@@ -133,11 +131,12 @@ function check_value_to_ignore(metrics) {
         if (metrics["status"].includes("NEW"))
             return true;
 
+    if (metrics["first_revision_number"] !== 1)
+        return true;
+
     /*if (metrics["is_a_bot"] === true)
     return true;*/
 
-    /*if (metrics["first_revision_number"] !== 1)
-        return true;*/
     /*if (check_self_review(metrics))
         return true;*/
     /*if(metrics["is_self_review"])
@@ -249,7 +248,7 @@ let date_suffix = ['', '_1_days', '_3_days', '_7_days', '_14_days', '_30_days']
 //let date_suffix = ['', '_7_days', '_14_days', '_30_days']
 //let date_suffix = ['', '_14_days', '_30_days']
 
-function addMetrics(json) {
+async function addMetrics(json) {
     add_non_close(json, "owner_non_close_changes", "ownerPriorChangesCount", "ownerPriorMergedChangesCount", "ownerPriorAbandonedChangesCount")
     add_non_close(json, "non_close_changes", "priorChangesCount", "priorMergedChangesCount", "priorAbandonedChangesCount")
     add_non_close(json, "project_non_close_changes", "priorSubsystemChangesCount", "priorSubsystemMergedChangesCount", "priorSubsystemAbandonedChangesCount")
@@ -348,7 +347,7 @@ async function collectMetrics(metric) {
 
     return Promise.all(
         [
-            saveMetrics(result, "metrics"),
+            //saveMetrics(result, "metrics"),
             saveMetrics(result_1_days, "metrics-1-days"),
             saveMetrics(result_3_days, "metrics-3-days"),
             saveMetrics(result_7_days, "metrics-7-days"),
@@ -503,10 +502,10 @@ let metric_to_collect = {
 
     //ownerNumberOfAutoReview: true, //todo change for autoreview rate
 
-    ownerInactiveTimeAvg: "ownerInactiveDurationAvg",
-    ownerInactiveTimeMax: "ownerInactiveDurationMax",
-    ownerInactiveTimeMin: "ownerInactiveDurationMin",
-    ownerInactiveTimeStd: "ownerInactiveDurationStd",
+    //ownerInactiveTimeAvg: "ownerInactiveDurationAvg",
+    //ownerInactiveTimeMax: "ownerInactiveDurationMax",
+    //ownerInactiveTimeMin: "ownerInactiveDurationMin",
+    //ownerInactiveTimeStd: "ownerInactiveDurationStd",
 
     ownerTimeBetweenMessageAvg: "ownerTimeBetweenMessageAvg",
     ownerTimeBetweenMessageMax: "ownerTimeBetweenMessageMax",
@@ -526,10 +525,10 @@ let metric_to_collect = {
     ownerProjectBranchNumberOfRevisionMin: "opb_num_revision_Min", //"opb_NumberOfRevisionMin",
     ownerProjectBranchNumberOfRevisionStd: "opb_num_revision_Std", //"opb_NumberOfRevisionStd",
 
-    ownerProjectBranchInactiveTimeAvg: "opb_InactiveTimeAvg",
-    ownerProjectBranchInactiveTimeMax: "opb_InactiveTimeMax",
-    ownerProjectBranchInactiveTimeMin: "opb_InactiveTimeMin",
-    ownerProjectBranchInactiveTimeStd: "opb_InactiveTimeStd",
+    //ownerProjectBranchInactiveTimeAvg: "opb_InactiveTimeAvg",
+    //ownerProjectBranchInactiveTimeMax: "opb_InactiveTimeMax",
+    //ownerProjectBranchInactiveTimeMin: "opb_InactiveTimeMin",
+    //ownerProjectBranchInactiveTimeStd: "opb_InactiveTimeStd",
 
     ownerProjectBranchTimeBetweenMessageAvg: "opb_TimeBetweenMsgsAvg",
     ownerProjectBranchTimeBetweenMessageMax: "opb_TimeBetweenMsgsMax",
@@ -681,6 +680,7 @@ let metric_to_collect = {
     //number_of_not_owned_abandoned_related_changes: "rel_not_owned_abandoned_changes_num",
     //number_of_not_owned_close_related_changes: "rel_not_owned_closed_changes_num",
 
+    is_self_review: true,
     effective_revision_time_diff: true,
     date_updated_date_created_diff: true,
 
