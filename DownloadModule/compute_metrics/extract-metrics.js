@@ -2,7 +2,7 @@ const cliProgress = require('cli-progress');
 const Moment = require('moment');
 const Database = require('../config/databaseConfig');
 const Metrics = require('../models/metrics');
-const Changes = require('../models/change');
+//const Changes = require('../models/change');
 const Utils = require('../config/utils');
 const fs = require('fs');
 const MetricsUtils = require('./metrics-utils');
@@ -18,7 +18,7 @@ let libreOfficeJson = Utils.getProjectParameters("libreoffice");
 let projectDBUrl = libreOfficeJson["projectDBUrl"];
 let projectName = libreOfficeJson["projectName"];
 let DATA_PATH = "data/"
-let NUM_OF_CHANGES_LIMIT = 5000;
+let NUM_OF_CHANGES_LIMIT = 100;
 let skipped = 0;
 
 
@@ -86,9 +86,9 @@ function getMetrics(skip) {
                 return Promise.resolve(false)
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
         })
-        .then(result => {
+        /*.then(result => {
             return result ? getMetrics(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
-        })
+        })*/
         .catch(err => {
             console.log(err)
         });
