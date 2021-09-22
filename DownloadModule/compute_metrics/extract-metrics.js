@@ -18,7 +18,7 @@ let libreOfficeJson = Utils.getProjectParameters("libreoffice");
 let projectDBUrl = libreOfficeJson["projectDBUrl"];
 let projectName = libreOfficeJson["projectName"];
 let DATA_PATH = "data/"
-let NUM_OF_CHANGES_LIMIT = 100;
+let NUM_OF_CHANGES_LIMIT = 20000;
 let skipped = 0;
 
 
@@ -86,9 +86,9 @@ function getMetrics(skip) {
                 return Promise.resolve(false)
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
         })
-        /*.then(result => {
+        .then(result => {
             return result ? getMetrics(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
-        })*/
+        })
         .catch(err => {
             console.log(err)
         });
