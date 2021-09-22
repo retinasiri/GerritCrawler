@@ -113,9 +113,9 @@ async function collectDocs(docs) {
         await addMetrics(doc);
 
         await collectMetrics(doc)
-            .then((json) => {
+            /*.then((json) => {
                 return saveMetrics(json);
-            })
+            })*/
             .then(() => {
                 return updateProgress();
             })
@@ -179,12 +179,18 @@ async function saveMetrics(json, suffix = "") {
 }
 
 //todo delete all file
+let file_suffix = ['', '-1-days', '-3-days', '-7-days', '-14-days', '-30-days']
+
 function delete_metrics_file() {
     try {
-        let filename = projectName + "-metrics.csv";
-        let filename_path = PathLibrary.join(DATA_PATH, projectName, filename);
-        if (fs.existsSync(filename_path))
-            fs.unlinkSync(filename_path);
+        //for (let id in file_suffix){
+        for (let i = 0; i < file_suffix.length; i++) {
+            let suffix = file_suffix[i];
+            let filename = projectName + "-metrics" + suffix + ".csv";
+            let filename_path = PathLibrary.join(DATA_PATH, projectName, filename);
+            if (fs.existsSync(filename_path))
+                fs.unlinkSync(filename_path);
+        }
     } catch (error) {
         console.log(error);
     }
@@ -235,7 +241,7 @@ function copy_time_metrics(id, result, metric, number_of_days, name = "") {
     if (metric.hasOwnProperty(id + number_of_days)) {
         result = copy(id + number_of_days, result, metric, name + number_of_days)
     } else {
-        if (id.includes("eviewer")){
+        if (id.includes("eviewer")) {
             result = copy(id + number_of_days, result, metric, name + number_of_days)
         } else {
             result = copy(id, result, metric, name)
@@ -281,8 +287,8 @@ function add_ratio(json, result_name, first, second) {
     //return json
 }
 
-let object665={}
-let object650={}
+let object665 = {}
+let object650 = {}
 let previous_date_updated_date_created_diff = undefined;
 
 async function collectMetrics(metric) {
@@ -316,7 +322,7 @@ async function collectMetrics(metric) {
         }
         result_all = {...result, ...result_1_days, ...result_3_days, ...result_7_days, ...result_14_days, ...result_30_days}
         //result_all = {...result, ...result_7_days, ...result_14_days, ...result_30_days}
-       // result_all = {...result, ...result_14_days, ...result_30_days}
+        // result_all = {...result, ...result_14_days, ...result_30_days}
     }
     //console.log(Object.keys(result_all).length + "..." + Object.keys(result).length + "..." + Object.keys(result_7_days).length + "..." + Object.keys(result_14_days).length + "..." + Object.keys(result_30_days).length)
 
@@ -347,7 +353,7 @@ async function collectMetrics(metric) {
 
     return Promise.all(
         [
-            //saveMetrics(result, "metrics"),
+            saveMetrics(result, "metrics"),
             saveMetrics(result_1_days, "metrics-1-days"),
             saveMetrics(result_3_days, "metrics-3-days"),
             saveMetrics(result_7_days, "metrics-7-days"),
