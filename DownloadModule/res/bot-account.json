@@ -2079,7 +2079,6 @@
         "username": "purestorage-thirdparty-ci",
         "status": "Doing CI things"
       },
-
       "32313": {
         "_account_id": 32313,
         "name": "ericsson-cicd",
@@ -2102,7 +2101,6 @@
         "username": "cisco_infra",
         "inactive": true
       }
-
     }
   },
   "qt": {

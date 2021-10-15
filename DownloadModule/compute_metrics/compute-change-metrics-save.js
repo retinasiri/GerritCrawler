@@ -54,7 +54,7 @@ async function collectMetrics(json) {
     })
 
     return Promise.all([t1, t2]).then((results) => {
-    //return Promise.all([t2]).then((results) => {
+        //return Promise.all([t2]).then((results) => {
         let metrics = {...results[0], ...results[1]};
         if (NUM_DAYS_FOR_RECENT !== null) {
             let suffix = '_' + NUM_DAYS_FOR_RECENT + '_days'
@@ -199,31 +199,32 @@ async function getChangesInfo(json) {
 
     //getChangesTimeInfo
     let fileTimeAndCount = getFileTimeAndCount(json, {$in: ['MERGED', 'ABANDONED']});
-    //let fileTimeAndCountForOwner = getFileTimeAndCountForOwner(number, ownerId, created_date, files_list, {$in: ['MERGED', 'ABANDONED']});
+    let fileTimeAndCountForOwner = getFileTimeAndCountForOwner(number, ownerId, created_date, files_list, {$in: ['MERGED', 'ABANDONED']});
     let fileDeveloperNumber = getFileDeveloperNumber(json);
-    let filesRevisionTime = getFilesRevisionTime(json);
+    let filesBuildTime = getFilesBuildTime(json);
+    let filesRevisionTime = getFilesRevisionTime(json); //todo remove
+    let filesNumFails = getFilesNumFails(json);
     let filesNumberOfRecentChangesOnBranch = getFilesNumberOfRecentChangesOnBranch(json, NUMBER_OF_DAYS_FOR_RECENT_CHANGES_OF_FILES);
-    //let filesNumFails = getFilesNumFails(json);
-    //let filesBuildTime = getFilesBuildTime(json);
 
-    //let branchAge = getBranchAge(json);
-    //let ownerAge = getOwnerAge(json);
-    //let subsystemAge = getSubsystemAge(json);
+    let branchAge = getBranchAge(json);
+    let ownerAge = getOwnerAge(json);
+    let subsystemAge = getSubsystemAge(json);
     let priorOwnerRate = getPriorOwnerRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
 
     let ownerNumberOfReview = getOwnerNumberOfReview(number, ownerId, created_date);
-    //let ownerPreviousMessageCount = getOwnerPreviousMessageCount(number, ownerId, created_date);
+    let ownerPreviousMessageCount = getOwnerPreviousMessageCount(number, ownerId, created_date);
     let ownerChangesMessagesCountAndAvgPerChanges = getOwnerChangesMessagesCountAndAvgPerChanges(json);
     let priorChangesFiles = getPriorChangesFiles(json);
     let priorChangesDuration = getPriorChangeMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
 
     let ownerNumberOfAutoReview = getOwnerNumberOfAutoReview(json);
+    let ownerInactiveTime = getOwnerInactiveTime(json);
     let ownerTimeBetweenMessage = getOwnerTimeBetweenMessage(json);
-    //let ownerInactiveTime = getOwnerInactiveTime(json);
-    //let ownerProjectBranchInactiveTime = getOwnerProjectBranchInactiveTime(json);
 
+    //let priorOwnerProjectBranchRate = getPriorOwnerProjectBranchRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
     let ownerProjectBranchNumberOfRevision = getOwnerProjectBranchNumberOfRevision(json);
-    //let ownerProjectBranchTimeBetweenMessage = getOwnerProjectBranchTimeBetweenMessage(json);
+    let ownerProjectBranchInactiveTime = getOwnerProjectBranchInactiveTime(json);
+    let ownerProjectBranchTimeBetweenMessage = getOwnerProjectBranchTimeBetweenMessage(json);
     let ownerProjectBranchNumberOfAutoReview = getOwnerProjectBranchNumberOfAutoReview(json);
     let ownerProjectBranchBuildTime = getOwnerProjectBranchBuildTime(json);
     let ownerProjectBranchRevisionTime = getOwnerProjectBranchRevisionTime(json);
@@ -233,13 +234,10 @@ async function getChangesInfo(json) {
     let ownerProjectBranchChangesCount = getPriorProjectBranchOwnerChangesCount(json);
     let ownerProjectBranchClosedChangesCount = getPriorProjectBranchOwnerTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
     let ownerProjectBranchNumberChangesBuilt = getOwnerProjectBranchNumberChangesBuilt(json);
+    //let ownerProjectBranchChangeMeanTimeType = getPriorProjectBranchOwnerChangeMeanTimeType(json);
     let ownerProjectBranchChangesDuration = getPriorOwnerProjectBranchChangesMeanTimeType(json, {$in: ['MERGED', 'ABANDONED']});
 
     let fileCount = getFileCount(json);
-
-    //let priorOwnerProjectBranchRate = getPriorOwnerProjectBranchRate(json, NUMBER_OF_DAYS_FOR_RECENT_FOR_RATE);
-    //let ownerProjectBranchChangeMeanTimeType = getPriorProjectBranchOwnerChangeMeanTimeType(json);
-
 
     //let branchNumberChangesBuilt = getBranchNumberChangesBuilt(json);
 
@@ -305,27 +303,27 @@ async function getChangesInfo(json) {
         priorSubsystemOwnerAbandonedChangesCount, //11
 
         fileTimeAndCount, //15
-        //fileTimeAndCountForOwner, //16
+        fileTimeAndCountForOwner, //16
         fileDeveloperNumber, //13
         priorChangesFiles, //14
-        //filesBuildTime,//17
+        filesBuildTime,//17
         filesRevisionTime,//18
-        //filesNumFails,//219
+        filesNumFails,//219
         filesNumberOfRecentChangesOnBranch,//20
 
-        //ownerAge,//35
-        //subsystemAge,//38
-        //branchAge,//21
+        ownerAge,//35
+        subsystemAge,//38
+        branchAge,//21
         priorOwnerRate,//36
 
         ownerNumberOfReview, //25
-        //ownerPreviousMessageCount, //26
+        ownerPreviousMessageCount, //26
         ownerChangesMessagesCountAndAvgPerChanges, //27
 
         priorChangesDuration, //12
 
         ownerNumberOfAutoReview,//31
-        //ownerInactiveTime,//32
+        ownerInactiveTime,//32
         ownerTimeBetweenMessage,//33
 
         //priorOwnerProjectBranchRate,
@@ -333,8 +331,8 @@ async function getChangesInfo(json) {
 
         ownerProjectBranchBuildTime,//22
         ownerProjectBranchNumberOfRevision,
-        //ownerProjectBranchInactiveTime,
-        //ownerProjectBranchTimeBetweenMessage,
+        ownerProjectBranchInactiveTime,
+        ownerProjectBranchTimeBetweenMessage,
         ownerProjectBranchChangesDuration,
         ownerProjectBranchRevisionTime,
         ownerProjectBranchTimeBetweenRevision,
@@ -438,43 +436,43 @@ async function getChangesInfo(json) {
             fileTimeMin: getResult(results, values, fileTimeAndCount).time_min,
             fileTimeStd: getResult(results, values, fileTimeAndCount).time_std,
 
-            //ownerFileCountAvg: getResult(results, values, fileTimeAndCountForOwner).count_avg,
-            //ownerFileCountMax: getResult(results, values, fileTimeAndCountForOwner).count_max,
-            //ownerFileCountMin: getResult(results, values, fileTimeAndCountForOwner).count_min,
-            //ownerFileCountStd: getResult(results, values, fileTimeAndCountForOwner).count_std,
-            //ownerFileTimeAvg: getResult(results, values, fileTimeAndCountForOwner).time_avg,
-            //ownerFileTimeMax: getResult(results, values, fileTimeAndCountForOwner).time_max,
-            //ownerFileTimeMin: getResult(results, values, fileTimeAndCountForOwner).time_min,
-            //ownerFileTimeStd: getResult(results, values, fileTimeAndCountForOwner).time_std,
+            ownerFileCountAvg: getResult(results, values, fileTimeAndCountForOwner).count_avg,
+            ownerFileCountMax: getResult(results, values, fileTimeAndCountForOwner).count_max,
+            ownerFileCountMin: getResult(results, values, fileTimeAndCountForOwner).count_min,
+            ownerFileCountStd: getResult(results, values, fileTimeAndCountForOwner).count_std,
+            ownerFileTimeAvg: getResult(results, values, fileTimeAndCountForOwner).time_avg,
+            ownerFileTimeMax: getResult(results, values, fileTimeAndCountForOwner).time_max,
+            ownerFileTimeMin: getResult(results, values, fileTimeAndCountForOwner).time_min,
+            ownerFileTimeStd: getResult(results, values, fileTimeAndCountForOwner).time_std,
 
             AvgNumberOfDeveloperWhoModifiedFiles: getResult(results, values, fileDeveloperNumber).count,
 
             priorChangesFiles: getResult(results, values, priorChangesFiles).count,
 
-            //filesBuildTimeAvg: getResult(results, values, filesBuildTime).avg,
-            //filesBuildTimeMax: getResult(results, values, filesBuildTime).max,
-            //filesBuildTimeMin: getResult(results, values, filesBuildTime).min,
-            //filesBuildTimeStd: getResult(results, values, filesBuildTime).std,
+            filesBuildTimeAvg: getResult(results, values, filesBuildTime).avg,
+            filesBuildTimeMax: getResult(results, values, filesBuildTime).max,
+            filesBuildTimeMin: getResult(results, values, filesBuildTime).min,
+            filesBuildTimeStd: getResult(results, values, filesBuildTime).std,
 
             filesRevisionTimeAvg: getResult(results, values, filesRevisionTime).avg,
             filesRevisionTimeMax: getResult(results, values, filesRevisionTime).max,
             filesRevisionTimeMin: getResult(results, values, filesRevisionTime).min,
             filesRevisionTimeStd: getResult(results, values, filesRevisionTime).std,
 
-            //filesNumFailsAvg: getResult(results, values, filesNumFails).avg,
-            //filesNumFailsMax: getResult(results, values, filesNumFails).max,
-            //filesNumFailsMin: getResult(results, values, filesNumFails).min,
-            //filesNumFailsStd: getResult(results, values, filesNumFails).std,
+            filesNumFailsAvg: getResult(results, values, filesNumFails).avg,
+            filesNumFailsMax: getResult(results, values, filesNumFails).max,
+            filesNumFailsMin: getResult(results, values, filesNumFails).min,
+            filesNumFailsStd: getResult(results, values, filesNumFails).std,
 
             filesNumberOfRecentChangesOnBranch: getResult(results, values, filesNumberOfRecentChangesOnBranch),
 
-            //ownerAge: convertAsDays(getResult(results, values, ownerAge)),
-            //subsystemAge: convertAsDays(getResult(results, values, subsystemAge)),
-            //branchAge: convertAsDays(getResult(results, values, branchAge)),
+            ownerAge: convertAsDays(getResult(results, values, ownerAge)),
+            subsystemAge: convertAsDays(getResult(results, values, subsystemAge)),
+            branchAge: convertAsDays(getResult(results, values, branchAge)),
             priorOwnerRate: getResult(results, values, priorOwnerRate),
 
             ownerNumberOfReview: getResult(results, values, ownerNumberOfReview).count,
-            //ownerPreviousMessageCount: getResult(results, values, ownerPreviousMessageCount).count,
+            ownerPreviousMessageCount: getResult(results, values, ownerPreviousMessageCount).count,
 
             ownerChangesMessagesSum: getResult(results, values, ownerChangesMessagesCountAndAvgPerChanges).count,
             ownerChangesMessagesAvgPerChanges: getResult(results, values, ownerChangesMessagesCountAndAvgPerChanges).avg,
@@ -490,10 +488,10 @@ async function getChangesInfo(json) {
 
             ownerNumberOfAutoReview: getResult(results, values, ownerNumberOfAutoReview).count,
 
-            //ownerInactiveTimeAvg: getResult(results, values, ownerInactiveTime).avg,
-            //ownerInactiveTimeMax: getResult(results, values, ownerInactiveTime).max,
-            //ownerInactiveTimeMin: getResult(results, values, ownerInactiveTime).min,
-            //ownerInactiveTimeStd: getResult(results, values, ownerInactiveTime).std,
+            ownerInactiveTimeAvg: getResult(results, values, ownerInactiveTime).avg,
+            ownerInactiveTimeMax: getResult(results, values, ownerInactiveTime).max,
+            ownerInactiveTimeMin: getResult(results, values, ownerInactiveTime).min,
+            ownerInactiveTimeStd: getResult(results, values, ownerInactiveTime).std,
 
             ownerTimeBetweenMessageAvg: getResult(results, values, ownerTimeBetweenMessage).avg,
             ownerTimeBetweenMessageMax: getResult(results, values, ownerTimeBetweenMessage).max,
@@ -513,15 +511,15 @@ async function getChangesInfo(json) {
             ownerProjectBranchNumberOfRevisionMin: getResult(results, values, ownerProjectBranchNumberOfRevision).revision_min,
             ownerProjectBranchNumberOfRevisionStd: getResult(results, values, ownerProjectBranchNumberOfRevision).revision_std,
 
-            //ownerProjectBranchInactiveTimeAvg: getResult(results, values, ownerProjectBranchInactiveTime).avg,
-            //ownerProjectBranchInactiveTimeMax: getResult(results, values, ownerProjectBranchInactiveTime).max,
-            //ownerProjectBranchInactiveTimeMin: getResult(results, values, ownerProjectBranchInactiveTime).min,
-            //ownerProjectBranchInactiveTimeStd: getResult(results, values, ownerProjectBranchInactiveTime).std,
+            ownerProjectBranchInactiveTimeAvg: getResult(results, values, ownerProjectBranchInactiveTime).avg,
+            ownerProjectBranchInactiveTimeMax: getResult(results, values, ownerProjectBranchInactiveTime).max,
+            ownerProjectBranchInactiveTimeMin: getResult(results, values, ownerProjectBranchInactiveTime).min,
+            ownerProjectBranchInactiveTimeStd: getResult(results, values, ownerProjectBranchInactiveTime).std,
 
-            //ownerProjectBranchTimeBetweenMessageAvg: getResult(results, values, ownerProjectBranchTimeBetweenMessage).avg,
-            //ownerProjectBranchTimeBetweenMessageMax: getResult(results, values, ownerProjectBranchTimeBetweenMessage).max,
-            //ownerProjectBranchTimeBetweenMessageMin: getResult(results, values, ownerProjectBranchTimeBetweenMessage).min,
-            //ownerProjectBranchTimeBetweenMessageStd: getResult(results, values, ownerProjectBranchTimeBetweenMessage).std,
+            ownerProjectBranchTimeBetweenMessageAvg: getResult(results, values, ownerProjectBranchTimeBetweenMessage).avg,
+            ownerProjectBranchTimeBetweenMessageMax: getResult(results, values, ownerProjectBranchTimeBetweenMessage).max,
+            ownerProjectBranchTimeBetweenMessageMin: getResult(results, values, ownerProjectBranchTimeBetweenMessage).min,
+            ownerProjectBranchTimeBetweenMessageStd: getResult(results, values, ownerProjectBranchTimeBetweenMessage).std,
 
             ownerProjectBranchChangesDurationAvg: getResult(results, values, ownerProjectBranchChangesDuration).avg,
             ownerProjectBranchChangesDurationMax: getResult(results, values, ownerProjectBranchChangesDuration).max,

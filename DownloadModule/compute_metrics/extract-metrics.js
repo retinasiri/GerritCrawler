@@ -377,8 +377,8 @@ let metric_to_collect = {
     days_of_the_weeks_of_date_created_for_owner_timezone: "created_weekday_owner_tz",
     hours_of_the_days_date_created: "created_hours_utc",
     hours_of_the_days_date_created_for_owner: "created_hours_owner_tz",
-    is_created_date_a_weekend: true,
-    is_created_date_a_weekend_for_owner_timezone: true,
+    is_created_date_a_weekend: "is_weekend",
+    is_created_date_a_weekend_for_owner_timezone: "is_weekend_owner_tz",
     author_timezone: true,
     month_date_created: "created_month_utc",
     month_date_created_for_owner: "created_month_owner_tz",
@@ -397,16 +397,15 @@ let metric_to_collect = {
     //clustering_coefficient: true,
     //core_number: true,
 
-
     //File
     first_revision_insertions: "insertions",
-    first_revision_deletions: "deletions",
+    first_revision_deletions: "insertions",
     num_files: true,
     num_files_type: true,
     num_directory: true,
     num_binary_file: "num_binary_files",
     num_programming_language: "num_programming_languages",
-    num_data_language: "num_data_languages",
+    num_data_language: "num_data_languages", /////////
     //num_prose_language: "num_prose_languages",
     //num_markup_language: "num_markup_languages",
     modify_entropy: true,
@@ -429,7 +428,6 @@ let metric_to_collect = {
     is_corrective: true,
     is_preventive: true,
     has_feature_addition: true,
-
     is_master_branch: true,
     is_merge: true,
     is_a_bot: true,
@@ -438,6 +436,7 @@ let metric_to_collect = {
 
     //File
     AvgNumberOfDeveloperWhoModifiedFiles: "AvgNumDevModifiedFiles",
+    filesNumberOfRecentChangesOnBranch: "filesNumRecentBranchChanges",
 
     priorChangesFiles: "num_files_changes_sum",
     fileCountAvg: "num_files_changes_avg",
@@ -450,23 +449,24 @@ let metric_to_collect = {
     fileTimeMin: "files_changes_duration_min",
     fileTimeStd: "files_changes_duration_std",
 
-    filesBuildTimeAvg: "files_build_time_avg",
-    filesBuildTimeMax: "files_build_time_max",
-    filesBuildTimeMin: "files_build_time_min",
-    filesBuildTimeStd: "files_build_time_std",
-
     filesRevisionTimeAvg: "filesRevisionsDurationAvg",
     filesRevisionTimeMax: "filesRevisionsDurationMax",
     filesRevisionTimeMin: "filesRevisionsDurationMin",
     filesRevisionTimeStd: "filesRevisionsDurationStd",
 
-    filesNumFailsAvg: "files_num_build_fails_avg",
-    filesNumFailsMax: "files_num_build_fails_max",
-    filesNumFailsMin: "files_num_build_fails_min",
-    filesNumFailsStd: "files_num_build_fails_std",
+    /////////////////
+    //filesBuildTimeAvg: "files_build_time_avg",
+    //filesBuildTimeMax: "files_build_time_max",
+    //filesBuildTimeMin: "files_build_time_min",
+    //filesBuildTimeStd: "files_build_time_std",
+    /////////////////
 
-    filesNumberOfRecentChangesOnBranch: "filesNumRecentBranchChanges",
-
+    ////////////////
+    //filesNumFailsAvg: "files_num_build_fails_avg",
+    //filesNumFailsMax: "files_num_build_fails_max",
+    //filesNumFailsMin: "files_num_build_fails_min",
+    //filesNumFailsStd: "files_num_build_fails_std",
+    ///////////////
 
     //owner
     priorChangesCount: "NumPriorChanges",
@@ -477,25 +477,30 @@ let metric_to_collect = {
     project_non_close_changes: "num_project_open_changes",
     owner_non_close_changes: "num_owner_open_changes",
 
-    ownerFileCountAvg: "owner_num_files_changes_Avg",
-    ownerFileCountMax: "owner_num_files_changes_Max",
-    ownerFileCountMin: "owner_num_files_changes_Min",
-    ownerFileCountStd: "owner_num_files_changes_Std",
+    //////////
+    //ownerFileCountAvg: "owner_num_files_changes_Avg",
+    //ownerFileCountMax: "owner_num_files_changes_Max",
+    //ownerFileCountMin: "owner_num_files_changes_Min",
+    //ownerFileCountStd: "owner_num_files_changes_Std",
 
-    ownerFileTimeAvg: "owner_files_changes_time_Avg",
-    ownerFileTimeMax: "owner_files_changes_time_Max",
-    ownerFileTimeMin: "owner_files_changes_time_Min",
-    ownerFileTimeStd: "owner_files_changes_time_Std",
+    //////////
+    //ownerFileTimeAvg: "owner_files_changes_time_Avg",
+    //ownerFileTimeMax: "owner_files_changes_time_Max",
+    //ownerFileTimeMin: "owner_files_changes_time_Min",
+    //ownerFileTimeStd: "owner_files_changes_time_Std",
 
-    ownerAge: true,
-    subsystemAge: true,
-    branchAge: true,
+    ////////
+    //ownerAge: true,
+    //subsystemAge: true,
+    //branchAge: true,
+
+
     priorOwnerRate: true,
 
     ownerNumberOfReview: "ownerNumberReview",
-    ownerPreviousMessageCount: "owner_previous_messages_count",
+    //ownerPreviousMessageCount: "owner_previous_messages_count",///////
 
-    ownerChangesMessagesSum: true,
+    ownerChangesMessagesSum: true, /////
     ownerChangesMessagesAvgPerChanges: "owner_changes_messages_avg",
     ownerChangesMessagesMaxPerChanges: "owner_changes_messages_max",
     ownerChangesMessagesMinPerChanges: "owner_changes_messages_min",
@@ -536,10 +541,12 @@ let metric_to_collect = {
     //ownerProjectBranchInactiveTimeMin: "opb_InactiveTimeMin",
     //ownerProjectBranchInactiveTimeStd: "opb_InactiveTimeStd",
 
-    ownerProjectBranchTimeBetweenMessageAvg: "opb_TimeBetweenMsgsAvg",
-    ownerProjectBranchTimeBetweenMessageMax: "opb_TimeBetweenMsgsMax",
-    ownerProjectBranchTimeBetweenMessageMin: "opb_TimeBetweenMsgsMin",
-    ownerProjectBranchTimeBetweenMessageStd: "opb_TimeBetweenMsgsStd",
+    ////////////
+    //ownerProjectBranchTimeBetweenMessageAvg: "opb_TimeBetweenMsgsAvg",
+    //ownerProjectBranchTimeBetweenMessageMax: "opb_TimeBetweenMsgsMax",
+    //ownerProjectBranchTimeBetweenMessageMin: "opb_TimeBetweenMsgsMin",
+    //ownerProjectBranchTimeBetweenMessageStd: "opb_TimeBetweenMsgsStd",
+    ////////////
 
     ownerProjectBranchChangesDurationAvg: "opb_ChangesDurationAvg",
     ownerProjectBranchChangesDurationMax: "opb_ChangesDurationMax",
@@ -642,11 +649,13 @@ let metric_to_collect = {
     reviewersPreviousMessageMin: "revrsPreviousMsgsMin",
     reviewersPreviousMessageStd: "revrsPreviousMsgsStd",
 
+    ////////
     fileCountForReviewersCountAvg: "RevrsNumFileChangesAvg",
     fileCountForReviewersCountMax: "RevrsNumFileChangesMax",
     fileCountForReviewersCountMin: "RevrsNumFileChangesMin",
     fileCountForReviewersCountStd: "RevrsNumFileChangesStd",
 
+    ////////
     fileTimeForReviewersCountAvg: "fileChangesTimeRevrsAvg",
     fileTimeForReviewersCountMax: "fileChangesTimeRevrsMax",
     fileTimeForReviewersCountMin: "fileChangesTimeRevrsMin",
@@ -677,14 +686,14 @@ let metric_to_collect = {
 
     number_of_similar_change_id: "num_similar_change_id",
 
-    //number_of_related_changes: "rel_changes_num",
-    //number_of_merged_related_changes: "rel_merged_changes_num",
-    //number_of_abandoned_related_changes: "rel_abandoned_changes_num",
-    //number_of_close_related_changes: "rel_closed_changes_num",
-    //number_of_not_owned_related_changes: "rel_not_owned_changes_num",
-    //number_of_not_owned_merged_related_changes: "rel_not_owned_merged_changes_num",
-    //number_of_not_owned_abandoned_related_changes: "rel_not_owned_abandoned_changes_num",
-    //number_of_not_owned_close_related_changes: "rel_not_owned_closed_changes_num",
+    number_of_related_changes: "rel_changes_num",
+    number_of_merged_related_changes: "rel_merged_changes_num",
+    number_of_abandoned_related_changes: "rel_abandoned_changes_num",
+    number_of_close_related_changes: "rel_closed_changes_num",
+    number_of_not_owned_related_changes: "rel_not_owned_changes_num",
+    number_of_not_owned_merged_related_changes: "rel_not_owned_merged_changes_num",
+    number_of_not_owned_abandoned_related_changes: "rel_not_owned_abandoned_changes_num",
+    number_of_not_owned_close_related_changes: "rel_not_owned_closed_changes_num",
 
     is_self_review: true,
     effective_revision_time_diff: true,

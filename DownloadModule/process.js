@@ -10,7 +10,7 @@ const Axios = require("axios");
 const RateLimit = require('axios-rate-limit');
 const Metrics = require("./models/metrics");
 const MetricsWM = require("./models/metricsWM");
-const axios = RateLimit(Axios.create(), {maxRPS: 10})
+const axios = RateLimit(Axios.create(), {maxRPS: 30})
 //const changes_graph_list = require("./res/openstack-changes-graph-list.json")
 
 
@@ -198,15 +198,32 @@ function processRelatedChanges(json) {
     console.timeEnd("getRelatedChange")
     return Promise.resolve(true);
 }*/
-
+let NUM_SKIPS = 250000
 async function getRelatedChange(id_revisions_list) {
     console.time("getRelatedChange")
 
     let NUM_CONCURRENCY = 100;
     let queue = [];
     let ret = [];
+    let iter = 0;
     for (let key in id_revisions_list) {
         let change_info = id_revisions_list[key];
+        //console.log("loop : " + iter)
+        iter = iter + 1;
+        if(iter <= NUM_SKIPS){
+            await updateProgress();
+            continue;
+        }
+
+        //todo check if the related change is already there
+        let id = change_info.id;
+        let relatedChangeExists = await checkIfRelatedChangeExists(id);
+        if(relatedChangeExists) {
+            //console.log(relatedChangeExists)
+            await updateProgress();
+            continue;
+        }
+
         let p = downloadRelatedChange(change_info)
             .then(() => {
                 queue.splice(queue.indexOf(p), 1);
@@ -218,7 +235,7 @@ async function getRelatedChange(id_revisions_list) {
         // if max concurrent, wait for one to finish
         if (queue.length >= NUM_CONCURRENCY) {
             await Promise.race(queue);
-            await delay(3000);
+            //await delay(3000);
         }
     }
 
@@ -228,6 +245,10 @@ async function getRelatedChange(id_revisions_list) {
 }
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
+
+function checkIfRelatedChangeExists(id) {
+    return RelatedChange.exists({id: id});
+}
 
 function get_related_change_id_url(id, revision_id) {
     return projectApiUrl + "changes/" + id + "/revisions/" + revision_id + "/related"
@@ -453,7 +474,7 @@ async function get_close_related_not_owned_change(id, created, updated, ownerId,
 }
 
 function dbRequest(pipeline) {
-    return Change
+    return ChangeWM
         .aggregate(pipeline)
         .allowDiskUse(true)
         .exec()

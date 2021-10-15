@@ -466,3 +466,41 @@ db.getCollection('changes').aggregate([
     },
 
 ])
+
+db.getCollection('changes_with_metadata').aggregate([
+    {$match : {
+            status: {$in: ['MERGED', 'ABANDONED']},
+            //date_updated_date_created_diff: {$gte: 24, $lte:336},
+            //max_inactive_time: {$lte: 168},
+            //messages_count: {$gt: 1},
+            //has_reviewers: true,
+            //num_files: {$gt: 0},
+            //is_a_cherry_pick: false,
+            //first_revision: 1
+            message
+        }
+    },
+    //{$count: 'count'}
+    //{$sort: {created:1, _number: 1}},
+    {
+        $group: {
+            _id: 1,
+            count: { $sum: 1 },
+        }
+    }
+])
+
+db.getCollection('changes_with_metadata').createIndex({_number:1})
+db.getCollection('changes_with_metadata').createIndex({id:1})
+db.getCollection('metrics_with_metadata').createIndex({_number:1})
+db.getCollection('metrics_with_metadata').createIndex({id:1})
+db.getCollection('related_changes').createIndex({id:1})
+db.getCollection('related_changes').createIndex({change_id:1})
+db.getCollection('changes_with_metadata').createIndex({id:1, created:1, change_id:1})
+db.getCollection('changes_with_metadata').createIndex({id:1, created: -1, change_id:1})
+db.getCollection('changes_with_metadata').createIndex({id:1, status:1, created: 1, updated:1, change_id:1})
+db.getCollection('changes_with_metadata').createIndex({id:1, status:1, created: -1, updated:-1, change_id:1})
+db.getCollection('changes_with_metadata').createIndex({id:1, created: 1, 'owner._account_id':1, change_id:1})
+db.getCollection('changes_with_metadata').createIndex({id:1, created: -1, 'owner._account_id':1, change_id:1})
+db.getCollection('changes_with_metadata').createIndex({id:1, status:1, 'owner._account_id':1, created: 1, updated:1, change_id:1})
+db.getCollection('changes_with_metadata').createIndex({id:1, status:1, 'owner._account_id':1, created: -1, updated:-1, change_id:1})
