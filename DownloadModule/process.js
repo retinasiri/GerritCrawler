@@ -198,7 +198,7 @@ function processRelatedChanges(json) {
     console.timeEnd("getRelatedChange")
     return Promise.resolve(true);
 }*/
-let NUM_SKIPS = 250000
+let NUM_SKIPS = 400000
 async function getRelatedChange(id_revisions_list) {
     console.time("getRelatedChange")
 
