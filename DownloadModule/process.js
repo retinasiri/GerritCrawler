@@ -10,7 +10,7 @@ const Axios = require("axios");
 const RateLimit = require('axios-rate-limit');
 const Metrics = require("./models/metrics");
 const MetricsWM = require("./models/metricsWM");
-const axios = RateLimit(Axios.create(), {maxRPS: 30})
+const axios = RateLimit(Axios.create(), {maxRPS: 10})
 //const changes_graph_list = require("./res/openstack-changes-graph-list.json")
 
 
@@ -198,11 +198,11 @@ function processRelatedChanges(json) {
     console.timeEnd("getRelatedChange")
     return Promise.resolve(true);
 }*/
-let NUM_SKIPS = 400000
+let NUM_SKIPS = 300000
 async function getRelatedChange(id_revisions_list) {
     console.time("getRelatedChange")
 
-    let NUM_CONCURRENCY = 100;
+    let NUM_CONCURRENCY = 500;
     let queue = [];
     let ret = [];
     let iter = 0;
@@ -235,7 +235,7 @@ async function getRelatedChange(id_revisions_list) {
         // if max concurrent, wait for one to finish
         if (queue.length >= NUM_CONCURRENCY) {
             await Promise.race(queue);
-            //await delay(3000);
+            await delay(3000);
         }
     }
 
