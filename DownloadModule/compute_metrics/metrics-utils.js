@@ -125,7 +125,7 @@ function startComputeMetrics(projectName, start, end, collectMetrics) {
             //let NUM_CONCURRENCY = Utils.getCPUCount() ? Utils.getCPUCount() : 4;
             //let NUM_OF_CHANGES_LIMIT = MathJs.ceil(count / NUM_CONCURRENCY);
             let skip = 0;
-            let NUM_OF_CHANGES_LIMIT = 1000;
+            let NUM_OF_CHANGES_LIMIT = 10000;
             if (start !== undefined && end !== undefined) {
                 skip = start;
                 NUM_OF_CHANGES_LIMIT = end - start;
@@ -216,6 +216,21 @@ async function collectDocs(docs, Project, progressBar, collectMetrics) {
     console.timeEnd('collectDocs')
     return Promise.resolve(true);
 }
+
+/*async function collectDocs(docs, Project, progressBar, collectMetrics) {
+    console.time('collectDocs')
+    if (!docs)
+        return Promise.resolve(true);
+
+    //let tasks = []
+    for (let key in docs) {
+        await collectMetrics(docs[key])
+            .then((json) => {
+                return saveMetrics(json, Project, progressBar);
+            })
+    }
+    return Promise.resolve(true);
+}*/
 
 
 /*async function collectDocs(docs, Project, progressBar, collectMetrics) {

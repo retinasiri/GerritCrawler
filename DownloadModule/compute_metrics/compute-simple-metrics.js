@@ -197,6 +197,28 @@ function collectTimeMetrics(json, metric) {
     //metric["diff_created_updated_in_hours_ceil"] = MathJs.ceil(diff_date_hours(json));
     //metric["date_submitted"] = get_date_submitted(json);
     //metric["diff_created_updated_in_hours"] = json["meta_date_updated_date_created_diff"]
+
+    //
+    metric["period_of_the_days_date_created_div_8"] = hoursDivisions(get_hours_of_the_days(json.created), 8);
+    metric["period_of_the_days_date_created_div_4"] = hoursDivisions(get_hours_of_the_days(json.created), 4);
+
+    metric["period_of_the_days_date_created_owner_tz_div_8"] = hoursDivisions(get_hours_of_the_days_for_owner_timezone(json.created), 8);
+    metric["period_of_the_days_date_created_owner_tz_div_4"] = hoursDivisions(get_hours_of_the_days_for_owner_timezone(json.created), 4);
+
+    metric["period_of_the_days_date_updated_div_8"] = hoursDivisions(get_hours_of_the_days(json.updated), 8);
+    metric["period_of_the_days_date_updated_div_4"] = hoursDivisions(get_hours_of_the_days(json.updated), 4);
+
+    metric["period_of_the_days_date_updated_owner_tz_div_8"] = hoursDivisions(get_hours_of_the_days_for_owner_timezone(json.updated), 8);
+    metric["period_of_the_days_date_updated_owner_tz_div_4"] = hoursDivisions(get_hours_of_the_days_for_owner_timezone(json.updated), 4);
+
+
+}
+
+function hoursDivisions(hours, number_of_division){
+    let divisions = Math.floor(hours / number_of_division);
+    let inf = divisions * number_of_division
+    let sup = divisions * number_of_division + number_of_division
+    return inf + "_" + sup
 }
 
 /**

@@ -769,7 +769,18 @@ function get_hours_of_the_days(dateString) {
     let date = Moment.utc(dateString);
     return Moment.duration(date.format("HH:mm:ss.SSSSSSSSS")).asHours()
 }
-console.log(get_hours_of_the_days(date))
+let hours = get_hours_of_the_days(date)
+console.log(hours)
+let hoursDivisions = function (hours, number_of_division){
+    let divisions = Math.floor(hours / number_of_division);
+    console.log(divisions)
+    let inf = divisions * number_of_division
+    let sup = divisions * number_of_division + number_of_division
+    return inf + "_" + sup
+}
+
+console.log(hoursDivisions(hours, 8))
+
 
 
 function get_month_for_owner(dateString) {

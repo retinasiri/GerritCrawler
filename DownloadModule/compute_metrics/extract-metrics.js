@@ -469,6 +469,7 @@ let metric_to_collect = {
     ///////////////
 
     //owner
+
     priorChangesCount: "NumPriorChanges",
     priorSubsystemChangesCount: "NumPriorProjectChanges",
     ownerPriorChangesCount: "NumOwnerPriorChanges",

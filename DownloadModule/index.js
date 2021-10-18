@@ -4,6 +4,7 @@ const DownloadProjects = require('./prepare_code_change/download-project-info');
 const AddChangesInDB = require('./prepare_code_change/add-code-change-in-db');
 const ComputeSimpleMetrics = require('./compute_metrics/compute-simple-metrics');
 const ComputeChangesMetrics = require('./compute_metrics/compute-changes-metrics');
+const ComputeChangesMetricsFull = require('./compute_metrics/compute-changes-metrics-full');
 const ComputeChangesMetrics_2 = require('./compute_metrics/compute-changes-metrics-2');
 const ComputeMetadata = require('./compute_metrics/metrics-metadata');
 const ComputeMetadata_2 = require('./compute_metrics/metrics-metadata-2');
@@ -74,6 +75,15 @@ function main() {
             }
         }, function (argv) {
             computeChangesMetrics(argv)
+        })
+        .command('computeMetricsFull [project]', 'Compute the changes metrics of a project.', {
+            project: {
+                description: 'The project from which metrics of codes changes are computed',
+                alias: 'p',
+                type: 'string',
+            }
+        }, function (argv) {
+            computeChangesMetricsFull(argv)
         })
         .command('extract [project]', 'Extract the metrics of a project.', {
             project: {
@@ -211,6 +221,16 @@ function computeChangesMetrics(argv) {
     if (projectJson)
         //return ComputeChangesMetrics_2.start(projectJson)
         return ComputeChangesMetrics.start(projectJson)
+            .catch(err => {
+                console.log(err)
+            });
+}
+
+function computeChangesMetricsFull(argv) {
+    let projectJson = prepareCommand(argv);
+    if (projectJson)
+        //return ComputeChangesMetrics_2.start(projectJson)
+        return ComputeChangesMetricsFull.start(projectJson)
             .catch(err => {
                 console.log(err)
             });

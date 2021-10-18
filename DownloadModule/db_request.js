@@ -504,3 +504,12 @@ db.getCollection('changes_with_metadata').createIndex({id:1, created: 1, 'owner.
 db.getCollection('changes_with_metadata').createIndex({id:1, created: -1, 'owner._account_id':1, change_id:1})
 db.getCollection('changes_with_metadata').createIndex({id:1, status:1, 'owner._account_id':1, created: 1, updated:1, change_id:1})
 db.getCollection('changes_with_metadata').createIndex({id:1, status:1, 'owner._account_id':1, created: -1, updated:-1, change_id:1})
+
+db.getCollection('changes').createIndex({date_updated_date_created_diff:1})
+db.getCollection('changes').createIndex({avg_build_time_before_close:1})
+db.getCollection('changes').createIndex({avg_time_to_add_human_reviewers_before_close:1})
+db.getCollection('changes').createIndex({revisions_num:1})
+db.getCollection('changes').createIndex({avg_time_revision_before_close:1})
+db.getCollection('changes').createIndex({avg_time_between_msg_before_close:1})
+db.getCollection('changes').createIndex({messages_count_before_close:1})
+db.getCollection('changes').createIndex({num_of_build_failures_before_close:1})
