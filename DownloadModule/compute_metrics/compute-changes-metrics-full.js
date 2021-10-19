@@ -105,9 +105,9 @@ async function computeMedianInfo(json, data) {
     let priorOwnerChangesDurationMed = getPriorOwnerChangesDurationMed(data, created_date)
     let priorProjectChangesDurationMed = getPriorProjectChangesDurationMed(data, created_date)
     let priorBranchChangesDurationMed = getPriorBranchChangesDurationMed(data, created_date)
-    let priorOwnerProjectChangesDurationMed = getPriorOwnerProjectChangesDurationMed(data, created_date)
-    let priorOwnerBranchChangesDurationMed = getPriorOwnerBranchChangesDurationMed(data, created_date)
-    let priorProjectBranchChangesDurationMed = getPriorProjectBranchChangesDurationMed(data, created_date)
+    //let priorOwnerProjectChangesDurationMed = getPriorOwnerProjectChangesDurationMed(data, created_date)
+    //let priorOwnerBranchChangesDurationMed = getPriorOwnerBranchChangesDurationMed(data, created_date)
+    //let priorProjectBranchChangesDurationMed = getPriorProjectBranchChangesDurationMed(data, created_date)
 
     //build time median
     let priorBuildTimeDurationMed = getPriorBuildTimeDurationMed(data, created_date)
@@ -115,9 +115,9 @@ async function computeMedianInfo(json, data) {
     let priorOwnerBuildTimeDurationMed = getPriorOwnerBuildTimeDurationMed(data, created_date)
     let priorProjectBuildTimeDurationMed = getPriorProjectBuildTimeDurationMed(data, created_date)
     let priorBranchBuildTimeDurationMed = getPriorBranchBuildTimeDurationMed(data, created_date)
-    let priorOwnerProjectBuildTimeDurationMed = getPriorOwnerProjectBuildTimeDurationMed(data, created_date)
-    let priorOwnerBranchBuildTimeDurationMed = getPriorOwnerBranchBuildTimeDurationMed(data, created_date)
-    let priorProjectBranchBuildTimeDurationMed = getPriorProjectBranchBuildTimeDurationMed(data, created_date)
+    //let priorOwnerProjectBuildTimeDurationMed = getPriorOwnerProjectBuildTimeDurationMed(data, created_date)
+    //let priorOwnerBranchBuildTimeDurationMed = getPriorOwnerBranchBuildTimeDurationMed(data, created_date)
+    //let priorProjectBranchBuildTimeDurationMed = getPriorProjectBranchBuildTimeDurationMed(data, created_date)
 
     //time to add reviewer median
     let priorTimeToAddReviewerMed = getPriorTimeToAddReviewerMed(data, created_date)
@@ -125,9 +125,9 @@ async function computeMedianInfo(json, data) {
     let priorOwnerTimeToAddReviewerMed = getPriorOwnerTimeToAddReviewerMed(data, created_date)
     let priorProjectTimeToAddReviewerMed = getPriorProjectTimeToAddReviewerMed(data, created_date)
     let priorBranchTimeToAddReviewerMed = getPriorBranchTimeToAddReviewerMed(data, created_date)
-    let priorOwnerProjectTimeToAddReviewerMed = getPriorOwnerProjectTimeToAddReviewerMed(data, created_date)
-    let priorOwnerBranchTimeToAddReviewerMed = getPriorOwnerBranchTimeToAddReviewerMed(data, created_date)
-    let priorProjectBranchTimeToAddReviewerMed = getPriorProjectBranchTimeToAddReviewerMed(data, created_date)
+    //let priorOwnerProjectTimeToAddReviewerMed = getPriorOwnerProjectTimeToAddReviewerMed(data, created_date)
+    //let priorOwnerBranchTimeToAddReviewerMed = getPriorOwnerBranchTimeToAddReviewerMed(data, created_date)
+    //let priorProjectBranchTimeToAddReviewerMed = getPriorProjectBranchTimeToAddReviewerMed(data, created_date)
 
 
     //number of revision median
@@ -150,7 +150,7 @@ async function computeMedianInfo(json, data) {
         branch_match(created_date, ownerId, project, branch),
         "revisions_num")
 
-    let owner_project_num_revision_med = getMedian(data.priorOwnerProjectClosedChangesCount,
+    /*let owner_project_num_revision_med = getMedian(data.priorOwnerProjectClosedChangesCount,
         owner_project_match(created_date, ownerId, project, branch),
         "revisions_num")
 
@@ -160,7 +160,7 @@ async function computeMedianInfo(json, data) {
 
     let project_branch_num_revision_med = getMedian(data.priorProjectBranchClosedChangesCount,
         project_branch_match(created_date, ownerId, project, branch),
-        "revisions_num")
+        "revisions_num")*/
 
 
     //revision duration median
@@ -183,7 +183,7 @@ async function computeMedianInfo(json, data) {
         branch_match(created_date, ownerId, project, branch),
         "avg_time_revision_before_close")
 
-    let owner_project_num_revision_duration_med = getMedian(data.priorOwnerProjectClosedChangesCount,
+    /*let owner_project_num_revision_duration_med = getMedian(data.priorOwnerProjectClosedChangesCount,
         owner_project_match(created_date, ownerId, project, branch),
         "avg_time_revision_before_close")
 
@@ -193,7 +193,7 @@ async function computeMedianInfo(json, data) {
 
     let project_branch_num_revision_duration_med = getMedian(data.priorProjectBranchClosedChangesCount,
         project_branch_match(created_date, ownerId, project, branch),
-        "avg_time_revision_before_close")
+        "avg_time_revision_before_close")*/
 
 
     //time between message median
@@ -216,7 +216,7 @@ async function computeMedianInfo(json, data) {
         branch_match(created_date, ownerId, project, branch),
         "avg_time_between_msg_before_close")
 
-    let owner_project_time_between_messages_med = getMedian(data.priorOwnerProjectClosedChangesCount,
+    /*let owner_project_time_between_messages_med = getMedian(data.priorOwnerProjectClosedChangesCount,
         owner_project_match(created_date, ownerId, project, branch),
         "avg_time_between_msg_before_close")
 
@@ -226,7 +226,7 @@ async function computeMedianInfo(json, data) {
 
     let project_branch_time_between_messages_med = getMedian(data.priorProjectBranchClosedChangesCount,
         project_branch_match(created_date, ownerId, project, branch),
-        "avg_time_between_msg_before_close")
+        "avg_time_between_msg_before_close")*/
 
 
     //num messages median
@@ -249,7 +249,7 @@ async function computeMedianInfo(json, data) {
         branch_match(created_date, ownerId, project, branch),
         "messages_count_before_close")
 
-    let owner_project_num_messages_med = getMedian(data.priorOwnerProjectClosedChangesCount,
+    /*let owner_project_num_messages_med = getMedian(data.priorOwnerProjectClosedChangesCount,
         owner_project_match(created_date, ownerId, project, branch),
         "messages_count_before_close")
 
@@ -259,7 +259,7 @@ async function computeMedianInfo(json, data) {
 
     let project_branch_num_messages_med = getMedian(data.priorProjectBranchClosedChangesCount,
         project_branch_match(created_date, ownerId, project, branch),
-        "messages_count_before_close")
+        "messages_count_before_close")*/
 
 
     //files time median
@@ -334,63 +334,63 @@ async function computeMedianInfo(json, data) {
         priorOwnerChangesDurationMed,
         priorProjectChangesDurationMed,
         priorBranchChangesDurationMed,
-        priorOwnerProjectChangesDurationMed,
-        priorOwnerBranchChangesDurationMed,
-        priorProjectBranchChangesDurationMed,
+        //priorOwnerProjectChangesDurationMed,
+        //priorOwnerBranchChangesDurationMed,
+        //priorProjectBranchChangesDurationMed,
 
         priorBuildTimeDurationMed,
         priorOwnerProjectBranchBuildTimeDurationMed,
         priorOwnerBuildTimeDurationMed,
         priorProjectBuildTimeDurationMed,
         priorBranchBuildTimeDurationMed,
-        priorOwnerProjectBuildTimeDurationMed,
-        priorOwnerBranchBuildTimeDurationMed,
-        priorProjectBranchBuildTimeDurationMed,
+        //priorOwnerProjectBuildTimeDurationMed,
+        //priorOwnerBranchBuildTimeDurationMed,
+        //priorProjectBranchBuildTimeDurationMed,
 
         priorTimeToAddReviewerMed,
         priorOwnerProjectBranchTimeToAddReviewerMed,
         priorOwnerTimeToAddReviewerMed,
         priorProjectTimeToAddReviewerMed,
         priorBranchTimeToAddReviewerMed,
-        priorOwnerProjectTimeToAddReviewerMed,
-        priorOwnerBranchTimeToAddReviewerMed,
-        priorProjectBranchTimeToAddReviewerMed,
+        //priorOwnerProjectTimeToAddReviewerMed,
+        //priorOwnerBranchTimeToAddReviewerMed,
+        //priorProjectBranchTimeToAddReviewerMed,
 
         num_revision_med,
         owner_project_branch_num_revision_med,
         owner_num_revision_med,
         project_num_revision_med,
         branch_num_revision_med,
-        owner_project_num_revision_med,
-        owner_branch_num_revision_med,
-        project_branch_num_revision_med,
+        //owner_project_num_revision_med,
+        //owner_branch_num_revision_med,
+        //project_branch_num_revision_med,
 
         num_revision_duration_med,
         owner_project_branch_num_revision_duration_med,
         owner_num_revision_duration_med,
         project_num_revision_duration_med,
         branch_num_revision_duration_med,
-        owner_project_num_revision_duration_med,
-        owner_branch_num_revision_duration_med,
-        project_branch_num_revision_duration_med,
+        //owner_project_num_revision_duration_med,
+        //owner_branch_num_revision_duration_med,
+        //project_branch_num_revision_duration_med,
 
         time_between_messages_med,
         owner_project_branch_time_between_messages_med,
         owner_time_between_messages_med,
         project_time_between_messages_med,
         branch_time_between_messages_med,
-        owner_project_time_between_messages_med,
-        owner_branch_time_between_messages_med,
-        project_branch_time_between_messages_med,
+        //owner_project_time_between_messages_med,
+        //owner_branch_time_between_messages_med,
+        //project_branch_time_between_messages_med,
 
         num_messages_med,
         owner_project_branch_num_messages_med,
         owner_num_messages_med,
         project_num_messages_med,
         branch_num_messages_med,
-        owner_project_num_messages_med,
-        owner_branch_num_messages_med,
-        project_branch_num_messages_med,
+        //owner_project_num_messages_med,
+        //owner_branch_num_messages_med,
+        //project_branch_num_messages_med,
 
         files_changes_duration_med,
         owner_files_changes_duration_med,
@@ -408,63 +408,63 @@ async function computeMedianInfo(json, data) {
             priorOwnerChangesDurationMed: getResult(results, values, priorOwnerChangesDurationMed),
             priorProjectChangesDurationMed: getResult(results, values, priorProjectChangesDurationMed),
             priorBranchChangesDurationMed: getResult(results, values, priorBranchChangesDurationMed),
-            priorOwnerProjectChangesDurationMed: getResult(results, values, priorOwnerProjectChangesDurationMed),
-            priorOwnerBranchChangesDurationMed: getResult(results, values, priorOwnerBranchChangesDurationMed),
-            priorProjectBranchChangesDurationMed: getResult(results, values, priorProjectBranchChangesDurationMed),
+            //priorOwnerProjectChangesDurationMed: getResult(results, values, priorOwnerProjectChangesDurationMed),
+            //priorOwnerBranchChangesDurationMed: getResult(results, values, priorOwnerBranchChangesDurationMed),
+            //priorProjectBranchChangesDurationMed: getResult(results, values, priorProjectBranchChangesDurationMed),
 
             priorBuildTimeDurationMed: getResult(results, values, priorBuildTimeDurationMed),
             priorOwnerProjectBranchBuildTimeDurationMed: getResult(results, values, priorOwnerProjectBranchBuildTimeDurationMed),
             priorOwnerBuildTimeDurationMed: getResult(results, values, priorOwnerBuildTimeDurationMed),
             priorProjectBuildTimeDurationMed: getResult(results, values, priorProjectBuildTimeDurationMed),
             priorBranchBuildTimeDurationMed: getResult(results, values, priorBranchBuildTimeDurationMed),
-            priorOwnerProjectBuildTimeDurationMed: getResult(results, values, priorOwnerProjectBuildTimeDurationMed),
-            priorOwnerBranchBuildTimeDurationMed: getResult(results, values, priorOwnerBranchBuildTimeDurationMed),
-            priorProjectBranchBuildTimeDurationMed: getResult(results, values, priorProjectBranchBuildTimeDurationMed),
+            //priorOwnerProjectBuildTimeDurationMed: getResult(results, values, priorOwnerProjectBuildTimeDurationMed),
+            //priorOwnerBranchBuildTimeDurationMed: getResult(results, values, priorOwnerBranchBuildTimeDurationMed),
+            //priorProjectBranchBuildTimeDurationMed: getResult(results, values, priorProjectBranchBuildTimeDurationMed),
 
             priorTimeToAddReviewerMed: getResult(results, values, priorTimeToAddReviewerMed),
             priorOwnerProjectBranchTimeToAddReviewerMed: getResult(results, values, priorOwnerProjectBranchTimeToAddReviewerMed),
             priorOwnerTimeToAddReviewerMed: getResult(results, values, priorOwnerTimeToAddReviewerMed),
             priorProjectTimeToAddReviewerMed: getResult(results, values, priorProjectTimeToAddReviewerMed),
             priorBranchTimeToAddReviewerMed: getResult(results, values, priorBranchTimeToAddReviewerMed),
-            priorOwnerProjectTimeToAddReviewerMed: getResult(results, values, priorOwnerProjectTimeToAddReviewerMed),
-            priorOwnerBranchTimeToAddReviewerMed: getResult(results, values, priorOwnerBranchTimeToAddReviewerMed),
-            priorProjectBranchTimeToAddReviewerMed: getResult(results, values, priorProjectBranchTimeToAddReviewerMed),
+            //priorOwnerProjectTimeToAddReviewerMed: getResult(results, values, priorOwnerProjectTimeToAddReviewerMed),
+            //priorOwnerBranchTimeToAddReviewerMed: getResult(results, values, priorOwnerBranchTimeToAddReviewerMed),
+            //priorProjectBranchTimeToAddReviewerMed: getResult(results, values, priorProjectBranchTimeToAddReviewerMed),
 
             num_revision_med: getResult(results, values, num_revision_med),
             owner_project_branch_num_revision_med: getResult(results, values, owner_project_branch_num_revision_med),
             owner_num_revision_med: getResult(results, values, owner_num_revision_med),
             project_num_revision_med: getResult(results, values, project_num_revision_med),
             branch_num_revision_med: getResult(results, values, branch_num_revision_med),
-            owner_project_num_revision_med: getResult(results, values, owner_project_num_revision_med),
-            owner_branch_num_revision_med: getResult(results, values, owner_branch_num_revision_med),
-            project_branch_num_revision_med: getResult(results, values, project_branch_num_revision_med),
+            //owner_project_num_revision_med: getResult(results, values, owner_project_num_revision_med),
+            //owner_branch_num_revision_med: getResult(results, values, owner_branch_num_revision_med),
+            //project_branch_num_revision_med: getResult(results, values, project_branch_num_revision_med),
 
             num_revision_duration_med: getResult(results, values, num_revision_duration_med),
             owner_project_branch_num_revision_duration_med: getResult(results, values, owner_project_branch_num_revision_duration_med),
             owner_num_revision_duration_med: getResult(results, values, owner_num_revision_duration_med),
             project_num_revision_duration_med: getResult(results, values, project_num_revision_duration_med),
             branch_num_revision_duration_med: getResult(results, values, branch_num_revision_duration_med),
-            owner_project_num_revision_duration_med: getResult(results, values, owner_project_num_revision_duration_med),
-            owner_branch_num_revision_duration_med: getResult(results, values, owner_branch_num_revision_duration_med),
-            project_branch_num_revision_duration_med: getResult(results, values, project_branch_num_revision_duration_med),
+            //owner_project_num_revision_duration_med: getResult(results, values, owner_project_num_revision_duration_med),
+            //owner_branch_num_revision_duration_med: getResult(results, values, owner_branch_num_revision_duration_med),
+            //project_branch_num_revision_duration_med: getResult(results, values, project_branch_num_revision_duration_med),
 
             time_between_messages_med: getResult(results, values, time_between_messages_med),
             owner_project_branch_time_between_messages_med: getResult(results, values, owner_project_branch_time_between_messages_med),
             owner_time_between_messages_med: getResult(results, values, owner_time_between_messages_med),
             project_time_between_messages_med: getResult(results, values, project_time_between_messages_med),
             branch_time_between_messages_med: getResult(results, values, branch_time_between_messages_med),
-            owner_project_time_between_messages_med: getResult(results, values, owner_project_time_between_messages_med),
-            owner_branch_time_between_messages_med: getResult(results, values, owner_branch_time_between_messages_med),
-            project_branch_time_between_messages_med: getResult(results, values, project_branch_time_between_messages_med),
+            //owner_project_time_between_messages_med: getResult(results, values, owner_project_time_between_messages_med),
+            //owner_branch_time_between_messages_med: getResult(results, values, owner_branch_time_between_messages_med),
+            //project_branch_time_between_messages_med: getResult(results, values, project_branch_time_between_messages_med),
 
             num_messages_med: getResult(results, values, num_messages_med),
             owner_project_branch_num_messages_med: getResult(results, values, owner_project_branch_num_messages_med),
             owner_num_messages_med: getResult(results, values, owner_num_messages_med),
             project_num_messages_med: getResult(results, values, project_num_messages_med),
             branch_num_messages_med: getResult(results, values, branch_num_messages_med),
-            owner_project_num_messages_med: getResult(results, values, owner_project_num_messages_med),
-            owner_branch_num_messages_med: getResult(results, values, owner_branch_num_messages_med),
-            project_branch_num_messages_med: getResult(results, values, project_branch_num_messages_med),
+            //owner_project_num_messages_med: getResult(results, values, owner_project_num_messages_med),
+            //owner_branch_num_messages_med: getResult(results, values, owner_branch_num_messages_med),
+            //project_branch_num_messages_med: getResult(results, values, project_branch_num_messages_med),
 
             files_changes_duration_med: getResult(results, values, files_changes_duration_med),
             owner_files_changes_duration_med: getResult(results, values, owner_files_changes_duration_med),
@@ -510,12 +510,14 @@ async function getChangesInfo(json) {
     let priorProjectClosedChangesCount = getPriorSubsystemTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
     let priorBranchChangesCount = getPriorBranchChangesCount(json);
     let priorBranchClosedChangesCount = getPriorBranchTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
-    let priorOwnerProjectChangesCount = getPriorSubsystemOwnerChangesCount(json);
-    let priorOwnerProjectClosedChangesCount = getPriorSubsystemOwnerTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
-    let priorOwnerBranchChangesCount = getPriorOwnerBranchChangesCount(json);
-    let priorOwnerBranchClosedChangesCount = getPriorOwnerBranchTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
-    let priorProjectBranchChangesCount = getPriorProjectBranchChangesCount(json);
-    let priorProjectBranchClosedChangesCount = getPriorProjectBranchTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+
+    //let priorOwnerProjectChangesCount = getPriorSubsystemOwnerChangesCount(json);
+    //let priorOwnerProjectClosedChangesCount = getPriorSubsystemOwnerTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    //let priorOwnerBranchChangesCount = getPriorOwnerBranchChangesCount(json);
+    //let priorOwnerBranchClosedChangesCount = getPriorOwnerBranchTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    //let priorProjectBranchChangesCount = getPriorProjectBranchChangesCount(json);
+    //let priorProjectBranchClosedChangesCount = getPriorProjectBranchTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+
     let priorOwnerProjectBranchChangesCount = getPriorProjectBranchOwnerChangesCount(json);
     let priorOwnerProjectBranchClosedChangesCount = getPriorProjectBranchOwnerTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
 
@@ -530,9 +532,9 @@ async function getChangesInfo(json) {
     let ownerNumberOfAutoReview = getOwnerNumberOfAutoReview(json);
     let projectNumberOfAutoReview = getProjectNumberOfAutoReview(json);
     let branchNumberOfAutoReview = getBranchNumberOfAutoReview(json);
-    let ownerProjectNumberOfAutoReview = getOwnerProjectNumberOfAutoReview(json);
-    let projectBranchNumberOfAutoReview = getProjectBranchNumberOfAutoReview(json);
-    let ownerBranchNumberOfAutoReview = getOwnerBranchNumberOfAutoReview(json);
+    //let ownerProjectNumberOfAutoReview = getOwnerProjectNumberOfAutoReview(json);
+    //let projectBranchNumberOfAutoReview = getProjectBranchNumberOfAutoReview(json);
+    //let ownerBranchNumberOfAutoReview = getOwnerBranchNumberOfAutoReview(json);
 
     //todo number of build
     //todo add ratio
@@ -541,9 +543,9 @@ async function getChangesInfo(json) {
     let ownerNumberChangesBuilt = getOwnerNumberChangesBuilt(json);
     let projectNumberChangesBuilt = getProjectNumberChangesBuilt(json);
     let branchNumberChangesBuilt = getBranchNumberChangesBuilt(json);
-    let ownerProjectNumberChangesBuilt = getOwnerProjectNumberChangesBuilt(json);
-    let ownerBranchNumberChangesBuilt = getOwnerBranchNumberChangesBuilt(json);
-    let projectBranchNumberChangesBuilt = getProjectBranchNumberChangesBuilt(json);
+    //let ownerProjectNumberChangesBuilt = getOwnerProjectNumberChangesBuilt(json);
+    //let ownerBranchNumberChangesBuilt = getOwnerBranchNumberChangesBuilt(json);
+    //let projectBranchNumberChangesBuilt = getProjectBranchNumberChangesBuilt(json);
 
     //todo number of build file extension
     let filesExtensionNumberChangesCount = getFilesExtensionNumberChangesCount(json);
@@ -587,12 +589,12 @@ async function getChangesInfo(json) {
         priorProjectClosedChangesCount,
         priorBranchChangesCount,
         priorBranchClosedChangesCount,
-        priorOwnerProjectChangesCount,
-        priorOwnerProjectClosedChangesCount,
-        priorOwnerBranchChangesCount,
-        priorOwnerBranchClosedChangesCount,
-        priorProjectBranchChangesCount,
-        priorProjectBranchClosedChangesCount,
+        //priorOwnerProjectChangesCount,
+        //priorOwnerProjectClosedChangesCount,
+        //priorOwnerBranchChangesCount,
+        //priorOwnerBranchClosedChangesCount,
+        //priorProjectBranchChangesCount,
+        //priorProjectBranchClosedChangesCount,
         priorOwnerProjectBranchChangesCount,
         priorOwnerProjectBranchClosedChangesCount,
 
@@ -604,18 +606,18 @@ async function getChangesInfo(json) {
         ownerNumberOfAutoReview,
         projectNumberOfAutoReview,
         branchNumberOfAutoReview,
-        ownerProjectNumberOfAutoReview,
-        projectBranchNumberOfAutoReview,
-        ownerBranchNumberOfAutoReview,
+        //ownerProjectNumberOfAutoReview,
+        //projectBranchNumberOfAutoReview,
+        //ownerBranchNumberOfAutoReview,
 
         numberChangesBuilt,
         ownerProjectBranchNumberChangesBuilt,
         ownerNumberChangesBuilt,
         projectNumberChangesBuilt,
         branchNumberChangesBuilt,
-        ownerProjectNumberChangesBuilt,
-        ownerBranchNumberChangesBuilt,
-        projectBranchNumberChangesBuilt,
+        //ownerProjectNumberChangesBuilt,
+        //ownerBranchNumberChangesBuilt,
+        //projectBranchNumberChangesBuilt,
 
         filesExtensionNumberChangesCount,
         filesExtensionNumberChangesBuilt,
@@ -636,14 +638,12 @@ async function getChangesInfo(json) {
             priorBranchChangesCount: getResult(results, values, priorBranchChangesCount),
             priorBranchClosedChangesCount: getResult(results, values, priorBranchClosedChangesCount),
 
-            priorOwnerProjectChangesCount: getResult(results, values, priorOwnerProjectChangesCount),
-            priorOwnerProjectClosedChangesCount: getResult(results, values, priorOwnerProjectClosedChangesCount),
-
-            priorOwnerBranchChangesCount: getResult(results, values, priorOwnerBranchChangesCount),
-            priorOwnerBranchClosedChangesCount: getResult(results, values, priorOwnerBranchClosedChangesCount),
-
-            priorProjectBranchChangesCount: getResult(results, values, priorProjectBranchChangesCount),
-            priorProjectBranchClosedChangesCount: getResult(results, values, priorProjectBranchClosedChangesCount),
+            //priorOwnerProjectChangesCount: getResult(results, values, priorOwnerProjectChangesCount),
+            //priorOwnerProjectClosedChangesCount: getResult(results, values, priorOwnerProjectClosedChangesCount),
+            //priorOwnerBranchChangesCount: getResult(results, values, priorOwnerBranchChangesCount),
+            //priorOwnerBranchClosedChangesCount: getResult(results, values, priorOwnerBranchClosedChangesCount),
+            //priorProjectBranchChangesCount: getResult(results, values, priorProjectBranchChangesCount),
+            //priorProjectBranchClosedChangesCount: getResult(results, values, priorProjectBranchClosedChangesCount),
 
             ownerProjectBranchChangesCount: getResult(results, values, priorOwnerProjectBranchChangesCount),
             ownerProjectBranchClosedChangesCount: getResult(results, values, priorOwnerProjectBranchClosedChangesCount),
@@ -656,18 +656,18 @@ async function getChangesInfo(json) {
             ownerNumberOfAutoReview: getResult(results, values, ownerNumberOfAutoReview),
             projectNumberOfAutoReview: getResult(results, values, projectNumberOfAutoReview),
             branchNumberOfAutoReview: getResult(results, values, branchNumberOfAutoReview),
-            ownerProjectNumberOfAutoReview: getResult(results, values, ownerProjectNumberOfAutoReview),
-            projectBranchNumberOfAutoReview: getResult(results, values, projectBranchNumberOfAutoReview),
-            ownerBranchNumberOfAutoReview: getResult(results, values, ownerBranchNumberOfAutoReview),
+            //ownerProjectNumberOfAutoReview: getResult(results, values, ownerProjectNumberOfAutoReview),
+            //projectBranchNumberOfAutoReview: getResult(results, values, projectBranchNumberOfAutoReview),
+            //ownerBranchNumberOfAutoReview: getResult(results, values, ownerBranchNumberOfAutoReview),
 
             numberChangesBuilt: getResult(results, values, numberChangesBuilt),
             ownerProjectBranchNumberChangesBuilt: getResult(results, values, ownerProjectBranchNumberChangesBuilt),
             ownerNumberChangesBuilt: getResult(results, values, ownerNumberChangesBuilt),
             projectNumberChangesBuilt: getResult(results, values, projectNumberChangesBuilt),
             branchNumberChangesBuilt: getResult(results, values, branchNumberChangesBuilt),
-            ownerProjectNumberChangesBuilt: getResult(results, values, ownerProjectNumberChangesBuilt),
-            ownerBranchNumberChangesBuilt: getResult(results, values, ownerBranchNumberChangesBuilt),
-            projectBranchNumberChangesBuilt: getResult(results, values, projectBranchNumberChangesBuilt),
+            //ownerProjectNumberChangesBuilt: getResult(results, values, ownerProjectNumberChangesBuilt),
+            //ownerBranchNumberChangesBuilt: getResult(results, values, ownerBranchNumberChangesBuilt),
+            //projectBranchNumberChangesBuilt: getResult(results, values, projectBranchNumberChangesBuilt),
 
             filesExtensionNumberChangesCount: getResult(results, values, filesExtensionNumberChangesCount),
             filesExtensionNumberChangesBuilt: getResult(results, values, filesExtensionNumberChangesBuilt),
@@ -679,9 +679,10 @@ async function getChangesInfo(json) {
         data["priorOwnerOpenChangesCount"] = data["ownerPriorChangesCount"] - data["ownerPriorClosedChangesCount"]
         data["priorProjectOpenChangesCount"] = data["priorProjectChangesCount"] - data["priorProjectClosedChangesCount"]
         data["priorBranchOpenChangesCount"] = data["priorBranchChangesCount"] - data["priorBranchClosedChangesCount"]
-        data["priorOwnerProjectOpenChangesCount"] = data["priorOwnerProjectChangesCount"] - data["priorOwnerProjectClosedChangesCount"]
-        data["priorOwnerBranchOpenChangesCount"] = data["priorOwnerBranchChangesCount"] - data["priorOwnerBranchClosedChangesCount"]
-        data["priorProjectBranchOpenChangesCount"] = data["priorProjectBranchChangesCount"] - data["priorProjectBranchClosedChangesCount"]
+        //data["priorOwnerProjectOpenChangesCount"] = data["priorOwnerProjectChangesCount"] - data["priorOwnerProjectClosedChangesCount"]
+        //data["priorOwnerBranchOpenChangesCount"] = data["priorOwnerBranchChangesCount"] - data["priorOwnerBranchClosedChangesCount"]
+        //data["priorProjectBranchOpenChangesCount"] = data["priorProjectBranchChangesCount"] - data["priorProjectBranchClosedChangesCount"]
+
         data["priorOwnerProjectBranchOpenChangesCount"] = data["ownerProjectBranchChangesCount"] - data["ownerProjectBranchClosedChangesCount"]
 
         //console.log(data["numberChangesBuilt"])
@@ -690,9 +691,10 @@ async function getChangesInfo(json) {
         data["ownerNumberChangesBuiltRatio"] = safeDivision(data["ownerNumberChangesBuilt"], data["ownerPriorClosedChangesCount"])
         data["projectNumberChangesBuiltRatio"] = safeDivision(data["projectNumberChangesBuilt"], data["priorProjectClosedChangesCount"])
         data["branchNumberChangesBuiltRatio"] = safeDivision(data["branchNumberChangesBuilt"], data["priorBranchClosedChangesCount"])
-        data["ownerProjectNumberChangesBuiltRatio"] = safeDivision(data["ownerProjectNumberChangesBuilt"], data["priorOwnerProjectClosedChangesCount"])
-        data["ownerBranchNumberChangesBuiltRatio"] = safeDivision(data["ownerBranchNumberChangesBuilt"], data["priorOwnerBranchClosedChangesCount"])
-        data["projectBranchNumberChangesBuiltRatio"] = safeDivision(data["projectBranchNumberChangesBuilt"], data["priorProjectBranchClosedChangesCount"])
+        //data["ownerProjectNumberChangesBuiltRatio"] = safeDivision(data["ownerProjectNumberChangesBuilt"], data["priorOwnerProjectClosedChangesCount"])
+        //data["ownerBranchNumberChangesBuiltRatio"] = safeDivision(data["ownerBranchNumberChangesBuilt"], data["priorOwnerBranchClosedChangesCount"])
+        //data["projectBranchNumberChangesBuiltRatio"] = safeDivision(data["projectBranchNumberChangesBuilt"], data["priorProjectBranchClosedChangesCount"])
+
         data["ownerProjectBranchNumberChangesBuiltRatio"] = safeDivision(data["ownerProjectBranchNumberChangesBuilt"], data["ownerProjectBranchClosedChangesCount"])
 
         data["filesExtensionNumberChangesBuiltRatio"] = safeDivision(data["filesExtensionNumberChangesBuilt"], data["filesExtensionNumberChangesCount"])
