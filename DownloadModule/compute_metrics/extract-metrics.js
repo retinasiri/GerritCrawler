@@ -370,9 +370,9 @@ let metric_to_collect = {
     id: true,
 
 
-    //Time
     max_inactive_time: true,
 
+    //Time
     days_of_the_weeks_of_date_created: "created_weekday_utc",
     days_of_the_weeks_of_date_created_for_owner_timezone: "created_weekday_owner_tz",
     hours_of_the_days_date_created: "created_hours_utc",
@@ -382,6 +382,8 @@ let metric_to_collect = {
     author_timezone: true,
     month_date_created: "created_month_utc",
     month_date_created_for_owner: "created_month_owner_tz",
+    period_of_the_day_date_created_div_8: "period_of_the_day_date_created",
+    period_of_the_day_date_created_owner_tz_div_8: "period_of_the_day_date_created_owner_tz",
 
     //Graph
     fg_degree_centrality: "degree_centrality",
@@ -399,7 +401,7 @@ let metric_to_collect = {
 
     //File
     first_revision_insertions: "insertions",
-    first_revision_deletions: "insertions",
+    first_revision_deletions: "deletions",
     num_files: true,
     num_files_type: true,
     num_directory: true,
@@ -498,7 +500,7 @@ let metric_to_collect = {
 
     priorOwnerRate: true,
 
-    ownerNumberOfReview: "ownerNumberReview",
+    ownerNumberOfReview: "num_OwnerReview",
     //ownerPreviousMessageCount: "owner_previous_messages_count",///////
 
     ownerChangesMessagesSum: true, /////
@@ -507,10 +509,10 @@ let metric_to_collect = {
     ownerChangesMessagesMinPerChanges: "owner_changes_messages_min",
     ownerChangesMessagesStdPerChanges: "owner_changes_messages_std",
 
-    priorChangeDurationMean: "priorChangeDurationAvg",
-    priorChangeDurationMax: true,
-    priorChangeDurationMin: true,
-    priorChangeDurationStd: true,
+    priorChangeDurationMean: "priorChangesDurationAvg",
+    priorChangeDurationMax: "priorChangesDurationMax",
+    priorChangeDurationMin: "priorChangesDurationMin",
+    priorChangeDurationStd: "priorChangesDurationStd",
 
     //ownerNumberOfAutoReview: true, //todo change for autoreview rate
 
@@ -519,10 +521,10 @@ let metric_to_collect = {
     //ownerInactiveTimeMin: "ownerInactiveDurationMin",
     //ownerInactiveTimeStd: "ownerInactiveDurationStd",
 
-    ownerTimeBetweenMessageAvg: "ownerTimeBetweenMessageAvg",
-    ownerTimeBetweenMessageMax: "ownerTimeBetweenMessageMax",
-    ownerTimeBetweenMessageMin: "ownerTimeBetweenMessageMin",
-    ownerTimeBetweenMessageStd: "ownerTimeBetweenMessageStd",
+    ownerTimeBetweenMessageAvg: "ownerTimeBetweenMessagesAvg",
+    ownerTimeBetweenMessageMax: "ownerTimeBetweenMessagesMax",
+    ownerTimeBetweenMessageMin: "ownerTimeBetweenMessagesMin",
+    ownerTimeBetweenMessageStd: "ownerTimeBetweenMessagesStd",
 
     ownerProjectBranchNumberOfAutoReview: "opb_num_auto_review", //"opb_NumberOfAutoReview", //todo competing value
     ownerProjectBranchNumberOfAutoReviewRate: "opb_AutoReviewRate",
@@ -638,11 +640,11 @@ let metric_to_collect = {
     reviewersPriorUnCloseChangesMin: "revrsOpenChangesMin",
     reviewersPriorUnCloseChangesStd: "revrsOpenChangesStd",
 
-    reviewersNumberOfReviewSum: "revrsNumReviewSum",
-    reviewersNumberOfReviewAvg: "revrsNumReviewAvg",
-    reviewersNumberOfReviewMax: "revrsNumReviewMax",
-    reviewersNumberOfReviewMin: "revrsNumReviewMin",
-    reviewersNumberOfReviewStd: "revrsNumReviewStd",
+    reviewersNumberOfReviewSum: "revrsNumReviewsSum",
+    reviewersNumberOfReviewAvg: "revrsNumReviewsAvg",
+    reviewersNumberOfReviewMax: "revrsNumReviewsMax",
+    reviewersNumberOfReviewMin: "revrsNumReviewsMin",
+    reviewersNumberOfReviewStd: "revrsNumReviewsStd",
 
     reviewersPreviousMessageSum: "revrsPreviousMsgsSum",
     reviewersPreviousMessageAvg: "revrsPreviousMsgsAvg",
@@ -651,10 +653,10 @@ let metric_to_collect = {
     reviewersPreviousMessageStd: "revrsPreviousMsgsStd",
 
     ////////
-    fileCountForReviewersCountAvg: "RevrsNumFileChangesAvg",
-    fileCountForReviewersCountMax: "RevrsNumFileChangesMax",
-    fileCountForReviewersCountMin: "RevrsNumFileChangesMin",
-    fileCountForReviewersCountStd: "RevrsNumFileChangesStd",
+    fileCountForReviewersCountAvg: "RevrsFileChangesAvg",
+    fileCountForReviewersCountMax: "RevrsFileChangesMax",
+    fileCountForReviewersCountMin: "RevrsFileChangesMin",
+    fileCountForReviewersCountStd: "RevrsFileChangesStd",
 
     ////////
     fileTimeForReviewersCountAvg: "fileChangesTimeRevrsAvg",
@@ -664,12 +666,12 @@ let metric_to_collect = {
 
     ownerAndReviewerCommonsChangesSum: "ownerRevrsCommonsChangesSum",
 
-    ownerAndReviewerCommonsMessagesSum: "ownerRevrsCommonsMsgsSum",
+    ownerAndReviewerCommonsMessagesSum: "ownerRevrsNumCommonsMsgsSum",
     //ownerAndReviewerCommonsMessagesSumForRev: "ownerRevrsCommonsMsgsSum",
-    ownerAndReviewerCommonsMessagesAvg: "ownerRevrsCommonsMsgsAvg",
-    ownerAndReviewerCommonsMessagesMax: "ownerRevrsCommonsMsgsMax",
-    ownerAndReviewerCommonsMessagesMin: "ownerRevrsCommonsMsgsMin",
-    ownerAndReviewerCommonsMessagesStd: "ownerRevrsCommonsMsgsStd",
+    ownerAndReviewerCommonsMessagesAvg: "ownerRevrsNumCommonsMsgsAvg",
+    ownerAndReviewerCommonsMessagesMax: "ownerRevrsNumCommonsMsgsMax",
+    ownerAndReviewerCommonsMessagesMin: "ownerRevrsNumCommonsMsgsMin",
+    ownerAndReviewerCommonsMessagesStd: "ownerRevrsNumCommonsMsgsStd",
 
     //reviewersChangesSum: true,
     //reviewersChangesAvg: true,
@@ -687,14 +689,76 @@ let metric_to_collect = {
 
     number_of_similar_change_id: "num_similar_change_id",
 
-    number_of_related_changes: "rel_changes_num",
-    number_of_merged_related_changes: "rel_merged_changes_num",
-    number_of_abandoned_related_changes: "rel_abandoned_changes_num",
-    number_of_close_related_changes: "rel_closed_changes_num",
-    number_of_not_owned_related_changes: "rel_not_owned_changes_num",
-    number_of_not_owned_merged_related_changes: "rel_not_owned_merged_changes_num",
-    number_of_not_owned_abandoned_related_changes: "rel_not_owned_abandoned_changes_num",
-    number_of_not_owned_close_related_changes: "rel_not_owned_closed_changes_num",
+    number_of_related_changes: "num_rel_changes",
+    number_of_merged_related_changes: "num_rel_merged_changes",
+    number_of_abandoned_related_changes: "num_rel_abandoned_changes",
+    number_of_close_related_changes: "num_rel_closed_changes",
+    number_of_not_owned_related_changes: "num_rel_not_owned_changes",
+    number_of_not_owned_merged_related_changes: "num_rel_not_owned_merged_changes",
+    number_of_not_owned_abandoned_related_changes: "num_rel_not_owned_abandoned_changes",
+    number_of_not_owned_close_related_changes: "num_rel_not_owned_closed_changes",
+
+    //////
+
+    priorChangesCount: "numPriorChanges",
+    priorOpenChangesCount: "numPriorOpenChanges",
+    ownerPriorChangesCount: "numPriorOwnerChanges",
+    priorOwnerOpenChangesCount: "numPriorOwnerOpenChanges",
+    priorProjectChangesCount: "numPriorProjectChanges",
+    priorProjectOpenChangesCount: "numPriorOpenChanges",
+    priorBranchChangesCount: "numPriorBranchChanges",
+    priorBranchOpenChangesCount: "numPriorBranchOpenChanges",
+    ownerProjectBranchChangesCount: "opb_numChanges",
+    priorOwnerProjectBranchOpenChangesCount: "opb_numOpenChanges",
+
+    numChangesFiles: "numChangesFiles",
+    numClosedChangesFiles: "numClosedChangesFiles",
+
+    //priorClosedChangesCount: "numPriorClosedChanges",
+    //ownerPriorClosedChangesCount: "numPriorOwnerClosedChanges",
+    //priorProjectClosedChangesCount: "numPriorProjectClosedChanges",
+    //priorBranchClosedChangesCount: "numPriorBranchClosedChanges",
+    //ownerProjectBranchClosedChangesCount: "opb_numClosedChanges",
+
+
+
+    numberOfAutoReview: "numAutoReview",
+    ownerNumberOfAutoReview: "numOwnerAutoReview",
+    numberChangesBuilt: "numChangesBuilt",
+    filesExtensionNumberChangesCount: "numFilesExtensionChangesCount",
+    filesExtensionNumberChangesBuilt: "numFilesExtensionChangesBuilt",
+    //ownerProjectBranchNumberOfAutoReview: "opb_NumAutoReview",
+    //ownerProjectBranchNumberChangesBuilt: "opb_NumChangesBuilt",
+
+    numberOfAutoReviewRatio: "auto_review_ratio",
+    ownerProjectBranchNumberOfAutoReviewRatio: "opb_auto_review_ratio",
+    ownerNumberOfAutoReviewRatio: "owner_auto_review_ratio",
+
+    numberChangesBuiltRatio: "built_changes_ratio",
+    ownerProjectBranchNumberChangesBuiltRatio: "opb_built_changes_ratio",
+    filesExtensionNumberChangesBuiltRatio: "files_extension_built_changes_ratio",
+
+    priorChangesDurationMed: "ChangesDurationMed",
+    priorOwnerProjectBranchChangesDurationMed: "opb_ChangesDurationMed",
+    priorBuildTimeDurationMed: "BuildTimeDurationMed",
+    priorOwnerProjectBranchBuildTimeDurationMed: "opb_BuildTimeDurationMed",
+    priorTimeToAddReviewerMed: "time_to_add_reviewers_Med",
+    priorOwnerProjectBranchTimeToAddReviewerMed: "opb_time_to_add_reviewers_Med",
+    num_revision_med: "num_revisions_med",
+    owner_project_branch_num_revision_med: "opb_num_revisions_med",
+    num_revision_duration_med: "revision_duration_med",
+    owner_project_branch_num_revision_duration_med: "opb_revision_duration_med",
+    time_between_messages_med: "time_between_messages_med",
+    owner_project_branch_time_between_messages_med: "opb_time_between_messages_med",
+    num_messages_med: "num_messages_med",
+    owner_project_branch_num_messages_med: "opb_num_messages_med",
+    files_changes_duration_med: "files_changes_duration_med",
+    owner_files_changes_duration_med: "owner_files_changes_duration_med",
+    files_build_time_med: "files_build_time_med",
+    files_revision_time_med: "files_revision_time_med",
+    files_num_fails_med: "files_num_fails_med",
+
+    /////
 
     is_self_review: true,
     effective_revision_time_diff: true,
