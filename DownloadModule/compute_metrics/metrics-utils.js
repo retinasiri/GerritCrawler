@@ -193,6 +193,7 @@ async function collectDocs(docs, Project, progressBar, collectMetrics) {
     if (!docs)
         return Promise.resolve(true);
 
+
     let queue = [];
     let ret = [];
     for (let key in docs) {
