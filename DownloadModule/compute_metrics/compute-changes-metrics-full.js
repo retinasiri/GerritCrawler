@@ -1808,15 +1808,11 @@ function getNumberOfAutoReview(json) {
             status: {$in: ['MERGED', 'ABANDONED']},
             //created: {$lte: created_date},
             updated: {$lte: created_date},
+            is_self_review: true,
         }
     }
     let pipeline = [
         match,
-        {
-            $match: {
-                is_self_review: true,
-            }
-        },
         {$count: 'count'}
     ]
     pipeline = addRecentDateToPipeline(pipeline);
@@ -1834,6 +1830,7 @@ function getOwnerProjectBranchNumberOfAutoReview(json) {
         $match: {
             //_number: {$lt: number},
             status: {$in: ['MERGED', 'ABANDONED']},
+            is_self_review: true,
             "owner._account_id": ownerId,
             project: project,
             branch: branch,
@@ -1843,11 +1840,6 @@ function getOwnerProjectBranchNumberOfAutoReview(json) {
     }
     let pipeline = [
         match,
-        {
-            $match: {
-                is_self_review: true,
-            }
-        },
         {$count: 'count'}
     ]
     pipeline = addRecentDateToPipeline(pipeline);
@@ -1867,15 +1859,11 @@ function getOwnerNumberOfAutoReview(json) {
             "owner._account_id": ownerId,
             //created: {$lte: created_date},
             updated: {$lte: created_date},
+            is_self_review: true,
         }
     }
     let pipeline = [
         match,
-        {
-            $match: {
-                is_self_review: true,
-            }
-        },
         {$count: 'count'}
     ]
     pipeline = addRecentDateToPipeline(pipeline);
@@ -3803,8 +3791,8 @@ function getOwnerAndReviewerCommonsMessagesAvg(json, reviewersId) {
 function all_match (created_date) {
     return {
         $match: {
-            status: {$in: ['MERGED', 'ABANDONED']},
             updated: {$lte: created_date},
+            status: {$in: ['MERGED', 'ABANDONED']},
         }
     }
 }
@@ -3812,9 +3800,9 @@ function all_match (created_date) {
 function owner_match (created_date, ownerId) {
     return {
         $match: {
+            updated: {$lte: created_date},
             status: {$in: ['MERGED', 'ABANDONED']},
             'owner._account_id': ownerId,
-            updated: {$lte: created_date},
         }
     }
 }
@@ -3822,9 +3810,9 @@ function owner_match (created_date, ownerId) {
 function project_match (created_date, project) {
     return {
         $match: {
+            updated: {$lte: created_date},
             status: {$in: ['MERGED', 'ABANDONED']},
             project: project,
-            updated: {$lte: created_date},
         }
     }
 }
@@ -3832,9 +3820,9 @@ function project_match (created_date, project) {
 function branch_match (created_date, branch) {
     return {
         $match: {
+            updated: {$lte: created_date},
             status: {$in: ['MERGED', 'ABANDONED']},
             branch: branch,
-            updated: {$lte: created_date},
         }
     }
 }
@@ -3842,10 +3830,10 @@ function branch_match (created_date, branch) {
 function owner_project_match (created_date, ownerId, project, branch) {
     return {
         $match: {
+            updated: {$lte: created_date},
             status: {$in: ['MERGED', 'ABANDONED']},
             'owner._account_id': ownerId,
             project: project,
-            updated: {$lte: created_date},
         }
     }
 }
@@ -3853,10 +3841,10 @@ function owner_project_match (created_date, ownerId, project, branch) {
 function owner_branch_match (created_date, ownerId, project, branch) {
     return {
         $match: {
+            updated: {$lte: created_date},
             status: {$in: ['MERGED', 'ABANDONED']},
             'owner._account_id': ownerId,
             branch: branch,
-            updated: {$lte: created_date},
         }
     }
 }
@@ -3864,10 +3852,10 @@ function owner_branch_match (created_date, ownerId, project, branch) {
 function project_branch_match (created_date, ownerId, project, branch) {
     return {
         $match: {
+            updated: {$lte: created_date},
             status: {$in: ['MERGED', 'ABANDONED']},
             project: project,
             branch: branch,
-            updated: {$lte: created_date},
         }
     }
 }
@@ -3875,11 +3863,11 @@ function project_branch_match (created_date, ownerId, project, branch) {
 function owner_project_branch_match (created_date, ownerId, project, branch) {
     return {
         $match: {
+            updated: {$lte: created_date},
             status: {$in: ['MERGED', 'ABANDONED']},
             project: project,
             branch: branch,
             'owner._account_id': ownerId,
-            updated: {$lte: created_date},
         }
     }
 }
@@ -3956,8 +3944,8 @@ function getPriorBuildTimeDurationMed(data, created_date){
         data.priorClosedChangesCount,
         {
             $match: {
-                status: {$in: ['MERGED', 'ABANDONED']},
                 updated: {$lte: created_date},
+                status: {$in: ['MERGED', 'ABANDONED']},
             }
         },
         "avg_build_time_before_close"
@@ -3969,11 +3957,11 @@ function getPriorOwnerProjectBranchBuildTimeDurationMed(data, created_date, owne
         data.ownerProjectBranchClosedChangesCount,
         {
             $match: {
+                updated: {$lte: created_date},
                 status: {$in: ['MERGED', 'ABANDONED']},
                 project: project,
                 branch: branch,
                 "owner._account_id": ownerId,
-                updated: {$lte: created_date},
             }
         },
         "avg_build_time_before_close"
@@ -3985,9 +3973,9 @@ function getPriorOwnerBuildTimeDurationMed(data, created_date, ownerId, project,
         data.ownerPriorChangesCount,
         {
             $match: {
+                updated: {$lte: created_date},
                 status: {$in: ['MERGED', 'ABANDONED']},
                 "owner._account_id": ownerId,
-                updated: {$lte: created_date},
             }
         },
         "avg_build_time_before_close"
@@ -3999,9 +3987,9 @@ function getPriorProjectBuildTimeDurationMed(data, created_date, ownerId, projec
         data.priorProjectChangesCount,
         {
             $match: {
+                updated: {$lte: created_date},
                 status: {$in: ['MERGED', 'ABANDONED']},
                 project: project,
-                updated: {$lte: created_date},
             }
         },
         "avg_build_time_before_close"
@@ -4013,9 +4001,9 @@ function getPriorBranchBuildTimeDurationMed(data, created_date, ownerId, project
         data.priorProjectChangesCount,
         {
             $match: {
+                updated: {$lte: created_date},
                 status: {$in: ['MERGED', 'ABANDONED']},
                 branch: branch,
-                updated: {$lte: created_date},
             }
         },
         "avg_build_time_before_close"
@@ -4027,10 +4015,10 @@ function getPriorOwnerProjectBuildTimeDurationMed(data, created_date, ownerId, p
         data.priorOwnerProjectChangesCount,
         {
             $match: {
+                updated: {$lte: created_date},
                 status: {$in: ['MERGED', 'ABANDONED']},
                 project: project,
                 "owner._account_id": ownerId,
-                updated: {$lte: created_date},
             }
         },
         "avg_build_time_before_close"
@@ -4057,10 +4045,10 @@ function getPriorProjectBranchBuildTimeDurationMed(data, created_date, ownerId, 
         data.priorProjectBranchChangesCount,
         {
             $match: {
+                updated: {$lte: created_date},
                 status: {$in: ['MERGED', 'ABANDONED']},
                 project: project,
                 branch: branch,
-                updated: {$lte: created_date},
             }
         },
         "avg_build_time_before_close"
