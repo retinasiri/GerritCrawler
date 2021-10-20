@@ -723,6 +723,12 @@ async function getChangesInfo(json) {
 
         data["priorOwnerProjectBranchOpenChangesCount"] = data.ownerProjectBranchChangesCount - data.ownerProjectBranchClosedChangesCount
 
+        //auto review
+        data["numberOfAutoReviewRatio"] = safeDivision(data.numberOfAutoReview, data.priorClosedChangesCount)
+        data["ownerProjectBranchNumberOfAutoReviewRatio"] = safeDivision(data.ownerProjectBranchNumberOfAutoReview, data.ownerProjectBranchClosedChangesCount)
+        data["ownerNumberOfAutoReviewRatio"] = safeDivision(data.ownerNumberOfAutoReview, data.ownerPriorClosedChangesCount)
+
+
         //console.log(data["numberChangesBuilt"])
         //console.log(data["priorClosedChangesCount"])
         data["numberChangesBuiltRatio"] = safeDivision(data.numberChangesBuilt, data.priorClosedChangesCount)
