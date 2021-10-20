@@ -231,6 +231,7 @@ async function collectDocs(docs, Project, progressBar, collectMetrics) {
             })
     }
 
+    console.timeEnd('collectDocs')
     return Promise.resolve(true);
 }
 
