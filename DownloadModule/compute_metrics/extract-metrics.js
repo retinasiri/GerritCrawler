@@ -700,9 +700,9 @@ let metric_to_collect = {
 
     //////
 
-    priorChangesCount: "numPriorChanges",
+    //priorChangesCount: "numPriorChanges",
     priorOpenChangesCount: "numPriorOpenChanges",
-    ownerPriorChangesCount: "numPriorOwnerChanges",
+    //ownerPriorChangesCount: "numPriorOwnerChanges",
     priorOwnerOpenChangesCount: "numPriorOwnerOpenChanges",
     priorProjectChangesCount: "numPriorProjectChanges",
     priorProjectOpenChangesCount: "numPriorOpenChanges",
