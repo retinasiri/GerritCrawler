@@ -592,6 +592,10 @@ db.getCollection('changes').createIndex({created: 1, updated: -1, status: 1, pro
 db.getCollection('changes').createIndex({created: 1, updated: -1, extensions_list: 1, status: 1})
 db.getCollection('changes').createIndex({created: 1, updated: -1, avg_build_time: 1, extensions_list: 1, status: 1})
 
+db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, updated: 1, status: 1})
+db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, updated: 1, created: 1, status: 1})
+
+
 db.getCollection('changes').createIndex({is_self_review: 1})
 db.getCollection('changes').createIndex({extensions_list: 1})
 db.getCollection('changes').createIndex({date_updated_date_created_diff: 1})

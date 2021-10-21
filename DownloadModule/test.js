@@ -765,6 +765,9 @@ String.prototype.camelCaseToDashed = function(){
 
 let date = "2021-06-14 23:30:00.000000000"
 
+dateMoment = Moment.utc(date);
+console.log(dateMoment)
+
 function get_hours_of_the_days(dateString) {
     let date = Moment.utc(dateString);
     return Moment.duration(date.format("HH:mm:ss.SSSSSSSSS")).asHours()
@@ -779,14 +782,33 @@ let hoursDivisions = function (hours, number_of_division){
     return inf + "_" + sup
 }
 
-console.log(hoursDivisions(hours, 8))
+//console.log(hoursDivisions(hours, 8))
+
+//var arr = " yyyy-mm-dd hh:mm:ss".split(/-|\s|:/);// split string and create array.
+var arr = date.split(/-|\s|:/);// split string and create array.
+console.log(arr);
+var dateFormat = new Date(Date.UTC(arr[0], arr[1] -1, arr[2], arr[3], arr[4], arr[5])); // decrease month value by 1
+//console.log(new Date(dateFormat))
+
+console.log(new Date(date))
 
 
+db.changes.find().forEach(function(doc) {
+    let created = doc.created;
+    let updated = doc.updated;
+    let arr_created = created.split(/-|\s|:/);
+    let arr_updated = updated.split(/-|\s|:/);
+    let date_created = new Date(Date.UTC(arr_created[0], arr_created[1] -1, arr_created[2], arr_created[3], arr_created[4], arr_created[5]));
+    let date_updated = new Date(Date.UTC(arr_updated[0], arr_updated[1] -1, arr_updated[2], arr_updated[3], arr_updated[4], arr_updated[5]));
+    doc.created = date_created;
+    doc.updated = date_updated;
+    db.changes.save(doc);
+})
 
 function get_month_for_owner(dateString) {
     return Moment.utc(dateString).format('MMMM')
 }
-console.log(get_month_for_owner(date))
+//console.log(get_month_for_owner(date))
 
 
 let filepath = "basegfx/test/B2DTupleTest.cxx"

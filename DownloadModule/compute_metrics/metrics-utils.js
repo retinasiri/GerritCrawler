@@ -187,7 +187,7 @@ function getChanges(skip, step, Project, progressBar, collectMetrics) {
         });
 }
 
-/*
+
 async function collectDocs(docs, Project, progressBar, collectMetrics) {
     console.time('collectDocs')
     let CONCURRENT = 500
@@ -216,9 +216,9 @@ async function collectDocs(docs, Project, progressBar, collectMetrics) {
     await Promise.all(queue);
     console.timeEnd('collectDocs')
     return Promise.resolve(true);
-}*/
+}
 
-async function collectDocs(docs, Project, progressBar, collectMetrics) {
+/*async function collectDocs(docs, Project, progressBar, collectMetrics) {
     console.time('collectDocs')
     if (!docs)
         return Promise.resolve(true);
@@ -233,7 +233,7 @@ async function collectDocs(docs, Project, progressBar, collectMetrics) {
 
     console.timeEnd('collectDocs')
     return Promise.resolve(true);
-}
+}*/
 
 
 /*async function collectDocs(docs, Project, progressBar, collectMetrics) {

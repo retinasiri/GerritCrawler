@@ -573,8 +573,7 @@ async function getChangesInfo(json) {
 
     //let ownerNumberChangesBuilt = getOwnerNumberChangesBuilt(json);
     //let projectNumberChangesBuilt = getProjectNumberChangesBuilt(json);
-
-    let branchNumberChangesBuilt = getBranchNumberChangesBuilt(json);
+    //let branchNumberChangesBuilt = getBranchNumberChangesBuilt(json);
 
     //let ownerProjectNumberChangesBuilt = getOwnerProjectNumberChangesBuilt(json);
     //let ownerBranchNumberChangesBuilt = getOwnerBranchNumberChangesBuilt(json);
@@ -1283,9 +1282,9 @@ function getPriorChangesFiles(json) {
     }
     let pipeline = [
         match,
-        {$unwind: "$files_list"},
-        {$match: {files_list: {$in: files_list}}},
-        {$group: {_id: "$id"}},
+        //{$unwind: "$files_list"},
+        //{$match: {files_list: {$in: files_list}}},
+        //{$group: {_id: "$id"}},
         {$count: "count"}
     ]
     pipeline = addRecentDateToPipeline(pipeline);
@@ -1304,9 +1303,9 @@ function getPriorClosedChangesFiles(json) {
     }
     let pipeline = [
         match,
-        {$unwind: "$files_list"},
-        {$match: {files_list: {$in: files_list}}},
-        {$group: {_id: "$id"}},
+        //{$unwind: "$files_list"},
+        //{$match: {files_list: {$in: files_list}}},
+        //{$group: {_id: "$id"}},
         {$count: "count"}
     ]
     pipeline = addRecentDateToPipeline(pipeline);
