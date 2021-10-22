@@ -515,6 +515,7 @@ let metric_to_collect = {
     priorChangeDurationStd: "priorChangesDurationStd",
 
     //ownerNumberOfAutoReview: true, //todo change for autoreview rate
+    ownerNumberOfAutoReview: "numOwnerAutoReview",
 
     //ownerInactiveTimeAvg: "ownerInactiveDurationAvg",
     //ownerInactiveTimeMax: "ownerInactiveDurationMax",
@@ -701,8 +702,8 @@ let metric_to_collect = {
     //////
 
     //priorChangesCount: "numPriorChanges",
-    priorOpenChangesCount: "numPriorOpenChanges",
     //ownerPriorChangesCount: "numPriorOwnerChanges",
+    priorOpenChangesCount: "numPriorOpenChanges",
     priorOwnerOpenChangesCount: "numPriorOwnerOpenChanges",
     priorProjectChangesCount: "numPriorProjectChanges",
     priorProjectOpenChangesCount: "numPriorOpenChanges",
@@ -712,7 +713,13 @@ let metric_to_collect = {
     priorOwnerProjectBranchOpenChangesCount: "opb_numOpenChanges",
 
     numChangesFiles: "numChangesFiles",
-    numClosedChangesFiles: "numClosedChangesFiles",
+    numOpenChangesFiles: "numOpenChangesFiles",
+
+    filesExtensionNumberChangesBuilt: "numFilesExtensionChangesBuilt",
+    filesExtensionNumberChangesBuiltRatio: "files_extension_built_changes_ratio",
+
+
+    //numClosedChangesFiles: "numClosedChangesFiles",
 
     //priorClosedChangesCount: "numPriorClosedChanges",
     //ownerPriorClosedChangesCount: "numPriorOwnerClosedChanges",
@@ -720,43 +727,41 @@ let metric_to_collect = {
     //priorBranchClosedChangesCount: "numPriorBranchClosedChanges",
     //ownerProjectBranchClosedChangesCount: "opb_numClosedChanges",
 
+    //numberOfAutoReview: "numAutoReview",
+    //ownerNumberOfAutoReview: "numOwnerAutoReview",
+    //numberOfAutoReviewRatio: "auto_review_ratio",
+    //ownerNumberOfAutoReviewRatio: "owner_auto_review_ratio",
+    //ownerProjectBranchNumberOfAutoReviewRatio: "opb_auto_review_ratio",
 
 
-    numberOfAutoReview: "numAutoReview",
-    ownerNumberOfAutoReview: "numOwnerAutoReview",
-    numberChangesBuilt: "numChangesBuilt",
-    filesExtensionNumberChangesCount: "numFilesExtensionChangesCount",
-    filesExtensionNumberChangesBuilt: "numFilesExtensionChangesBuilt",
+    //numberChangesBuilt: "numChangesBuilt",
+    //filesExtensionNumberChangesCount: "numFilesExtensionChangesCount",
     //ownerProjectBranchNumberOfAutoReview: "opb_NumAutoReview",
     //ownerProjectBranchNumberChangesBuilt: "opb_NumChangesBuilt",
 
-    numberOfAutoReviewRatio: "auto_review_ratio",
-    ownerProjectBranchNumberOfAutoReviewRatio: "opb_auto_review_ratio",
-    ownerNumberOfAutoReviewRatio: "owner_auto_review_ratio",
-
-    numberChangesBuiltRatio: "built_changes_ratio",
-    ownerProjectBranchNumberChangesBuiltRatio: "opb_built_changes_ratio",
-    filesExtensionNumberChangesBuiltRatio: "files_extension_built_changes_ratio",
+    //numberChangesBuiltRatio: "built_changes_ratio",
+    //ownerProjectBranchNumberChangesBuiltRatio: "opb_built_changes_ratio",
 
     priorChangesDurationMed: "ChangesDurationMed",
     priorOwnerProjectBranchChangesDurationMed: "opb_ChangesDurationMed",
-    priorBuildTimeDurationMed: "BuildTimeDurationMed",
+    //priorBuildTimeDurationMed: "BuildTimeDurationMed",
     priorOwnerProjectBranchBuildTimeDurationMed: "opb_BuildTimeDurationMed",
-    priorTimeToAddReviewerMed: "time_to_add_reviewers_Med",
+    //priorTimeToAddReviewerMed: "time_to_add_reviewers_Med",
     priorOwnerProjectBranchTimeToAddReviewerMed: "opb_time_to_add_reviewers_Med",
-    num_revision_med: "num_revisions_med",
+    //num_revision_med: "num_revisions_med",
     owner_project_branch_num_revision_med: "opb_num_revisions_med",
-    num_revision_duration_med: "revision_duration_med",
+    //num_revision_duration_med: "revision_duration_med",
     owner_project_branch_num_revision_duration_med: "opb_revision_duration_med",
-    time_between_messages_med: "time_between_messages_med",
+    //time_between_messages_med: "time_between_messages_med",
     owner_project_branch_time_between_messages_med: "opb_time_between_messages_med",
-    num_messages_med: "num_messages_med",
+    //num_messages_med: "num_messages_med",
     owner_project_branch_num_messages_med: "opb_num_messages_med",
+
     files_changes_duration_med: "files_changes_duration_med",
     owner_files_changes_duration_med: "owner_files_changes_duration_med",
     files_build_time_med: "files_build_time_med",
     files_revision_time_med: "files_revision_time_med",
-    files_num_fails_med: "files_num_fails_med",
+    //files_num_fails_med: "files_num_fails_med",
 
     /////
 
