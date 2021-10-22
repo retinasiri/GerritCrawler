@@ -716,7 +716,7 @@ let metric_to_collect = {
     numOpenChangesFiles: "numOpenChangesFiles",
 
     filesExtensionNumberChangesBuilt: "numFilesExtensionChangesBuilt",
-    filesExtensionNumberChangesBuiltRatio: "files_extension_built_changes_ratio",
+    //filesExtensionNumberChangesBuiltRatio: "files_extension_built_changes_ratio",
 
 
     //numClosedChangesFiles: "numClosedChangesFiles",

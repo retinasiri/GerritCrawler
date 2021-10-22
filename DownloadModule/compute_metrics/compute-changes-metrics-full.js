@@ -708,7 +708,7 @@ async function getChangesInfo(json) {
 
         //console.log(data["numberChangesBuilt"])
         //console.log(data["priorClosedChangesCount"])
-        data["numberChangesBuiltRatio"] = safeDivision(data.numberChangesBuilt, data.priorClosedChangesCount)
+        //data["numberChangesBuiltRatio"] = safeDivision(data.numberChangesBuilt, data.priorClosedChangesCount)
 
         //data["ownerNumberChangesBuiltRatio"] = safeDivision(data["ownerNumberChangesBuilt"], data["ownerPriorClosedChangesCount"])
         //data["projectNumberChangesBuiltRatio"] = safeDivision(data["projectNumberChangesBuilt"], data["priorProjectClosedChangesCount"])
@@ -719,9 +719,9 @@ async function getChangesInfo(json) {
         //data["ownerBranchNumberChangesBuiltRatio"] = safeDivision(data["ownerBranchNumberChangesBuilt"], data["priorOwnerBranchClosedChangesCount"])
         //data["projectBranchNumberChangesBuiltRatio"] = safeDivision(data["projectBranchNumberChangesBuilt"], data["priorProjectBranchClosedChangesCount"])
 
-        data["ownerProjectBranchNumberChangesBuiltRatio"] = safeDivision(data.ownerProjectBranchNumberChangesBuilt, data.ownerProjectBranchClosedChangesCount)
+        //data["ownerProjectBranchNumberChangesBuiltRatio"] = safeDivision(data.ownerProjectBranchNumberChangesBuilt, data.ownerProjectBranchClosedChangesCount)
 
-        data["filesExtensionNumberChangesBuiltRatio"] = safeDivision(data.filesExtensionNumberChangesBuilt, data.filesExtensionNumberChangesCount)
+        //data["filesExtensionNumberChangesBuiltRatio"] = safeDivision(data.filesExtensionNumberChangesBuilt, data.filesExtensionNumberChangesCount)
 
         return data;
     })
