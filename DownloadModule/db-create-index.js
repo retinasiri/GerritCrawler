@@ -330,3 +330,8 @@ db.getCollection('changes').createIndex({messages_count_before_close: 1, opb: 1,
 db.getCollection('changes').createIndex({avg_time_between_msg_before_close: 1, opb: 1, updated_date: 1})
 db.getCollection('changes').createIndex({avg_time_revision_before_close: 1, opb: 1, updated_date: 1})
 db.getCollection('changes').createIndex({revisions_num: 1, opb: 1, updated_date: 1})
+
+db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, closed: 1, updated_date: 1})
+db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, closed: 1, updated_date: 1, created_date: 1})
+db.getCollection('changes').createIndex({ closed: 1, date_updated_date_created_diff: 1,updated_date: 1})
+db.getCollection('changes').createIndex({ closed: 1, date_updated_date_created_diff: 1,updated_date: 1, created_date: 1})

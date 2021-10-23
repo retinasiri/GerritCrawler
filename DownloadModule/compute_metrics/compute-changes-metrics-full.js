@@ -1354,8 +1354,8 @@ function getPriorClosedChangesFiles(json) {
     let match = {
         $match: {
             //status: {$in: ['MERGED', 'ABANDONED']},
-            files_list: {$in: files_list},
             closed: true,
+            files_list: {$in: files_list},
             updated_date: {$lte: created_date},
             //updated: {$lte: created_date},
         }
