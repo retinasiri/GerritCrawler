@@ -1,7 +1,7 @@
 const MathJs = require('mathjs');
 const Moment = require('moment');
 const Change = require('../models/change');
-const MetricsUtils = require("./metrics-utils");
+const MetricsUtils = require("./metrics-utils-2");
 
 //todo add open change
 //todo add hour separation
@@ -41,9 +41,12 @@ function startComputeMetrics(projectJson) {
         end = projectJson["end"];
     if (projectJson["NUM_DAYS_FOR_RECENT"])
         NUM_DAYS_FOR_RECENT = projectJson["NUM_DAYS_FOR_RECENT"];
+    console.log('Start Time: ', new Date().toLocaleTimeString());
 
     return MetricsUtils.startComputeMetrics(projectName, start, end, function (json) {
         return collectMetrics(json)
+    }).then(() => {
+        console.log('End Time: ', new Date().toLocaleTimeString());
     })
 }
 
@@ -96,8 +99,11 @@ async function computeMedianInfo(json, data) {
     let branch = json.branch;
     let files_list = json.files_list ? json.files_list : [];
 
-    if (NUM_DAYS_FOR_RECENT !== null)
-        date_for_recent = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+    if (NUM_DAYS_FOR_RECENT !== null) {
+        //date_for_recent = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+        date_for_recent = Moment.utc(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').toDate();
+        //Moment.utc(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').toDate()
+    }
 
     //change duration median
     let priorChangesDurationMed = getPriorChangeDurationMed(data, created_date)
@@ -263,42 +269,50 @@ async function computeMedianInfo(json, data) {
 
 
     //files time median
-    let files_changes_duration_med  = getMedian(data.numChangesFiles,
+    let iso_created_date = Moment.utc(json.created).toDate();
+
+    let files_changes_duration_med = getMedian(data.numChangesFiles,
         {
             $match: {
                 files_list: {$in: files_list},
-                created: {$lte: created_date},
+                //created: {$lte: iso_created_date},
+                updated_date: {$lte: iso_created_date},
             }
         },
         "date_updated_date_created_diff")
 
     //owner file time median
-    let owner_files_changes_duration_med  = getMedian(data.numChangesFiles,
+    let owner_files_changes_duration_med = getMedian(data.numChangesFiles,
         {
             $match: {
-                files_list: {$in: files_list},
                 'owner._account_id': ownerId,
-                created: {$lte: created_date},
+                files_list: {$in: files_list},
+                //created: {$lte: created_date},
+                updated_date: {$lte: iso_created_date},
+
             }
         },
         "date_updated_date_created_diff")
 
     //files build time median
-    let files_build_time_med  = getMedian(data.numChangesFiles,
+    let files_build_time_med = getMedian(data.numChangesFiles,
         {
             $match: {
                 files_list: {$in: files_list},
-                created: {$lte: created_date},
+                //created: {$lte: created_date},
+                updated_date: {$lte: iso_created_date},
+
             }
         },
         "avg_build_time_before_close")
 
     //files revision time median
-    let files_revision_time_med  = getMedian(data.numChangesFiles,
+    let files_revision_time_med = getMedian(data.numChangesFiles,
         {
             $match: {
                 files_list: {$in: files_list},
-                created: {$lte: created_date},
+                //created: {$lte: created_date},
+                updated_date: {$lte: iso_created_date},
             }
         },
         "avg_time_revision_before_close")
@@ -480,6 +494,19 @@ async function computeMedianInfo(json, data) {
     })
 }
 
+function get_opb(ownerId, project, branch) {
+    //console.log(project + "-" + branch + "-" + ownerId)
+    return project + "-" + branch + "-" + ownerId
+}
+
+function get_opb_closed(ownerId, project, branch, closed = true) {
+    if (closed)
+        return project + "-" + branch + "-" + ownerId + "-" + "true"
+    else
+        return project + "-" + branch + "-" + ownerId + "-" + "false"
+
+}
+
 function getMedian(count, match, field) {
     let project_val = "$" + field
     let pipeline = [
@@ -501,17 +528,23 @@ async function getChangesInfo(json) {
     let project = json.project;
     let files_list = json.files_list ? json.files_list : [];
 
-    if (NUM_DAYS_FOR_RECENT !== null)
-        date_for_recent = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+    if (NUM_DAYS_FOR_RECENT !== null) {
+        //date_for_recent = Moment(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS');
+        date_for_recent = Moment.utc(json.created).subtract(NUM_DAYS_FOR_RECENT, 'days').toDate();
+    }
 
     let priorChangesCount = getPriorChangesCount(json);
-    let priorClosedChangesCount = getPriorTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    //let priorClosedChangesCount = getPriorTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    let priorClosedChangesCount = getPriorTypeChangesCount(json);
     let priorOwnerChangesCount = getOwnerPriorChangesCount(json);
-    let priorOwnerClosedChangesCount = getOwnerPriorTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    //let priorOwnerClosedChangesCount = getOwnerPriorTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    let priorOwnerClosedChangesCount = getOwnerPriorTypeChangesCount(json);
     let priorProjectChangesCount = getPriorSubsystemChangesCount(json);
-    let priorProjectClosedChangesCount = getPriorSubsystemTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    //let priorProjectClosedChangesCount = getPriorSubsystemTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    let priorProjectClosedChangesCount = getPriorSubsystemTypeChangesCount(json);
     let priorBranchChangesCount = getPriorBranchChangesCount(json);
-    let priorBranchClosedChangesCount = getPriorBranchTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    //let priorBranchClosedChangesCount = getPriorBranchTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
+    let priorBranchClosedChangesCount = getPriorBranchTypeChangesCount(json);
 
     //let priorOwnerProjectChangesCount = getPriorSubsystemOwnerChangesCount(json);
     //let priorOwnerProjectClosedChangesCount = getPriorSubsystemOwnerTypeChangesCount(json, {$in: ['MERGED', 'ABANDONED']});
@@ -741,7 +774,7 @@ function convertAsDays(input) {
 
 function safeDivision(number1, number2) {
     //return (number2 !== 0 || number2 === undefined)? MathJs.divide(number1, number2) : 0;
-    return (number2 !== 0)? MathJs.divide(number1, number2) : 0;
+    return (number2 !== 0) ? MathJs.divide(number1, number2) : 0;
 }
 
 function safe_result(number) {
@@ -778,7 +811,7 @@ function dbRequest_indexed(pipeline, index_name) {
         });
 }
 
-function addRecentDateToPipeline(pipeline) {
+/*function addRecentDateToPipeline(pipeline) {
     if (date_for_recent !== null) {
         if (pipeline[0]["$match"]["created"])
             pipeline[0]["$match"]["created"]["$gte"] = date_for_recent
@@ -787,16 +820,29 @@ function addRecentDateToPipeline(pipeline) {
         return pipeline
     } else
         return pipeline
+}*/
+
+function addRecentDateToPipeline(pipeline) {
+    if (date_for_recent !== null) {
+        if (pipeline[0]["$match"]["created_date"])
+            pipeline[0]["$match"]["created_date"]["$gte"] = date_for_recent
+        else
+            pipeline[0]["$match"]["created_date"] = {$gte: date_for_recent}
+        return pipeline
+    } else
+        return pipeline
 }
 
 function getPriorChangesCount(json) {
-    let number = json._number;
-    let created_date = json.created;
+    //let number = json._number;
+    //let created_date = json.created;
+    let created_date = Moment.utc(json.created).toDate();
     let pipeline = [
         {
             $match: {
                 //_number: {$lt: number},
-                created: {$lte: created_date}
+                //created: {$lte: created_date}
+                created_date: {$lte: created_date}
             }
         },
         {$count: "count"}
@@ -805,15 +851,20 @@ function getPriorChangesCount(json) {
     return dbRequest(pipeline);
 }
 
-function getPriorTypeChangesCount(json, TYPE) {
-    let number = json._number;
-    let created_date = json.created;
+//function getPriorTypeChangesCount(json, TYPE) {
+function getPriorTypeChangesCount(json, closed = true) {
+    //let number = json._number;
+    //let created_date = json.created;
+    let created_date = Moment.utc(json.created).toDate();
+
     let pipeline = [
         {
             $match: {
-                status: TYPE,
+                //status: TYPE,
+                closed: true,
                 //created: {$lte: created_date},
-                updated: {$lte: created_date},
+                //updated: {$lte: created_date},
+                updated_date: {$lte: created_date},
                 //_number: {$lt: number},
             }
         },
@@ -825,14 +876,16 @@ function getPriorTypeChangesCount(json, TYPE) {
 
 function getOwnerPriorChangesCount(json) {
     let number = json._number;
-    let created_date = json.created;
+    //let created_date = json.created;
+    let created_date = Moment.utc(json.created).toDate();
+
     let ownerId = json.owner._account_id;
     let pipeline = [
         {
             $match: {
                 //_number: {$lt: number},
                 'owner._account_id': ownerId,
-                created: {$lte: created_date},
+                created_date: {$lte: created_date},
             }
         },
         {$count: "count"}
@@ -841,17 +894,20 @@ function getOwnerPriorChangesCount(json) {
     return dbRequest(pipeline);
 }
 
-function getOwnerPriorTypeChangesCount(json, TYPE) {
+//function getOwnerPriorTypeChangesCount(json, TYPE) {
+function getOwnerPriorTypeChangesCount(json, closed = true) {
     let number = json._number;
-    let created_date = json.created;
+    //let created_date = json.created;
+    let created_date = Moment.utc(json.created).toDate();
     let ownerId = json.owner._account_id;
     let pipeline = [{
         $match: {
             //_number: {$lt: number},
-            status: TYPE,
+            //status: TYPE,
+            closed: true,
             'owner._account_id': ownerId,
             //created: {$lte: created_date},
-            updated: {$lte: created_date},
+            updated_date: {$lte: created_date},
         }
     },
         {$count: "count"}
@@ -863,12 +919,13 @@ function getOwnerPriorTypeChangesCount(json, TYPE) {
 function getPriorSubsystemChangesCount(json) {
     let number = json._number;
     let project = json.project;
-    let created_date = json.created;
+    //let created_date = json.created;
+    let created_date = Moment.utc(json.created).toDate();
     let pipeline = [{
         $match: {
             //_number: {$lt: number},
             project: project,
-            created: {$lte: created_date},
+            created_date: {$lte: created_date},
         }
     },
         {$count: "count"}
@@ -877,17 +934,21 @@ function getPriorSubsystemChangesCount(json) {
     return dbRequest(pipeline);
 }
 
-function getPriorSubsystemTypeChangesCount(json, TYPE) {
+//function getPriorSubsystemTypeChangesCount(json, TYPE) {
+function getPriorSubsystemTypeChangesCount(json, closed = true) {
     let number = json._number;
     let project = json.project;
-    let created_date = json.created;
+    //let created_date = json.created;
+    let created_date = Moment.utc(json.created).toDate();
     let pipeline = [{
         $match: {
             //_number: {$lt: number},
-            status: TYPE,
+            //status: TYPE,
+            closed: true,
             project: project,
             //created: {$lte: created_date},
-            updated: {$lte: created_date},
+            //updated: {$lte: created_date},
+            updated_date: {$lte: created_date},
         }
     },
         {$count: "count"}
@@ -1265,12 +1326,14 @@ function getFileDeveloperNumber(json) {
 
 //done
 function getPriorChangesFiles(json) {
-    let created_date = json.created;
+    //let created_date = json.created;
+    let created_date = Moment.utc(json.created).toDate();
     let files_list = json.files_list ? json.files_list : [];
     let match = {
         $match: {
             files_list: {$in: files_list},
-            created: {$lte: created_date},
+            //created: {$lte: created_date},
+            created_date: {$lte: created_date},
         }
     }
     let pipeline = [
@@ -1285,13 +1348,16 @@ function getPriorChangesFiles(json) {
 }
 
 function getPriorClosedChangesFiles(json) {
-    let created_date = json.created;
+    //let created_date = json.created;
     let files_list = json.files_list ? json.files_list : [];
+    let created_date = Moment.utc(json.created).toDate();
     let match = {
         $match: {
-            status: {$in: ['MERGED', 'ABANDONED']},
+            //status: {$in: ['MERGED', 'ABANDONED']},
             files_list: {$in: files_list},
-            updated: {$lte: created_date},
+            closed: true,
+            updated_date: {$lte: created_date},
+            //updated: {$lte: created_date},
         }
     }
     let pipeline = [
@@ -2189,12 +2255,14 @@ function getBranchNumberOfCherryPicked(json) {
 //add
 function getPriorBranchChangesCount(json) {
     let number = json._number;
-    let created_date = json.created;
+    //let created_date = json.created;
+    let created_date = Moment.utc(json.created).toDate();
     let branch = json.branch;
     let pipeline = [{
         $match: {
             branch: branch,
-            updated: {$lte: created_date},
+            updated_date: {$lte: created_date},
+            //updated: {$lte: created_date},
             //_number: {$lt: number},
             //status: TYPE,
             //'owner._account_id': ownerId,
@@ -2207,15 +2275,19 @@ function getPriorBranchChangesCount(json) {
     return dbRequest(pipeline);
 }
 
-function getPriorBranchTypeChangesCount(json, TYPE) {
+//function getPriorBranchTypeChangesCount(json, TYPE) {
+function getPriorBranchTypeChangesCount(json, closed = true) {
     let number = json._number;
-    let created_date = json.created;
+    //let created_date = json.created;
+    let created_date = Moment.utc(json.created).toDate();
     let branch = json.branch;
     let pipeline = [{
         $match: {
-            status: TYPE,
+            //status: TYPE,
+            closed: true,
             branch: branch,
-            updated: {$lte: created_date},
+            updated_date: {$lte: created_date},
+            //updated: {$lte: created_date},
             //_number: {$lt: number},
             //'owner._account_id': ownerId,
             //created: {$lte: created_date},
@@ -2372,14 +2444,17 @@ function getPriorProjectBranchOwnerChangesCount(json) {
     let branch = json.branch;
     let project = json.project;
     let ownerId = json.owner._account_id;
-    let created_date = json.created;
+    let created_date = Moment.utc(json.created).toDate();
+    //let created = json.created;
+    let opb = get_opb(ownerId, project, branch)
     let pipeline = [{
         $match: {
             //_number: {$lt: number},
-            project: project,
-            branch: branch,
-            'owner._account_id': ownerId,
-            updated: {$lte: created_date},
+            opb: opb,
+            updated_date: {$lte: created_date},
+            //project: project,
+            //branch: branch,
+            //'owner._account_id': ownerId,
             //created: {$lte: created_date},
         }
     },
@@ -2389,20 +2464,28 @@ function getPriorProjectBranchOwnerChangesCount(json) {
     return dbRequest(pipeline);
 }
 
-function getPriorProjectBranchOwnerTypeChangesCount(json, TYPE) {
-    let created_date = json.created;
+//function getPriorProjectBranchOwnerTypeChangesCount(json, TYPE) {
+function getPriorProjectBranchOwnerTypeChangesCount(json, closed = true) {
+    // let created_date = json.created;
+    let created_date = Moment.utc(json.created).toDate();
     let number = json._number;
     let branch = json.branch;
     let project = json.project;
     let ownerId = json.owner._account_id;
+    let opb = get_opb(ownerId, project, branch)
+    let opb_closed = get_opb_closed(ownerId, project, branch)
     let pipeline = [{
         $match: {
             //_number: {$lt: number},
-            status: TYPE,
-            project: project,
-            branch: branch,
-            'owner._account_id': ownerId,
-            updated: {$lte: created_date},
+            //status: TYPE,
+            //closed: true,
+            //opb: opb,
+            opb_closed: opb_closed,
+            //project: project,
+            //branch: branch,
+            //'owner._account_id': ownerId,
+            updated_date: {$lte: created_date},
+            //updated: {$lte: created_date},
             //created: {$lte: created_date},
         }
     },
@@ -2806,17 +2889,21 @@ function getFilesExtensionNumberChangesCount(json) {
 }
 
 function getFilesExtensionNumberChangesBuilt(json) {
-    let created_date = json.created;
+    //let created_date = json.created;
+    let created_date = Moment.utc(json.created).toDate();
     let number = json._number;
     let extensions_list = json.extensions_list ? json.extensions_list : [];
     let match = {
         $match: {
             //_number: {$lt: number},
-            status: {$in: ['MERGED', 'ABANDONED']},
+            //status: {$in: ['MERGED', 'ABANDONED']},
             extensions_list: {$in: extensions_list},
-            avg_build_time: {$gt: 0},
+            closed: true,
+            is_built: true,
+            updated_date: {$lte: created_date},
+            //avg_build_time: {$gt: 0},
             //created: {$lte: created_date},
-            updated: {$lte: created_date},
+            //updated: {$lte: created_date},
         }
     }
     let pipeline = [
@@ -3780,57 +3867,70 @@ function getOwnerAndReviewerCommonsMessagesAvg(json, reviewersId) {
 //todo add metrics to compute
 
 //get median function
-function all_match (created_date) {
+function all_match(created) {
+    let created_date = Moment.utc(created).toDate();
     return {
         $match: {
-            updated: {$lte: created_date},
-            status: {$in: ['MERGED', 'ABANDONED']},
+            closed: true,
+            updated_date: {$lte: created_date},
+            //updated: {$lte: created_date},
+            //status: {$in: ['MERGED', 'ABANDONED']},
         }
     }
 }
 
-function owner_match (created_date, ownerId) {
+function owner_match(created, ownerId) {
+    let created_date = Moment.utc(created).toDate();
+    return {
+        $match: {
+            //updated: {$lte: created_date},
+            //status: {$in: ['MERGED', 'ABANDONED']},
+            closed: true,
+            'owner._account_id': ownerId,
+            updated_date: {$lte: created_date},
+        }
+    }
+}
+
+function project_match(created, project) {
+    let created_date = Moment.utc(created).toDate();
+    return {
+        $match: {
+            closed: true,
+            project: project,
+            updated_date: {$lte: created_date},
+
+            //updated: {$lte: created_date},
+            //status: {$in: ['MERGED', 'ABANDONED']},
+        }
+    }
+}
+
+function branch_match(created, branch) {
+    let created_date = Moment.utc(created).toDate();
+    return {
+        $match: {
+            //updated: {$lte: created_date},
+            updated_date: {$lte: created_date},
+            closed: true,
+            branch: branch,
+            //status: {$in: ['MERGED', 'ABANDONED']},
+        }
+    }
+}
+
+function owner_project_match(created_date, ownerId, project, branch) {
     return {
         $match: {
             updated: {$lte: created_date},
             status: {$in: ['MERGED', 'ABANDONED']},
             'owner._account_id': ownerId,
-        }
-    }
-}
-
-function project_match (created_date, project) {
-    return {
-        $match: {
-            updated: {$lte: created_date},
-            status: {$in: ['MERGED', 'ABANDONED']},
             project: project,
         }
     }
 }
 
-function branch_match (created_date, branch) {
-    return {
-        $match: {
-            updated: {$lte: created_date},
-            status: {$in: ['MERGED', 'ABANDONED']},
-            branch: branch,
-        }
-    }
-}
-
-function owner_project_match (created_date, ownerId, project, branch) {
-    return {
-        $match: {
-            updated: {$lte: created_date},
-            status: {$in: ['MERGED', 'ABANDONED']},
-            'owner._account_id': ownerId,
-            project: project,
-        }
-    }
-}
-
-function owner_branch_match (created_date, ownerId, project, branch) {
+function owner_branch_match(created_date, ownerId, project, branch) {
     return {
         $match: {
             updated: {$lte: created_date},
@@ -3841,7 +3941,7 @@ function owner_branch_match (created_date, ownerId, project, branch) {
     }
 }
 
-function project_branch_match (created_date, ownerId, project, branch) {
+function project_branch_match(created_date, ownerId, project, branch) {
     return {
         $match: {
             updated: {$lte: created_date},
@@ -3852,21 +3952,26 @@ function project_branch_match (created_date, ownerId, project, branch) {
     }
 }
 
-function owner_project_branch_match (created_date, ownerId, project, branch) {
+function owner_project_branch_match(created, ownerId, project, branch) {
+    let created_date = Moment.utc(created).toDate();
+    let opb_closed = get_opb_closed(ownerId, project, branch)
     return {
         $match: {
-            updated: {$lte: created_date},
-            status: {$in: ['MERGED', 'ABANDONED']},
-            project: project,
-            branch: branch,
-            'owner._account_id': ownerId,
+            //updated: {$lte: created_date},
+            updated_date: {$lte: created_date},
+            opb_closed: opb_closed,
+            //closed: true,
+            ////status: {$in: ['MERGED', 'ABANDONED']},
+            //project: project,
+            //branch: branch,
+            //'owner._account_id': ownerId,
         }
     }
 }
 
 
 //change duration
-function getPriorChangeDurationMed(data, created_date){
+function getPriorChangeDurationMed(data, created_date) {
     return getMedian(
         data.priorClosedChangesCount,
         all_match(created_date),
@@ -3874,64 +3979,64 @@ function getPriorChangeDurationMed(data, created_date){
     )
 }
 
-function getPriorOwnerProjectBranchChangesDurationMed(data, created_date, ownerId, project, branch){
+function getPriorOwnerProjectBranchChangesDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.ownerProjectBranchClosedChangesCount,
-        owner_project_branch_match (created_date, ownerId, project, branch),
+        owner_project_branch_match(created_date, ownerId, project, branch),
         "date_updated_date_created_diff"
     )
 }
 
-function getPriorOwnerChangesDurationMed(data, created_date, ownerId, project, branch){
+function getPriorOwnerChangesDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.ownerPriorClosedChangesCount,
-        owner_match (created_date, ownerId),
+        owner_match(created_date, ownerId),
         "date_updated_date_created_diff"
     )
 }
 
-function getPriorProjectChangesDurationMed(data, created_date, ownerId, project, branch){
+function getPriorProjectChangesDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorProjectClosedChangesCount,
-        project_match (created_date, project),
+        project_match(created_date, project),
         "date_updated_date_created_diff"
     )
 }
 
-function getPriorBranchChangesDurationMed(data, created_date, ownerId, project, branch){
+function getPriorBranchChangesDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorBranchClosedChangesCount,
-        branch_match (created_date, branch),
+        branch_match(created_date, branch),
         "date_updated_date_created_diff"
     )
 }
 
-function getPriorOwnerProjectChangesDurationMed(data, created_date, ownerId, project, branch){
+function getPriorOwnerProjectChangesDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorOwnerProjectClosedChangesCount,
-        owner_project_match (created_date, ownerId, project, branch),
+        owner_project_match(created_date, ownerId, project, branch),
         "date_updated_date_created_diff"
     )
 }
 
-function getPriorOwnerBranchChangesDurationMed(data, created_date, ownerId, project, branch){
+function getPriorOwnerBranchChangesDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorOwnerBranchClosedChangesCount,
-        owner_branch_match (created_date, ownerId, project, branch),
+        owner_branch_match(created_date, ownerId, project, branch),
         "date_updated_date_created_diff"
     )
 }
 
-function getPriorProjectBranchChangesDurationMed(data, created_date, ownerId, project, branch){
+function getPriorProjectBranchChangesDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorProjectBranchChangesCount,
-        project_branch_match (created_date, ownerId, project, branch),
+        project_branch_match(created_date, ownerId, project, branch),
         "date_updated_date_created_diff"
     )
 }
 
 //build time duration
-function getPriorBuildTimeDurationMed(data, created_date){
+function getPriorBuildTimeDurationMed(data, created_date) {
     return getMedian(
         data.priorClosedChangesCount,
         {
@@ -3944,23 +4049,15 @@ function getPriorBuildTimeDurationMed(data, created_date){
     )
 }
 
-function getPriorOwnerProjectBranchBuildTimeDurationMed(data, created_date, ownerId, project, branch){
+function getPriorOwnerProjectBranchBuildTimeDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.ownerProjectBranchClosedChangesCount,
-        {
-            $match: {
-                updated: {$lte: created_date},
-                status: {$in: ['MERGED', 'ABANDONED']},
-                project: project,
-                branch: branch,
-                "owner._account_id": ownerId,
-            }
-        },
+        owner_project_branch_match(created_date, ownerId, project, branch),
         "avg_build_time_before_close"
     )
 }
 
-function getPriorOwnerBuildTimeDurationMed(data, created_date, ownerId, project, branch){
+function getPriorOwnerBuildTimeDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.ownerPriorChangesCount,
         {
@@ -3974,7 +4071,7 @@ function getPriorOwnerBuildTimeDurationMed(data, created_date, ownerId, project,
     )
 }
 
-function getPriorProjectBuildTimeDurationMed(data, created_date, ownerId, project, branch){
+function getPriorProjectBuildTimeDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorProjectChangesCount,
         {
@@ -3988,7 +4085,7 @@ function getPriorProjectBuildTimeDurationMed(data, created_date, ownerId, projec
     )
 }
 
-function getPriorBranchBuildTimeDurationMed(data, created_date, ownerId, project, branch){
+function getPriorBranchBuildTimeDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorProjectChangesCount,
         {
@@ -4002,7 +4099,7 @@ function getPriorBranchBuildTimeDurationMed(data, created_date, ownerId, project
     )
 }
 
-function getPriorOwnerProjectBuildTimeDurationMed(data, created_date, ownerId, project, branch){
+function getPriorOwnerProjectBuildTimeDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorOwnerProjectChangesCount,
         {
@@ -4017,7 +4114,7 @@ function getPriorOwnerProjectBuildTimeDurationMed(data, created_date, ownerId, p
     )
 }
 
-function getPriorOwnerBranchBuildTimeDurationMed(data, created_date, ownerId, project, branch){
+function getPriorOwnerBranchBuildTimeDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorOwnerBranchChangesCount,
         {
@@ -4032,7 +4129,7 @@ function getPriorOwnerBranchBuildTimeDurationMed(data, created_date, ownerId, pr
     )
 }
 
-function getPriorProjectBranchBuildTimeDurationMed(data, created_date, ownerId, project, branch){
+function getPriorProjectBranchBuildTimeDurationMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorProjectBranchChangesCount,
         {
@@ -4048,7 +4145,7 @@ function getPriorProjectBranchBuildTimeDurationMed(data, created_date, ownerId, 
 }
 
 //time to add reviewer
-function getPriorTimeToAddReviewerMed(data, created_date, ownerId, project, branch){
+function getPriorTimeToAddReviewerMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorClosedChangesCount,
         all_match(created_date),
@@ -4056,7 +4153,7 @@ function getPriorTimeToAddReviewerMed(data, created_date, ownerId, project, bran
     )
 }
 
-function getPriorOwnerProjectBranchTimeToAddReviewerMed(data, created_date, ownerId, project, branch){
+function getPriorOwnerProjectBranchTimeToAddReviewerMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.ownerProjectBranchClosedChangesCount,
         owner_project_branch_match(created_date, ownerId, project, branch),
@@ -4064,7 +4161,7 @@ function getPriorOwnerProjectBranchTimeToAddReviewerMed(data, created_date, owne
     )
 }
 
-function getPriorOwnerTimeToAddReviewerMed(data, created_date, ownerId, project, branch){
+function getPriorOwnerTimeToAddReviewerMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.ownerPriorClosedChangesCount,
         owner_match(created_date, ownerId, project, branch),
@@ -4072,7 +4169,7 @@ function getPriorOwnerTimeToAddReviewerMed(data, created_date, ownerId, project,
     )
 }
 
-function getPriorProjectTimeToAddReviewerMed(data, created_date, ownerId, project, branch){
+function getPriorProjectTimeToAddReviewerMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorProjectClosedChangesCount,
         project_match(created_date, ownerId, project, branch),
@@ -4080,7 +4177,7 @@ function getPriorProjectTimeToAddReviewerMed(data, created_date, ownerId, projec
     )
 }
 
-function getPriorBranchTimeToAddReviewerMed(data, created_date, ownerId, project, branch){
+function getPriorBranchTimeToAddReviewerMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorBranchClosedChangesCount,
         branch_match(created_date, ownerId, project, branch),
@@ -4088,7 +4185,7 @@ function getPriorBranchTimeToAddReviewerMed(data, created_date, ownerId, project
     )
 }
 
-function getPriorOwnerProjectTimeToAddReviewerMed(data, created_date, ownerId, project, branch){
+function getPriorOwnerProjectTimeToAddReviewerMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorOwnerProjectClosedChangesCount,
         owner_project_match(created_date, ownerId, project, branch),
@@ -4096,7 +4193,7 @@ function getPriorOwnerProjectTimeToAddReviewerMed(data, created_date, ownerId, p
     )
 }
 
-function getPriorOwnerBranchTimeToAddReviewerMed(data, created_date, ownerId, project, branch){
+function getPriorOwnerBranchTimeToAddReviewerMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorOwnerBranchClosedChangesCount,
         owner_branch_match(created_date, ownerId, project, branch),
@@ -4104,14 +4201,13 @@ function getPriorOwnerBranchTimeToAddReviewerMed(data, created_date, ownerId, pr
     )
 }
 
-function getPriorProjectBranchTimeToAddReviewerMed(data, created_date, ownerId, project, branch){
+function getPriorProjectBranchTimeToAddReviewerMed(data, created_date, ownerId, project, branch) {
     return getMedian(
         data.priorProjectBranchClosedChangesCount,
         project_branch_match(created_date, ownerId, project, branch),
         "avg_time_to_add_human_reviewers_before_close"
     )
 }
-
 
 
 module.exports = {

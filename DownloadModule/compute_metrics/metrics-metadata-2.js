@@ -62,10 +62,13 @@ function startComputeMetadata(json) {
 function getChanges(skip, NUM_OF_CHANGES_LIMIT = 10000) {
     return Change
         .aggregate([
-            {$sort: {created: 1, _number: 1}},
+            //{$sort: {created: 1, _number: 1}},
+            {$sort: {_number: 1}},
             {$skip: skip},
             {$limit: NUM_OF_CHANGES_LIMIT},
             //{$project: {id: 1, date_updated_date_created_diff: 1, avg_time_to_add_human_reviewers_before_close: 1}}
+            {$project: {id: 1, owner: 1, project: 1, branch: 1,
+                    status: 1, created: 1, updated: 1, avg_build_time_before_close:1}}
         ])
         .allowDiskUse(true)
         .exec()
@@ -120,10 +123,9 @@ let i = 1;
 async function collectMetadata(json) {
     let metadata = {};
     metadata["id"] = json.id
+
     //metadata["n"] = i++
-
-
-    metadata["owner_timezone"] = MetricsUtils.get_timezone_owner(json)
+    /*metadata["owner_timezone"] = MetricsUtils.get_timezone_owner(json)
     metadata["month_date_created"] = MetricsUtils.get_month(json.created);
     metadata["month_date_created_for_owner"] = MetricsUtils.get_month_for_owner(json.created, MetricsUtils.get_timezone(json).author);
     metadata["month_date_updated"] = MetricsUtils.get_month(json.updated);
@@ -153,6 +155,34 @@ async function collectMetadata(json) {
     let avg_time_to_add_human_reviewers_before_close = json["avg_time_to_add_human_reviewers_before_close"] ? json["avg_time_to_add_human_reviewers_before_close"] : 0;
     //metadata["effective_revision_time_diff"] = Math.abs(json["date_updated_date_created_diff"] - avg_time_to_add_human_reviewers_before_close)
     metadata["effective_revision_time_diff"] = json["date_updated_date_created_diff"] - avg_time_to_add_human_reviewers_before_close
+
+     */
+
+    metadata.opb = json.project + "-" + json.branch + "-" + json.owner._account_id
+    if (json.status === "MERGED" || json.status === "ABANDONED"){
+        metadata.closed = true
+        metadata.opb_closed = metadata.opb + "-" + "true"
+    }
+    else{
+        metadata.closed = false
+        metadata.opb_closed = metadata.opb + "-" + "false"
+    }
+
+    if(json.avg_build_time_before_close > 0){
+        metadata.is_built = true;
+    } else {
+        metadata.is_built = false;
+    }
+
+    let created = json.created;
+    let updated = json.updated;
+    let arr_created = created.split(/-|\s|:/);
+    let arr_updated = updated.split(/-|\s|:/);
+    let date_created = new Date(Date.UTC(arr_created[0], arr_created[1] -1, arr_created[2], arr_created[3], arr_created[4], arr_created[5]));
+    let date_updated = new Date(Date.UTC(arr_updated[0], arr_updated[1] -1, arr_updated[2], arr_updated[3], arr_updated[4], arr_updated[5]));
+    metadata.created_date = date_created;
+    metadata.updated_date = date_updated;
+    //db.changes.save(doc);
 
     return metadata;
 }

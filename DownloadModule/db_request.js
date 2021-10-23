@@ -558,28 +558,40 @@ db.getCollection('changes').createIndex({id: 1})
 db.getCollection('changes').createIndex({change_id: 1})
 db.getCollection('changes').createIndex({_number: 1})
 db.getCollection('changes').createIndex({status: 1})
-db.getCollection('changes').createIndex({updated: -1})
+db.getCollection('changes').createIndex({updated: 1})
 db.getCollection('changes').createIndex({created: 1})
 db.getCollection('changes').createIndex({project: 1})
 db.getCollection('changes').createIndex({branch: 1})
 db.getCollection('changes').createIndex({'owner._account_id': 1})
 
 db.getCollection('changes').createIndex({updated: 1, status: 1})
-db.getCollection('changes').createIndex({updated: -1, status: 1})
-db.getCollection('changes').createIndex({created: -1, updated: -1, status: 1})
 db.getCollection('changes').createIndex({created: 1, updated: 1, status: 1})
-db.getCollection('changes').createIndex({created: 1, updated: -1, status: 1})
 
-db.getCollection('changes').createIndex({updated: -1, status: 1, is_self_review: 1})
-db.getCollection('changes').createIndex({updated: -1, status: 1, project: 1})
-db.getCollection('changes').createIndex({updated: -1, status: 1, 'owner._account_id': 1})
-db.getCollection('changes').createIndex({updated: -1, status: 1, branch: 1})
-db.getCollection('changes').createIndex({updated: -1, status: 1, project: 1, 'owner._account_id': 1})
-db.getCollection('changes').createIndex({updated: -1, status: 1, project: 1, branch: 1})
-db.getCollection('changes').createIndex({updated: -1, status: 1, branch: 1, 'owner._account_id': 1})
-db.getCollection('changes').createIndex({updated: -1, status: 1, project: 1, 'owner._account_id': 1, branch: 1})
-db.getCollection('changes').createIndex({updated: -1, extensions_list: 1, status: 1})
-db.getCollection('changes').createIndex({updated: -1, avg_build_time: 1, extensions_list: 1, status: 1})
+//db.getCollection('changes').createIndex({updated: -1, status: 1})
+//db.getCollection('changes').createIndex({created: -1, updated: -1, status: 1})
+//db.getCollection('changes').createIndex({created: 1, updated: -1, status: 1})
+
+db.getCollection('changes').createIndex({is_self_review: 1, status: 1, updated: 1})
+db.getCollection('changes').createIndex({project: 1, status: 1, updated: 1, })
+db.getCollection('changes').createIndex({updated: 1, 'owner._account_id': 1, status: 1})
+db.getCollection('changes').createIndex({updated: 1, status: 1, branch: 1})
+db.getCollection('changes').createIndex({updated: 1, status: 1, project: 1, 'owner._account_id': 1})
+db.getCollection('changes').createIndex({updated: 1, status: 1, project: 1, branch: 1})
+db.getCollection('changes').createIndex({updated: 1, status: 1, branch: 1, 'owner._account_id': 1})
+db.getCollection('changes').createIndex({updated: 1, status: 1, project: 1, 'owner._account_id': 1, branch: 1})
+db.getCollection('changes').createIndex({updated: 1, extensions_list: 1, status: 1})
+db.getCollection('changes').createIndex({updated: 1, avg_build_time: 1, extensions_list: 1, status: 1})
+
+db.getCollection('changes').createIndex({updated: 1, status: 1, is_self_review: 1})
+db.getCollection('changes').createIndex({updated: 1, status: 1, project: 1})
+db.getCollection('changes').createIndex({updated: 1, status: 1, 'owner._account_id': 1})
+db.getCollection('changes').createIndex({updated: 1, status: 1, branch: 1})
+db.getCollection('changes').createIndex({updated: 1, status: 1, project: 1, 'owner._account_id': 1})
+db.getCollection('changes').createIndex({updated: 1, status: 1, project: 1, branch: 1})
+db.getCollection('changes').createIndex({updated: 1, status: 1, branch: 1, 'owner._account_id': 1})
+db.getCollection('changes').createIndex({updated: 1, status: 1, project: 1, 'owner._account_id': 1, branch: 1})
+db.getCollection('changes').createIndex({updated: 1, extensions_list: 1, status: 1})
+db.getCollection('changes').createIndex({updated: 1, avg_build_time: 1, extensions_list: 1, status: 1})
 
 db.getCollection('changes').createIndex({created: 1, updated: -1, status: 1, is_self_review: 1})
 db.getCollection('changes').createIndex({created: 1, updated: -1, status: 1, project: 1})
@@ -595,6 +607,8 @@ db.getCollection('changes').createIndex({created: 1, updated: -1, avg_build_time
 db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, updated: 1, status: 1})
 db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, updated: 1, created: 1, status: 1})
 
+db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, updated: 1, status: 1})
+db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, updated: 1, created: 1, status: 1})
 
 db.getCollection('changes').createIndex({is_self_review: 1})
 db.getCollection('changes').createIndex({extensions_list: 1})
@@ -618,3 +632,15 @@ db.getCollection('changes').createIndex({status: 1, branch: 1, 'owner._account_i
 db.getCollection('changes').createIndex({status: 1, project: 1, 'owner._account_id': 1, branch: 1, updated: -1})
 db.getCollection('changes').createIndex({status: 1, extensions_list: 1, updated: -1})
 db.getCollection('changes').createIndex({status: 1, extensions_list: 1, avg_build_time: 1, updated: -1})*/
+
+db.changes.find().forEach(function(doc) {
+    let created = doc.created;
+    let updated = doc.updated;
+    let arr_created = created.split(/-|\s|:/);
+    let arr_updated = updated.split(/-|\s|:/);
+    let date_created = new Date(Date.UTC(arr_created[0], arr_created[1] -1, arr_created[2], arr_created[3], arr_created[4], arr_created[5]));
+    let date_updated = new Date(Date.UTC(arr_updated[0], arr_updated[1] -1, arr_updated[2], arr_updated[3], arr_updated[4], arr_updated[5]));
+    doc.created = date_created;
+    doc.updated = date_updated;
+    db.changes.save(doc);
+})

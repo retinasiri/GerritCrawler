@@ -225,3 +225,108 @@ db.getCollection('changes').createIndex({updated: -1})
 db.getCollection('changes').createIndex({_number: 1, created: -1})
 db.getCollection('changes').createIndex({_number: -1, created: -1})
 db.getCollection('changes').createIndex({_number: -1, created: 1})
+
+
+///////////////
+
+db.getCollection('changes').createIndex({id: 1})
+db.getCollection('changes').createIndex({change_id: 1})
+db.getCollection('changes').createIndex({_number: 1})
+db.getCollection('changes').createIndex({status: 1})
+db.getCollection('changes').createIndex({updated: 1})
+db.getCollection('changes').createIndex({created: 1})
+db.getCollection('changes').createIndex({project: 1})
+db.getCollection('changes').createIndex({branch: 1})
+db.getCollection('changes').createIndex({'owner._account_id': 1})
+db.getCollection('changes').createIndex({opb: 1})
+db.getCollection('changes').createIndex({opb_closed: 1})
+
+db.getCollection('changes').createIndex({updated_date: 1})
+db.getCollection('changes').createIndex({created_date: 1})
+db.getCollection('changes').createIndex({closed:1, created_date: 1})
+db.getCollection('changes').createIndex({closed:1, updated_date: 1})
+
+db.getCollection('changes').createIndex({closed:1, project: 1, updated_date: 1})
+db.getCollection('changes').createIndex({closed:1, branch: 1, updated_date: 1})
+db.getCollection('changes').createIndex({closed:1, 'owner._account_id': 1, updated_date: 1})
+
+db.getCollection('changes').createIndex({closed:1, project: 1, created_date: 1})
+db.getCollection('changes').createIndex({closed:1, branch: 1, created_date: 1})
+db.getCollection('changes').createIndex({closed:1, 'owner._account_id': 1, created_date: 1})
+
+db.getCollection('changes').createIndex({closed:1, updated_date: 1, created_date: 1})
+db.getCollection('changes').createIndex({closed:1, project: 1, updated_date: 1, created_date: 1})
+db.getCollection('changes').createIndex({closed:1, branch: 1, updated_date: 1, created_date: 1})
+db.getCollection('changes').createIndex({closed:1, 'owner._account_id': 1, updated_date: 1, created_date: 1})
+
+db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, updated_date: 1, closed: 1})
+db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, updated_date: 1, created_date: 1, closed: 1})
+
+db.getCollection('changes').createIndex({extensions_list: 1, is_built:1, closed: 1, updated_date: 1, updated_date: 1})
+
+
+
+///////////////:
+
+db.getCollection('changes').createIndex({id: 1})
+db.getCollection('changes').createIndex({change_id: 1})
+db.getCollection('changes').createIndex({_number: 1})
+db.getCollection('changes').createIndex({status: 1})
+db.getCollection('changes').createIndex({updated: 1})
+db.getCollection('changes').createIndex({created: 1})
+db.getCollection('changes').createIndex({project: 1})
+db.getCollection('changes').createIndex({branch: 1})
+db.getCollection('changes').createIndex({'owner._account_id': 1})
+db.getCollection('changes').createIndex({opb: 1})
+db.getCollection('changes').createIndex({opb_closed: 1})
+
+db.getCollection('changes').createIndex({updated_date: 1})
+db.getCollection('changes').createIndex({created_date: 1})
+db.getCollection('changes').createIndex({closed:1, created_date: 1})
+db.getCollection('changes').createIndex({closed:1, updated_date: 1})
+
+db.getCollection('changes').createIndex({project: 1, updated_date: 1})
+db.getCollection('changes').createIndex({branch: 1, updated_date: 1})
+db.getCollection('changes').createIndex({'owner._account_id': 1, updated_date: 1})
+
+db.getCollection('changes').createIndex({closed:1, project: 1, updated_date: 1})
+db.getCollection('changes').createIndex({closed:1, branch: 1, updated_date: 1})
+db.getCollection('changes').createIndex({closed:1, 'owner._account_id': 1, updated_date: 1})
+
+db.getCollection('changes').createIndex({closed:1, project: 1, created_date: 1})
+db.getCollection('changes').createIndex({closed:1, branch: 1, created_date: 1})
+db.getCollection('changes').createIndex({closed:1, 'owner._account_id': 1, created_date: 1})
+
+db.getCollection('changes').createIndex({extensions_list: 1, is_built:1, closed: 1, updated_date: 1, updated_date: 1})
+db.getCollection('changes').createIndex({project: 1, updated_date: 1})
+db.getCollection('changes').createIndex({branch: 1, updated_date: 1})
+db.getCollection('changes').createIndex({'owner._account_id': 1, updated_date: 1})
+
+db.getCollection('changes').createIndex({updated_date: 1, project: 1})
+db.getCollection('changes').createIndex({updated_date: 1, branch: 1})
+db.getCollection('changes').createIndex({updated_date: 1, 'owner._account_id': 1})
+
+db.getCollection('changes').createIndex({closed:1, updated_date: 1, created_date: 1})
+db.getCollection('changes').createIndex({closed:1, project: 1, updated_date: 1, created_date: 1})
+db.getCollection('changes').createIndex({closed:1, branch: 1, updated_date: 1, created_date: 1})
+db.getCollection('changes').createIndex({closed:1, 'owner._account_id': 1, updated_date: 1, created_date: 1})
+
+db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, updated_date: 1, closed: 1})
+db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, updated_date: 1, created_date: 1, closed: 1})
+
+db.getCollection('changes').createIndex({extensions_list: 1, is_built:1, closed: 1, updated_date: 1})
+
+db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, files_list: 1, updated_date: 1})
+db.getCollection('changes').createIndex({files_list: 1, date_updated_date_created_diff: 1, updated_date: 1})
+db.getCollection('changes').createIndex({'owner._account_id':1, files_list: 1, date_updated_date_created_diff: 1, updated_date: 1})
+
+db.getCollection('changes').createIndex({avg_build_time_before_close: 1, files_list: 1, updated_date: 1})
+db.getCollection('changes').createIndex({avg_time_revision_before_close: 1, files_list: 1, updated_date: 1})
+db.getCollection('changes').createIndex({files_list: 1, avg_build_time_before_close: 1, updated_date: 1})
+db.getCollection('changes').createIndex({files_list: 1, avg_time_revision_before_close: 1, updated_date: 1})
+
+db.getCollection('changes').createIndex({date_updated_date_created_diff: 1, opb: 1, updated_date: 1})
+db.getCollection('changes').createIndex({messages_count_before_close: 1, opb: 1, updated_date: 1})
+db.getCollection('changes').createIndex({avg_time_between_msg_before_close: 1, opb: 1, updated_date: 1})
+db.getCollection('changes').createIndex({avg_time_revision_before_close: 1, opb: 1, updated_date: 1})
+db.getCollection('changes').createIndex({revisions_num: 1, opb: 1, updated_date: 1})

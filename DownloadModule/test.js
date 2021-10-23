@@ -766,7 +766,12 @@ String.prototype.camelCaseToDashed = function(){
 let date = "2021-06-14 23:30:00.000000000"
 
 dateMoment = Moment.utc(date);
-console.log(dateMoment)
+//console.log(dateMoment.toDate())
+console.log(
+    //Moment(date).subtract(10, 'days').format('YYYY-MM-DD HH:mm:ss.SSSSSSSSS')
+    Moment.utc(date).subtract(10, 'days').toDate()
+);
+
 
 function get_hours_of_the_days(dateString) {
     let date = Moment.utc(dateString);
@@ -793,7 +798,7 @@ var dateFormat = new Date(Date.UTC(arr[0], arr[1] -1, arr[2], arr[3], arr[4], ar
 console.log(new Date(date))
 
 
-db.changes.find().forEach(function(doc) {
+/*db.changes.find().forEach(function(doc) {
     let created = doc.created;
     let updated = doc.updated;
     let arr_created = created.split(/-|\s|:/);
@@ -803,7 +808,7 @@ db.changes.find().forEach(function(doc) {
     doc.created = date_created;
     doc.updated = date_updated;
     db.changes.save(doc);
-})
+})*/
 
 function get_month_for_owner(dateString) {
     return Moment.utc(dateString).format('MMMM')
