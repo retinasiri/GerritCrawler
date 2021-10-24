@@ -87,10 +87,10 @@ function getMetrics(skip) {
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
         })
         .then(result => {
-            if (skip + NUM_OF_CHANGES_LIMIT < 100000)
+            //if (skip + NUM_OF_CHANGES_LIMIT < 100000)
                 return result ? getMetrics(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
-            else
-                return Promise.resolve(false);
+            //else
+            //    return Promise.resolve(false);
         })
         .catch(err => {
             console.log(err)
@@ -372,7 +372,6 @@ async function collectMetrics(metric) {
 let metric_to_collect = {
     id: true,
 
-
     max_inactive_time: true,
 
     //Time
@@ -385,8 +384,8 @@ let metric_to_collect = {
     author_timezone: true,
     month_date_created: "created_month_utc",
     month_date_created_for_owner: "created_month_owner_tz",
-    period_of_the_day_date_created_div_8: "period_of_the_day_date_created",
-    period_of_the_day_date_created_owner_tz_div_8: "period_of_the_day_date_created_owner_tz",
+    //period_of_the_day_date_created_div_8: "period_of_the_day_date_created",
+    //period_of_the_day_date_created_owner_tz_div_8: "period_of_the_day_date_created_owner_tz",
 
     //Graph
     fg_degree_centrality: "degree_centrality",
@@ -704,23 +703,34 @@ let metric_to_collect = {
 
     //////
 
+    //priorOpenChangesCount: "numPriorOpenChanges",
+    //priorOwnerOpenChangesCount: "numPriorOwnerOpenChanges",
+    //priorProjectChangesCount: "numPriorProjectChanges",
+    //priorProjectOpenChangesCount: "numPriorOpenChanges",
+    //priorBranchChangesCount: "numPriorBranchChanges",
+    //priorBranchOpenChangesCount: "numPriorBranchOpenChanges",
+    //ownerProjectBranchChangesCount: "opb_numChanges",
+    //priorOwnerProjectBranchOpenChangesCount: "opb_numOpenChanges",
+    //numChangesFiles: "numChangesFiles",
+    //numOpenChangesFiles: "numOpenChangesFiles",
+    //filesExtensionNumberChangesBuilt: "numFilesExtensionChangesBuilt",
+    //priorChangesDurationMed: "ChangesDurationMed",
+    //priorOwnerProjectBranchChangesDurationMed: "opb_ChangesDurationMed",
+    //priorOwnerProjectBranchBuildTimeDurationMed: "opb_BuildTimeDurationMed",
+    //priorOwnerProjectBranchTimeToAddReviewerMed: "opb_time_to_add_reviewers_Med",
+    //owner_project_branch_num_revision_med: "opb_num_revisions_med",
+    //owner_project_branch_num_revision_duration_med: "opb_revision_duration_med",
+    //owner_project_branch_time_between_messages_med: "opb_time_between_messages_med",
+    //owner_project_branch_num_messages_med: "opb_num_messages_med",
+    //files_changes_duration_med: "files_changes_duration_med",
+    //owner_files_changes_duration_med: "owner_files_changes_duration_med",
+    //files_build_time_med: "files_build_time_med",
+    //files_revision_time_med: "files_revision_time_med",
+
+
     //priorChangesCount: "numPriorChanges",
     //ownerPriorChangesCount: "numPriorOwnerChanges",
-    priorOpenChangesCount: "numPriorOpenChanges",
-    priorOwnerOpenChangesCount: "numPriorOwnerOpenChanges",
-    priorProjectChangesCount: "numPriorProjectChanges",
-    priorProjectOpenChangesCount: "numPriorOpenChanges",
-    priorBranchChangesCount: "numPriorBranchChanges",
-    priorBranchOpenChangesCount: "numPriorBranchOpenChanges",
-    ownerProjectBranchChangesCount: "opb_numChanges",
-    priorOwnerProjectBranchOpenChangesCount: "opb_numOpenChanges",
-
-    numChangesFiles: "numChangesFiles",
-    numOpenChangesFiles: "numOpenChangesFiles",
-
-    filesExtensionNumberChangesBuilt: "numFilesExtensionChangesBuilt",
     //filesExtensionNumberChangesBuiltRatio: "files_extension_built_changes_ratio",
-
 
     //numClosedChangesFiles: "numClosedChangesFiles",
 
@@ -745,25 +755,14 @@ let metric_to_collect = {
     //numberChangesBuiltRatio: "built_changes_ratio",
     //ownerProjectBranchNumberChangesBuiltRatio: "opb_built_changes_ratio",
 
-    priorChangesDurationMed: "ChangesDurationMed",
-    priorOwnerProjectBranchChangesDurationMed: "opb_ChangesDurationMed",
-    //priorBuildTimeDurationMed: "BuildTimeDurationMed",
-    priorOwnerProjectBranchBuildTimeDurationMed: "opb_BuildTimeDurationMed",
-    //priorTimeToAddReviewerMed: "time_to_add_reviewers_Med",
-    priorOwnerProjectBranchTimeToAddReviewerMed: "opb_time_to_add_reviewers_Med",
-    //num_revision_med: "num_revisions_med",
-    owner_project_branch_num_revision_med: "opb_num_revisions_med",
-    //num_revision_duration_med: "revision_duration_med",
-    owner_project_branch_num_revision_duration_med: "opb_revision_duration_med",
-    //time_between_messages_med: "time_between_messages_med",
-    owner_project_branch_time_between_messages_med: "opb_time_between_messages_med",
-    //num_messages_med: "num_messages_med",
-    owner_project_branch_num_messages_med: "opb_num_messages_med",
 
-    files_changes_duration_med: "files_changes_duration_med",
-    owner_files_changes_duration_med: "owner_files_changes_duration_med",
-    files_build_time_med: "files_build_time_med",
-    files_revision_time_med: "files_revision_time_med",
+    //priorBuildTimeDurationMed: "BuildTimeDurationMed",
+    //priorTimeToAddReviewerMed: "time_to_add_reviewers_Med",
+    //num_revision_med: "num_revisions_med",
+    //num_revision_duration_med: "revision_duration_med",
+    //time_between_messages_med: "time_between_messages_med",
+    //num_messages_med: "num_messages_med",
+
     //files_num_fails_med: "files_num_fails_med",
 
     /////
