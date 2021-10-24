@@ -87,10 +87,10 @@ function getMetrics(skip) {
             return docs.length ? collectDocs(docs) : Promise.resolve(false);
         })
         .then(result => {
-            //if (skip + NUM_OF_CHANGES_LIMIT < 100000)
+            if (skip + NUM_OF_CHANGES_LIMIT < 300000)
                 return result ? getMetrics(skip + NUM_OF_CHANGES_LIMIT) : Promise.resolve(false);
-            //else
-            //    return Promise.resolve(false);
+            else
+                return Promise.resolve(false);
         })
         .catch(err => {
             console.log(err)
